@@ -1,0 +1,10 @@
+as.character.FastaReferenceFile as.character.FastqDataFile
+getCommonSeqWidth getCommonSeqWidth.FastqDataFile getGeometry
+getGeometry.FastqDataFile getSeqLengths
+getSeqLengths.FastaReferenceFile getSeqNames
+getSeqNames.FastaReferenceFile getTotalSeqLengths
+getTotalSeqLengths.FastaReferenceFile nbrOfSeqs
+nbrOfSeqs.FastaReferenceFile nbrOfSeqs.FastqDataFile
+readGeometry readGeometry.FastqDataFile readSeqLengths
+readSeqLengths.FastaReferenceFile validate.FastqDataSet
+
