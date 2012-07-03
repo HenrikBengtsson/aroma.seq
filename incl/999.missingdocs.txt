@@ -7,4 +7,21 @@ getTotalSeqLengths.FastaReferenceFile nbrOfSeqs
 nbrOfSeqs.FastaReferenceFile nbrOfSeqs.FastqDataFile
 readGeometry readGeometry.FastqDataFile readSeqLengths
 readSeqLengths.FastaReferenceFile validate.FastqDataSet
-
+as.character.BamDataFile as.character.Bowtie2Aligment
+getAsteriskTags.Bowtie2Aligment getFlavor
+getFlavor.Bowtie2Aligment getFullName.Bowtie2Aligment
+getHeader.BamDataFile getInputDataSet
+getInputDataSet.Bowtie2Aligment getName.Bowtie2Aligment
+getOutputDataSet getOutputDataSet.Bowtie2Aligment
+getPath.Bowtie2Aligment getReferenceFile
+getReferenceFile.Bowtie2Aligment getRootPath
+getRootPath.Bowtie2Aligment getTags.Bowtie2Aligment
+getTargetLengths getTargetLengths.BamDataFile getTargetNames
+getTargetNames.BamDataFile getTargets getTargets.BamDataFile
+getTotalTargetLength getTotalTargetLength.BamDataFile hasIndex
+hasIndex.BamDataFile isSorted isSorted.BamDataFile
+nbrOfFiles.Bowtie2Aligment nbrOfSeqs.BamDataFile nbrOfTargets
+nbrOfTargets.BamDataFile process process.Bowtie2Aligment
+processOne processOne.Bowtie2Aligment readHeader
+readHeader.BamDataFile setTags.Bowtie2Aligment sort.BamDataFile
+validate.BamDataSet
