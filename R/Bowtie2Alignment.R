@@ -277,8 +277,10 @@ setMethodS3("processOne", "Bowtie2Aligment", function(this, df, reference, ..., 
   fastqPathname <- getPathname(df);
   fastaPathname <- getPathname(reference);
   args <- list(pathname=fastqPathname, refPathname=fastaPathname);
+
   # Additional arguments
-  args <- c(args, this$.args);
+  userArgs <- list(...);
+  args <- c(args, this$.args, userArgs);
   args$verbose <- less(verbose, 5);
 
   # Call the aligner
