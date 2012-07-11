@@ -5,7 +5,7 @@ Title: Sequence analysis in the Aroma Framework
 Maintainer: Henrik Bengtsson <henrikb@braju.com>
 Author: Henrik Bengtsson et al.
 Depends: R (>= 2.15.0), R.methodsS3 (>= 1.4.2), R.oo (>= 1.9.8), R.utils (>= 1.12.1), R.filesets (>= 1.1.5)
-Imports: 
+Imports: R.methodsS3 (>= 1.4.2), R.oo (>= 1.9.8), R.utils (>= 1.2.1)
 Suggests: Biostrings (>= 2.24.1), Rsamtools (>= 1.8.5)
 Description: [STUB ONLY/DON'T INSTALL] Methods for performing common sequence analysis.  Most of the actual analysis is performed by external software, which this package provides transparent wrappers for.
 License: LGPL (>= 2.1)

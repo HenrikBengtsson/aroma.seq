@@ -1,13 +1,30 @@
-setMethodS3("bowtie2", "default", function(..., verbose=FALSE) {
+setMethodS3("bowtie2", "default", function(inPathname, outPathname=NULL, ..., overwrite=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'inPathname':
+  inPathname <- Arguments$getReadablePathname(inPathname);
+
+  # Argument 'outPathname':
+  if (is.null(outPathname)) {
+    outPathname <- gsub("[.][^.]$", ".bam", inPathname);
+  }
+  outPathname <- Arguments$getWritablePathname(outPathname, mustNotExist=!overwrite);
+
+  # Additional arguments
+  args <- list(...);
+
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
   if (verbose) {
     pushState(verbose);
     on.exit(popState(verbose));
   }
+
+  verbose && enter(verbose, "Running bowtie2");
+  verbose && cat(verbose, "Input pathname: ", inPathname);
+  verbose && cat(verbose, "Arguments:");
+  verbose && str(verbose, args);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -19,7 +36,11 @@ setMethodS3("bowtie2", "default", function(..., verbose=FALSE) {
 
   bin <- Sys.which(command);
   verbose && cat(verbose, "Located pathname: ", bin)
-
+  
+  # Assert existence
+  if (identical(bin, "") || !isFile(bin)) {
+    throw("Failed to located external software (via the system PATH): ", command);
+  }
   verbose && exit(verbose);
 
 
@@ -32,6 +53,8 @@ setMethodS3("bowtie2", "default", function(..., verbose=FALSE) {
   verbose && cat(verbose, "System call: ", cmd)
 
   res <- system(cmd, ...);
+
+  verbose && exit(verbose);
 
   verbose && exit(verbose);
 

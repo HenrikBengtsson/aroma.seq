@@ -1,8 +1,8 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # IMPORTS
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# importFrom(R.utils, cat)
-# import(R.utils)
+# importFrom("R.utils", cat)
+import("R.utils")
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
