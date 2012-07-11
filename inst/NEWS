@@ -1,10 +1,10 @@
 Package: aroma.seq
 ==================
 
-Taku can edit!!!
-
 Version: 0.1.0 [2012-06-28]
-o Added FastqDataFile.
+o Added BowtieAlignment.
+o Added BamDataFile and BamDataSet.
+o Added FastqDataFile and FastqDataSet.
 o Added FastaReferenceFile.
 
 
