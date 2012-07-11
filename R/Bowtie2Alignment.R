@@ -282,7 +282,7 @@ setMethodS3("processOne", "Bowtie2Aligment", function(this, df, reference, ..., 
   args$verbose <- less(verbose, 5);
 
   # Call the aligner
-  bamPathname <- do.call("bowtie2", args=args);
+  bamPathname <- do.call(bowtie2, args=args);
 
   # Assert output
   dfOut <- BamFile(bamPathname);
@@ -298,6 +298,10 @@ setMethodS3("processOne", "Bowtie2Aligment", function(this, df, reference, ..., 
 
 ############################################################################
 # HISTORY:
+# 2012-07-11
+# o ROBUSTNESS: Now using do.call(bowtie2, ...) instead of 
+#   do.call("bowtie2", ...) so that R CMD check can validate it
+#   knowing that bowtie2() is a function.
 # 2012-06-28
 # o Created.
 ############################################################################ 

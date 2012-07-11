@@ -75,6 +75,8 @@
 \alias{setTags.Bowtie2Aligment}
 \alias{sort.BamDataFile}
 \alias{validate.BamDataSet}
+\alias{bowtie2}
+\alias{bowtie2.default}
 
 \description{
   This page contains aliases for all "non-documented" objects that

@@ -25,3 +25,4 @@ nbrOfTargets.BamDataFile process process.Bowtie2Aligment
 processOne processOne.Bowtie2Aligment readHeader
 readHeader.BamDataFile setTags.Bowtie2Aligment sort.BamDataFile
 validate.BamDataSet
+bowtie2 bowtie2.default
