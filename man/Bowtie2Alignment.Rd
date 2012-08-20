@@ -6,25 +6,25 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{Bowtie2Aligment}
+ \name{Bowtie2Alignment}
 \docType{class}
-\alias{Bowtie2Aligment}
+\alias{Bowtie2Alignment}
 
 
- \title{The Bowtie2Aligment class}
+ \title{The Bowtie2Alignment class}
 
  \description{
   Package:  aroma.seq \cr
-\bold{Class Bowtie2Aligment}\cr
+\bold{Class Bowtie2Alignment}\cr
 
 \code{\link[R.oo]{Object}}\cr
 \code{~~|}\cr
-\code{~~+--}\code{Bowtie2Aligment}\cr
+\code{~~+--}\code{Bowtie2Alignment}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
 
-public static class \bold{Bowtie2Aligment}\cr
+public static class \bold{Bowtie2Alignment}\cr
 extends \link[R.oo]{Object}\cr
 
 
@@ -32,7 +32,7 @@ extends \link[R.oo]{Object}\cr
   ...
  }
 
- \usage{Bowtie2Aligment(ds=NULL, reference=NULL, tags="*", ...)}
+ \usage{Bowtie2Alignment(ds=NULL, reference=NULL, tags="*", ...)}
 
  \arguments{
   \item{ds}{An \code{\link{FastqDataSet}}.}

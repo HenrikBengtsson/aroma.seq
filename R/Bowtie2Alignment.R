@@ -1,7 +1,7 @@
 ###########################################################################/**
-# @RdocClass Bowtie2Aligment
+# @RdocClass Bowtie2Alignment
 #
-# @title "The Bowtie2Aligment class"
+# @title "The Bowtie2Alignment class"
 #
 # \description{
 #  @classhierarchy
@@ -24,7 +24,7 @@
 #
 # \author{Henrik Bengtsson and Pierre Neuvial}
 #*/########################################################################### 
-setConstructorS3("Bowtie2Aligment", function(ds=NULL, reference=NULL, tags="*", ...) {
+setConstructorS3("Bowtie2Alignment", function(ds=NULL, reference=NULL, tags="*", ...) {
   # Validate arguments
   if (!is.null(ds)) {
     # Argument 'ds':
@@ -37,7 +37,7 @@ setConstructorS3("Bowtie2Aligment", function(ds=NULL, reference=NULL, tags="*", 
   # Arguments '...':
   args <- list(...);
 
-  this <- extend(Object(...), "Bowtie2Aligment",
+  this <- extend(Object(...), "Bowtie2Alignment",
     .ds = ds,
     .reference = reference,
     .tags = tags,
@@ -50,7 +50,7 @@ setConstructorS3("Bowtie2Aligment", function(ds=NULL, reference=NULL, tags="*", 
 })
 
 
-setMethodS3("as.character", "Bowtie2Aligment", function(x, ...) {
+setMethodS3("as.character", "Bowtie2Alignment", function(x, ...) {
   # To please R CMD check
   this <- x;
 
@@ -69,15 +69,15 @@ setMethodS3("as.character", "Bowtie2Aligment", function(x, ...) {
 }, private=TRUE)
 
 
-setMethodS3("getInputDataSet", "Bowtie2Aligment", function(this, ...) {
+setMethodS3("getInputDataSet", "Bowtie2Alignment", function(this, ...) {
   this$.ds;
 })
 
-setMethodS3("getReferenceFile", "Bowtie2Aligment", function(this, ...) {
+setMethodS3("getReferenceFile", "Bowtie2Alignment", function(this, ...) {
   this$.reference;
 })
 
-setMethodS3("getAsteriskTags", "Bowtie2Aligment", function(this, collapse=NULL, ...) {
+setMethodS3("getAsteriskTags", "Bowtie2Alignment", function(this, collapse=NULL, ...) {
   tags <- "bowtie2";
 
   if (!is.null(collapse)) {
@@ -88,17 +88,17 @@ setMethodS3("getAsteriskTags", "Bowtie2Aligment", function(this, collapse=NULL, 
 }, private=TRUE)
 
 
-setMethodS3("getName", "Bowtie2Aligment", function(this, ...) {
+setMethodS3("getName", "Bowtie2Alignment", function(this, ...) {
   ds <- getInputDataSet(this);
   getName(ds);
 })
 
-setMethodS3("getFlavor", "Bowtie2Aligment", function(this, ...) {
+setMethodS3("getFlavor", "Bowtie2Alignment", function(this, ...) {
   this$.flavor;
 }, protected=TRUE)
 
 
-setMethodS3("getTags", "Bowtie2Aligment", function(this, collapse=NULL, ...) {
+setMethodS3("getTags", "Bowtie2Alignment", function(this, collapse=NULL, ...) {
   # "Pass down" tags from input data set
   ds <- getInputDataSet(this);
   tags <- getTags(ds, collapse=collapse);
@@ -124,7 +124,7 @@ setMethodS3("getTags", "Bowtie2Aligment", function(this, collapse=NULL, ...) {
 })
 
 
-setMethodS3("setTags", "Bowtie2Aligment", function(this, tags="*", ...) {
+setMethodS3("setTags", "Bowtie2Alignment", function(this, tags="*", ...) {
   # Argument 'tags':
   if (!is.null(tags)) {
     tags <- Arguments$getCharacters(tags);
@@ -136,7 +136,7 @@ setMethodS3("setTags", "Bowtie2Aligment", function(this, tags="*", ...) {
 })
 
  
-setMethodS3("getFullName", "Bowtie2Aligment", function(this, ...) {
+setMethodS3("getFullName", "Bowtie2Alignment", function(this, ...) {
   name <- getName(this);
   tags <- getTags(this);
   fullname <- paste(c(name, tags), collapse=",");
@@ -145,11 +145,11 @@ setMethodS3("getFullName", "Bowtie2Aligment", function(this, ...) {
 })
 
 
-setMethodS3("getRootPath", "Bowtie2Aligment", function(this, ...) {
+setMethodS3("getRootPath", "Bowtie2Alignment", function(this, ...) {
   "bamData";
 })
 
-setMethodS3("getPath", "Bowtie2Aligment", function(this, create=TRUE, ...) {
+setMethodS3("getPath", "Bowtie2Alignment", function(this, create=TRUE, ...) {
   # Create the (sub-)directory tree for the data set
 
   # Root path
@@ -185,13 +185,13 @@ setMethodS3("getPath", "Bowtie2Aligment", function(this, create=TRUE, ...) {
 })
 
 
-setMethodS3("nbrOfFiles", "Bowtie2Aligment", function(this, ...) {
+setMethodS3("nbrOfFiles", "Bowtie2Alignment", function(this, ...) {
   ds <- getInputDataSet(this);
   nbrOfFiles(ds);
 })
 
 
-setMethodS3("getOutputDataSet", "Bowtie2Aligment", function(this, ...) {
+setMethodS3("getOutputDataSet", "Bowtie2Alignment", function(this, ...) {
   ds <- getInputDataSet(this);
   path <- getPath(this);
   res <- BamDataSet$byPath(path, ...);
@@ -201,7 +201,7 @@ setMethodS3("getOutputDataSet", "Bowtie2Aligment", function(this, ...) {
 })
 
 
-setMethodS3("process", "Bowtie2Aligment", function(this, ..., force=FALSE, verbose=FALSE) {
+setMethodS3("process", "Bowtie2Alignment", function(this, ..., force=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -262,7 +262,7 @@ setMethodS3("process", "Bowtie2Aligment", function(this, ..., force=FALSE, verbo
   invisible(res);
 })
 
-setMethodS3("processOne", "Bowtie2Aligment", function(this, df, reference, ..., verbose=FALSE) {
+setMethodS3("processOne", "Bowtie2Alignment", function(this, df, reference, ..., verbose=FALSE) {
   # Argument 'df':
   df <- Arguments$getInstanceOf(df, "FastqDataFile");
 
@@ -300,6 +300,8 @@ setMethodS3("processOne", "Bowtie2Aligment", function(this, df, reference, ..., 
 
 ############################################################################
 # HISTORY:
+# 2012-08-20
+# o Renamed Bowtie2Aligment to Bowtie2Alignment.
 # 2012-07-11
 # o ROBUSTNESS: Now using do.call(bowtie2, ...) instead of 
 #   do.call("bowtie2", ...) so that R CMD check can validate it
