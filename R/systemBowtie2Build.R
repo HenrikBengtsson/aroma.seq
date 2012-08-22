@@ -1,94 +1,96 @@
-## systemBowtie2Build("path/to/lambda_virus.fa", "lambda_virus");
-## - low-level function called by bowtie2Build()
-##
-##  systemBowtie2Build("path/to/lambda_virus.fa", "lambda_virus");
-##  => calls =>
-##  system("bowtie2-build path/to/lambda_virus.fa lambda_virus");
+## source("systemBowtie2Build.R")
 
-setMethodS3("systemBowtie2Build", "default", function(inPathname, outPath=NULL, name=NULL, ..., overwrite=FALSE, verbose=FALSE) {
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Argument 'inPathname':
-  inPathname <- Arguments$getReadablePathname(inPathname);
+bDebugSystemBowtie2Build <- TRUE
+if (bDebugSystemBowtie2Build)
+{
+    library(R.oo)
+    library(R.filesets)
+    library(R.utils)
+}
 
-  # Argument 'outPath':
-  if (is.null(outPath)) {
-    outPath <- dirname(inPathname);   # e.g. /path/to
-  }
-  outPath <- Arguments$getWritablePath(outPath);
+setMethodS3("systemBowtie2Build", "default",
+            function(
 
-  # Argument 'name':
-  if (is.null(name)) {
-    inFilename <- basename(inPathname);   # e.g. lambda_virus.fa
-    name <- gsub("[.][^.]$", ".bam", inFilename);  # e.g. lambda_virus
-  }
-  name <- Arguments$getCharacter(name);
+            ## Required args
+            bin="bowtie2-build",     ## full pathname to bowtie2-build executable
+            referenceIn,             ## comma-separated string = list of files with ref sequences
+            bt2IndexBase,            ## write .bt2 data to files with this dir/basename
+            ## *** Bowtie 2 indexes work only with v2 (not v1).  Likewise for v1 indexes. ***
 
-  # Additional arguments
-  args <- list(...);
+            ## Options:
+            f = NULL,               ## reference files are Fasta (default)
+            c = NULL,               ## reference sequences given on cmd line (as <seq_in>)
+            a = NULL,               ## disable automatic -p/--bmax/--dcv memory-fitting
+            noauto = NULL,          ## disable automatic -p/--bmax/--dcv memory-fitting
+            p = NULL,               ## use packed strings internally; slower, uses less mem
+            packed = NULL,          ## use packed strings internally; slower, uses less mem
+            bmax = NULL,            ## <int> = max bucket sz for blockwise suffix-array builder
+            bmaxdivn = NULL,        ## <int> = max bucket sz as divisor of ref len (default: 4)
+            dcv = NULL,             ## <int> = diff-cover period for blockwise (default: 1024)
+            nodc = NULL,            ## disable diff-cover (algorithm becomes quadratic)
+            r = NULL,               ## don't build .3/.4.bt2 (packed reference) portion
+            noref = NULL,           ## don't build .3/.4.bt2 (packed reference) portion
+            three = NULL,           ## just build .3/.4.bt2 (packed reference) portion  ## IS THIS ALLOWED?
+            ## - The actual bowtie2-build switch is '-3'
+            justref = NULL,         ## just build .3/.4.bt2 (packed reference) portion
+            o = NULL,               ## <int>: SA is sampled every 2^offRate BWT chars (default: 5)
+            offrate = NULL,         ## <int>: SA is sampled every 2^offRate BWT chars (default: 5)
+            t = NULL,               ## <int>: # of chars consumed in initial lookup (default: 10)
+            ftabchars = NULL,       ## <int>: # of chars consumed in initial lookup (default: 10)
+            seed = NULL,            ## <int>: ## seed for random number generator
+            q = NULL,               ## verbose output (for debugging)
+            quiet = NULL,           ## verbose output (for debugging)
+            h = NULL,               ## print detailed description of tool and its options
+            help = NULL,            ## print detailed description of tool and its options
+            usage = NULL,           ## print this usage message
+            version = NULL,         ## print version information and quit
+            ...,
+            overwrite=FALSE,
+            verbose=FALSE
+            )
+        {
+            ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+            argsList <- list(...)  ## This automatically leaves out the NULL args
+            if (length(argsList) > 0)
+            {
+                switchVals <- unlist(argsList)
+                switchNames <- names(argsList)
+                hyphenVec <- sapply(switchNames, function(x) {ifelse(nchar(x) == 1, "-", "--")})
+                cmdSwitches <- paste(paste(hyphenVec, switchNames, sep=""), switchVals, collapse=" ")
+            } else {
+                cmdSwitches <- ""
+            }
 
-  # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
-  if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
-  }
+            binWithArgs <- sprintf("%s", bin)
+            binWithArgs <- sprintf("%s %s", binWithArgs, cmdSwitches)
+            binWithArgs <- sprintf("%s %s", binWithArgs, referenceIn)
+            binWithArgs <- sprintf("%s %s", binWithArgs, bt2IndexBase)
 
-  verbose && enter(verbose, "Running bowtie2-build");
-  verbose && cat(verbose, "Input pathname: ", inPathname);
-  verbose && cat(verbose, "Arguments:");
-  verbose && str(verbose, args);
+            ## cmd <- sprintf("%s", binWithArgs)  ## In emacs/ess, shQuote() version with single quotes added does not run
+            cmd <- binWithArgs
 
+            verbose && cat(verbose, "System call: ", cmd)
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Locate external software
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Locating external software");
-  command <- "bowtie2-build";
-  verbose && cat(verbose, "Command: ", command)
+            ##
+            ## ADDITIONAL TESTING FOR BOWTIE2-BUILD IN HERE?
+            ##
 
-  bin <- Sys.which(command);
-  verbose && cat(verbose, "Located pathname: ", bin)
+            if (bDebugSystemBowtie2Build)
+            {
+                res <- NULL
+            } else {
+                res <- system(cmd);
+            }
 
-  # Assert existence
-  if (identical(bin, "") || !isFile(bin)) {
-    throw("Failed to located external software (via the system PATH): ", command);
-  }
-  verbose && exit(verbose);
-
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Call external software
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Calling external software");
-
-  # Argument to bowtie2-index (maybe)
-  outPrefix <- file.path(outPath, name); # e.g. path/to/lambda_virus
-
-  cmdSwitches <- args$cmdSwitches
-  ## binWithArgs <- paste(bin, cmdSwitches, inPathname, name)  ## This works
-  binWithArgs <- paste(bin, cmdSwitches, inPathname, outPrefix)
-
-
-  ## cmd <- sprintf("%s", shQuote(binWithArgs));
-  cmd <- sprintf("%s", binWithArgs)  ## In emacs/ess, shQuote() version with single quotes added does not run
-
-
-  verbose && cat(verbose, "System call: ", cmd)
-
-  res <- system(cmd, ...);
-
-  verbose && exit(verbose);
-
-  ## verbose && exit(verbose);
-
-  invisible(res);
-}) # bowtie2-build()
-
+            return(res)
+        })
 
 ############################################################################
 # HISTORY:
+# 2012-08-22
+# o TT:  First implementation of low-level system wrapper, including all bowtie2-build switches; not tested
+# 2012-08-21
+# o TT:  Implemented working version (turns out this was closer in intent to bowtie2Build.R
 # 2012-08-20
 # o HB:  Created systemBowtie2Build stub
 ############################################################################

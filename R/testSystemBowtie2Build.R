@@ -1,8 +1,11 @@
 ## source("test.R")
+# - This is for low-level testing only
 
 ## Tip:  If using emacs, start it up using
 ## 'bash -c emacs &' from a cmd line
-
+## Usage:
+## library(aroma.seq)
+## testSystemBowtie2Build()  should work
 
 testSystemBowtie2Build <- function(
                           OutPath = "./tmp",
@@ -14,11 +17,13 @@ testSystemBowtie2Build <- function(
     library(R.utils)
     ## source("systemBowtie2Build.R")
 
-    args <- list(...)
-
+    ## Hack to get
     Bt2Bin <- Sys.which("bowtie2")
     Bt2Home <- getParent(Bt2Bin)
     InPathName <- filePath(Bt2Home, "example/reference/lambda_virus.fa", sep="")
+
+    ## In the real aroma workflow, the following should already be done in bowtie2Build.R
+    ##  (i.e. "outPath <- Arguments$getWritablePath(outPath);")
     if (!file.exists(OutPath))
     {
         mkdirs(OutPath)
