@@ -11,7 +11,7 @@ if (bDebugSystemBowtie2Build)
 setMethodS3("systemBowtie2Build", "default",
             function(
 
-            ## Required args
+            ## Required args for bowtie2 index builder
             bin="bowtie2-build",     ## full pathname to bowtie2-build executable
             referenceIn,             ## comma-separated string = list of files with ref sequences
             bt2IndexBase,            ## write .bt2 data to files with this dir/basename
@@ -50,11 +50,21 @@ setMethodS3("systemBowtie2Build", "default",
             )
         {
             ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-            argsList <- list(...)  ## This automatically leaves out the NULL args
-            if (length(argsList) > 0)
+            argsList <- as.list(sys.call()) ## This automatically leaves out the NULL args
+            argsList <- argsList[-1]  ## remove the function name
+
+            if (length(argsList) > 0)  ## [ always true as it stands ]
             {
-                switchVals <- unlist(argsList)
+                switchVals <- unlist(argsList)  ## not used
                 switchNames <- names(argsList)
+                indsDrop <- which(switchNames=="bt2IndexBase"|switchNames=="referenceIn")  ## [ must be a shorter way to do this ]
+                indsDrop <- c(indsDrop, which(switchNames=="overwrite"|switchNames=="verbose"))  ## non-bowtie2 args
+                if (length(indsDrop) > 0)
+                {
+                    switchNames <- switchNames[-indsDrop]
+                    switchVals <- switchVals[-indsDrop]
+                }
+                switchNames <- sub("^three$", "3", switchNames)  ## fix the one numerical option that can't be passed as is
                 hyphenVec <- sapply(switchNames, function(x) {ifelse(nchar(x) == 1, "-", "--")})
                 cmdSwitches <- paste(paste(hyphenVec, switchNames, sep=""), switchVals, collapse=" ")
             } else {
@@ -69,6 +79,13 @@ setMethodS3("systemBowtie2Build", "default",
             ## cmd <- sprintf("%s", binWithArgs)  ## In emacs/ess, shQuote() version with single quotes added does not run
             cmd <- binWithArgs
 
+            verbose <- Arguments$getVerbose(verbose);
+            if (verbose) {
+                pushState(verbose);
+                on.exit(popState(verbose));
+            }
+
+            verbose && enter(verbose, "Running bowtie2-build");
             verbose && cat(verbose, "System call: ", cmd)
 
             ##
@@ -80,6 +97,10 @@ setMethodS3("systemBowtie2Build", "default",
                 res <- NULL
             } else {
                 res <- system(cmd);
+            }
+
+            if (verbose) {
+                verbose && exit(verbose);
             }
 
             return(res)
