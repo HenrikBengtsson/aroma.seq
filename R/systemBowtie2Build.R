@@ -8,16 +8,17 @@ if (bDebugSystemBowtie2Build)
     library(R.utils)
 }
 
+## Usage:  systemBowtie2Build referenceIn="" bt2IndexBase="" f=1 c=1 ...
+
 setMethodS3("systemBowtie2Build", "default",
             function(
 
             ## Required args for bowtie2 index builder
-            bin="bowtie2-build",     ## full pathname to bowtie2-build executable
             referenceIn,             ## comma-separated string = list of files with ref sequences
             bt2IndexBase,            ## write .bt2 data to files with this dir/basename
             ## *** Bowtie 2 indexes work only with v2 (not v1).  Likewise for v1 indexes. ***
 
-            ## Options:
+            ## Unsupported options [ flags should be binary (boolean)-valued; check the integer-valued ones? ]
             f = NULL,               ## reference files are Fasta (default)
             c = NULL,               ## reference sequences given on cmd line (as <seq_in>)
             a = NULL,               ## disable automatic -p/--bmax/--dcv memory-fitting
@@ -30,7 +31,8 @@ setMethodS3("systemBowtie2Build", "default",
             nodc = NULL,            ## disable diff-cover (algorithm becomes quadratic)
             r = NULL,               ## don't build .3/.4.bt2 (packed reference) portion
             noref = NULL,           ## don't build .3/.4.bt2 (packed reference) portion
-            three = NULL,           ## just build .3/.4.bt2 (packed reference) portion  ## IS THIS ALLOWED?
+            ## three = NULL,           ## just build .3/.4.bt2 (packed reference) portion  ## IS THIS ALLOWED?
+            "3" = NULL,           ## just build .3/.4.bt2 (packed reference) portion  ## IS THIS ALLOWED?
             ## - The actual bowtie2-build switch is '-3'
             justref = NULL,         ## just build .3/.4.bt2 (packed reference) portion
             o = NULL,               ## <int>: SA is sampled every 2^offRate BWT chars (default: 5)
@@ -44,9 +46,10 @@ setMethodS3("systemBowtie2Build", "default",
             help = NULL,            ## print detailed description of tool and its options
             usage = NULL,           ## print this usage message
             version = NULL,         ## print version information and quit
-            ...,
-            overwrite=FALSE,
-            verbose=FALSE
+            ## overwrite=FALSE, ## Put these args one level up, in bowtie2Build
+            ## verbose=FALSE
+            bin="bowtie2-build",     ## full pathname to bowtie2-build executable
+            ...
             )
         {
             ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -58,7 +61,8 @@ setMethodS3("systemBowtie2Build", "default",
                 switchVals <- unlist(argsList)  ## not used
                 switchNames <- names(argsList)
                 indsDrop <- which(switchNames=="bt2IndexBase"|switchNames=="referenceIn")  ## [ must be a shorter way to do this ]
-                indsDrop <- c(indsDrop, which(switchNames=="overwrite"|switchNames=="verbose"))  ## non-bowtie2 args
+                ## [ Not needed if move these to one level up in the code ]
+                ## indsDrop <- c(indsDrop, which(switchNames=="overwrite"|switchNames=="verbose"))  ## non-bowtie2 args
                 if (length(indsDrop) > 0)
                 {
                     switchNames <- switchNames[-indsDrop]
@@ -67,6 +71,9 @@ setMethodS3("systemBowtie2Build", "default",
                 switchNames <- sub("^three$", "3", switchNames)  ## fix the one numerical option that can't be passed as is
                 hyphenVec <- sapply(switchNames, function(x) {ifelse(nchar(x) == 1, "-", "--")})
                 cmdSwitches <- paste(paste(hyphenVec, switchNames, sep=""), switchVals, collapse=" ")
+
+                ## [ This is not correct yet - some switches take on (integer) values ]
+
             } else {
                 cmdSwitches <- ""
             }
