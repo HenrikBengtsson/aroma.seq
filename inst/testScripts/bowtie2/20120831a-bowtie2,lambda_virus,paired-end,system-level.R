@@ -31,7 +31,7 @@ print(res);
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Paired-end alignment
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-res <- systemBowtie2("-x"="lambda_virus", "-1"="example/reads/reads_1.fq", "-2"="example/reads/reads_2.fq", "-S"="eg2.sam");
+res <- systemBowtie2(x="lambda_virus", "1"="example/reads/reads_1.fq", "2"="example/reads/reads_2.fq", S="eg2.sam");
 print(res);
  
 
