@@ -31,8 +31,9 @@ setMethodS3("systemBowtie2Build", "default",
             nodc = NULL,            ## disable diff-cover (algorithm becomes quadratic)
             r = NULL,               ## don't build .3/.4.bt2 (packed reference) portion
             noref = NULL,           ## don't build .3/.4.bt2 (packed reference) portion
-            three = NULL,           ## just build .3/.4.bt2 (packed reference) portion  ## IS THIS ALLOWED?
+##            three = NULL,           ## just build .3/.4.bt2 (packed reference) portion  ## IS THIS ALLOWED?
             ## - The actual bowtie2-build switch is '-3'
+            `3` = NULL, 
             justref = NULL,         ## just build .3/.4.bt2 (packed reference) portion
             o = NULL,               ## <int>: SA is sampled every 2^offRate BWT chars (default: 5)
             offrate = NULL,         ## <int>: SA is sampled every 2^offRate BWT chars (default: 5)
