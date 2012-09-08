@@ -22,6 +22,17 @@
    TBA.
  }
 
+ \section{External software requirements}{
+   The following external tools utilized by this package:
+   \itemize{
+     \item bowtie2: \url{http://bowtie-bio.sourceforge.net/bowtie2/}
+     \item BWA: \url{http://bio-bwa.sourceforge.net/}
+     \item samtools: \url{http://samtools.sourceforge.net/}
+   }
+
+   Some of the external tools are available for Windows from [1].
+ }
+
  \section{Installation and updates}{
    TBA.
  }
@@ -49,6 +60,7 @@
  }
 
  \references{
-   TBA
+   [1] \emph{BOW - Bioinformatics On Windows},
+       \url{http://bow.codeplex.com/}.\cr
  }
 \keyword{package}

@@ -26,3 +26,14 @@ processOne processOne.Bowtie2Aligment readHeader
 readHeader.BamDataFile setTags.Bowtie2Aligment sort.BamDataFile
 validate.BamDataSet
 bowtie2 bowtie2.default
+as.character.Bowtie2Alignment bDebugSystemBowtie2Build
+bowtie2Build bowtie2Build.default
+getAsteriskTags.Bowtie2Alignment getFlavor.Bowtie2Alignment
+getFullName.Bowtie2Alignment getInputDataSet.Bowtie2Alignment
+getName.Bowtie2Alignment getOutputDataSet.Bowtie2Alignment
+getPath.Bowtie2Alignment getReferenceFile.Bowtie2Alignment
+getRootPath.Bowtie2Alignment getTags.Bowtie2Alignment
+nbrOfFiles.Bowtie2Alignment process.Bowtie2Alignment
+processOne.Bowtie2Alignment setTags.Bowtie2Alignment
+systemBowtie2 systemBowtie2.default systemBowtie2Build
+systemBowtie2Build.default testSystemBowtie2Build

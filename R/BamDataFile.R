@@ -83,7 +83,11 @@ setMethodS3("isSorted", "BamDataFile", function(this, ...) {
 })
 
 
-setMethodS3("sort", "BamDataFile", function(this, force=FALSE, ...) {
+# Argument '...' must be 2nd to match the generic base::sort() function.
+setMethodS3("sort", "BamDataFile", function(x, ..., force=FALSE) {
+  # To please R CMD check
+  this <- x;
+
   # Nothing todo?
   if (!force && isSorted(this)) {
     return(this);
