@@ -20,51 +20,26 @@
 ## - see [] comments below
 ## ]
 
-setMethodS3("bowtie2Build", "default", function(inPathname, outPath=NULL, outName=NULL, ..., overwrite=FALSE, verbose=FALSE) {
+setMethodS3("bowtie2Build", "default", function(inPathnames, outPath=NULL, outName=NULL,
+                                                cmdSwitchList,
+                                                ..., overwrite=FALSE, verbose=FALSE, command="bowtie2-build") {
+
     ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     ## Validate arguments
     ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    ## Argument 'inPathname':
-    ## inPathname <- Arguments$getReadablePathname(inPathname);
-
-    ## Check if inPathname is readable
-    if (is.list(inPathname)) {
-        tmp <- sapply(inPathname, function(x)
-                  {
-                      tryCatch(Arguments$getReadablePathname(x), error=function(e) {e}, warning=function(w) {})
-                      ## [ Q: Does this check if x is a *file*, not a dir? ]
-                  })
-        if (sum(tmp)==0) {throw(paste(inPathname, "contains unreadable file(s)"))}
-    } else {
-        ## Return error msg but leave out warnings for now
-        tryCatch(inPathname <- Arguments$getReadablePathname(inPathname), error=function(e) {e}, warning=function(w) {})
-    }
+    inPathnames <- sapply(inPathnames, Arguments$getReadablePathname(x))
+    inPathsStr <- paste(inPathnames, collapse=",")   ## [ CHECK THIS ]
 
     ## Check outPath
     if (is.null(outPath)) {
-        ifelse (is.list(inPathname),
-                outPath <- dirname(inPathname[[1]]),  ## [ hack ]
-                outPath <- dirname(inPathname)  ## e.g. /path/to
-                )
+        outPath <- dirname(inPathnames[1])
     }
     outPath <- Arguments$getWritablePath(outPath);
-
-    inFiles <- paste(inPathname, collapse=",")
-
-    ## Argument 'outName':
-    if (is.null(outName)) {
-        ## inFilename <- basename(inPathname);   ## e.g. lambda_virus.fa
-        ifelse(is.list(inPathname),
-               inFilename <- basename(inPathname[[1]]),
-               inFilename <- basename(inPathname) ## e.g. lambda_virus.fa
-               )
-        ## outName <- gsub("[.][^.]$", ".bam", inFilename);  ## [ Uh, .bam?  Where did this come from? ]
-        outName <- gsub("\\.fa$", "", inFilename);  ## e.g. lambda_virus
-        ## [ NEED TO TEST: Have to make sure this does not overwrite the input files! ]
+    if (is.null(outPath)) {
+        outName <- gsub("\\.fa$", "", basename(inPathnames[1]))   ## e.g. lambda_virus
     }
-    outName <- Arguments$getCharacter(outName);
-    ## [ Should this be Arguments$getWriteablePathname() ? ]
-
+    outPrefix <- file.path(outPath, outName); ## e.g. path/to/lambda_virus
+    outPrefix <- Arguments$getWriteablePathname(outPrefix, mustNotExist=T)
 
     ## Additional arguments
     args <- list(...);
@@ -76,17 +51,14 @@ setMethodS3("bowtie2Build", "default", function(inPathname, outPath=NULL, outNam
         on.exit(popState(verbose));   ## [ << what is this ]
     }
 
-    verbose && enter(verbose, "Running bowtie2-build");
+    verbose && enter(verbose, paste("Running", command));
     verbose && cat(verbose, "Input pathname: ", inPathname);  ## [ FIX: inPathname can be a list ]
     verbose && cat(verbose, "Arguments:");
     verbose && str(verbose, args);
 
-
-    ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     ## Locate external software
     ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     verbose && enter(verbose, "Locating external software");
-    command <- "bowtie2-build";
     verbose && cat(verbose, "Command: ", command)
 
     bin <- Sys.which(command);
@@ -104,21 +76,8 @@ setMethodS3("bowtie2Build", "default", function(inPathname, outPath=NULL, outNam
     ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     verbose && enter(verbose, "Calling external software");
 
-    ## Argument to bowtie2-index (maybe)
-    outPrefix <- file.path(outPath, outName); ## e.g. path/to/lambda_virus
+    systemBowtie2Build(inPathname, outPrefix, cmdSwitchList)
 
-    cmdSwitches <- args$cmdSwitches
-    ## binWithArgs <- paste(bin, cmdSwitches, inPathname, outName)
-    binWithArgs <- paste(bin, cmdSwitches, inFiles, outName)
-
-    ## cmd <- sprintf("%s", shQuote(binWithArgs));
-    cmd <- sprintf("%s", binWithArgs)  ## In emacs/ess, shQuote() version with single quotes added does not run
-
-    verbose && cat(verbose, "System call: ", cmd)
-
-
-
-    res <- system(cmd, ...);
     verbose && exit(verbose);
     verbose && exit(verbose);
     invisible(res);
@@ -128,6 +87,8 @@ setMethodS3("bowtie2Build", "default", function(inPathname, outPath=NULL, outNam
 ############################################################################
 # HISTORY:
 # 2012-07-18
-# o Created bowtie2-build() stub.
+# o Created bowtie2-build() stub. (HB)
+# 2012-09-14
+# o First real draft of "level 2" code (TAT)
 ############################################################################
 

@@ -19,33 +19,35 @@ setMethodS3("systemBowtie2Build", "default",
             ## *** Bowtie 2 indexes work only with v2 (not v1).  Likewise for v1 indexes. ***
 
             ## Unsupported options [ flags should be binary (boolean)-valued; check the integer-valued ones? ]
-            f = NULL,               ## reference files are Fasta (default)
-            c = NULL,               ## reference sequences given on cmd line (as <seq_in>)
-            a = NULL,               ## disable automatic -p/--bmax/--dcv memory-fitting
-            noauto = NULL,          ## disable automatic -p/--bmax/--dcv memory-fitting
-            p = NULL,               ## use packed strings internally; slower, uses less mem
-            packed = NULL,          ## use packed strings internally; slower, uses less mem
+            cmdSwitchList=list(
+            f = FALSE,               ## reference files are Fasta (default)
+            c = FALSE,               ## reference sequences given on cmd line (as <seq_in>)
+            a = FALSE,               ## disable automatic -p/--bmax/--dcv memory-fitting
+            noauto = FALSE,          ## disable automatic -p/--bmax/--dcv memory-fitting
+            p = FALSE,               ## use packed strings internally; slower, uses less mem
+            packed = FALSE,          ## use packed strings internally; slower, uses less mem
             bmax = NULL,            ## <int> = max bucket sz for blockwise suffix-array builder
             bmaxdivn = NULL,        ## <int> = max bucket sz as divisor of ref len (default: 4)
             dcv = NULL,             ## <int> = diff-cover period for blockwise (default: 1024)
-            nodc = NULL,            ## disable diff-cover (algorithm becomes quadratic)
-            r = NULL,               ## don't build .3/.4.bt2 (packed reference) portion
-            noref = NULL,           ## don't build .3/.4.bt2 (packed reference) portion
-##            three = NULL,           ## just build .3/.4.bt2 (packed reference) portion  ## IS THIS ALLOWED?
+            nodc = FALSE,            ## disable diff-cover (algorithm becomes quadratic)
+            r = FALSE,               ## don't build .3/.4.bt2 (packed reference) portion
+            noref = FALSE,           ## don't build .3/.4.bt2 (packed reference) portion
+##            three = FALSE,           ## just build .3/.4.bt2 (packed reference) portion  ## IS THIS ALLOWED?
             ## - The actual bowtie2-build switch is '-3'
-            `3` = NULL, 
-            justref = NULL,         ## just build .3/.4.bt2 (packed reference) portion
+            `3` = FALSE,
+            justref = FALSE,         ## just build .3/.4.bt2 (packed reference) portion
             o = NULL,               ## <int>: SA is sampled every 2^offRate BWT chars (default: 5)
             offrate = NULL,         ## <int>: SA is sampled every 2^offRate BWT chars (default: 5)
             t = NULL,               ## <int>: # of chars consumed in initial lookup (default: 10)
             ftabchars = NULL,       ## <int>: # of chars consumed in initial lookup (default: 10)
             seed = NULL,            ## <int>: ## seed for random number generator
-            q = NULL,               ## verbose output (for debugging)
-            quiet = NULL,           ## verbose output (for debugging)
-            h = NULL,               ## print detailed description of tool and its options
-            help = NULL,            ## print detailed description of tool and its options
-            usage = NULL,           ## print this usage message
-            version = NULL,         ## print version information and quit
+            q = FALSE,               ## verbose output (for debugging)
+            quiet = FALSE,           ## verbose output (for debugging)
+            h = FALSE,               ## print detailed description of tool and its options
+            help = FALSE,            ## print detailed description of tool and its options
+            usage = FALSE,           ## print this usage message
+            version = FALSE         ## print version information and quit
+            ),
             ## overwrite=FALSE, ## Put these args one level up, in bowtie2Build
             ## verbose=FALSE
             bin="bowtie2-build",     ## full pathname to bowtie2-build executable
@@ -55,6 +57,44 @@ setMethodS3("systemBowtie2Build", "default",
             ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
             argsList <- as.list(sys.call()) ## This automatically leaves out the NULL args
             argsList <- argsList[-1]  ## remove the function name
+
+            ## ############################################
+            ## ## Dummy test code
+            ## if (F) {
+            ## cmdSwitchList$q <- TRUE
+            ## cmdSwitchList$version <- TRUE
+            ## cmdSwitchList$t <- 5
+            ## }
+            ##
+            ## cmdSwitchList <- cmdSwitchList[!sapply(cmdSwitchList, is.null)]
+            ## cmdSwitchLogical <- cmdSwitchList[sapply(cmdSwitchList, function(x) {identical(x, TRUE)})]
+            ## ## cmdSwitchVec <- sapply(cmdSwitchList, function(x) {x})
+            ##
+            ##
+            ## if (F) { ## DEPRECATED
+            ## optionVals <- unlist(cmdSwitchList)  ## NULL's automatically removed; [ THIS IS BAD BECAUSE VECTOR HAS TO BE SET TO A SINGLE TYPE! ]
+            ## optionNames <- names(optionVals)
+            ## optionsLogical <- optionNames[sapply(optionVals, function(x) {identical(x, TRUE)})]
+            ## optionsLogical <- sapply(optionNames[sapply(optionVals, function(x) {identical(x, TRUE)})])
+            ## if (length(optionsLogical) > 0)
+            ## {
+            ## hyphenVec <- sapply(optionsLogical, function(x)
+            ## {
+            ## ifelse(nchar(x) == 1, "-", "--")
+            ## })
+            ## optionsLogicalStr <- paste(paste(hyphenVec, optionsLogical, sep=""))
+            ## } else {
+            ## optionsLogicalStr <- NULL
+            ## }
+            ##
+            ##
+            ## optionsNonLogic <- optionNames[!is.logical(optionVals)]  ## something like this...
+            ## ##strList <- lapply(1:length(optionVals), function(x)
+            ## ##              {
+            ## optionsStr <- paste(paste("-", namesSet))
+            ## }
+            ## ############################################
+
 
             if (length(argsList) > 0)  ## [ always true as it stands ]
             {
