@@ -46,10 +46,8 @@ setMethodS3("systemBowtie2Build", "default",
             usage = FALSE,           ## print this usage message
             version = FALSE          ## print version information and quit
             ),
-
-            ## full pathname to bowtie2-build executable
-            bin="bowtie2-build",
-            ...
+            ...,
+            bin="bowtie2-build",     ## full pathname to bowtie2-build executable
             )
         {
             ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

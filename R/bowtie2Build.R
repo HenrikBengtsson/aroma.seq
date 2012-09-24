@@ -21,28 +21,29 @@
 ## ]
 
 setMethodS3("bowtie2Build", "default", function(inPathnames, outPath=NULL, outName=NULL,
-                                                cmdSwitchList,
-                                                ..., overwrite=FALSE, verbose=FALSE, command="bowtie2-build") {
+                                                optionsList, ...,
+                                                overwrite=FALSE, verbose=FALSE, command="bowtie2-build") {
 
     ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     ## Validate arguments
     ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     inPathnames <- sapply(inPathnames, Arguments$getReadablePathname(x))
-    inPathsStr <- paste(inPathnames, collapse=",")   ## [ CHECK THIS ]
+    inPathsStr <- paste(inPathnames, collapse=",")   ## bowtie2 wants a comma-delimited string
 
-    ## Check outPath
+    ## Default for outPath is the inPath
     if (is.null(outPath)) {
         outPath <- dirname(inPathnames[1])
     }
     outPath <- Arguments$getWritablePath(outPath);
     if (is.null(outPath)) {
         outName <- gsub("\\.fa$", "", basename(inPathnames[1]))   ## e.g. lambda_virus
+        ## - Using the first infile may be confusing, if e.g. it is a subscripted name like "_1"; oh well
     }
     outPrefix <- file.path(outPath, outName); ## e.g. path/to/lambda_virus
     outPrefix <- Arguments$getWriteablePathname(outPrefix, mustNotExist=T)
 
     ## Additional arguments
-    args <- list(...);
+    args <- list(...);  ## Not used here; just passed along
 
     ## Argument 'verbose':
     verbose <- Arguments$getVerbose(verbose);
@@ -50,9 +51,8 @@ setMethodS3("bowtie2Build", "default", function(inPathnames, outPath=NULL, outNa
         pushState(verbose);
         on.exit(popState(verbose));   ## [ << what is this ]
     }
-
     verbose && enter(verbose, paste("Running", command));
-    verbose && cat(verbose, "Input pathname: ", inPathname);  ## [ FIX: inPathname can be a list ]
+    verbose && cat(verbose, "Input pathnames: ", inPathsStr);
     verbose && cat(verbose, "Arguments:");
     verbose && str(verbose, args);
 
@@ -60,7 +60,6 @@ setMethodS3("bowtie2Build", "default", function(inPathnames, outPath=NULL, outNa
     ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     verbose && enter(verbose, "Locating external software");
     verbose && cat(verbose, "Command: ", command)
-
     bin <- Sys.which(command);
     verbose && cat(verbose, "Located pathname: ", bin)
 
@@ -70,13 +69,12 @@ setMethodS3("bowtie2Build", "default", function(inPathnames, outPath=NULL, outNa
     }
     verbose && exit(verbose);
 
-
     ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     ## Call external software
     ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     verbose && enter(verbose, "Calling external software");
 
-    systemBowtie2Build(inPathname, outPrefix, cmdSwitchList)
+    systemBowtie2Build(inPathsStr, outPrefix, optionsList, ..., bin=bin)
 
     verbose && exit(verbose);
     verbose && exit(verbose);
