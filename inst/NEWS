@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.1.6 [2012-09-24]
+o Added low-level support for BWA.
+
+
 Version: 0.1.5 [2012-08-31]
 o TESTING: Added some test scripts for running bowtie2 at
   the shell and at the system level.
