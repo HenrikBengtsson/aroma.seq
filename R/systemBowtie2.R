@@ -4,13 +4,14 @@
 
 setMethodS3("systemBowtie2", "default",
             function(
-            ## -x ## <bt2-idx> ## Index filename prefix (minus trailing .X.bt2).
-            ## -1 ## <m1>      ## Files with #1 mates, paired with files in <m2>; could be gzip'ed (extension: .gz) or bzip2'ed (extension: .bz2).
-            ## -2 ## <m2>      ## Files with #2 mates, paired with files in <m1>; could be gzip'ed (extension: .gz) or bzip2'ed (extension: .bz2).
-            ## -U ## <r>       ## Files with unpaired reads; could be gzip'ed (extension: .gz) or bzip2'ed (extension: .bz2).
-            ## ##  NB: <m1>, <m2>, <r> can be comma-separated lists (no whitespace) and can be specified many times.  E.g. '-U file1.fq,file2.fq -U file3.fq'.
-            ## -S ## <sam>     ## File for SAM output (default: stdout)
-
+            optionsList=list(
+            x=NULL,     ## <bt2-idx> ## Index filename prefix (minus trailing .X.bt2).
+            `1`=NULL,   ## <m1>      ## Files with #1 mates, paired with files in <m2>; could be gzip'ed (extension: .gz) or bzip2'ed (extension: .bz2).
+            `2`=NULL,   ## <m2>      ## Files with #2 mates, paired with files in <m1>; could be gzip'ed (extension: .gz) or bzip2'ed (extension: .bz2).
+            U=NULL,     ## <r>       ## Files with unpaired reads; could be gzip'ed (extension: .gz) or bzip2'ed (extension: .bz2).
+            ##  NB: <m1>, <m2>, <r> can be comma-separated lists (no whitespace) and can be specified many times.  E.g. '-U file1.fq,file2.fq -U file3.fq'.
+            S=NULL, ## <sam>     ## File for SAM output (default: stdout)
+            ),
 
             ## ## Options (defaults in parentheses):
 
@@ -118,6 +119,8 @@ setMethodS3("systemBowtie2", "default",
             ## --seed <int>       ## seed for random number generator (0)
             ## --version          ## print version information and quit
             ## -h/--help          ## print this usage message
+            bin="bowtie2"      ## full pathname to bowtie2 executable
+            ...,
             )
         {
             ## ...

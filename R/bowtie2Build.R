@@ -11,17 +11,11 @@
 #  system("bowtie2-build path/to/lambda_virus.fa lambda_virus");
 #
 
-## [
-## Q's on the plate:
-## - Arg list for bowtie2Build.R: inPathname can be pathname or list?
-## - How to do file checking / error handling in bowtie2Build.R?  Does Arguments$getReadablePathname do a stop()?
-## - Indent convention = 2 spaces?
-## - use dirname instead of getParent?
-## - see [] comments below
-## ]
-
-setMethodS3("bowtie2Build", "default", function(inPathnames, outPath=NULL, outName=NULL,
-                                                optionsList, ...,
+setMethodS3("bowtie2Build", "default", function(inPathnames,   ## vector of filenames
+                                                outPath=NULL,  ## path to index
+                                                outName=NULL,  ## basename of index
+                                                optionsList,   ## list of bowtie2 options, for power users
+                                                ...,
                                                 overwrite=FALSE, verbose=FALSE, command="bowtie2-build") {
 
     ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -49,7 +43,7 @@ setMethodS3("bowtie2Build", "default", function(inPathnames, outPath=NULL, outNa
     verbose <- Arguments$getVerbose(verbose);
     if (verbose) {
         pushState(verbose);
-        on.exit(popState(verbose));   ## [ << what is this ]
+        on.exit(popState(verbose));
     }
     verbose && enter(verbose, paste("Running", command));
     verbose && cat(verbose, "Input pathnames: ", inPathsStr);
