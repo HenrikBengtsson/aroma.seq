@@ -10,15 +10,6 @@ library("aroma.seq");
 pathname <- findBWA();
 printf("BWA executable: %s\n", pathname);
 
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Setup
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Create link to bowtie2's example/ directory
-path <- file.path(pathH, "example");
-createLink(target=path);
-
-
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Indexing a reference genome
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
