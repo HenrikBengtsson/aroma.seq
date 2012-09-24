@@ -119,8 +119,8 @@ setMethodS3("systemBowtie2", "default",
             ## --seed <int>       ## seed for random number generator (0)
             ## --version          ## print version information and quit
             ## -h/--help          ## print this usage message
-            bin="bowtie2"      ## full pathname to bowtie2 executable
-            ...,
+            bin="bowtie2",        ## full pathname to bowtie2 executable
+            ...
             )
         {
             ## ...
