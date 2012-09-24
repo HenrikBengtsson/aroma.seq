@@ -10,8 +10,8 @@
 # @synopsis
 #
 # \arguments{
-#   \item{pathanemSAI}{The SAI file to be aligned.}
-#   \item{pathanemFQ}{The FASTQ file to be aligned.}
+#   \item{pathnameSAI}{The SAI file to be aligned.}
+#   \item{pathnameFQ}{The FASTQ file to be aligned.}
 #   \item{pathnameFA}{The FASTA reference file.}
 #   \item{pathnameD}{The destination pathname.}
 #   \item{...}{Additional arguments specifying BWA 'samse' switches

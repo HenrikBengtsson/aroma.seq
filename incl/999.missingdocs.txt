@@ -37,3 +37,4 @@ nbrOfFiles.Bowtie2Alignment process.Bowtie2Alignment
 processOne.Bowtie2Alignment setTags.Bowtie2Alignment
 systemBowtie2 systemBowtie2.default systemBowtie2Build
 systemBowtie2Build.default testSystemBowtie2Build
+isCapableOf

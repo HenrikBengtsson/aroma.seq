@@ -12,12 +12,13 @@
 # \arguments{
 #   \item{mustExists}{If @TRUE, an exception is thrown if the executable
 #      could not be located.}
+#   \item{...}{Not used.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
 # @author
 #*/###########################################################################
-setMethodS3("findBWA", "default", function(..., mustExists=TRUE, verbose=FALSE) {
+setMethodS3("findBWA", "default", function(mustExists=TRUE, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -100,6 +100,7 @@
 \alias{systemBowtie2Build}
 \alias{systemBowtie2Build.default}
 \alias{testSystemBowtie2Build}
+\alias{isCapableOf}
 
 \description{
   This page contains aliases for all "non-documented" objects that
