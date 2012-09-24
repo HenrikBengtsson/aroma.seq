@@ -10,24 +10,24 @@
 # @synopsis
 #
 # \arguments{
-#   \item{filename, path}{The FASTA file to be indexed.}
+#   \item{pathnameFA}{The FASTA file to be indexed.}
 #   \item{...}{Additional arguments specifying BWA 'index' switches
 #     passed to @see "systemBWA".}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
-# \examples{{\dontrun{
+# \examples{\dontrun{
 #   bwaIndex("annotationData/organisms/LambdaPhage/lambda_virus.fa")
 # }}
 #
 # @author
 #*/###########################################################################
-setMethodS3("bwaIndex", "default", function(filename, path=NULL, ..., verbose=FALSE) {
+setMethodS3("bwaIndex", "default", function(pathnameFA, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Argument 'filename' & 'path':
-  pathname <- Arguments$getReadablePathname(filename, path=path);
+  # Argument 'pathnameFA':
+  pathnameFA <- Arguments$getReadablePathname(pathnameFA);
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -37,7 +37,7 @@ setMethodS3("bwaIndex", "default", function(filename, path=NULL, ..., verbose=FA
   }
 
   verbose && enter(verbose, "Running BWA index");
-  res <- systemBWA("index", ..., pathname, verbose=less(verbose, 10));
+  res <- systemBWA("index", ..., pathnameFA, verbose=less(verbose, 10));
   verbose && exit(verbose);
 
   res;

@@ -8,8 +8,8 @@ library("aroma.seq");
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 path <- "annotationData/organisms/LambdaPhage";
 filename <- "lambda_virus.fa";
-faPathname <- file.path(path, filename);
-res <- bwaIndex(filename, path=path, "-a"="is");
+pathnameFA <- Arguments$getReadablePathname(filename, path=path);
+res <- bwaIndex(pathnameFA, "-a"="is", verbose=TRUE);
 print(res);
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -20,16 +20,28 @@ dataSet <- "LambdaVirusExample";
 platform <- "Generic";
 path <- file.path("fastqData", dataSet, platform);
 filename <- "reads_1.fq";
+pathnameFQ <- Arguments$getReadablePathname(filename, path=path);
 
-# The aligned BWA file
-pathD <- file.path("bwaData", dataSet, platform);
-filenameD <- "reads_1.sai";
-pathnameD <- Arguments$getWritablePathname(filenameD, path=pathD);
-
-res <- bwaAln(filename, path=path, pathnameD=pathnameD, faPathname=faPathname, stderr="foo.log");
+# BWA file
+path <- file.path("bwaData", dataSet, platform);
+filename <- "reads_1.sai";
+pathnameSAI <- Arguments$getWritablePathname(filename, path=path);
+res <- bwaAln(pathnameFQ, pathnameFA=pathnameFA, pathnameD=pathnameSAI, stderr="foo.log");
 print(res);
 
-files <- list.files(path=pathD);
+# SAM file
+path <- file.path("bwaData", dataSet, platform);
+filename <- "reads_1.sam";
+pathnameSAM <- Arguments$getWritablePathname(filename, path=path);
+res <- bwaSamse(pathnameSAI=pathnameSAI, pathnameFQ=pathnameFQ, pathnameFA=pathnameFA, pathnameD=pathnameSAM, verbose=TRUE);
+print(res);
+
+files <- list.files(path=path);
+print(files);
+
+print(res);
+
+files <- list.files(path=path);
 print(files);
 
 

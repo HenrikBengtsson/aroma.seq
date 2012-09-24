@@ -77,7 +77,7 @@ setMethodS3("systemBWA", "default", function(command, ..., .fake=FALSE, verbose=
   # System call
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && cat(verbose, "System call:");
-  cmd <- sprintf("%s %s %s", bin, command, paste(args, collapse=" "));
+  cmd <- sprintf("%s %s", bin, paste(args, collapse=" "));
   verbose && print(verbose, cmd);
   verbose && str(verbose, system2Args);
 
