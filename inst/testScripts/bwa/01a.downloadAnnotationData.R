@@ -15,7 +15,7 @@ verbose && enter(verbose, "Downloading annotation data");
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 path <- "annotationData/organisms/LambdaPhage/";
 filename <- "lambda_virus.fa";
-pathname <- Arguments$getReadablePathname(filename, path=path, mustExists=FALSE);
+pathname <- Arguments$getReadablePathname(filename, path=path, mustExist=FALSE);
 
 if (!isFile(pathname)) {
   downloadBowtie2ExampleData();
