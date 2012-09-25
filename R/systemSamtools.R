@@ -1,7 +1,7 @@
 ###########################################################################/**
-# @RdocDefault systemBWA
+# @RdocDefault systemSamtools
 #
-# @title "Calls the BWA executable"
+# @title "Calls the samtools executable"
 #
 # \description{
 #  @get "title".
@@ -10,15 +10,15 @@
 # @synopsis
 #
 # \arguments{
-#   \item{command}{A @character string specifying the BWA command.}
-#   \item{...}{Additional arguments specifying BWA command line switches.}
+#   \item{command}{A @character string specifying the samtools command.}
+#   \item{...}{Additional arguments specifying samtools command line switches.}
 #   \item{.fake}{If @TRUE, the executable is not called.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
 # @author
 #*/###########################################################################
-setMethodS3("systemBWA", "default", function(command, ..., .fake=FALSE, verbose=FALSE) {
+setMethodS3("systemSamtools", "default", function(command, ..., .fake=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -35,17 +35,17 @@ setMethodS3("systemBWA", "default", function(command, ..., .fake=FALSE, verbose=
     on.exit(popState(verbose));
   }
 
-  verbose && enter(verbose, "Calling BWA executable");
+  verbose && enter(verbose, "Calling samtools executable");
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Local executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  bin <- findBWA(verbose=less(verbose, 50));
+  bin <- findSamtools(verbose=less(verbose, 50));
   verbose && cat(verbose, "Executable: ", bin);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Split up '...' arguments by system2() and BWA executable
+  # Split up '...' arguments by system2() and samtools executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   keep <- is.element(names(args), names(formals(base::system2)));
   system2Args <- args[keep];
@@ -54,7 +54,7 @@ setMethodS3("systemBWA", "default", function(command, ..., .fake=FALSE, verbose=
   verbose && cat(verbose, "Arguments passed to system2():");
   verbose && str(verbose, system2Args);
 
-  verbose && cat(verbose, "Arguments passed to BWA:");
+  verbose && cat(verbose, "Arguments passed to samtools:");
   args <- c(list(command), args);
   verbose && str(verbose, args);
 
@@ -94,18 +94,18 @@ setMethodS3("systemBWA", "default", function(command, ..., .fake=FALSE, verbose=
   if (!.fake) {
     res <- do.call(base::system2, callArgs);
   } else {
-    res <- "<fake run>"; 
+    res <- "<fake run>";
   }
   verbose && exit(verbose);
 
   verbose && exit(verbose);
 
   res;
-}) # systemBWA()
+}) # systemSamtools()
 
 
 ############################################################################
 # HISTORY:
-# 2012-09-24
-# o Created.
+# 2012-09-25
+# o Created from systemBWA.R.
 ############################################################################

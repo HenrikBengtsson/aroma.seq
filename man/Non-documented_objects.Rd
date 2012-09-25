@@ -142,6 +142,10 @@
 \alias{getDepth.BamDataSet}
 \alias{getDepth.FastqDataSet}
 \alias{getDepth.SamDataSet}
+\alias{byPath.SamDataSet}
+\alias{convertToBamDataFile}
+\alias{convertToBamDataFile.SamDataFile}
+\alias{convertToBamDataSet}
 
 \description{
   This page contains aliases for all "non-documented" objects that

@@ -59,6 +59,7 @@ setMethodS3("isCapableOf", "AromaSeq", function(static, what=NULL, ...) {
   res <- list();
   res$bowtie2 <- !is.null(findBowtie2(mustExists=FALSE));
   res$bwa <- !is.null(findBWA(mustExists=FALSE));
+  res$samtools <- !is.null(findSamtools(mustExists=FALSE));
   res <- unlist(res);
 
   if (!is.null(what)) {
@@ -72,6 +73,8 @@ setMethodS3("isCapableOf", "AromaSeq", function(static, what=NULL, ...) {
 
 ############################################################################
 # HISTORY:
+# 2012-09-25
+# o Added 'samtools' to AromaSeq$isCapableOf().
 # 2012-09-24
 # o Created.
 ############################################################################
