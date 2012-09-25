@@ -46,16 +46,7 @@ extends \emph{\link[R.filesets]{GenericDataFile}}\cr
   \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{as.character} \tab  -\cr
- \tab \code{getHeader} \tab  -\cr
- \tab \code{getTargetLengths} \tab  -\cr
- \tab \code{getTargetNames} \tab  -\cr
- \tab \code{getTargets} \tab  -\cr
- \tab \code{getTotalTargetLength} \tab  -\cr
- \tab \code{hasIndex} \tab  -\cr
- \tab \code{isSorted} \tab  -\cr
- \tab \code{nbrOfSeqs} \tab  -\cr
- \tab \code{nbrOfTargets} \tab  -\cr
- \tab \code{sort} \tab  -\cr
+ \tab \code{convertToBamDataFile} \tab  -\cr
 }
 
 

@@ -42,102 +42,69 @@ setMethodS3("as.character", "SamDataFile", function(x, ...) {
   s <- NextMethod("as.character", ...);
   class <- class(s);
 
-  n <- nbrOfTargets(this);
-  s <- c(s, sprintf("Number of targets: %s", n));
-  len <- getTotalTargetLength(this);
-  s <- c(s, sprintf("Total target length: %.3gMb (%.0f bases)", len/1e9, len));
-  names <- getTargetNames(this);
-  s <- c(s, sprintf("Targets: [%d] %s", n, hpaste(names)));
-  s <- c(s, sprintf("Has index file (*.bai): %s", hasIndex(this)));
-  s <- c(s, sprintf("Is sorted: %s", isSorted(this)));
-
   class(s) <- class;
   s;
 })
 
-setMethodS3("hasIndex", "SamDataFile", function(this, ...) {
+
+setMethodS3("convertToBamDataFile", "SamDataFile", function(this, path=getPath(this), ..., skip=!overwrite, overwrite=FALSE, verbose=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'path':
+  path <- Arguments$getWritablePath(path);
+
+  # Argument 'skip':
+  skip <- Arguments$getLogical(skip);
+
+  # Argument 'overwrite':
+  overwrite <- Arguments$getLogical(overwrite);
+
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  } 
+ 
+
+  verbose && enter(verbose, "Converting SAM file to a BAM file");
+ 
   pathname <- getPathname(this);
-  pathnameI <- sprintf("%s.bai", pathname);
-  isFile(pathnameI);
-})
+  verbose && cat(verbose, "SAM pathname: ", pathname);
 
-# \details{
-#   BAM headers typically contain an \code{"@HD VN:1.0 SO:<value>"} entry,
-#   where \code{<value>} indicates whether the aligned reads are sorted 
-#   or not.  Unfortunately, this entry is neither enforced nor has it to
-#   be correct [1,2].
-#
-#   Instead, we consider a BAM file to be sorted if and only if it has
-#   an index file.  The rationale is that it is not possible to index
-#   a BAM file unless it is sorted first.
-# }
-#
-# \references{
-#   [1] Question: is my BAM file sorted?, Biostar, 2011,
-#   \url{http://www.biostars.org/post/show/5256/is-my-bam-file-sorted/}\cr
-#   [2] Asking for suggestiona on samtools bug fixing, SEQanswers, 2010,
-#   \url{http://seqanswers.com/forums/showthread.php?t=3739}\cr
-# }
-setMethodS3("isSorted", "SamDataFile", function(this, ...) {
-  isTRUE(hasIndex(this));
-})
+  fullname <- getFullName(this);
+  filenameBAM <- sprintf("%s.bam", fullname);
+  pathnameBAM <- file.path(path, filenameBAM);
+  verbose && cat(verbose, "BAM pathname: ", pathnameBAM);
 
-
-# Argument '...' must be 2nd to match the generic base::sort() function.
-setMethodS3("sort", "SamDataFile", function(x, ..., force=FALSE) {
-  # To please R CMD check
-  this <- x;
-
-  # Nothing todo?
-  if (!force && isSorted(this)) {
-    return(this);
+  # Nothing to do?
+  if (skip && isFile(pathnameBAM)) {
+    verbose && cat(verbose, "Already converted. Skipping.");
+    res <- BamDataFile(pathnameBAM);
+    verbose && exit(verbose);
+    return(res);
   }
 
-  throw("Not yet implemented!");
-})
+  # Asserts
+  stopifnot(getAbsolutePath(pathnameBAM) != getAbsolutePath(pathname));
+  pathnameBAM <- Arguments$getWritablePathname(pathnameBAM, mustNotExist=!overwrite);
 
+  # Converting
+  verbose && enter(verbose, "Converting using Rsamtools");
+  require("Rsamtools") || throw("Package not loaded: Rsamtools");
+  pathnameBAMx <- gsub("[.]bam$", "", pathnameBAM);
+  verbose && cat(verbose, "BAM destination: ", pathnameBAMx);
+  # NB: Rsamtools::asBam() already writes atomically.
+  pathnameD <- asBam(pathname, destination=pathnameBAMx, overwrite=overwrite);
+  verbose && exit(verbose);
 
-setMethodS3("nbrOfSeqs", "SamDataFile", function(this, ...) {
-  nbrOfTargets(this);
-})
+  res <- BamDataFile(pathnameBAM);
 
-setMethodS3("getTargets", "SamDataFile", function(this, ...) {
-  hdr <- getHeader(this);
-  targets <- hdr$targets;
-  targets;  
-})
+  verbose && exit(verbose);
 
-setMethodS3("nbrOfTargets", "SamDataFile", function(this, ...) {
-  length(getTargets(this));
-})
-
-setMethodS3("getTargetNames", "SamDataFile", function(this, ...) {
-  names(getTargets(this));
-})
-
-setMethodS3("getTargetLengths", "SamDataFile", function(this, ...) {
-  getTargets(this);
-})
-
-setMethodS3("getTotalTargetLength", "SamDataFile", function(this, ...) {
-  sum(as.numeric(getTargets(this)));
-})
-
-setMethodS3("getHeader", "SamDataFile", function(this, force=FALSE, ...) {
-  header <- this$.header;
-  if (force || is.null(header)) {
-    header <- readHeader(this, ...);
-    this$.header <- header;
-  }
-  header;
-})
-
-setMethodS3("readHeader", "SamDataFile", function(this, ...) {
-  pathname <- getPathname(this);
-  bf <- Rsamtools::SamFile(pathname);
-  hdr <- Rsamtools::scanSamHeader(bf);
-  hdr;
-}, private=TRUE)
+  res;
+}) # convertToBamDataFile()
 
 
 ############################################################################

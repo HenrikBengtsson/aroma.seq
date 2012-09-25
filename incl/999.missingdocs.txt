@@ -57,3 +57,6 @@ process.BwaAlignment readHeader.SamDataFile
 setTags.BwaAlignment sort.SamDataFile validate.SamDataSet
 byPrefix byPrefix.BwaIndexSet getDepth.BamDataSet
 getDepth.FastqDataSet getDepth.SamDataSet
+byPath.SamDataSet
+convertToBamDataFile convertToBamDataFile.SamDataFile
+convertToBamDataSet

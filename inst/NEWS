@@ -2,6 +2,7 @@ Package: aroma.seq
 ==================
 
 Version: 0.1.7 [2012-09-25]
+o Now a SamDataSet can be converted to a BamDataSet.
 o Added BwaAlignment.
 o Added BamDataFile and BamDataSet classes.
 o Added BamData(File|Set) classes, cf. SamData(File|Set).

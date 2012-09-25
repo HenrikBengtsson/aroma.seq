@@ -45,7 +45,10 @@ extends \link[R.filesets]{GenericDataFileSet}\cr
 
  \section{Fields and Methods}{
   \bold{Methods:}\cr
-\emph{No methods defined}.
+\tabular{rll}{
+ \tab \code{byPath} \tab  -\cr
+ \tab \code{\link[aroma.seq:convertToBamDataSet.SamDataSet]{convertToBamDataSet}} \tab Converts the SAM set into a BAM set.\cr
+}
 
 
  \bold{Methods inherited from GenericDataFileSet}:\cr
