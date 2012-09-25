@@ -195,10 +195,14 @@ setMethodS3("nbrOfFiles", "BwaAlignment", function(this, ...) {
 
 
 setMethodS3("getOutputDataSet", "BwaAlignment", function(this, ...) {
-  ds <- getInputDataSet(this);
+  ## Find all existing output data files
   path <- getPath(this);
   res <- SamDataSet$byPath(path, ...);
-  ## TODO: Keep only those samples that exists in the input data set
+
+  ## Keep only those samples that exists in the input data set
+  ds <- getInputDataSet(this);
+  res <- extract(res, getFullNames(ds));
+  
   ## TODO: Assert completeness
   res;
 })

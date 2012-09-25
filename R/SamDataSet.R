@@ -37,6 +37,12 @@ setMethodS3("getDepth", "SamDataSet", function(this, ...) {
 }, protected=TRUE);
 
 
+setMethodS3("byPath", "SamDataSet", function(static, ..., pattern="[.](sam|SAM)$") {
+  # Method dispatching is not working here
+  byPath.GenericDataFileSet(static, ..., pattern=pattern);
+}, static=TRUE)
+
+
 
 ############################################################################
 # HISTORY:
