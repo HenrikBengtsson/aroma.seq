@@ -23,6 +23,7 @@
    \item{method}{The BWA algorithm used for generating the index set.}
    \item{subdir}{The subdirectory relative to the FASTA file where to put
      the BWA index files.}
+   \item{tags}{Tags added to the directory of the index set.}
    \item{...}{Not used.}
  }
 
