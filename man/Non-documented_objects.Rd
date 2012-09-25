@@ -33,23 +33,12 @@
 \alias{readSeqLengths.FastaReferenceFile}
 \alias{validate.FastqDataSet}
 \alias{as.character.BamDataFile}
-\alias{as.character.Bowtie2Aligment}
-\alias{getAsteriskTags.Bowtie2Aligment}
 \alias{getFlavor}
-\alias{getFlavor.Bowtie2Aligment}
-\alias{getFullName.Bowtie2Aligment}
 \alias{getHeader.BamDataFile}
 \alias{getInputDataSet}
-\alias{getInputDataSet.Bowtie2Aligment}
-\alias{getName.Bowtie2Aligment}
 \alias{getOutputDataSet}
-\alias{getOutputDataSet.Bowtie2Aligment}
-\alias{getPath.Bowtie2Aligment}
 \alias{getReferenceFile}
-\alias{getReferenceFile.Bowtie2Aligment}
 \alias{getRootPath}
-\alias{getRootPath.Bowtie2Aligment}
-\alias{getTags.Bowtie2Aligment}
 \alias{getTargetLengths}
 \alias{getTargetLengths.BamDataFile}
 \alias{getTargetNames}
@@ -62,17 +51,13 @@
 \alias{hasIndex.BamDataFile}
 \alias{isSorted}
 \alias{isSorted.BamDataFile}
-\alias{nbrOfFiles.Bowtie2Aligment}
 \alias{nbrOfSeqs.BamDataFile}
 \alias{nbrOfTargets}
 \alias{nbrOfTargets.BamDataFile}
 \alias{process}
-\alias{process.Bowtie2Aligment}
 \alias{processOne}
-\alias{processOne.Bowtie2Aligment}
 \alias{readHeader}
 \alias{readHeader.BamDataFile}
-\alias{setTags.Bowtie2Aligment}
 \alias{sort.BamDataFile}
 \alias{validate.BamDataSet}
 \alias{bowtie2}
@@ -132,7 +117,6 @@
 \alias{nbrOfFiles.BwaAlignment}
 \alias{nbrOfSeqs.SamDataFile}
 \alias{nbrOfTargets.SamDataFile}
-\alias{process.BwaAlignment}
 \alias{readHeader.SamDataFile}
 \alias{setTags.BwaAlignment}
 \alias{sort.SamDataFile}
@@ -146,6 +130,7 @@
 \alias{convertToBamDataFile}
 \alias{convertToBamDataFile.SamDataFile}
 \alias{convertToBamDataSet}
+\alias{byPath.BamDataSet}
 
 \description{
   This page contains aliases for all "non-documented" objects that

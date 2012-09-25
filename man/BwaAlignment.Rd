@@ -53,7 +53,7 @@ extends \link[R.oo]{Object}\cr
  \tab \code{getRootPath} \tab  -\cr
  \tab \code{getTags} \tab  -\cr
  \tab \code{nbrOfFiles} \tab  -\cr
- \tab \code{process} \tab  -\cr
+ \tab \code{\link[aroma.seq:process.BwaAlignment]{process}} \tab Runs the BWA aligner.\cr
  \tab \code{setTags} \tab  -\cr
 }
 

@@ -197,7 +197,7 @@ setMethodS3("nbrOfFiles", "BwaAlignment", function(this, ...) {
 setMethodS3("getOutputDataSet", "BwaAlignment", function(this, ...) {
   ## Find all existing output data files
   path <- getPath(this);
-  res <- SamDataSet$byPath(path, ...);
+  res <- BamDataSet$byPath(path, ...);
 
   ## Keep only those samples that exists in the input data set
   ds <- getInputDataSet(this);
@@ -208,6 +208,30 @@ setMethodS3("getOutputDataSet", "BwaAlignment", function(this, ...) {
 })
 
 
+###########################################################################/** 
+# @RdocMethod process
+#
+# @title "Runs the BWA aligner"
+#
+# \description{
+#   @get "title" on all input files.
+#   The generated BAM files are all sorted and indexed.
+# }
+#
+# @synopsis
+#
+# \arguments{
+#  \item{...}{Not used.}
+#  \item{skip}{If @TRUE, already processed files are skipped.}
+#  \item{verbose}{See @see "R.utils::Verbose".}
+# }
+#
+# \value{
+#   Returns a @see "BamDataSet".
+# }
+#
+# @author
+#*/###########################################################################  
 setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -253,9 +277,12 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
     filename <- sprintf("%s.sam", fullname);
     pathnameSAM <- Arguments$getWritablePathname(filename, path=outPath);
     verbose && cat(verbose, "SAM pathname: ", pathnameSAM);
+    filename <- sprintf("%s.bam", fullname);
+    pathnameBAM <- Arguments$getWritablePathname(filename, path=outPath);
+    verbose && cat(verbose, "BAM pathname: ", pathnameBAM);
 
     # Nothing to do?
-    if (skip && isFile(pathnameSAM)) {
+    if (skip && isFile(pathnameBAM)) {
       verbose && cat(verbose, "Already aligned. Skipping");
       verbose && exit(verbose);
       next;
@@ -287,6 +314,17 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
     }
     # Sanity check
     stopifnot(isFile(pathnameSAM));
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # (c) Generate BAM file from SAM file
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    if (!isFile(pathnameBAM)) {
+      sf <- SamDataFile(pathnameSAM);
+      bf <- convertToBamDataFile(sf, verbose=less(verbose, 5));
+      print(pathnameBAM);
+    }
+    # Sanity check
+    stopifnot(isFile(pathnameBAM));
 
     verbose && exit(verbose);
   } # for (kk ...)
