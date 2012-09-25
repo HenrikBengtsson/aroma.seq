@@ -129,7 +129,6 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, ..., skip=T
     pathnames <- findIndexFiles(prefix);
     if (any(is.na(pathnames))) return(NULL);
     dfList <- lapply(pathnames, FUN=GenericDataFile);
-    GenericDataFileSet(dfList);
   } # getIndexFileSet()
 
 
@@ -157,10 +156,12 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, ..., skip=T
   verbose && cat(verbose, "Prefix for index files: ", prefix);
 
   # Locate existing index files
-  res <- getIndexFileSet(prefix);
+  res <- tryCatch({
+    BwaIndexSet$byPrefix(prefix);
+  }, error=function(ex) BwaIndexSet());
 
   # Nothing todo?
-  if (skip && !is.null(res)) {
+  if (skip && isComplete(res)) {
     verbose && cat(verbose, "Already done. Skipping.");
     verbose && exit(verbose);
     return(res);
@@ -172,7 +173,7 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, ..., skip=T
     throw("Failed to build BWA index. Return code: ", res);
   }
 
-  res <- getIndexFileSet(prefix);
+  res <- BwaIndexSet$byPrefix(prefix);
 
   # Sanity check
   stopifnot(!is.null(res));

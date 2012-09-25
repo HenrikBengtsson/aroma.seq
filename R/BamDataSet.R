@@ -32,9 +32,15 @@ setMethodS3("validate", "BamDataSet", function(this, ...) {
 }, protected=TRUE)
 
 
+setMethodS3("getDepth", "BamDataSet", function(this, ...) {
+  1L;
+}, protected=TRUE);
+
 
 ############################################################################
 # HISTORY:
+# 2012-09-25
+# o Added getDepth().
 # 2012-06-28
 # o Created.
 ############################################################################

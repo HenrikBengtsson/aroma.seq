@@ -47,6 +47,7 @@ extends \link[R.filesets]{GenericDataFileSet}\cr
   \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{as.character} \tab  -\cr
+ \tab \code{byPrefix} \tab  -\cr
  \tab \code{getIndexPrefix} \tab  -\cr
  \tab \code{isComplete} \tab  -\cr
 }

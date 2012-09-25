@@ -32,6 +32,11 @@ setMethodS3("validate", "FastqDataSet", function(this, ...) {
 }, protected=TRUE)
 
 
+setMethodS3("getDepth", "FastqDataSet", function(this, ...) {
+  1L;
+}, protected=TRUE);
+
+
 
 ############################################################################
 # HISTORY:

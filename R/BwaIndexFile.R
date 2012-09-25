@@ -49,8 +49,8 @@ setMethodS3("as.character", "BwaIndexFile", function(x, ...) {
 
 
 setMethodS3("getIndexPrefix", "BwaIndexFile", function(this, ...) {
-  path <- getPath(df);
-  fullname <- getFullName(df);
+  path <- getPath(this);
+  fullname <- getFullName(this);
   prefix <- file.path(path, fullname);
   prefix;
 })

@@ -39,3 +39,21 @@ systemBowtie2 systemBowtie2.default systemBowtie2Build
 systemBowtie2Build.default testSystemBowtie2Build
 isCapableOf
 buildBwaIndexSet
+as.character.BwaAlignment as.character.BwaIndexFile
+as.character.BwaIndexSet as.character.SamDataFile
+getAsteriskTags.BwaAlignment getFlavor.BwaAlignment
+getFullName.BwaAlignment getHeader.SamDataFile getIndexPrefix
+getIndexPrefix.BwaIndexFile getIndexPrefix.BwaIndexSet
+getIndexSet getIndexSet.BwaAlignment
+getInputDataSet.BwaAlignment getName.BwaAlignment
+getOutputDataSet.BwaAlignment getPath.BwaAlignment
+getRootPath.BwaAlignment getTags.BwaAlignment
+getTargetLengths.SamDataFile getTargetNames.SamDataFile
+getTargets.SamDataFile getTotalTargetLength.SamDataFile
+hasIndex.SamDataFile isComplete isComplete.BwaIndexSet
+isSorted.SamDataFile nbrOfFiles.BwaAlignment
+nbrOfSeqs.SamDataFile nbrOfTargets.SamDataFile
+process.BwaAlignment readHeader.SamDataFile
+setTags.BwaAlignment sort.SamDataFile validate.SamDataSet
+byPrefix byPrefix.BwaIndexSet getDepth.BamDataSet
+getDepth.FastqDataSet getDepth.SamDataSet

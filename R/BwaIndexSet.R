@@ -42,7 +42,15 @@ setMethodS3("as.character", "BwaIndexSet", function(x, ...) {
 })
 
 
+setMethodS3("byPrefix", "BwaIndexSet", function(static, prefix, ...) {
+  path <- getParent(prefix);
+print(path);
+  byPath(static, path=path, ...);
+}, static=TRUE)
+
+
 setMethodS3("getIndexPrefix", "BwaIndexSet", function(this, ...) {
+  if (length(this) == 0L) return(as.character(NA));
   df <- getFile(this, 1L);
   getIndexPrefix(df, ...);
   path <- getPath(this);
@@ -54,11 +62,14 @@ setMethodS3("getIndexPrefix", "BwaIndexSet", function(this, ...) {
 
 setMethodS3("isComplete", "BwaIndexSet", function(this, ...) {
   knownExts <- c("amb", "ann", "bwt", "pac", "sa");
+  if (length(this) < length(knownExts)) return(FALSE);
+
   exts <- sapply(this, getExtension);
   missing <- setdiff(knownExts, exts);
   if (any(missing)) {
     return(FALSE);
   }
+
   TRUE;
 })
 
