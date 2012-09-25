@@ -1,6 +1,13 @@
 Package: aroma.seq
 ==================
 
+Version: 0.1.7 [2012-09-25]
+o Added BwaAlignment.
+o Added BamDataFile and BamDataSet classes.
+o Added BamData(File|Set) classes, cf. SamData(File|Set).
+o Added BwaIndex(File|Set) classes for holding BWA index sets.
+
+
 Version: 0.1.6 [2012-09-24]
 o Added buildBwaIndexSet() for FastaReferenceFile.
 o Added low-level support for BWA index, aln and samse.

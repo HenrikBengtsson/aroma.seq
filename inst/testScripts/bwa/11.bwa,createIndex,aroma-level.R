@@ -10,8 +10,8 @@ path <- "annotationData/organisms/LambdaPhage";
 fa <- FastaReferenceFile("lambda_virus.fa", path=path);
 print(fa);
 
-ds <- buildBwaIndexSet(fa, a="is", verbose=TRUE);
-print(ds);
+is <- buildBwaIndexSet(fa, a="is", verbose=TRUE);
+print(is);
 
 
 ############################################################################
