@@ -39,8 +39,8 @@ setMethodS3("as.character", "FastaReferenceFile", function(x, ...) {
   class <- class(s);
 
   n <- nbrOfSeqs(this);
-  s <- c(s, sprintf("Total sequence length: %d", getTotalSeqLengths(this)));
-  s <- c(s, sprintf("Number of sequences: %s", n));
+  s <- c(s, sprintf("Total sequence length: %.0f", getTotalSeqLengths(this)));
+  s <- c(s, sprintf("Number of sequences: %d", n));
   s <- c(s, sprintf("Sequence names: [%d] %s", n, hpaste(getSeqNames(this))));
 
   class(s) <- class;
