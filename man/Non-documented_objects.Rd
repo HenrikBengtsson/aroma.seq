@@ -101,6 +101,7 @@
 \alias{systemBowtie2Build.default}
 \alias{testSystemBowtie2Build}
 \alias{isCapableOf}
+\alias{buildBwaIndexSet}
 
 \description{
   This page contains aliases for all "non-documented" objects that

@@ -9,6 +9,7 @@
  \name{bwaIndex}
 \alias{bwaIndex.default}
 \alias{bwaIndex}
+ \alias{bwaIndex.FastaReferenceFile}
 
  \title{Calls the BWA index command}
 
@@ -16,10 +17,11 @@
   Calls the BWA index command.
  }
 
- \usage{\method{bwaIndex}{default}(pathnameFA, ..., verbose=FALSE)}
+ \usage{\method{bwaIndex}{default}(pathnameFA, indexPrefix="*", ..., verbose=FALSE)}
 
  \arguments{
    \item{pathnameFA}{The FASTA file to be indexed.}
+   \item{indexPrefix}{The prefix for the generated index files.}
    \item{...}{Additional arguments specifying BWA 'index' switches
      passed to \code{\link{systemBWA}}().}
    \item{verbose}{See \code{\link[R.utils]{Verbose}}.}

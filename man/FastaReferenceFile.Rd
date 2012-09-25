@@ -46,6 +46,7 @@ extends \emph{\link[R.filesets]{GenericDataFile}}\cr
   \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{as.character} \tab  -\cr
+ \tab \code{\link[aroma.seq:buildBwaIndexSet.FastaReferenceFile]{buildBwaIndexSet}} \tab Builds a BWA index files set.\cr
  \tab \code{getSeqLengths} \tab  -\cr
  \tab \code{getSeqNames} \tab  -\cr
  \tab \code{getTotalSeqLengths} \tab  -\cr

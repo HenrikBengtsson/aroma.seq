@@ -7,12 +7,11 @@ library("aroma.seq");
 # Indexing a reference genome
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 path <- "annotationData/organisms/LambdaPhage";
-pathname <- file.path(path, "lambda_virus.fa");
-pathname <- Arguments$getReadablePathname(pathname);
-res <- bwaIndex(pathname, "-a"="is");
+pathnameFA <- file.path(path, "lambda_virus.fa");
+res <- bwaIndex(pathnameFA, a="is", verbose=TRUE);
 print(res);
 
-files <- list.files(path=path);
+files <- list.files(path=getParent(bwaIndexPrefix(pathnameFA)));
 print(files);
 
 

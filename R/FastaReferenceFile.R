@@ -83,8 +83,107 @@ setMethodS3("readSeqLengths", "FastaReferenceFile", function(this, ...) {
 }, private=TRUE)
 
 
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# BWA
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+###########################################################################/** 
+# @RdocMethod buildBwaIndexSet
+#
+# @title "Builds a BWA index files set"
+#
+# \description{
+#   @get "title".
+# }
+#
+# @synopsis
+#
+# \arguments{
+#  \item{...}{Additional arguments passed to @see "bwaIndex".}
+#  \item{skip}{If @TRUE, the index files are not rebuilt if already available.}
+#  \item{verbose}{See @see "R.utils::Verbose".}
+# }
+#
+# \value{
+#   Returns a @see "R.filesets::GenericDataFileSet" consisting of the BWA index files.
+# }
+#
+# @author
+#*/########################################################################### 
+setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, ..., skip=TRUE, verbose=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Local functions
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  findIndexFiles <- function(prefix, exts=c("amb", "ann", "bwt", "pac", "sa"), ...) {
+    pathnames <- sprintf("%s.%s", prefix, exts);
+    names(pathnames) <- exts;
+    pathnames[!file.exists(pathnames)] <- NA;
+    pathnames;
+  } # findIndexFiles()
+
+  getIndexFileSet <- function(prefix, ...) {
+    pathnames <- findIndexFiles(prefix);
+    if (any(is.na(pathnames))) return(NULL);
+    dfList <- lapply(pathnames, FUN=GenericDataFile);
+    GenericDataFileSet(dfList);
+  } # getIndexFileSet()
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'skip':
+  skip <- Arguments$getLogical(skip);
+
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  } 
+ 
+
+  verbose && enter(verbose, "Building BWA index files");
+
+  pathnameFA <- getPathname(this);
+  verbose && cat(verbose, "FASTA reference file to be indexed: ", pathnameFA);
+
+  # The index prefix
+  prefix <- bwaIndexPrefix(pathnameFA, ...);
+  verbose && cat(verbose, "Prefix for index files: ", prefix);
+
+  # Locate existing index files
+  res <- getIndexFileSet(prefix);
+
+  # Nothing todo?
+  if (skip && !is.null(res)) {
+    verbose && cat(verbose, "Already done. Skipping.");
+    verbose && exit(verbose);
+    return(res);
+  }
+
+  res <- bwaIndex(pathnameFA, indexPrefix=prefix, ..., verbose=less(verbose, 5));
+
+  if (res != 0L) {
+    throw("Failed to build BWA index. Return code: ", res);
+  }
+
+  res <- getIndexFileSet(prefix);
+
+  # Sanity check
+  stopifnot(!is.null(res));
+
+  verbose && exit(verbose);
+
+  res;
+}) # buildBwaIndexSet()
+
+
+
 ############################################################################
 # HISTORY:
+# 2012-09-24
+# o Added buildBwaIndexSet().
 # 2012-06-28
 # o Created.
 ############################################################################

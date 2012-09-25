@@ -2,6 +2,7 @@ Package: aroma.seq
 ==================
 
 Version: 0.1.6 [2012-09-24]
+o Added buildBwaIndexSet() for FastaReferenceFile.
 o Added low-level support for BWA index, aln and samse.
 
 

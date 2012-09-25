@@ -16,11 +16,11 @@
   Calls the BWA 'aln' command.
  }
 
- \usage{\method{bwaAln}{default}(pathnameFQ, pathnameFA, pathnameD, ..., verbose=FALSE)}
+ \usage{\method{bwaAln}{default}(pathnameFQ, indexPrefix, pathnameD, ..., verbose=FALSE)}
 
  \arguments{
    \item{pathnameFQ}{The FASTQ file to be aligned.}
-   \item{pathnameFA}{The FASTA reference file.}
+   \item{indexPrefix}{The pathname prefix to the BWA index files.}
    \item{...}{Additional arguments specifying BWA 'aln' switches
      passed to \code{\link{systemBWA}}().}
    \item{pathnameD}{The destination pathname.}
@@ -30,7 +30,8 @@
  \examples{\dontrun{
    pathnameFA <- "annotationData/organisms/LambdaPhage/lambda_virus.fa"
    bwaIndex(pathnameFA)
-   bwaAln("fastqData/LambdaVirusExample/Generic/reads_1.fq", pathnameD="fastqData/LambdaVirusExample/Generic/reads_1.sai", pathnameFA=pathnameFA)
+   indexPrefix <- bwaIndexPrefix(pathnameFA)
+   bwaAln("fastqData/LambdaVirusExample/Generic/reads_1.fq", indexPrefix=indexPrefix, pathnameD="fastqData/LambdaVirusExample/Generic/reads_1.sai")
  }}
 
  \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}

@@ -12,7 +12,7 @@
 # \arguments{
 #   \item{pathnameSAI}{The SAI file to be aligned.}
 #   \item{pathnameFQ}{The FASTQ file to be aligned.}
-#   \item{pathnameFA}{The FASTA reference file.}
+#   \item{indexPrefix}{The pathname prefix to the BWA index files.}
 #   \item{pathnameD}{The destination pathname.}
 #   \item{...}{Additional arguments specifying BWA 'samse' switches
 #     passed to @see "systemBWA".}
@@ -31,7 +31,7 @@
 #
 # @author
 #*/###########################################################################
-setMethodS3("bwaSamse", "default", function(pathnameSAI, pathnameFQ, pathnameFA, pathnameD, ..., verbose=FALSE) {
+setMethodS3("bwaSamse", "default", function(pathnameSAI, pathnameFQ, indexPrefix, pathnameD, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -41,8 +41,8 @@ setMethodS3("bwaSamse", "default", function(pathnameSAI, pathnameFQ, pathnameFA,
   # Argument 'pathnameFQ':
   pathnameFQ <- Arguments$getReadablePathname(pathnameFQ);
 
-  # Argument 'pathnameFA':
-  pathnameFA <- Arguments$getReadablePathname(pathnameFA);
+  # Argument 'indexPrefix':
+  dummy <- Arguments$getReadablePath(getParent(indexPrefix));
 
   # Argument 'pathnameD':
   pathnameD <- Arguments$getWritablePathname(pathnameD);
@@ -59,9 +59,9 @@ setMethodS3("bwaSamse", "default", function(pathnameSAI, pathnameFQ, pathnameFA,
   # Assert that input files are not overwritten
   stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameSAI));
   stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFQ));
-  stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFA));
+##  stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFA));
  
-  res <- systemBWA("samse", pathnameFA, pathnameSAI, pathnameFQ, "-f"=pathnameD, ..., verbose=less(verbose, 10));
+  res <- systemBWA("samse", "f"=pathnameD, indexPrefix, pathnameSAI, pathnameFQ, ..., verbose=less(verbose, 10));
 
   verbose && exit(verbose);
 

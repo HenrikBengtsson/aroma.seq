@@ -57,16 +57,22 @@ setMethodS3("systemBWA", "default", function(command, ..., .fake=FALSE, verbose=
   verbose && cat(verbose, "Arguments passed to BWA:");
   args <- c(list(command), args);
   verbose && str(verbose, args);
-  keys <- names(args);
-  invalid <- grep("^[^-]", keys, value=TRUE);
-  if (length(invalid) > 0L) {
-    throw("Detected non-valid command line switched: ", hpaste(invalid));
-  }
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup command line switches
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Automatically add dashes
+  keys <- names(args);
+  missing <- grep("^[^-]", keys);
+  if (length(missing) > 0L) {
+    invalid <- (args[missing] == "");
+    if (any(invalid)) {
+      throw("Detected non-valid command line switched: ", hpaste(args[missing][invalid]));
+    }
+    keys[missing] <- sprintf("-%s", keys[missing]);
+  }
+
   args <- paste(keys, args, sep=" ");
   args <- trim(args);
   verbose && cat(verbose, "Command line options:");

@@ -9,8 +9,11 @@ library("aroma.seq");
 path <- "annotationData/organisms/LambdaPhage";
 filename <- "lambda_virus.fa";
 pathnameFA <- Arguments$getReadablePathname(filename, path=path);
-res <- bwaIndex(pathnameFA, "-a"="is", verbose=TRUE);
+res <- bwaIndex(pathnameFA, "a"="is");
 print(res);
+
+prefix <- bwaIndexPrefix(pathnameFA);
+print(prefix);
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Single-end alignment
@@ -26,14 +29,14 @@ pathnameFQ <- Arguments$getReadablePathname(filename, path=path);
 path <- file.path("bwaData", dataSet, platform);
 filename <- "reads_1.sai";
 pathnameSAI <- Arguments$getWritablePathname(filename, path=path);
-res <- bwaAln(pathnameFQ, pathnameFA=pathnameFA, pathnameD=pathnameSAI, stderr="foo.log");
+res <- bwaAln(pathnameFQ, indexPrefix=prefix, pathnameD=pathnameSAI, verbose=TRUE);
 print(res);
 
 # SAM file
 path <- file.path("bwaData", dataSet, platform);
 filename <- "reads_1.sam";
 pathnameSAM <- Arguments$getWritablePathname(filename, path=path);
-res <- bwaSamse(pathnameSAI=pathnameSAI, pathnameFQ=pathnameFQ, pathnameFA=pathnameFA, pathnameD=pathnameSAM, verbose=TRUE);
+res <- bwaSamse(pathnameSAI=pathnameSAI, pathnameFQ=pathnameFQ, indexPrefix=prefix, pathnameD=pathnameSAM, verbose=TRUE);
 print(res);
 
 files <- list.files(path=path);

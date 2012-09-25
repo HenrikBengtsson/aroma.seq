@@ -16,12 +16,12 @@
   Calls the BWA 'samse' command.
  }
 
- \usage{\method{bwaSamse}{default}(pathnameSAI, pathnameFQ, pathnameFA, pathnameD, ..., verbose=FALSE)}
+ \usage{\method{bwaSamse}{default}(pathnameSAI, pathnameFQ, indexPrefix, pathnameD, ..., verbose=FALSE)}
 
  \arguments{
    \item{pathnameSAI}{The SAI file to be aligned.}
    \item{pathnameFQ}{The FASTQ file to be aligned.}
-   \item{pathnameFA}{The FASTA reference file.}
+   \item{indexPrefix}{The pathname prefix to the BWA index files.}
    \item{pathnameD}{The destination pathname.}
    \item{...}{Additional arguments specifying BWA 'samse' switches
      passed to \code{\link{systemBWA}}().}

@@ -11,7 +11,7 @@
 #
 # \arguments{
 #   \item{pathnameFQ}{The FASTQ file to be aligned.}
-#   \item{pathnameFA}{The FASTA reference file.}
+#   \item{indexPrefix}{The pathname prefix to the BWA index files.}
 #   \item{...}{Additional arguments specifying BWA 'aln' switches
 #     passed to @see "systemBWA".}
 #   \item{pathnameD}{The destination pathname.}
@@ -21,20 +21,21 @@
 # \examples{\dontrun{
 #   pathnameFA <- "annotationData/organisms/LambdaPhage/lambda_virus.fa"
 #   bwaIndex(pathnameFA)
-#   bwaAln("fastqData/LambdaVirusExample/Generic/reads_1.fq", pathnameD="fastqData/LambdaVirusExample/Generic/reads_1.sai", pathnameFA=pathnameFA)
+#   indexPrefix <- bwaIndexPrefix(pathnameFA)
+#   bwaAln("fastqData/LambdaVirusExample/Generic/reads_1.fq", indexPrefix=indexPrefix, pathnameD="fastqData/LambdaVirusExample/Generic/reads_1.sai")
 # }}
 #
 # @author
 #*/###########################################################################
-setMethodS3("bwaAln", "default", function(pathnameFQ, pathnameFA, pathnameD, ..., verbose=FALSE) {
+setMethodS3("bwaAln", "default", function(pathnameFQ, indexPrefix, pathnameD, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'pathnameFQ':
   pathnameFQ <- Arguments$getReadablePathname(pathnameFQ);
 
-  # Argument 'pathnameFA':
-  pathnameFA <- Arguments$getReadablePathname(pathnameFA);
+  # Argument 'indexPrefix':
+  dummy <- Arguments$getReadablePath(getParent(indexPrefix));
 
   # Argument 'pathnameD':
   pathnameD <- Arguments$getWritablePathname(pathnameD);
@@ -51,9 +52,9 @@ setMethodS3("bwaAln", "default", function(pathnameFQ, pathnameFA, pathnameD, ...
 
   # Assert that input files are not overwritten
   stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFQ));
-  stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFA));
+##  stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFA));
   
-  res <- systemBWA("aln", pathnameFA, pathnameFQ, "-f"=pathnameD, ..., verbose=less(verbose, 10));
+  res <- systemBWA("aln", "f"=pathnameD, indexPrefix, pathnameFQ, ..., verbose=less(verbose, 10));
 
   verbose && exit(verbose);
 

@@ -4,24 +4,14 @@
 library("aroma.seq");
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Session information
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Assert that BWA is available
-pathname <- findBWA();
-printf("BWA executable: %s\n", pathname);
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Indexing a reference genome
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 path <- "annotationData/organisms/LambdaPhage";
-pathnameFA <- file.path(path, "lambda_virus.fa");
-pathnameFA <- Arguments$getReadablePathname(pathnameFA);
-prefix <- bwaIndexPrefix(pathnameFA);
-res <- systemBWA("index", "a"="is", "p"=prefix, pathnameFA, verbose=TRUE);
-print(res);
+fa <- FastaReferenceFile("lambda_virus.fa", path=path);
+print(fa);
 
-files <- list.files(path=getParent(prefix));
-print(files);
+ds <- buildBwaIndexSet(fa, a="is", verbose=TRUE);
+print(ds);
 
 
 ############################################################################
