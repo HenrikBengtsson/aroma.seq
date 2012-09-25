@@ -59,7 +59,11 @@ setMethodS3("getSeqLengths", "FastaReferenceFile", function(this, force=FALSE, .
 
 setMethodS3("getTotalSeqLengths", "FastaReferenceFile", function(this, ...) {
   seqLengths <- getSeqLengths(this, ...);
-  sum(seqLengths);
+  res <- sum(as.numeric(seqLengths));
+  if (res < .Machine$integer.max) {
+    res <- as.integer(res);
+  }
+  res;
 })
 
 setMethodS3("getSeqNames", "FastaReferenceFile", function(this, ...) {
@@ -183,6 +187,8 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, ..., skip=T
 ############################################################################
 # HISTORY:
 # 2012-09-24
+# o Now getTotalSeqLengths() returns a numeric if the result cannot be
+#   held in an integer.
 # o Added buildBwaIndexSet().
 # 2012-06-28
 # o Created.

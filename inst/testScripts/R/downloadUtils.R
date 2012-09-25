@@ -34,7 +34,7 @@ downloadBowtie2ExampleData <- function(...) {
   pathZ <- "tmp/bowtie2/";
   mkdirs(pathZ);
   on.exit({
-    removeDirectory(pathZ, recursive=FALSE);
+    removeDirectory(pathZ, recursive=TRUE);
   }, add=TRUE);
   pathnames <- unzip(pathnameZ, exdir=pathZ);
 
@@ -60,6 +60,38 @@ downloadBowtie2ExampleData <- function(...) {
     if (!isFile(pathnamesD[kk])) copyFile(pathnamesS[kk], pathnamesD[kk]);
   }
 } # downloadBowtie2ExampleData()
+
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# 1000 Genomes
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+download1000GenomesHumanReferenceFile <- function(...) {
+  url <- "ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/technical/reference/human_g1k_v37.fasta.gz";
+
+  path <- "annotationData/organisms/Human/";
+  filenameGZ <- basename(url);
+  filename <- gsub("[.]gz", "", filenameGZ);
+  pathname <- Arguments$getReadablePathname(filename, path=path, mustExist=FALSE);
+
+  # Already available?
+  if (isFile(pathname)) {
+    df <- FastaReferenceFile(pathname);
+    return(df);
+  }
+
+  # Download?
+  pathnameGZ <- Arguments$getReadablePathname(filenameGZ, path=path, mustExist=FALSE);
+  if (!isFile(pathnameGZ)) {
+    pathnameGZ <- downloadFile(url, path=path);
+  }
+
+  # Extract
+  pathname <- gunzip(pathnameGZ);
+  df <- FastaReferenceFile(pathname);
+
+  df;
+} # download1000GenomesHumanReferenceFile()
 
 
 
