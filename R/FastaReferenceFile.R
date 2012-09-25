@@ -103,6 +103,7 @@ setMethodS3("readSeqLengths", "FastaReferenceFile", function(this, ...) {
 # @synopsis
 #
 # \arguments{
+#  \item{method}{A @character string specifying the algorithm to use.}
 #  \item{...}{Additional arguments passed to @see "bwaIndex".}
 #  \item{skip}{If @TRUE, the index files are not rebuilt if already available.}
 #  \item{verbose}{See @see "R.utils::Verbose".}
@@ -114,7 +115,7 @@ setMethodS3("readSeqLengths", "FastaReferenceFile", function(this, ...) {
 #
 # @author
 #*/########################################################################### 
-setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, ..., skip=TRUE, verbose=FALSE) {
+setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method, ..., skip=TRUE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Local functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -135,6 +136,11 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, ..., skip=T
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'method':
+#  method <- Arguments$getCharacter(method);
+  choices <- eval(formals(bwaIndexPrefix.default)$method);
+  method <- match.arg(method, choices=choices);
+
   # Argument 'skip':
   skip <- Arguments$getLogical(skip);
 
@@ -150,9 +156,10 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, ..., skip=T
 
   pathnameFA <- getPathname(this);
   verbose && cat(verbose, "FASTA reference file to be indexed: ", pathnameFA);
+  verbose && cat(verbose, "Algorithm: ", method);
 
   # The index prefix
-  prefix <- bwaIndexPrefix(pathnameFA, ...);
+  prefix <- bwaIndexPrefix(pathnameFA, method=method, ...);
   verbose && cat(verbose, "Prefix for index files: ", prefix);
 
   # Locate existing index files
@@ -167,7 +174,7 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, ..., skip=T
     return(res);
   }
 
-  res <- bwaIndex(pathnameFA, indexPrefix=prefix, ..., verbose=less(verbose, 5));
+  res <- bwaIndex(pathnameFA, indexPrefix=prefix, a=method, ..., verbose=less(verbose, 5));
 
   if (res != 0L) {
     throw("Failed to build BWA index. Return code: ", res);
@@ -187,6 +194,8 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, ..., skip=T
 
 ############################################################################
 # HISTORY:
+# 2012-09-25
+# o Added mandatory argument 'method' to buildBwaIndexSet().
 # 2012-09-24
 # o Now getTotalSeqLengths() returns a numeric if the result cannot be
 #   held in an integer.

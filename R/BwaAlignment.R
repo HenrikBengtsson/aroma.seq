@@ -81,7 +81,9 @@ setMethodS3("getIndexSet", "BwaAlignment", function(this, ...) {
 })
 
 setMethodS3("getAsteriskTags", "BwaAlignment", function(this, collapse=NULL, ...) {
-  tags <- "bwa";
+  is <- getIndexSet(this);
+  tags <- c("bwa", getTags(is, collapse=NULL));
+  tags <- unique(tags);
 
   if (!is.null(collapse)) {
     tags <- paste(tags, collapse=collapse);
@@ -339,6 +341,6 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
 
 ############################################################################
 # HISTORY:
-# 2012-09-25.
+# 2012-09-25
 # o Created from Bowtie2Alignment.R.
 ############################################################################ 

@@ -19,9 +19,10 @@
    Builds a BWA index files set.
  }
 
- \usage{\method{buildBwaIndexSet}{FastaReferenceFile}(this, ..., skip=TRUE, verbose=FALSE)}
+ \usage{\method{buildBwaIndexSet}{FastaReferenceFile}(this, method, ..., skip=TRUE, verbose=FALSE)}
 
  \arguments{
+  \item{method}{A \code{\link[base]{character}} string specifying the algorithm to use.}
   \item{...}{Additional arguments passed to \code{\link{bwaIndex}}().}
   \item{skip}{If \code{\link[base:logical]{TRUE}}, the index files are not rebuilt if already available.}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
