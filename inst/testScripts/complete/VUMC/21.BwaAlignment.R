@@ -35,7 +35,7 @@ ds <- extract(ds, 1:min(2, length(ds)));
 alg <- BwaAlignment(ds, indexSet=is, n=2, q=40);
 print(alg);
 
-bs <- process(alg, verbose=-10);
+bs <- process(alg, verbose=-20);
 print(bs);
 
 # Display an example BAM file
