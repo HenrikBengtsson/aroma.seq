@@ -15,7 +15,7 @@
 #  \item{dataSet}{An @see "FastqDataSet".}
 #  \item{indexSet}{An @see "BwaIndexSet".}
 #  \item{tags}{Additional tags for the output data sets.}
-#  \item{...}{Additional arguments passed to the aligner.}
+#  \item{...}{Additional BWA 'aln' arguments.}
 # }
 #
 # \section{Fields and Methods}{
@@ -40,7 +40,7 @@ setConstructorS3("BwaAlignment", function(dataSet=NULL, indexSet=NULL, tags="*",
   # Arguments '...':
   args <- list(...);
 
-  this <- extend(Object(...), "BwaAlignment",
+  this <- extend(Object(), "BwaAlignment",
     .ds = dataSet,
     .indexSet = indexSet,
     .tags = tags,
@@ -78,6 +78,10 @@ setMethodS3("getInputDataSet", "BwaAlignment", function(this, ...) {
 
 setMethodS3("getIndexSet", "BwaAlignment", function(this, ...) {
   this$.indexSet;
+})
+
+setMethodS3("getOptionalArguments", "BwaAlignment", function(this, ...) {
+  this$.args;
 })
 
 setMethodS3("getAsteriskTags", "BwaAlignment", function(this, collapse=NULL, ...) {
@@ -259,6 +263,11 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
   verbose && print(verbose, is);
   indexPrefix <- getIndexPrefix(is);
 
+  optArgs <- getOptionalArguments(this);
+  verbose && cat(verbose, "Additional BWA 'aln' arguments:");
+  verbose && str(verbose, optArgs);
+
+
   nbrOfFiles <- nbrOfFiles(this);
   verbose && cat(verbose, "Number of files: ", nbrOfFiles);
 
@@ -296,9 +305,11 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
     # (a) Generate SAI file via BWA aln
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     if (!isFile(pathnameSAI)) {
-      res <- bwaAln(pathnameFQ, indexPrefix=indexPrefix, 
-                    pathnameD=pathnameSAI,
-                    verbose=less(verbose, 5));
+      args <- list(pathnameFQ, indexPrefix=indexPrefix,
+                   pathnameD=pathnameSAI);
+      args <- c(args, optArgs);
+      args$verbose <- less(verbose, 5);
+      res <- do.call(bwaAln, args=args);
       verbose && print(verbose, res);
     }
 
@@ -342,5 +353,6 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
 ############################################################################
 # HISTORY:
 # 2012-09-25
+# o Now process() passes additional arguments to bwaAln().
 # o Created from Bowtie2Alignment.R.
 ############################################################################ 

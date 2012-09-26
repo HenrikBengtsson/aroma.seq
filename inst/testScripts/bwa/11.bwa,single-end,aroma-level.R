@@ -33,10 +33,11 @@ print(is);
 # Reverse the order of the input set to test ordering
 ds <- extract(ds, rev(seq(ds)));
 
-alg <- BwaAlignment(ds, indexSet=is);
+# BWA with BWA 'aln' options '-n 2' and '-q 40'.
+alg <- BwaAlignment(ds, indexSet=is, n=2, q=40);
 print(alg);
 
-bs <- process(alg, verbose=TRUE);
+bs <- process(alg, verbose=-10);
 print(bs);
 
 # Sanity check
