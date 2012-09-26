@@ -58,3 +58,4 @@ byPath.SamDataSet
 convertToBamDataFile convertToBamDataFile.SamDataFile
 convertToBamDataSet
 byPath.BamDataSet
+getOptionalArguments.BwaAlignment

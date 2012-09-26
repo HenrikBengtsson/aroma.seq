@@ -38,7 +38,7 @@ extends \link[R.oo]{Object}\cr
   \item{dataSet}{An \code{\link{FastqDataSet}}.}
   \item{indexSet}{An \code{\link{BwaIndexSet}}.}
   \item{tags}{Additional tags for the output data sets.}
-  \item{...}{Additional arguments passed to the aligner.}
+  \item{...}{Additional BWA 'aln' arguments.}
  }
 
  \section{Fields and Methods}{
@@ -48,6 +48,7 @@ extends \link[R.oo]{Object}\cr
  \tab \code{getIndexSet} \tab  -\cr
  \tab \code{getInputDataSet} \tab  -\cr
  \tab \code{getName} \tab  -\cr
+ \tab \code{getOptionalArguments} \tab  -\cr
  \tab \code{getOutputDataSet} \tab  -\cr
  \tab \code{getPath} \tab  -\cr
  \tab \code{getRootPath} \tab  -\cr

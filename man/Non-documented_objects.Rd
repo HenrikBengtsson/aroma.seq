@@ -131,6 +131,7 @@
 \alias{convertToBamDataFile.SamDataFile}
 \alias{convertToBamDataSet}
 \alias{byPath.BamDataSet}
+\alias{getOptionalArguments.BwaAlignment}
 
 \description{
   This page contains aliases for all "non-documented" objects that
