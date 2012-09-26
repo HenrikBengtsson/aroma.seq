@@ -310,7 +310,7 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
       args <- c(args, optArgs);
       args$verbose <- less(verbose, 5);
       res <- do.call(bwaAln, args=args);
-      verbose && print(verbose, res);
+      verbose && cat(verbose, "System result code: ", res);
     }
 
     # Sanity check
@@ -323,7 +323,7 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
       res <- bwaSamse(pathnameSAI=pathnameSAI, pathnameFQ=pathnameFQ, 
                       indexPrefix=indexPrefix, pathnameD=pathnameSAM,
                       verbose=less(verbose, 5));
-      print(res);
+      verbose && cat(verbose, "System result code: ", res);
     }
     # Sanity check
     stopifnot(isFile(pathnameSAM));
