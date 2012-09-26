@@ -38,27 +38,30 @@ setMethodS3("as.character", "FastaReferenceFile", function(x, ...) {
   s <- NextMethod("as.character", ...);
   class <- class(s);
 
-  n <- nbrOfSeqs(this);
-  s <- c(s, sprintf("Total sequence length: %.0f", getTotalSeqLengths(this)));
+  n <- nbrOfSeqs(this, onlyIfCached=TRUE);
+  s <- c(s, sprintf("Total sequence length: %.0f", getTotalSeqLengths(this, onlyIfCached=TRUE)));
   s <- c(s, sprintf("Number of sequences: %d", n));
-  s <- c(s, sprintf("Sequence names: [%d] %s", n, hpaste(getSeqNames(this))));
+  s <- c(s, sprintf("Sequence names: [%d] %s", n, hpaste(getSeqNames(this, onlyIfCached=TRUE))));
 
   class(s) <- class;
   s;
 })
 
 
-setMethodS3("getSeqLengths", "FastaReferenceFile", function(this, force=FALSE, ...) {
+setMethodS3("getSeqLengths", "FastaReferenceFile", function(this, force=FALSE, onlyIfCached=FALSE, ...) {
   seqLengths <- this$.seqLengths;
   if (force || is.null(seqLengths)) {
-    seqLengths <- readSeqLengths(this, ...);
-    this$.seqLengths <- seqLengths;
+    if (!onlyIfCached) {
+      seqLengths <- readSeqLengths(this, ...);
+      this$.seqLengths <- seqLengths;
+    }
   }
   seqLengths;
 })
 
 setMethodS3("getTotalSeqLengths", "FastaReferenceFile", function(this, ...) {
   seqLengths <- getSeqLengths(this, ...);
+  if (is.null(seqLengths)) return(as.integer(NA));
   res <- sum(as.numeric(seqLengths));
   if (res < .Machine$integer.max) {
     res <- as.integer(res);
@@ -68,11 +71,13 @@ setMethodS3("getTotalSeqLengths", "FastaReferenceFile", function(this, ...) {
 
 setMethodS3("getSeqNames", "FastaReferenceFile", function(this, ...) {
   seqLengths <- getSeqLengths(this, ...);
+  if (is.null(seqLengths)) return(as.character(NA));
   names(seqLengths);
 })
 
 setMethodS3("nbrOfSeqs", "FastaReferenceFile", function(this, ...) {
   seqLengths <- getSeqLengths(this, ...);
+  if (is.null(seqLengths)) return(as.integer(NA));
   length(seqLengths);
 })
 
@@ -174,6 +179,10 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method, ...
     return(res);
   }
 
+  # Read sequences information, if not already done
+  n <- nbrOfSeqs(this);
+  verbose && print(verbose, this);
+
   res <- bwaIndex(pathnameFA, indexPrefix=prefix, a=method, ..., verbose=less(verbose, 5));
 
   if (res != 0L) {
@@ -195,6 +204,8 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method, ...
 ############################################################################
 # HISTORY:
 # 2012-09-25
+# o SPEEDUP: Now print() only displays sequence information, iff
+#   already cached.  Otherwise, NAs are displayed.
 # o Added mandatory argument 'method' to buildBwaIndexSet().
 # 2012-09-24
 # o Now getTotalSeqLengths() returns a numeric if the result cannot be

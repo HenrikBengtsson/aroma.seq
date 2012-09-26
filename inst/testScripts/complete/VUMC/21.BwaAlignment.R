@@ -18,7 +18,6 @@ path <- file.path("fastqData", dataSet, platform);
 ds <- FastqDataSet$byPath(path);
 print(ds);
 
-
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Build BWA index set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -29,12 +28,19 @@ print(is);
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Single-end alignment
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Process at most two FASTQ files
+ds <- extract(ds, 1:min(2, length(ds)));
+
 # BWA with BWA 'aln' options '-n 2' and '-q 40'.
 alg <- BwaAlignment(ds, indexSet=is, n=2, q=40);
 print(alg);
 
 bs <- process(alg, verbose=-10);
 print(bs);
+
+# Display an example BAM file
+bf <- getFile(bs, 1);
+print(bf);
 
 
 ############################################################################
