@@ -43,6 +43,7 @@ extends \link[aroma.core]{AromaPackage}\cr
  \section{Fields and Methods}{
   \bold{Methods:}\cr
 \tabular{rll}{
+ \tab \code{\link[aroma.seq:capabilitiesOf.AromaSeq]{capabilitiesOf}} \tab Checks which tools are supported.\cr
  \tab \code{\link[aroma.seq:isCapableOf.AromaSeq]{isCapableOf}} \tab Checks which tools are supported.\cr
 }
 

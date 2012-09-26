@@ -6,9 +6,13 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{isCapableOf.AromaSeq}
-\alias{isCapableOf.AromaSeq}
-\alias{AromaSeq.isCapableOf}
+ \name{capabilitiesOf.AromaSeq}
+\alias{capabilitiesOf.AromaSeq}
+\alias{AromaSeq.capabilitiesOf}
+\alias{capabilitiesOf.AromaSeq}
+\alias{capabilitiesOf,AromaSeq-method}
+
+ \alias{AromaSeq.isCapableOf}
 \alias{isCapableOf.AromaSeq}
 \alias{isCapableOf,AromaSeq-method}
 
@@ -19,8 +23,8 @@
    Checks which tools are supported.
  }
 
- \synopsis{isCapableOf.AromaSeq(static, what=NULL, ...)}
-\usage{AromaSeq$isCapableOf(what=NULL, ...)}
+ \synopsis{capabilitiesOf.AromaSeq(static, what=NULL, ...)}
+\usage{AromaSeq$capabilitiesOf(what=NULL, ...)}
 
  \arguments{
   \item{what}{Optional \code{\link[base]{character}} \code{\link[base]{vector}} of which tools to check.}
@@ -32,11 +36,11 @@
  }
 
  \examples{
-   # Display which sequencing tools are supported
-   print(AromaSeq$isCapableOf())
+   # Display which sequencing tools are supported by the package
+   print(capabilitiesOf(aroma.seq))
 
    # Check whether BWA is supported
-   print(AromaSeq$isCapableOf("bwa"))
+   print(isCapableOf(aroma.seq, "bwa"))
  }
 
  \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}

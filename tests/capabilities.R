@@ -1,3 +1,7 @@
 library("aroma.seq")
-cat("Tools supported on the current system:\n")
-print(AromaSeq$isCapableOf())
+
+cat("Tools supported by the package:\n")
+print(capabilitiesOf(aroma.seq))
+
+# Check whether BWA is supported
+print(isCapableOf(aroma.seq, "bwa"))

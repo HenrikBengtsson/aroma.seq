@@ -3,7 +3,7 @@
 .conflicts.OK <- TRUE;
 
 .onAttach <- function(libname, pkgname) {
-  pkg <- Package(pkgname);
+  pkg <- AromaSeq(pkgname);
   assign(pkgname, pkg, pos=getPosition(pkg));
 
   packageStartupMessage(getName(pkg), " v", getVersion(pkg), " (", 

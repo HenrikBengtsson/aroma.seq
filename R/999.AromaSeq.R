@@ -26,7 +26,8 @@ setConstructorS3("AromaSeq", function(...) {
 
 
 ###########################################################################/** 
-# @RdocMethod isCapableOf
+# @RdocMethod capabilitiesOf
+# @aliasmethod isCapableOf
 #
 # @title "Checks which tools are supported"
 #
@@ -46,16 +47,16 @@ setConstructorS3("AromaSeq", function(...) {
 # }
 #
 # \examples{
-#   # Display which sequencing tools are supported
-#   print(AromaSeq$isCapableOf())
+#   # Display which sequencing tools are supported by the package
+#   print(capabilitiesOf(aroma.seq))
 #
 #   # Check whether BWA is supported
-#   print(AromaSeq$isCapableOf("bwa"))
+#   print(isCapableOf(aroma.seq, "bwa"))
 # }
 #
 # @author
 #*/###########################################################################
-setMethodS3("isCapableOf", "AromaSeq", function(static, what=NULL, ...) {
+setMethodS3("capabilitiesOf", "AromaSeq", function(static, what=NULL, ...) {
   res <- list();
   res$bowtie2 <- !is.null(findBowtie2(mustExists=FALSE));
   res$bwa <- !is.null(findBWA(mustExists=FALSE));
@@ -70,10 +71,16 @@ setMethodS3("isCapableOf", "AromaSeq", function(static, what=NULL, ...) {
 }, static=TRUE)
 
 
+setMethodS3("isCapableOf", "AromaSeq", function(static, what, ...) {
+  capabilitiesOf(static, what=what, ...);
+})
+
+
 
 ############################################################################
 # HISTORY:
 # 2012-09-25
+# o Added capabilitiesOf().
 # o Added 'samtools' to AromaSeq$isCapableOf().
 # 2012-09-24
 # o Created.
