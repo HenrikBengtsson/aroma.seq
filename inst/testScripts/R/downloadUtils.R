@@ -1,4 +1,4 @@
-library("aroma.affymetrix");
+library("aroma.seq");
 
 # Local functions
 getDataSet <- function(path, ...) {

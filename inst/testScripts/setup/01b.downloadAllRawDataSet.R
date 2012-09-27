@@ -5,7 +5,7 @@ verbose <- Arguments$getVerbose(-8, timestamp=TRUE);
 verbose && enter(verbose, "Downloading raw data for all tests");
 
 verbose && enter(verbose, "Scanning tests");
-path <- system.file("testScripts", package="aroma.affymetrix");
+path <- system.file("testScripts", package="aroma.seq");
 verbose && cat(verbose, "Path to testScripts: ", path);
 
 pattern <- "downloadRawData.R$";

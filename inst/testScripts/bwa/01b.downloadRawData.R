@@ -1,4 +1,4 @@
-path <- system.file("testScripts/R", package="aroma.affymetrix");
+path <- system.file("testScripts/R", package="aroma.seq");
 pathname <- file.path(path, "downloadUtils.R");
 source(pathname);
 
