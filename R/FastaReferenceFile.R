@@ -93,9 +93,6 @@ setMethodS3("readSeqLengths", "FastaReferenceFile", function(this, ...) {
 
 
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# BWA
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ###########################################################################/** 
 # @RdocMethod buildBwaIndexSet
 #
@@ -158,6 +155,7 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method, ...
  
 
   verbose && enter(verbose, "Building BWA index files");
+  stopifnot(isCapableOf(aroma.seq, "bwa"));
 
   pathnameFA <- getPathname(this);
   verbose && cat(verbose, "FASTA reference file to be indexed: ", pathnameFA);
@@ -201,8 +199,80 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method, ...
 
 
 
+
+setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., skip=TRUE, verbose=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Local functions
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  bowtie2Build <- function(pathnameFA, prefix, ..., verbose=FALSE) {
+     systemBowtie2Build(pathnameFA, prefix, ...);
+  } # bowtie2Build()
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'skip':
+  skip <- Arguments$getLogical(skip);
+
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  } 
+ 
+
+  verbose && enter(verbose, "Building Bowtie2 index file");
+  stopifnot(isCapableOf(aroma.seq, "bowtie2"));
+
+  pathnameFA <- getPathname(this);
+  verbose && cat(verbose, "FASTA reference file to be indexed: ", pathnameFA);
+##  verbose && cat(verbose, "Algorithm: ", method);
+
+  # The index prefix
+  prefix <- bowtie2IndexPrefix(pathnameFA, ...);
+  verbose && cat(verbose, "Prefix for index files: ", prefix);
+
+  # Locate existing index files
+  res <- tryCatch({
+    Bowtie2IndexSet$byPrefix(prefix);
+  }, error=function(ex) Bowtie2IndexSet());
+
+  # Nothing todo?
+  if (skip && isComplete(res)) {
+    verbose && cat(verbose, "Already done. Skipping.");
+    verbose && exit(verbose);
+    return(res);
+  }
+
+  # Read sequences information, if not already done
+  n <- nbrOfSeqs(this);
+  verbose && print(verbose, this);
+
+  res <- bowtie2Build(pathnameFA, prefix, ..., verbose=less(verbose, 5));
+  verbose && print(verbose, res);
+
+  if (res != 0L) {
+    throw("Failed to build Bowtie2 index. Return code: ", res);
+  }
+
+  res <- Bowtie2IndexSet$byPrefix(prefix);
+
+  # Sanity check
+  stopifnot(!is.null(res));
+
+  verbose && exit(verbose);
+
+  res;
+}) # buildBowtie2IndexSet()
+
+
+
 ############################################################################
 # HISTORY:
+# 2012-09-27
+# o Added buildBowtie2IndexSet() for FastaReferenceFile.
 # 2012-09-25
 # o SPEEDUP: Now print() only displays sequence information, iff
 #   already cached.  Otherwise, NAs are displayed.

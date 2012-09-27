@@ -1,12 +1,12 @@
 ###########################################################################/**
-# @RdocClass BwaIndexFile
+# @RdocClass Bowtie2IndexFile
 #
-# @title "The abstract BwaIndexFile class"
+# @title "The abstract Bowtie2IndexFile class"
 #
 # \description{
 #  @classhierarchy
 #
-#  A BwaIndexFile object represents a Bwa index file.
+#  A Bowtie2IndexFile object represents a Bowtie2 index file.
 # }
 # 
 # @synopsis
@@ -27,11 +27,11 @@
 #
 # \seealso{
 #   An object of this class is typically part of an 
-#   @see "BwaIndexSet".
+#   @see "Bowtie2IndexSet".
 # }
 #*/###########################################################################
-setConstructorS3("BwaIndexFile", function(...) {
-  extend(AbstractIndexFile(...), "BwaIndexFile");
+setConstructorS3("Bowtie2IndexFile", function(...) {
+  extend(AbstractIndexFile(...), "Bowtie2IndexFile");
 })
 
 

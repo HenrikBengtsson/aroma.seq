@@ -27,38 +27,7 @@
 # @author
 #*/###########################################################################
 setMethodS3("bwaIndexPrefix", "default", function(pathnameFA, method=c("is", "bwtsw"), subdir="bwa", tags="*", ...) {
-  # Argument 'method':
-  if (missing(method)) throw("Argument 'method' must be specified explicitly.");
-  method <- match.arg(method);
-
-  # Argument 'subdir':
-  subdir <- Arguments$getCharacters(subdir);
-  subdir <- do.call(file.path, as.list(subdir));
-
-  # Argument 'tags':
-  tags <- Arguments$getTags(tags, collapse=NULL);
-
-
-  # Asterisk tags?
-  keep <- (tags == "*");
-  tags[keep] <- method;
-
-  # Add tags to subdir
-  subdir <- paste(c(subdir, tags), collapse=",");
-
-  # Drop *.fa and *.fasta filename extensions
-  prefix <- gsub("[.](fa|fasta)*$", "", pathnameFA, ignore.case=TRUE);
-  path <- getParent(prefix);
-  if (is.null(path)) {
-    path <- subdir;
-  } else {
-    path <- file.path(path, subdir);
-  }
-
-  fullname <- basename(prefix);
-  prefix <- file.path(path, fullname);
-
-  prefix;
+  createIndexPrefix(pathnameFA, subdir=subdir, tags=tags, asteriskTags=method, ...);
 }) # bwaIndexPrefix()
 
 

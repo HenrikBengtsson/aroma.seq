@@ -23,35 +23,36 @@
 \code{~~~~~~~|}\cr
 \code{~~~~~~~+--}\code{\link[R.filesets]{GenericDataFileSet}}\cr
 \code{~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~+--}\code{BwaIndexSet}\cr
+\code{~~~~~~~~~~~~+--}\code{\link[aroma.seq]{AbstractIndexSet}}\cr
+\code{~~~~~~~~~~~~~~~~~|}\cr
+\code{~~~~~~~~~~~~~~~~~+--}\code{BwaIndexSet}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
 
 public static class \bold{BwaIndexSet}\cr
-extends \link[R.filesets]{GenericDataFileSet}\cr
+extends \emph{\link[aroma.seq]{AbstractIndexSet}}\cr
 
 
 
   An BwaIndexSet object represents a set of \code{\link{BwaIndexFile}}:s.
  }
 
- \usage{BwaIndexSet(files=NULL, ...)}
+ \usage{BwaIndexSet(...)}
 
  \arguments{
-   \item{files}{A \code{\link[base]{list}} of \code{\link{BwaIndexFile}}:s.}
-   \item{...}{Arguments passed to \code{\link[R.filesets]{GenericDataFileSet}}.}
+   \item{...}{Arguments passed to \code{\link{AbstractIndexSet}}.}
  }
 
  \section{Fields and Methods}{
   \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{as.character} \tab  -\cr
- \tab \code{byPrefix} \tab  -\cr
- \tab \code{getIndexPrefix} \tab  -\cr
  \tab \code{isComplete} \tab  -\cr
 }
 
+
+ \bold{Methods inherited from AbstractIndexSet}:\cr
+as.character, byPrefix, getIndexPrefix, isComplete
 
  \bold{Methods inherited from GenericDataFileSet}:\cr
 getFullNameTranslatorSet, getParentName, append, appendFiles, appendFullNamesTranslator, appendFullNamesTranslatorBydata.frame, appendFullNamesTranslatorByfunction, appendFullNamesTranslatorBylist, appendFullNamesTranslatorByNULL, appendFullNamesTranslatorByTabularTextFile, appendFullNamesTranslatorByTabularTextFileSet, as.list, byName, byPath, clearCache, clearFullNamesTranslator, copyTo, equals, extract, findByName, getAlias, getChecksum, getChecksumObjects, getDefaultFullName, getFile, getFileClass, getFileSize, getFullNames, getNames, getPath, getPathnames, getSubdirs, hasFile, indexOf, lapply, nbrOfFiles, sapply, seq, setAlias, setFullNamesTranslator, sortBy, update2, updateFullName, updateFullNames, validate

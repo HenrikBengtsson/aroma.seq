@@ -135,6 +135,17 @@
 \alias{capabilitiesOf}
 \alias{setupTests}
 \alias{setupTests.AromaSeq}
+\alias{as.character.AbstractIndexFile}
+\alias{as.character.AbstractIndexSet}
+\alias{bowtie2IndexPrefix}
+\alias{bowtie2IndexPrefix.default}
+\alias{buildBowtie2IndexSet}
+\alias{buildBowtie2IndexSet.FastaReferenceFile}
+\alias{byPrefix.AbstractIndexSet}
+\alias{getIndexPrefix.AbstractIndexFile}
+\alias{getIndexPrefix.AbstractIndexSet}
+\alias{isComplete.AbstractIndexSet}
+\alias{isComplete.Bowtie2IndexSet}
 
 \description{
   This page contains aliases for all "non-documented" objects that

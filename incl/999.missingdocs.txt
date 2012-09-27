@@ -61,3 +61,9 @@ byPath.BamDataSet
 getOptionalArguments.BwaAlignment
 capabilitiesOf
 setupTests setupTests.AromaSeq
+as.character.AbstractIndexFile as.character.AbstractIndexSet
+bowtie2IndexPrefix bowtie2IndexPrefix.default
+buildBowtie2IndexSet buildBowtie2IndexSet.FastaReferenceFile
+byPrefix.AbstractIndexSet getIndexPrefix.AbstractIndexFile
+getIndexPrefix.AbstractIndexSet isComplete.AbstractIndexSet
+isComplete.Bowtie2IndexSet

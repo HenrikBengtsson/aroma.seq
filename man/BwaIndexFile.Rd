@@ -23,32 +23,34 @@
 \code{~~~~~~~|}\cr
 \code{~~~~~~~+--}\code{\link[R.filesets]{GenericDataFile}}\cr
 \code{~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~+--}\emph{\code{BwaIndexFile}}\cr
+\code{~~~~~~~~~~~~+--}\code{\link[aroma.seq]{AbstractIndexFile}}\cr
+\code{~~~~~~~~~~~~~~~~~|}\cr
+\code{~~~~~~~~~~~~~~~~~+--}\emph{\code{BwaIndexFile}}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
 
 public abstract static class \bold{BwaIndexFile}\cr
-extends \emph{\link[R.filesets]{GenericDataFile}}\cr
+extends \emph{\link[aroma.seq]{AbstractIndexFile}}\cr
 
 
 
-  A BwaIndexFile object represents a BWA index file.
+  A BwaIndexFile object represents a Bwa index file.
  }
 
  \usage{BwaIndexFile(...)}
 
  \arguments{
-   \item{...}{Arguments passed to \code{\link[R.filesets]{GenericDataFile}}.}
+   \item{...}{Arguments passed to \code{\link{AbstractIndexFile}}.}
  }
 
  \section{Fields and Methods}{
   \bold{Methods:}\cr
-\tabular{rll}{
- \tab \code{as.character} \tab  -\cr
- \tab \code{getIndexPrefix} \tab  -\cr
-}
+\emph{No methods defined}.
 
+
+ \bold{Methods inherited from AbstractIndexFile}:\cr
+as.character, getIndexPrefix
 
  \bold{Methods inherited from GenericDataFile}:\cr
 getParentName, compareChecksum, copyTo, equals, fromFile, getAlias, getAttribute, getAttributes, getChecksum, getCreatedOn, getDefaultFullName, getExtension, getExtensionPattern, getFilename, getFilenameExtension, getFileSize, getFileType, getLastAccessedOn, getLastModifiedOn, getOutputExtension, getPath, getPathname, gunzip, gzip, hasBeenModified, isFile, readChecksum, renameTo, renameToUpperCaseExt, setAlias, setAttribute, setAttributes, setAttributesBy, setAttributesByTags, setExtensionPattern, testAttributes, validateChecksum, writeChecksum

@@ -1,12 +1,12 @@
 ###########################################################################/**
-# @RdocClass BwaIndexSet
+# @RdocClass Bowtie2IndexSet
 #
-# @title "The BwaIndexSet class"
+# @title "The Bowtie2IndexSet class"
 #
 # \description{
 #  @classhierarchy
 #
-#  An BwaIndexSet object represents a set of @see "BwaIndexFile":s.
+#  An Bowtie2IndexSet object represents a set of @see "Bowtie2IndexFile":s.
 # }
 # 
 # @synopsis
@@ -21,11 +21,11 @@
 # 
 # @author
 #*/###########################################################################
-setConstructorS3("BwaIndexSet", function(...) {
-  extend(AbstractIndexSet(...), "BwaIndexSet");
+setConstructorS3("Bowtie2IndexSet", function(...) {
+  extend(AbstractIndexSet(...), "Bowtie2IndexSet");
 })
 
-setMethodS3("isComplete", "BwaIndexSet", function(this, ...) {
+setMethodS3("isComplete", "Bowtie2IndexSet", function(this, ...) {
   knownExts <- c("amb", "ann", "bwt", "pac", "sa");
   if (length(this) < length(knownExts)) return(FALSE);
 
