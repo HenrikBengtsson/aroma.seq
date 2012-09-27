@@ -1,6 +1,8 @@
 library("R.utils");
 stopifnot(packageVersion("R.utils") >= "1.16.5");
 
+package <- "aroma.seq";
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Install extra packages, iff missing
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -16,7 +18,7 @@ if (!isPackageInstalled("R.menu")) {
 path <- "testScripts/";
 path <- Arguments$getReadablePath(path, mustExist=FALSE);
 if (!isDirectory(path)) {
-  pathT <- system.file("testScripts", package="aroma.affymetrix");
+  pathT <- system.file("testScripts", package=package);
   pathT <- Arguments$getReadablePath(pathT);
   createLink(target=pathT);
 }
