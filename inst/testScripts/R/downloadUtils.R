@@ -32,7 +32,7 @@ downloadBowtie2ExampleData <- function(...) {
 
   # Extract
   pathZ <- "tmp/bowtie2/";
-  mkdirs(pathZ);
+  pathZ <- Arguments$getWritablePath(pathZ);
   on.exit({
     removeDirectory(pathZ, recursive=TRUE);
   }, add=TRUE);

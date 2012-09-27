@@ -133,6 +133,8 @@
 \alias{byPath.BamDataSet}
 \alias{getOptionalArguments.BwaAlignment}
 \alias{capabilitiesOf}
+\alias{setupTests}
+\alias{setupTests.AromaSeq}
 
 \description{
   This page contains aliases for all "non-documented" objects that

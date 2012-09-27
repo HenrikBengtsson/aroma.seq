@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.1.8 [2012-09-27]
+o Added setupTests(aroma.seq) for easy setup of a redundancyTests/ directory.
+
+
 Version: 0.1.7 [2012-09-25]
 o Added capabilitiesOf(aroma.seq).
 o Now a SamDataSet can be converted to a BamDataSet.

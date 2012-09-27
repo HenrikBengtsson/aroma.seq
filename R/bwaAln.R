@@ -20,8 +20,8 @@
 #
 # \examples{\dontrun{
 #   pathnameFA <- "annotationData/organisms/LambdaPhage/lambda_virus.fa"
-#   bwaIndex(pathnameFA)
-#   indexPrefix <- bwaIndexPrefix(pathnameFA)
+#   bwaIndex(pathnameFA, method="is")
+#   indexPrefix <- bwaIndexPrefix(pathnameFA, method="is")
 #   bwaAln("fastqData/LambdaVirusExample/Generic/reads_1.fq", indexPrefix=indexPrefix, pathnameD="fastqData/LambdaVirusExample/Generic/reads_1.sai")
 # }}
 #

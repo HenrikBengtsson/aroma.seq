@@ -60,3 +60,4 @@ convertToBamDataSet
 byPath.BamDataSet
 getOptionalArguments.BwaAlignment
 capabilitiesOf
+setupTests setupTests.AromaSeq

@@ -76,9 +76,30 @@ setMethodS3("isCapableOf", "AromaSeq", function(static, what, ...) {
 })
 
 
+setMethodS3("setupTests", "AromaSeq", function(static, path="redundancyTests/", ...) {
+  # Argument 'path':
+  path <- Arguments$getWritablePath(path);
+
+  # Get the setup script
+  pathT <- system.file("testScripts", "setup", package=getName(static));
+  pathname <- Arguments$getReadablePathname("00a.setup.R", path=pathT);
+
+  opwd <- getwd();
+  setwd(path);
+  on.exit(setwd(opwd));
+
+  # Setup test directory
+  source(pathname);
+
+  path;
+})
+
+
 
 ############################################################################
 # HISTORY:
+# 2012-09-27
+# o Added setupTests() for AromaSeq.
 # 2012-09-25
 # o Added capabilitiesOf().
 # o Added 'samtools' to AromaSeq$isCapableOf().

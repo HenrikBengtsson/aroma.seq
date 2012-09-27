@@ -13,6 +13,8 @@
 # \arguments{
 #   \item{pathnameFA}{The FASTA file to be indexed.}
 #   \item{indexPrefix}{The prefix for the generated index files.}
+#   \item{method}{Additional arguments passed to @see "bwaIndexPrefix".
+#     Required if \code{indexPrefix == "*"}.}
 #   \item{...}{Additional arguments specifying BWA 'index' switches
 #     passed to @see "systemBWA".}
 #   \item{verbose}{See @see "R.utils::Verbose".}
@@ -24,7 +26,7 @@
 #
 # @author
 #*/###########################################################################
-setMethodS3("bwaIndex", "default", function(pathnameFA, indexPrefix="*", ..., verbose=FALSE) {
+setMethodS3("bwaIndex", "default", function(pathnameFA, indexPrefix="*", method, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -33,7 +35,7 @@ setMethodS3("bwaIndex", "default", function(pathnameFA, indexPrefix="*", ..., ve
 
   # Argument 'indexPrefix':
   if (identical(indexPrefix, "*")) {
-    indexPrefix <- bwaIndexPrefix(pathnameFA);
+    indexPrefix <- bwaIndexPrefix(pathnameFA, method=method);
   }
   if (!is.null(indexPrefix)) {
     path <- Arguments$getWritablePath(getParent(indexPrefix));
@@ -58,6 +60,8 @@ setMethodS3("bwaIndex", "default", function(pathnameFA, indexPrefix="*", ..., ve
 
 ############################################################################
 # HISTORY:
+# 2012-09-27
+# o Added argument 'method' with will be passed to bwaIndexPrefix().
 # 2012-09-24
 # o Created.
 ############################################################################
