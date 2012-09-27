@@ -1,4 +1,4 @@
-#! /usr/bin/env Rscript
+#!/usr/bin/env Rscript
 
 ############################################################################
 #
@@ -31,7 +31,7 @@ print(is);
 # Single-end alignment
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Process at most two FASTQ files
-ds <- extract(ds, 1:min(2, length(ds)));
+ds <- extract(ds, 1:min(3, length(ds)));
 
 # BWA with BWA 'aln' options '-n 2' and '-q 40'.
 alg <- BwaAlignment(ds, indexSet=is, n=2, q=40);
