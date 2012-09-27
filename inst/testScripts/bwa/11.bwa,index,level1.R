@@ -16,8 +16,8 @@ printf("BWA executable: %s\n", pathname);
 path <- "annotationData/organisms/LambdaPhage";
 pathnameFA <- file.path(path, "lambda_virus.fa");
 pathnameFA <- Arguments$getReadablePathname(pathnameFA);
-prefix <- bwaIndexPrefix(pathnameFA);
-res <- systemBWA("index", "a"="is", "p"=prefix, pathnameFA, verbose=TRUE);
+prefix <- bwaIndexPrefix(pathnameFA, method="is");
+res <- systemBWA("index", a="is", p=prefix, pathnameFA, verbose=TRUE);
 print(res);
 
 files <- list.files(path=getParent(prefix));

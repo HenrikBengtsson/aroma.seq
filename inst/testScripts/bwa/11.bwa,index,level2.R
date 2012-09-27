@@ -8,10 +8,11 @@ library("aroma.seq");
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 path <- "annotationData/organisms/LambdaPhage";
 pathnameFA <- file.path(path, "lambda_virus.fa");
-res <- bwaIndex(pathnameFA, a="is", verbose=TRUE);
+res <- bwaIndex(pathnameFA, method="is", verbose=TRUE);
 print(res);
 
-files <- list.files(path=getParent(bwaIndexPrefix(pathnameFA)));
+prefix <- bwaIndexPrefix(pathnameFA, method="is")
+files <- list.files(path=getParent(prefix));
 print(files);
 
 
