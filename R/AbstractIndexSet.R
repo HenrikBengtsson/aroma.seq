@@ -52,10 +52,6 @@ setMethodS3("getIndexPrefix", "AbstractIndexSet", function(this, ...) {
   if (length(this) == 0L) return(as.character(NA));
   df <- getFile(this, 1L);
   getIndexPrefix(df, ...);
-  path <- getPath(this);
-  fullname <- getFullName(df);
-  prefix <- file.path(path, fullname);
-  prefix;
 })
 
 

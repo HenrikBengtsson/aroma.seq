@@ -205,7 +205,10 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
   # Local functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   bowtie2Build <- function(pathnameFA, prefix, ..., verbose=FALSE) {
-     systemBowtie2Build(pathnameFA, prefix, ...);
+    # Assert that the directory for the index set exists
+    path <- getParent(prefix);
+    path <- Arguments$getWritablePath(path);
+    systemBowtie2Build(pathnameFA, prefix, ...);
   } # bowtie2Build()
 
 

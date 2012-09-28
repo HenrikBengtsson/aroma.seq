@@ -31,7 +31,7 @@ setMethodS3("isComplete", "BwaIndexSet", function(this, ...) {
 
   exts <- sapply(this, getExtension);
   missing <- setdiff(knownExts, exts);
-  if (any(missing)) {
+  if (length(missing) == 0L || any(missing)) {
     return(FALSE);
   }
 

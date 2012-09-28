@@ -12,10 +12,10 @@
 # @synopsis
 #
 # \arguments{
-#  \item{ds}{An @see "FastqDataSet".}
-#  \item{reference}{An @see "FastaReferenceFile".} of 
+#  \item{dataSet}{An @see "FastqDataSet".}
+#  \item{indexSet}{An @see "Bowtie2IndexSet".}
 #  \item{tags}{Additional tags for the output data sets.}
-#  \item{...}{Additional arguments passed to the aligner.}
+#  \item{...}{Additional BWA 'aln' arguments.}
 # }
 #
 # \section{Fields and Methods}{
@@ -24,22 +24,25 @@
 #
 # \author{Henrik Bengtsson and Pierre Neuvial}
 #*/########################################################################### 
-setConstructorS3("Bowtie2Alignment", function(ds=NULL, reference=NULL, tags="*", ...) {
+setConstructorS3("Bowtie2Alignment", function(dataSet=NULL, indexSet=NULL, tags="*", ...) {
   # Validate arguments
-  if (!is.null(ds)) {
-    # Argument 'ds':
-    ds <- Arguments$getInstanceOf(ds, "FastqDataSet");
+  if (!is.null(dataSet)) {
+    # Argument 'dataSet':
+    dataSet <- Arguments$getInstanceOf(dataSet, "FastqDataSet");
 
-    # Argument 'reference':
-    reference <- Arguments$getInstanceOf(ds, "FastaReferenceFile");
-  } # if (!is.null(ds))
+    # Argument 'indexSet':
+    if (inherits(indexSet, "FastaReferenceFile")) {
+      throw("Argument 'indexSet' should be a Bowtie2IndexSet object (not ", class(indexSet)[1], "). Use buildBowtie2IndexSet().");
+    }
+    indexSet <- Arguments$getInstanceOf(indexSet, "Bowtie2IndexSet");
+  } # if (!is.null(dataSet))
 
   # Arguments '...':
   args <- list(...);
 
-  this <- extend(Object(...), "Bowtie2Alignment",
-    .ds = ds,
-    .reference = reference,
+  this <- extend(Object(), "Bowtie2Alignment",
+    .ds = dataSet,
+    .indexSet = indexSet,
     .tags = tags,
     .args = args
   );
@@ -60,9 +63,9 @@ setMethodS3("as.character", "Bowtie2Alignment", function(x, ...) {
   s <- c(s, "Input data set:");
   s <- c(s, as.character(ds));
 
-  ref <- getReferenceFile(this);
-  s <- c(s, "Aligning to reference:");
-  s <- c(s, as.character(ref));
+  is <- getIndexSet(this);
+  s <- c(s, "Reference index set:");
+  s <- c(s, as.character(is));
  
   class(s) <- "GenericSummary";
   s;
@@ -73,12 +76,18 @@ setMethodS3("getInputDataSet", "Bowtie2Alignment", function(this, ...) {
   this$.ds;
 })
 
-setMethodS3("getReferenceFile", "Bowtie2Alignment", function(this, ...) {
-  this$.reference;
+setMethodS3("getIndexSet", "Bowtie2Alignment", function(this, ...) {
+  this$.indexSet;
+})
+
+setMethodS3("getOptionalArguments", "Bowtie2Alignment", function(this, ...) {
+  this$.args;
 })
 
 setMethodS3("getAsteriskTags", "Bowtie2Alignment", function(this, collapse=NULL, ...) {
-  tags <- "bowtie2";
+  is <- getIndexSet(this);
+  tags <- c("bowtie2", getTags(is, collapse=NULL));
+  tags <- unique(tags);
 
   if (!is.null(collapse)) {
     tags <- paste(tags, collapse=collapse);
@@ -146,7 +155,7 @@ setMethodS3("getFullName", "Bowtie2Alignment", function(this, ...) {
 
 
 setMethodS3("getRootPath", "Bowtie2Alignment", function(this, ...) {
-  "bamData";
+  "bowtie2Data";
 })
 
 setMethodS3("getPath", "Bowtie2Alignment", function(this, create=TRUE, ...) {
@@ -192,16 +201,56 @@ setMethodS3("nbrOfFiles", "Bowtie2Alignment", function(this, ...) {
 
 
 setMethodS3("getOutputDataSet", "Bowtie2Alignment", function(this, ...) {
-  ds <- getInputDataSet(this);
+  ## Find all existing output data files
   path <- getPath(this);
   res <- BamDataSet$byPath(path, ...);
-  ## TODO: Keep only those samples that exists in the input data set
+
+  ## Keep only those samples that exists in the input data set
+  ds <- getInputDataSet(this);
+  res <- extract(res, getFullNames(ds));
+  
   ## TODO: Assert completeness
   res;
 })
 
 
-setMethodS3("process", "Bowtie2Alignment", function(this, ..., force=FALSE, verbose=FALSE) {
+###########################################################################/** 
+# @RdocMethod process
+#
+# @title "Runs the aligner"
+#
+# \description{
+#   @get "title" on all input files.
+#   The generated BAM files are all sorted and indexed.
+# }
+#
+# @synopsis
+#
+# \arguments{
+#  \item{...}{Not used.}
+#  \item{skip}{If @TRUE, already processed files are skipped.}
+#  \item{verbose}{See @see "R.utils::Verbose".}
+# }
+#
+# \value{
+#   Returns a @see "BamDataSet".
+# }
+#
+# @author
+#*/###########################################################################  
+setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=FALSE, verbose=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Local functions
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  bowtie2 <- function(pathnameFQ, indexPrefix, pathnameSAM, ..., verbose=FALSE) {
+    pathnameFQ <- Arguments$getReadablePathname(pathnameFQ);
+    indexPrefix <- Arguments$getCharacter(indexPrefix);
+    indexPath <- Arguments$getReadablePath(getParent(indexPrefix));
+    pathnameSAM <- Arguments$getWritablePathname(pathnameSAM);
+    systemBowtie2(optionsList=list(x=indexPrefix, U=pathnameFQ, S=pathnameSAM));
+  } # bowtie2()
+
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -216,13 +265,20 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., force=FALSE, verb
   units <- NULL;
 
   verbose && enter(verbose, "Bowtie2 alignment");
+
   ds <- getInputDataSet(this);
   verbose && cat(verbose, "Input data set:");
   verbose && print(verbose, ds);
 
-  ref <- getReferenceFile(this);
-  verbose && cat(verbose, "Aligning to reference:");
-  verbose && print(verbose, ref);
+  is <- getIndexSet(this);
+  verbose && cat(verbose, "Aligning using index set:");
+  verbose && print(verbose, is);
+  indexPrefix <- getIndexPrefix(is);
+
+  optArgs <- getOptionalArguments(this);
+  verbose && cat(verbose, "Additional bowtie2 arguments:");
+  verbose && str(verbose, optArgs);
+
 
   nbrOfFiles <- nbrOfFiles(this);
   verbose && cat(verbose, "Number of files: ", nbrOfFiles);
@@ -234,23 +290,53 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., force=FALSE, verb
     verbose && enter(verbose, sprintf("Sample #%d ('%s') of %d", 
                                                     kk, name, nbrOfFiles));
 
-    # Output file
-    filename <- getFilename(df);
-    pathname <- Arguments$getReadablePathname(filename, path=outPath, mustExist=FALSE);
+    pathnameFQ <- getPathname(df);
+    verbose && cat(verbose, "FASTQ pathname: ", pathnameFQ);
+
+    # The SAI and SAM files to be generated
+    fullname <- getFullName(df);
+    filename <- sprintf("%s.sai", fullname);
+    pathnameSAI <- Arguments$getWritablePathname(filename, path=outPath);
+    filename <- sprintf("%s.sam", fullname);
+    pathnameSAM <- Arguments$getWritablePathname(filename, path=outPath);
+    verbose && cat(verbose, "SAM pathname: ", pathnameSAM);
+    filename <- sprintf("%s.bam", fullname);
+    pathnameBAM <- Arguments$getWritablePathname(filename, path=outPath);
+    verbose && cat(verbose, "BAM pathname: ", pathnameBAM);
 
     # Nothing to do?
-    if (isFile(pathname)) {
-      verbose && cat(verbose, "Already aligned.");
+    if (skip && isFile(pathnameBAM)) {
+      verbose && cat(verbose, "Already aligned. Skipping");
       verbose && exit(verbose);
       next;
     }
 
     verbose && print(verbose, df);
 
-    verbose && enter(verbose, "Aligning");
-    dfOut <- processOne(this, df=df, reference=ref, ..., verbose=less(verbose));
-    verbose && print(verbose, dfOut);
-    verbose && exit(verbose);
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # (a) Generate SAM file
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    if (!isFile(pathnameSAM)) {
+      args <- list(pathnameFQ, indexPrefix=indexPrefix, pathnameSAM=pathnameSAM);
+      args <- c(args, optArgs);
+      args$verbose <- less(verbose, 5);
+      res <- do.call(bowtie2, args=args);
+      verbose && cat(verbose, "System result code: ", res);
+    }
+
+    # Sanity check
+    stopifnot(isFile(pathnameSAM));
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # (b) Generate BAM file from SAM file
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    if (!isFile(pathnameBAM)) {
+      sf <- SamDataFile(pathnameSAM);
+      bf <- convertToBamDataFile(sf, verbose=less(verbose, 5));
+      print(pathnameBAM);
+    }
+    # Sanity check
+    stopifnot(isFile(pathnameBAM));
 
     verbose && exit(verbose);
   } # for (kk ...)
@@ -262,50 +348,9 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., force=FALSE, verb
   invisible(res);
 })
 
-setMethodS3("processOne", "Bowtie2Alignment", function(this, df, reference, ..., verbose=FALSE) {
-  # Argument 'df':
-  df <- Arguments$getInstanceOf(df, "FastqDataFile");
-
-  # Argument 'reference':
-  reference <- Arguments$getInstanceOf(reference, "FastaReferenceFile");
-
-
-  verbose && enter(verbose, "Aligning one file");
-  verbose && print(verbose, df);
-  verbose && print(verbose, reference);
-
-  fastqPathname <- getPathname(df);
-  fastaPathname <- getPathname(reference);
-  args <- list(pathname=fastqPathname, refPathname=fastaPathname);
-
-  # Additional arguments
-  userArgs <- list(...);
-  args <- c(args, this$.args, userArgs);
-  args$verbose <- less(verbose, 5);
-
-  # Call the aligner
-  bamPathname <- do.call(bowtie2, args=args);
-
-  # Assert output
-  dfOut <- BamFile(bamPathname);
-  verbose && print(verbose, dfOut);
-  
-  verbose && exit(verbose);
-
-  # Assert correctness of output
-  dfOut <- Arguments$getInstanceOf(dfOut, "BamFile");
-
-  dfOut;
-}, private=TRUE);
 
 ############################################################################
 # HISTORY:
-# 2012-08-20
-# o Renamed Bowtie2Aligment to Bowtie2Alignment.
-# 2012-07-11
-# o ROBUSTNESS: Now using do.call(bowtie2, ...) instead of 
-#   do.call("bowtie2", ...) so that R CMD check can validate it
-#   knowing that bowtie2() is a function.
-# 2012-06-28
-# o Created.
+# 2012-09-27
+# o Created from BwaAlignment.R.
 ############################################################################ 

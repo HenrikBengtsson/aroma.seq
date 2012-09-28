@@ -32,7 +32,7 @@ print(is);
 # Single-end alignment
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Bowtie2 with bowtie2 ...
-alg <- Bowtie2Alignment(ds, indexFile=if);
+alg <- Bowtie2Alignment(ds, indexSet=is);
 print(alg);
 
 bs <- process(alg, verbose=-20);

@@ -26,14 +26,16 @@ setConstructorS3("Bowtie2IndexSet", function(...) {
 })
 
 setMethodS3("isComplete", "Bowtie2IndexSet", function(this, ...) {
-  knownExts <- c("amb", "ann", "bwt", "pac", "sa");
+  knownExts <- c("1", "2", "3", "4", "rev.1", "rev.2");
+  knownExts <- sprintf("%s.bt2", knownExts);
   if (length(this) < length(knownExts)) return(FALSE);
 
-  exts <- sapply(this, getExtension);
-  missing <- setdiff(knownExts, exts);
-  if (any(missing)) {
-    return(FALSE);
-  }
+  filenames <- sapply(this, getFilename);
+  patterns <- sprintf("[.]%s$", knownExts);
+  idxs <- sapply(patterns, FUN=grep, filenames);
+  ns <- sapply(idxs, FUN=length);
+
+  if(any(ns == 0L)) return(FALSE);
 
   TRUE;
 })
