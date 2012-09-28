@@ -1,22 +1,23 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Do not modify this file since it was automatically generated from:
 % 
-%  findBowtie2.R
+%  findPicard.R
 % 
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{findBowtie2}
-\alias{findBowtie2.default}
-\alias{findBowtie2}
+ \name{findPicard}
+\alias{findPicard.default}
+\alias{findPicard}
+ \alias{PICARD_HOME}
 
- \title{Locates the Bowtie2 executable}
+ \title{Locates the Picard executable}
 
  \description{
-  Locates the Bowtie2 executable on the current system.
+  Locates the Picard executable on the current system.
  }
 
- \usage{\method{findBowtie2}{default}(mustExists=TRUE, ..., verbose=FALSE)}
+ \usage{\method{findPicard}{default}(mustExists=TRUE, ..., verbose=FALSE)}
 
  \arguments{
    \item{mustExists}{If \code{\link[base:logical]{TRUE}}, an exception is thrown if the executable
@@ -26,9 +27,9 @@
  }
 
  \details{
-  The Bowtie2 executable is searched for as follows:
+  The Picard tools directory is searched for as follows:
   \enumerate{
-   \item \code{Sys.which("bowtie2-align")}
+   \item \code{Sys.getenv("PICARD_HOME")}
   }
  }
 

@@ -1,7 +1,7 @@
 ###########################################################################/**
-# @RdocDefault systemSamtools
+# @RdocDefault systemPicard
 #
-# @title "Calls the samtools executable"
+# @title "Calls the Picard executable"
 #
 # \description{
 #  @get "title".
@@ -10,15 +10,16 @@
 # @synopsis
 #
 # \arguments{
-#   \item{command}{A @character string specifying the samtools command.}
-#   \item{...}{Additional arguments specifying samtools command line switches.}
+#   \item{command}{A @character string specifying the Picard command
+#     (the name of the jar file without the *.jar extension).}
+#   \item{...}{Additional arguments specifying Picard command line switches.}
 #   \item{.fake}{If @TRUE, the executable is not called.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
 # @author
 #*/###########################################################################
-setMethodS3("systemSamtools", "default", function(command, ..., .fake=FALSE, verbose=FALSE) {
+setMethodS3("systemPicard", "default", function(command, ..., .fake=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -35,17 +36,27 @@ setMethodS3("systemSamtools", "default", function(command, ..., .fake=FALSE, ver
     on.exit(popState(verbose));
   }
 
-  verbose && enter(verbose, "Calling samtools executable");
+  verbose && enter(verbose, "Calling Picard executable");
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Locate executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  bin <- findSamtools(verbose=less(verbose, 50));
-  verbose && cat(verbose, "Executable: ", bin);
+  path <- findPicard(verbose=less(verbose, 50));
+  verbose && cat(verbose, "Picard directory: ", path);
+
+  verbose && cat(verbose, "Picard command: ", command);
+  filename <- sprintf("%s.jar", command);
+
+  pathname <- file.path(path, filename);
+  verbose && cat(verbose, "Pathname to Picard jar file: ", pathname);
+  pathname <- Arguments$getReadablePathname(pathname);
+
+  # The actual binary is 'java'
+  bin <- "java";
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Split up '...' arguments by system2() and samtools executable
+  # Split up '...' arguments by system2() and Picard executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   keep <- is.element(names(args), names(formals(base::system2)));
   system2Args <- args[keep];
@@ -54,8 +65,9 @@ setMethodS3("systemSamtools", "default", function(command, ..., .fake=FALSE, ver
   verbose && cat(verbose, "Arguments passed to system2():");
   verbose && str(verbose, system2Args);
 
-  verbose && cat(verbose, "Arguments passed to samtools:");
-  args <- c(list(command), args);
+  verbose && cat(verbose, "Arguments passed to java (to launch Picard):");
+  
+  args <- c(list(sprintf("-jar \"%s\"", pathname)), args);
   verbose && str(verbose, args);
 
 
@@ -64,13 +76,9 @@ setMethodS3("systemSamtools", "default", function(command, ..., .fake=FALSE, ver
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Automatically add dashes
   keys <- names(args);
-  missing <- grep("^[^-]", keys);
-  if (length(missing) > 0L) {
-    invalid <- (args[missing] == "");
-    if (any(invalid)) {
-      throw("Detected non-valid command line switched: ", hpaste(args[missing][invalid]));
-    }
-    keys[missing] <- sprintf("-%s", keys[missing]);
+  bad <- grep("^-", keys, value=TRUE);
+  if (length(bad) > 0L) {
+    throw("Detected non-valid command line options: ", hpaste(bad));
   }
 
   args <- paste(keys, args, sep=" ");
@@ -94,18 +102,18 @@ setMethodS3("systemSamtools", "default", function(command, ..., .fake=FALSE, ver
   if (!.fake) {
     res <- do.call(base::system2, callArgs);
   } else {
-    res <- "<fake run>";
+    res <- "<fake run>"; 
   }
   verbose && exit(verbose);
 
   verbose && exit(verbose);
 
   res;
-}) # systemSamtools()
+}) # systemPicard()
 
 
 ############################################################################
 # HISTORY:
-# 2012-09-25
-# o Created from systemBWA.R.
+# 2012-09-27
+# o Created.
 ############################################################################

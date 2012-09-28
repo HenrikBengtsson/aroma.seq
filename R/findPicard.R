@@ -1,7 +1,8 @@
 ###########################################################################/**
-# @RdocDefault findBowtie2
+# @RdocDefault findPicard
+# \alias{PICARD_HOME}
 #
-# @title "Locates the Bowtie2 executable"
+# @title "Locates the Picard executable"
 #
 # \description{
 #  @get "title" on the current system.
@@ -17,15 +18,15 @@
 # }
 #
 # \details{
-#  The Bowtie2 executable is searched for as follows:
+#  The Picard tools directory is searched for as follows:
 #  \enumerate{
-#   \item \code{Sys.which("bowtie2-align")}
+#   \item \code{Sys.getenv("PICARD_HOME")}
 #  }
 # }
 #
 # @author
 #*/###########################################################################
-setMethodS3("findBowtie2", "default", function(mustExists=TRUE, ..., verbose=FALSE) {
+setMethodS3("findPicard", "default", function(mustExists=TRUE, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -39,34 +40,36 @@ setMethodS3("findBowtie2", "default", function(mustExists=TRUE, ..., verbose=FAL
     on.exit(popState(verbose));
   }
 
-  verbose && enter(verbose, "Locating BWA software");
+  verbose && enter(verbose, "Locating Picard software");
 
-  # The bowtie2 itself is actually a perl script
-  command <- "bowtie2-align";
+  command <- "picard";
   verbose && cat(verbose, "Command: ", command);
 
-  pathname <- Sys.which(command);
-  if (identical(pathname, "")) pathname <- NULL;
-  if (!isFile(pathname)) pathname <- NULL;
+  path <- Sys.getenv("PICARD_HOME");
+  verbose && printf(verbose, "System variable 'PICARD_HOME': '%s'\n", path);
+  if (path == "") path <- NULL;
+ 
+  if (mustExists && (is.null(path) || !isDirectory(path))) {
+    throw(sprintf("Failed to located Picard tools"));
+  }
 
+  path <- Arguments$getReadablePath(path);
+  verbose && cat(verbose, "Located directory: ", path);
 
-  verbose && cat(verbose, "Located pathname: ", pathname);
-
-  if (mustExists && !isFile(pathname)) {
-    throw(sprintf("Failed to located Bowtie2 (executable '%s').", command));
+  # Validating
+  files <- list.files(path=path, pattern="[.]jar$");
+  if (length(files) == 0L) {
+    throw("The located Picard directory contains no *.jar files: ", path);
   }
 
   verbose && exit(verbose);
 
-  pathname;
-}) # findBowtie2()
+  path;
+}) # findPicard()
 
 
 ############################################################################
 # HISTORY:
 # 2012-09-27
-# o Now looking for bowtie2-align instead of bowtie2, because the latter
-#   is a perl script calling the former.
-# 2012-09-24
 # o Created.
 ############################################################################

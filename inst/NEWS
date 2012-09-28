@@ -1,6 +1,11 @@
 Package: aroma.seq
 ==================
 
+
+Version: 0.1.10 [2012-09-27]
+o Added low-level support for Picard.
+
+
 Version: 0.1.9 [2012-09-27]
 o Added Bowtie2Alignment.
 

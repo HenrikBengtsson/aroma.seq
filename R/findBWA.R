@@ -16,6 +16,13 @@
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
+# \details{
+#  The BWA executable is searched for as follows:
+#  \enumerate{
+#   \item \code{Sys.which("bwa")}
+#  }
+# }
+#
 # @author
 #*/###########################################################################
 setMethodS3("findBWA", "default", function(mustExists=TRUE, ..., verbose=FALSE) {
