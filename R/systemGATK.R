@@ -1,7 +1,7 @@
 ###########################################################################/**
-# @RdocDefault systemPicard
+# @RdocDefault systemGATK
 #
-# @title "Calls the Picard executable"
+# @title "Calls the GATK executable"
 #
 # \description{
 #  @get "title".
@@ -10,37 +10,23 @@
 # @synopsis
 #
 # \arguments{
-#   \item{command}{A @character string specifying the Picard command
-#     (the name of the jar file without the *.jar extension).}
-#   \item{...}{Additional arguments specifying Picard command line switches.}
+#   \item{...}{Arguments specifying GATK command line switches.}
 #   \item{.fake}{If @TRUE, the executable is not called.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
 # \examples{\dontrun{
 #   pathnameBAM <- "bwaData/LambdaVirusExample,bwa,is/Generic/reads_1.bam"
-#   res <- systemPicard("ValidateSamFile", INPUT=pathnameBAM, stderr=FALSE)
-#   ## ERROR: Read groups is empty
-#   print(res)
-#   ## [1] 1
-#
-#   res <- systemPicard("ValidateSamFile", INPUT=pathnameBAM,
-#                       IGNORE="MISSING_READ_GROUP", stderr=FALSE)
-#   ## "No errors found"
-#   print(res)
-#   ## [1] 0
+#   res <- systemGATK(T="CountReads", ..., stderr=FALSE)
 # }}
 #
 #
 # @author
 #*/###########################################################################
-setMethodS3("systemPicard", "default", function(command, ..., .fake=FALSE, verbose=FALSE) {
+setMethodS3("systemGATK", "default", function(..., .fake=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Argument 'command':
-  command <- Arguments$getCharacter(command);
-
   # Arguments '...':
   args <- list(...);
 
@@ -51,19 +37,13 @@ setMethodS3("systemPicard", "default", function(command, ..., .fake=FALSE, verbo
     on.exit(popState(verbose));
   }
 
-  verbose && enter(verbose, "Calling Picard executable");
+  verbose && enter(verbose, "Calling GATK executable");
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Locate executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  path <- findPicard(verbose=less(verbose, 50));
-  verbose && cat(verbose, "Picard directory: ", path);
-
-  verbose && cat(verbose, "Picard command: ", command);
-  filename <- sprintf("%s.jar", command);
-
-  pathname <- file.path(path, filename);
-  verbose && cat(verbose, "Pathname to Picard jar file: ", pathname);
+  pathname <- findGATK(verbose=less(verbose, 50));
+  verbose && cat(verbose, "GATK jar file: ", pathname);
   pathname <- Arguments$getReadablePathname(pathname);
 
   # The actual binary is 'java'
@@ -71,7 +51,7 @@ setMethodS3("systemPicard", "default", function(command, ..., .fake=FALSE, verbo
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Split up '...' arguments by system2() and Picard executable
+  # Split up '...' arguments by system2() and GATK executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   keep <- is.element(names(args), names(formals(base::system2)));
   system2Args <- args[keep];
@@ -80,9 +60,9 @@ setMethodS3("systemPicard", "default", function(command, ..., .fake=FALSE, verbo
   verbose && cat(verbose, "Arguments passed to system2():");
   verbose && str(verbose, system2Args);
 
-  verbose && cat(verbose, "Arguments passed to java (to launch Picard):");
+  verbose && cat(verbose, "Arguments passed to java (to launch GATK):");
   
-  args <- c(list(sprintf("-jar \"%s\"", pathname)), args);
+  args <- c(list(jar=sprintf("\"%s\"", pathname)), args);
   verbose && str(verbose, args);
 
 
@@ -91,13 +71,16 @@ setMethodS3("systemPicard", "default", function(command, ..., .fake=FALSE, verbo
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Automatically add dashes
   keys <- names(args);
-  bad <- grep("^-", keys, value=TRUE);
-  if (length(bad) > 0L) {
-    throw("Detected non-valid command line options: ", hpaste(bad));
+  missing <- grep("^[^-]", keys);
+  if (length(missing) > 0L) {
+    invalid <- (args[missing] == "");
+    if (any(invalid)) {
+      throw("Detected non-valid command line switched: ", hpaste(args[missing][invalid]));
+    }
+    keys[missing] <- sprintf("-%s", keys[missing]);
   }
 
-  pairs <- (nchar(keys) > 0L);
-  args[pairs] <- paste(keys[pairs], args[pairs], sep="=");
+  args <- paste(keys, args, sep=" ");
   args <- trim(args);
   verbose && cat(verbose, "Command line options:");
   verbose && print(verbose, args);
@@ -125,11 +108,11 @@ setMethodS3("systemPicard", "default", function(command, ..., .fake=FALSE, verbo
   verbose && exit(verbose);
 
   res;
-}) # systemPicard()
+}) # systemGATK()
 
 
 ############################################################################
 # HISTORY:
-# 2012-09-27
-# o Created.
+# 2012-09-28
+# o Created from systemPicard.R.
 ############################################################################

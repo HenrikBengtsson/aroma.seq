@@ -26,7 +26,7 @@
    \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
  }
 
- \examples{
+ \examples{\dontrun{
    pathnameBAM <- "bwaData/LambdaVirusExample,bwa,is/Generic/reads_1.bam"
    res <- systemPicard("ValidateSamFile", INPUT=pathnameBAM, stderr=FALSE)
    ## ERROR: Read groups is empty
@@ -38,7 +38,7 @@
    ## "No errors found"
    print(res)
    ## [1] 0
- }
+ }}
 
 
  \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}

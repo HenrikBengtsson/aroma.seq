@@ -60,8 +60,15 @@ setMethodS3("capabilitiesOf", "AromaSeq", function(static, what=NULL, ...) {
   res <- list();
   res$bowtie2 <- !is.null(findBowtie2(mustExists=FALSE));
   res$bwa <- !is.null(findBWA(mustExists=FALSE));
+  res$gatk <- !is.null(findGATK(mustExists=FALSE));
   res$picard <- !is.null(findPicard(mustExists=FALSE));
   res$samtools <- !is.null(findSamtools(mustExists=FALSE));
+
+  # Order lexicographically
+  o <- order(names(res));
+  res <- res[o];
+
+  # Coerce into a named character vector
   res <- unlist(res);
 
   if (!is.null(what)) {
