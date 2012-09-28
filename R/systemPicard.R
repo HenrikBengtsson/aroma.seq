@@ -17,6 +17,21 @@
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
+# \examples{
+#   pathnameBAM <- "bwaData/LambdaVirusExample,bwa,is/Generic/reads_1.bam"
+#   res <- systemPicard("ValidateSamFile", INPUT=pathnameBAM, stderr=FALSE)
+#   ## ERROR: Read groups is empty
+#   print(res)
+#   ## [1] 1
+#
+#   res <- systemPicard("ValidateSamFile", INPUT=pathnameBAM,
+#                       IGNORE="MISSING_READ_GROUP", stderr=FALSE)
+#   ## "No errors found"
+#   print(res)
+#   ## [1] 0
+# }
+#
+#
 # @author
 #*/###########################################################################
 setMethodS3("systemPicard", "default", function(command, ..., .fake=FALSE, verbose=FALSE) {
@@ -81,7 +96,8 @@ setMethodS3("systemPicard", "default", function(command, ..., .fake=FALSE, verbo
     throw("Detected non-valid command line options: ", hpaste(bad));
   }
 
-  args <- paste(keys, args, sep=" ");
+  pairs <- (nchar(keys) > 0L);
+  args[pairs] <- paste(keys[pairs], args[pairs], sep="=");
   args <- trim(args);
   verbose && cat(verbose, "Command line options:");
   verbose && print(verbose, args);
