@@ -147,6 +147,10 @@
 \alias{isComplete.Bowtie2IndexSet}
 \alias{getIndexSet.Bowtie2Alignment}
 \alias{getOptionalArguments.Bowtie2Alignment}
+\alias{getSequenceNames}
+\alias{getSequenceNames.Bowtie2IndexSet}
+\alias{getSummary}
+\alias{getSummary.Bowtie2IndexSet}
 
 \description{
   This page contains aliases for all "non-documented" objects that

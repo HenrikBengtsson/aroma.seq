@@ -69,3 +69,5 @@ getIndexPrefix.AbstractIndexSet isComplete.AbstractIndexSet
 isComplete.Bowtie2IndexSet
 getIndexSet.Bowtie2Alignment
 getOptionalArguments.Bowtie2Alignment
+getSequenceNames getSequenceNames.Bowtie2IndexSet getSummary
+getSummary.Bowtie2IndexSet
