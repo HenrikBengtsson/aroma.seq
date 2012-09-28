@@ -151,8 +151,6 @@ setMethodS3("systemBowtie2", "default", function(
   verbose && enter(verbose, "Running bowtie2");
   verbose && cat(verbose, "System call: ", cmd)
 
-  browser()
-
   ##
   ## ADDITIONAL TESTING FOR BOWTIE2-BUILD IN HERE?
   ##
