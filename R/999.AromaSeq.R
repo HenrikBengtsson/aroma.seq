@@ -58,6 +58,12 @@ setConstructorS3("AromaSeq", function(...) {
 #*/###########################################################################
 setMethodS3("capabilitiesOf", "AromaSeq", function(static, what=NULL, ...) {
   res <- list();
+
+  # General software frameworks
+  res$java <- !is.null(findJava(mustExists=FALSE));
+  res$perl <- !is.null(findPerl(mustExists=FALSE));
+
+  # Sequencing tools
   res$bowtie2 <- !is.null(findBowtie2(mustExists=FALSE));
   res$bwa <- !is.null(findBWA(mustExists=FALSE));
   res$gatk <- !is.null(findGATK(mustExists=FALSE));

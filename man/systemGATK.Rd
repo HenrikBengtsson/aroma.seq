@@ -16,11 +16,10 @@
   Calls the GATK executable.
  }
 
- \usage{\method{systemGATK}{default}(..., .fake=FALSE, verbose=FALSE)}
+ \usage{\method{systemGATK}{default}(..., verbose=FALSE)}
 
  \arguments{
    \item{...}{Arguments specifying GATK command line switches.}
-   \item{.fake}{If \code{\link[base:logical]{TRUE}}, the executable is not called.}
    \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
  }
 

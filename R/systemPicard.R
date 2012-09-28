@@ -13,7 +13,6 @@
 #   \item{command}{A @character string specifying the Picard command
 #     (the name of the jar file without the *.jar extension).}
 #   \item{...}{Additional arguments specifying Picard command line switches.}
-#   \item{.fake}{If @TRUE, the executable is not called.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
@@ -34,7 +33,7 @@
 #
 # @author
 #*/###########################################################################
-setMethodS3("systemPicard", "default", function(command, ..., .fake=FALSE, verbose=FALSE) {
+setMethodS3("systemPicard", "default", function(command, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -66,62 +65,13 @@ setMethodS3("systemPicard", "default", function(command, ..., .fake=FALSE, verbo
   verbose && cat(verbose, "Pathname to Picard jar file: ", pathname);
   pathname <- Arguments$getReadablePathname(pathname);
 
-  # The actual binary is 'java'
-  bin <- "java";
-
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Split up '...' arguments by system2() and Picard executable
+  # Call Picard java jar
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  keep <- is.element(names(args), names(formals(base::system2)));
-  system2Args <- args[keep];
-  args <- args[!keep];
-
-  verbose && cat(verbose, "Arguments passed to system2():");
-  verbose && str(verbose, system2Args);
-
-  verbose && cat(verbose, "Arguments passed to java (to launch Picard):");
-  
-  args <- c(list(sprintf("-jar \"%s\"", pathname)), args);
-  verbose && str(verbose, args);
-
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Setup command line switches
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Automatically add dashes
-  keys <- names(args);
-  bad <- grep("^-", keys, value=TRUE);
-  if (length(bad) > 0L) {
-    throw("Detected non-valid command line options: ", hpaste(bad));
-  }
-
-  pairs <- (nchar(keys) > 0L);
-  args[pairs] <- paste(keys[pairs], args[pairs], sep="=");
-  args <- trim(args);
-  verbose && cat(verbose, "Command line options:");
-  verbose && print(verbose, args);
-
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # System call
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && cat(verbose, "System call:");
-  cmd <- sprintf("%s %s", bin, paste(args, collapse=" "));
-  verbose && print(verbose, cmd);
-  verbose && str(verbose, system2Args);
-
-  verbose && enter(verbose, "system2() call");
-  callArgs <- list(command=bin, args=args);
-  callArgs <- c(callArgs, system2Args);
-  verbose && str(verbose, callArgs);
-  if (!.fake) {
-    res <- do.call(base::system2, callArgs);
-  } else {
-    res <- "<fake run>"; 
-  }
-  verbose && exit(verbose);
-
+  .fmtArg <- c(".*"="%s=%s");
+  res <- systemJavaJar(pathname, ..., .fmtArg=.fmtArg, verbose=less(verbose, 5));
+ 
   verbose && exit(verbose);
 
   res;
@@ -130,6 +80,8 @@ setMethodS3("systemPicard", "default", function(command, ..., .fake=FALSE, verbo
 
 ############################################################################
 # HISTORY:
+# 2012-09-28
+# o Now utilizing systemJavaJar().
 # 2012-09-27
 # o Created.
 ############################################################################
