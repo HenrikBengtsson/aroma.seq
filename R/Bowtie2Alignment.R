@@ -293,10 +293,8 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
     pathnameFQ <- getPathname(df);
     verbose && cat(verbose, "FASTQ pathname: ", pathnameFQ);
 
-    # The SAI and SAM files to be generated
+    # The SAM and BAM files to be generated
     fullname <- getFullName(df);
-    filename <- sprintf("%s.sai", fullname);
-    pathnameSAI <- Arguments$getWritablePathname(filename, path=outPath);
     filename <- sprintf("%s.sam", fullname);
     pathnameSAM <- Arguments$getWritablePathname(filename, path=outPath);
     verbose && cat(verbose, "SAM pathname: ", pathnameSAM);

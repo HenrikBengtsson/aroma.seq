@@ -34,7 +34,8 @@ setMethodS3("findBowtie2", "default", function(mustExists=TRUE, ..., verbose=FAL
 
   verbose && enter(verbose, "Locating BWA software");
 
-  command <- "bowtie2";
+  # The bowtie2 itself is actually a perl script
+  command <- "bowtie2-align";
   verbose && cat(verbose, "Command: ", command);
 
   pathname <- Sys.which(command);
@@ -56,6 +57,9 @@ setMethodS3("findBowtie2", "default", function(mustExists=TRUE, ..., verbose=FAL
 
 ############################################################################
 # HISTORY:
+# 2012-09-27
+# o Now looking for bowtie2-align instead of bowtie2, because the latter
+#   is a perl script calling the former.
 # 2012-09-24
 # o Created.
 ############################################################################

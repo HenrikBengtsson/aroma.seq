@@ -30,7 +30,7 @@ getFullName.Bowtie2Alignment getInputDataSet.Bowtie2Alignment
 getName.Bowtie2Alignment getOutputDataSet.Bowtie2Alignment
 getPath.Bowtie2Alignment getReferenceFile.Bowtie2Alignment
 getRootPath.Bowtie2Alignment getTags.Bowtie2Alignment
-nbrOfFiles.Bowtie2Alignment process.Bowtie2Alignment
+nbrOfFiles.Bowtie2Alignment 
 processOne.Bowtie2Alignment setTags.Bowtie2Alignment
 systemBowtie2 systemBowtie2.default systemBowtie2Build
 systemBowtie2Build.default testSystemBowtie2Build
@@ -67,3 +67,5 @@ buildBowtie2IndexSet buildBowtie2IndexSet.FastaReferenceFile
 byPrefix.AbstractIndexSet getIndexPrefix.AbstractIndexFile
 getIndexPrefix.AbstractIndexSet isComplete.AbstractIndexSet
 isComplete.Bowtie2IndexSet
+getIndexSet.Bowtie2Alignment
+getOptionalArguments.Bowtie2Alignment

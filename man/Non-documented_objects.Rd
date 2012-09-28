@@ -77,7 +77,6 @@
 \alias{getRootPath.Bowtie2Alignment}
 \alias{getTags.Bowtie2Alignment}
 \alias{nbrOfFiles.Bowtie2Alignment}
-\alias{process.Bowtie2Alignment}
 \alias{processOne.Bowtie2Alignment}
 \alias{setTags.Bowtie2Alignment}
 \alias{systemBowtie2}
@@ -146,6 +145,8 @@
 \alias{getIndexPrefix.AbstractIndexSet}
 \alias{isComplete.AbstractIndexSet}
 \alias{isComplete.Bowtie2IndexSet}
+\alias{getIndexSet.Bowtie2Alignment}
+\alias{getOptionalArguments.Bowtie2Alignment}
 
 \description{
   This page contains aliases for all "non-documented" objects that
