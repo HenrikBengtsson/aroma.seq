@@ -185,18 +185,8 @@ setMethodS3("readHeader", "BamDataFile", function(this, ...) {
 #      \url{http://seqanswers.com/forums/showthread.php?t=9784}\cr
 # }
 setMethodS3("getReadGroups", "BamDataFile", function(this, ...) {
-  hdr <- readHeader(this, ...);
-  text <- hdr$text;
-  keys <- names(text);
-  rgList <- text[(keys == "@RG")];
-  rgList <- lapply(rgList, FUN=function(params) {
-    pattern <- "([^:]*):(.*)";
-    keys <- gsub(pattern, "\\1", params);
-    values <- gsub(pattern, "\\2", params);
-    names(values) <- keys;
-    values;
-  });
-  rgList;
+  hdr <- getHeader(this, ...);
+  SamReadGroup$byScanBamHeader(hdr, ...);
 })
 
 
@@ -213,54 +203,19 @@ setMethodS3("getReadGroups", "BamDataFile", function(this, ...) {
 #  \item{platform}{Specifies the \code{PL} read group.}
 #  \item{platformUnit}{Specifies the \code{PU} read group.}
 # }
-setMethodS3("replaceAllReadGroups", "BamDataFile", function(this, sample="*", library="*", platform="*", platformUnit="*", sequencingCenter="*", description="*", runDate="*", ..., validate=TRUE, skip=!overwrite, overwrite=FALSE, verbose=FALSE) {
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Local functions
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  getReadGroupsOnce <- function(rg, ...) {
-    if (is.null(rg)) {
-      rgList <- getReadGroups(this);
-      names(rgList) <- NULL;
-      rg <- unlist(rgList);
-      rg <- rev(rg);
-      dups <- duplicated(names(rg));
-      rg <- rg[!dups];
-      rg <- rev(rg);
-    }
-    rg;
-  } # getReadGroupsOnce()
-
-
-
+setMethodS3("replaceAllReadGroups", "BamDataFile", function(this, rg="*", ..., validate=TRUE, skip=!overwrite, overwrite=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Argument 'sample':
-  sample <- Arguments$getCharacter(sample);
-
-  # Argument 'library':
-  library <- Arguments$getCharacter(library);
-
-  # Argument 'platform':
-  platform <- Arguments$getCharacter(platform);
-
-  # Argument 'platformUnit':
-  platformUnit <- Arguments$getCharacter(platformUnit);
-
-  # Argument 'sequencingCenter':
-  sequencingCenter <- Arguments$getCharacter(sequencingCenter);
-
-  # Argument 'description':
-  description <- Arguments$getCharacter(description);
-
-  # Argument 'runDate':
-  if (inherits(runDate, "Date")) {
-    runDate <- Arguments$getCharacter(runDate);
-  } else if (inherits(runDate, "POSIXct") || inherits(runDate, "POSIXlt")) {
-    runDate <- Arguments$getCharacter(runDate);
+  # Argument 'rg':
+  if (is.character(rg) && rg == "*") {
+    rg <- SamReadGroup();
+    keys <- names(asSamList(rg, drop=FALSE));
+    for (key in keys) rg[[key]] <- "*";
   } else {
-    runDate <- Arguments$getCharacter(runDate);
+    rg <- Arguments$getInstanceOf(rg, "SamReadGroup");
   }
+
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -292,79 +247,58 @@ setMethodS3("replaceAllReadGroups", "BamDataFile", function(this, sample="*", li
   }
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Setup
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  optional <- c(CN="sequencingCenter", DS="description", DT="runDate");
-  map <- c(SM="sample", LB="library", PL="platform", PU="platformUnit",
-           optional);
-  rgList <- list();
-  for (key in names(map)) {
-    varname <- map[key];
-    rgList[[key]] <- get(varname, inherits=FALSE);
-  }
-
-  # Append user arguments '...'
-  args <- list(...);
-  for (key in names(args)) {
-    rgList[[key]] <- args[[key]];
-  }
   verbose && cat(verbose, "Arguments:");
-  verbose && str(verbose, rgList);
-
-  verbose && cat(verbose, "Arguments:");
-  verbose && str(verbose, rgList);
+  verbose && print(verbose, rg);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Use default values from existing read groups of the input file?
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  rg <- NULL;
-  for (key in names(rgList)) {
-    value <- rgList[[key]];
+  rgList <- asSamList(rg);
+  keep <- sapply(rgList, FUN=function(x) identical(x, "*"));
+  keys <- names(rgList)[keep];
+  if (length(keys) > 0L) {
+    rgDefault <- getReadGroups(this);
+    rgDefault <- Reduce(assignBy, rgDefault);
+    # Sanity check
+    stopifnot(inherits(rgDefault, "SamReadGroup"));
 
-    # Use default?
-    if (value == "*") {
-      rg <- getReadGroupsOnce(rg);
-      value <- rg[key];
-      if (is.na(value)) {
-        if (!is.element(key, names(optional))) {
-          throw(sprintf("Read group '%s' could not be inferred from input file ('%s'). The following read groups was found: %s", key, pathname, hpaste(rg)));
-        }
-        value <- NULL;
-      }
-      rgList[[key]] <- value;
+    # Don't write to the original 'rg' object
+    rg <- clone(rg);
+    for (key in keys) {
+      value <- rgDefault[[key]];
+      rg[[key]] <- value;
     }
   } # for (key ...)
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  validate(rg);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Assert mandatory fields 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  rgList <- asSamList(rg);
+  mandatory <- c("SM", "LB", "PL", "PU");
+  missing <- setdiff(mandatory, names(rgList));
+  if (length(missing)) {
+    throw("Cannot write read groups. Mandatory fields are missing: ", hpaste(missing));
+  }
+
   verbose && cat(verbose, "Arguments:");
   verbose && str(verbose, rgList);
-
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Validate read groups?
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  if (validate) {
-    # Validate platform
-    knownPlatforms <- c("CAPILLARY", "HELICOS", "ILLUMINA", "IONTORRENT", "LS454", "PACBIO", "SOLID");
-    platform <- rgList[["PL"]];
-    if (!is.element(toupper(platform), knownPlatforms)) {
-      throw("Unknown 'PL' (platform) value: ", platform);
-    }
-
-    # Validate run date
-    runDate <- rgList[["DT"]];
-    # TODO...
-  } # if (validate)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Write new BAM file
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   args <- list("AddOrReplaceReadGroups", I=pathname, O=pathnameD);
-  names(rgList) <- sprintf("RG%s", names(rgList));
-  args <- c(args, rgList);
-  args$verbose <- less(verbose, 10);
+  args <- c(args, asString(rg, fmtstr="RG%s=%s"));
   verbose && str(verbose, args);
+  args$verbose <- less(verbose, 10);
 
   res <- do.call(systemPicard, args);
 

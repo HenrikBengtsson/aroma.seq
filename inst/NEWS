@@ -1,9 +1,9 @@
 Package: aroma.seq
 ==================
 
-
 Version: 0.1.11 [2012-09-28]
 o Added getReadGroups() and replaceAllReadGroups() for BamDataFile.
+o Added SamReadGroup() class.
 o Added buildIndex() for BamDataFile.
 o Added low-level support for GATK.
 

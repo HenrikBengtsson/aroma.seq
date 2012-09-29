@@ -108,6 +108,9 @@ setMethodS3("systemJava", "default", function(..., .fmtArg=c("( |=)$"="%s%s", ".
     verbose && cat(verbose, "Keys: ", hpaste(keysKK));
     verbose && cat(verbose, "Values: ", hpaste(argsKK));
     optionsKK <- sprintf(fmtArgKK, keysKK, argsKK);
+    # Undo non-named arguments
+    hasNoName <- (nchar(keysKK) == 0L);
+    optionsKK[hasNoName] <- argsKK[hasNoName];
     verbose && cat(verbose, "Options: ", hpaste(optionsKK));
 
     options <- c(options, optionsKK);

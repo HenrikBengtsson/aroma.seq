@@ -47,8 +47,6 @@ extends \emph{\link[R.filesets]{GenericDataFile}}\cr
 \tabular{rll}{
  \tab \code{as.character} \tab  -\cr
  \tab \code{convertToBamDataFile} \tab  -\cr
- \tab \code{readSamHeader} \tab  -\cr
- \tab \code{readSamReadGroups} \tab  -\cr
 }
 
 

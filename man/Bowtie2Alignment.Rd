@@ -32,12 +32,14 @@ extends \link[R.oo]{Object}\cr
   ...
  }
 
- \usage{Bowtie2Alignment(dataSet=NULL, indexSet=NULL, tags="*", ...)}
+ \usage{Bowtie2Alignment(dataSet=NULL, indexSet=NULL, tags="*", readGroup=NULL, ...)}
 
  \arguments{
   \item{dataSet}{An \code{\link{FastqDataSet}}.}
   \item{indexSet}{An \code{\link{Bowtie2IndexSet}}.}
   \item{tags}{Additional tags for the output data sets.}
+  \item{readGroup}{(optional) An \code{\link{SamReadGroup}} for added
+    SAM read group to the results.}
   \item{...}{Additional BWA 'aln' arguments.}
  }
 
@@ -50,6 +52,8 @@ extends \link[R.oo]{Object}\cr
  \tab \code{getName} \tab  -\cr
  \tab \code{getOptionalArguments} \tab  -\cr
  \tab \code{getOutputDataSet} \tab  -\cr
+ \tab \code{getParameters} \tab  -\cr
+ \tab \code{getParametersAsString} \tab  -\cr
  \tab \code{getPath} \tab  -\cr
  \tab \code{getRootPath} \tab  -\cr
  \tab \code{getTags} \tab  -\cr

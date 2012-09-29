@@ -157,6 +157,36 @@
 \alias{getReadGroups.BamDataFile}
 \alias{replaceAllReadGroups}
 \alias{replaceAllReadGroups.BamDataFile}
+\alias{as.character.SamReadGroup}
+\alias{asBwaString}
+\alias{asBwaString.SamReadGroup}
+\alias{asSamList}
+\alias{asSamList.SamReadGroup}
+\alias{asString}
+\alias{asString.SamReadGroup}
+\alias{assignBy}
+\alias{assignBy.SamReadGroup}
+\alias{byScanBamHeader}
+\alias{byScanBamHeader.SamReadGroup}
+\alias{getParameters.Bowtie2Alignment}
+\alias{getParameters.BwaAlignment}
+\alias{getParametersAsString.Bowtie2Alignment}
+\alias{getParametersAsString.BwaAlignment}
+\alias{hasDescription}
+\alias{hasDescription.SamReadGroup}
+\alias{hasLibrary}
+\alias{hasLibrary.SamReadGroup}
+\alias{hasPlatform}
+\alias{hasPlatform.SamReadGroup}
+\alias{hasPlatformUnit}
+\alias{hasPlatformUnit.SamReadGroup}
+\alias{hasRunDate}
+\alias{hasRunDate.SamReadGroup}
+\alias{hasSample}
+\alias{hasSample.SamReadGroup}
+\alias{hasSequencingCenter}
+\alias{hasSequencingCenter.SamReadGroup}
+\alias{validate.SamReadGroup}
 
 \description{
   This page contains aliases for all "non-documented" objects that

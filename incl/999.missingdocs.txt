@@ -74,3 +74,15 @@ getSummary.Bowtie2IndexSet
 buildIndex buildIndex.BamDataFile getReadGroups
 getReadGroups.BamDataFile  replaceAllReadGroups
 replaceAllReadGroups.BamDataFile
+as.character.SamReadGroup asBwaString asBwaString.SamReadGroup
+asSamList asSamList.SamReadGroup asString
+asString.SamReadGroup assignBy assignBy.SamReadGroup
+byScanBamHeader byScanBamHeader.SamReadGroup
+getParameters.Bowtie2Alignment getParameters.BwaAlignment
+getParametersAsString.Bowtie2Alignment
+getParametersAsString.BwaAlignment hasDescription
+hasDescription.SamReadGroup hasLibrary hasLibrary.SamReadGroup
+hasPlatform hasPlatform.SamReadGroup hasPlatformUnit
+hasPlatformUnit.SamReadGroup hasRunDate hasRunDate.SamReadGroup
+hasSample hasSample.SamReadGroup hasSequencingCenter
+hasSequencingCenter.SamReadGroup validate.SamReadGroup

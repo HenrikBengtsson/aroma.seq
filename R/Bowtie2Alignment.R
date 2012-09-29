@@ -15,6 +15,8 @@
 #  \item{dataSet}{An @see "FastqDataSet".}
 #  \item{indexSet}{An @see "Bowtie2IndexSet".}
 #  \item{tags}{Additional tags for the output data sets.}
+#  \item{readGroup}{(optional) An @see "SamReadGroup" for added 
+#    SAM read group to the results.}
 #  \item{...}{Additional BWA 'aln' arguments.}
 # }
 #
@@ -24,7 +26,7 @@
 #
 # \author{Henrik Bengtsson and Pierre Neuvial}
 #*/########################################################################### 
-setConstructorS3("Bowtie2Alignment", function(dataSet=NULL, indexSet=NULL, tags="*", ...) {
+setConstructorS3("Bowtie2Alignment", function(dataSet=NULL, indexSet=NULL, tags="*", readGroup=NULL, ...) {
   # Validate arguments
   if (!is.null(dataSet)) {
     # Argument 'dataSet':
@@ -44,6 +46,7 @@ setConstructorS3("Bowtie2Alignment", function(dataSet=NULL, indexSet=NULL, tags=
     .ds = dataSet,
     .indexSet = indexSet,
     .tags = tags,
+    .readGroup = readGroup,
     .args = args
   );
 
@@ -67,6 +70,9 @@ setMethodS3("as.character", "Bowtie2Alignment", function(x, ...) {
   s <- c(s, "Reference index set:");
   s <- c(s, as.character(is));
  
+  params <- getParametersAsString(this, collapse=", ");
+  s <- c(s, sprintf("Additional parameters: %s", params));
+
   class(s) <- "GenericSummary";
   s;
 }, private=TRUE)
@@ -83,6 +89,36 @@ setMethodS3("getIndexSet", "Bowtie2Alignment", function(this, ...) {
 setMethodS3("getOptionalArguments", "Bowtie2Alignment", function(this, ...) {
   this$.args;
 })
+
+setMethodS3("getParameters", "Bowtie2Alignment", function(this, ...) {
+  params <- getOptionalArguments(this, ...);
+
+  readGroup <- this$.readGroup;
+  if (!is.null(readGroup)) {
+    rgArg <- asString(readGroup, fmtstr="%s:%s", collapse=NULL);
+    # Don't forget to put within quotation marks
+    rgArg <- sprintf("\"%s\"", rgArg);
+    rgArg <- as.list(rgArg);
+    names(rgArg) <- rep("rg", times=length(rgArg));
+    params <- c(params, rgArg);
+  }
+
+  params;
+})
+
+
+setMethodS3("getParametersAsString", "Bowtie2Alignment", function(this, ..., collapse=NULL) {
+  params <- getParameters(this, drop=FALSE, ...);
+  params <- trim(capture.output(str(params)))[-1];
+  params <- gsub("^[$][ ]*", "", params);
+  params <- gsub(" [ ]*", " ", params);
+  params <- gsub("[ ]*:", ":", params);
+  if (!is.null(collapse)) {
+    params <- paste(params, collapse=collapse);
+  }
+  params;
+})
+
 
 setMethodS3("getAsteriskTags", "Bowtie2Alignment", function(this, collapse=NULL, ...) {
   is <- getIndexSet(this);
@@ -247,7 +283,7 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
     indexPrefix <- Arguments$getCharacter(indexPrefix);
     indexPath <- Arguments$getReadablePath(getParent(indexPrefix));
     pathnameSAM <- Arguments$getWritablePathname(pathnameSAM);
-    systemBowtie2(optionsList=list(x=indexPrefix, U=pathnameFQ, S=pathnameSAM));
+    systemBowtie2(optionsList=list(x=indexPrefix, U=pathnameFQ, S=pathnameSAM), ...);
   } # bowtie2()
 
 
@@ -275,10 +311,9 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
   verbose && print(verbose, is);
   indexPrefix <- getIndexPrefix(is);
 
-  optArgs <- getOptionalArguments(this);
+  params <- getParameters(this);
   verbose && cat(verbose, "Additional bowtie2 arguments:");
-  verbose && str(verbose, optArgs);
-
+  verbose && str(verbose, params);
 
   nbrOfFiles <- nbrOfFiles(this);
   verbose && cat(verbose, "Number of files: ", nbrOfFiles);
@@ -316,8 +351,11 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     if (!isFile(pathnameSAM)) {
       args <- list(pathnameFQ, indexPrefix=indexPrefix, pathnameSAM=pathnameSAM);
-      args <- c(args, optArgs);
+      args <- c(args, params);
+      verbose && cat(verbose, "Arguments:");
+      verbose && str(verbose, args);
       args$verbose <- less(verbose, 5);
+
       res <- do.call(bowtie2, args=args);
       verbose && cat(verbose, "System result code: ", res);
     }
@@ -349,6 +387,8 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 
 ############################################################################
 # HISTORY:
+# 2012-09-28
+# o Added support for argument 'readGroup' to Bowtie2Alignment().
 # 2012-09-27
 # o Created from BwaAlignment.R.
 ############################################################################ 
