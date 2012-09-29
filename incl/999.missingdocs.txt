@@ -71,3 +71,6 @@ getIndexSet.Bowtie2Alignment
 getOptionalArguments.Bowtie2Alignment
 getSequenceNames getSequenceNames.Bowtie2IndexSet getSummary
 getSummary.Bowtie2IndexSet
+buildIndex buildIndex.BamDataFile getReadGroups
+getReadGroups.BamDataFile  replaceAllReadGroups
+replaceAllReadGroups.BamDataFile

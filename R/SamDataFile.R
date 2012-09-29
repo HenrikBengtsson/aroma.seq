@@ -6,7 +6,7 @@
 # \description{
 #  @classhierarchy
 #
-#  A SamDataFile object represents a SAM file.
+#  A SamDataFile object represents a Sequence Alignment/Map (SAM) file [1].
 # }
 # 
 # @synopsis
@@ -22,7 +22,8 @@
 # @author
 #
 # \references{
-#    ...
+#  [1] The SAM Format Specification Working Group,
+#      \emph{The SAM Format Specification}, Sept 7, 2011.\cr
 # }
 #
 # \seealso{
@@ -105,6 +106,7 @@ setMethodS3("convertToBamDataFile", "SamDataFile", function(this, path=getPath(t
 
   res;
 }) # convertToBamDataFile()
+
 
 
 ############################################################################

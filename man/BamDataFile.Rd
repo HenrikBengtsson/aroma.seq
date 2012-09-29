@@ -46,7 +46,9 @@ extends \emph{\link[R.filesets]{GenericDataFile}}\cr
   \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{as.character} \tab  -\cr
+ \tab \code{buildIndex} \tab  -\cr
  \tab \code{getHeader} \tab  -\cr
+ \tab \code{getReadGroups} \tab  -\cr
  \tab \code{getTargetLengths} \tab  -\cr
  \tab \code{getTargetNames} \tab  -\cr
  \tab \code{getTargets} \tab  -\cr
@@ -55,6 +57,7 @@ extends \emph{\link[R.filesets]{GenericDataFile}}\cr
  \tab \code{isSorted} \tab  -\cr
  \tab \code{nbrOfSeqs} \tab  -\cr
  \tab \code{nbrOfTargets} \tab  -\cr
+ \tab \code{replaceAllReadGroups} \tab  -\cr
  \tab \code{sort} \tab  -\cr
 }
 
@@ -74,7 +77,8 @@ asThis, getChecksum, $, $<-, [[, [[<-, as.character, attach, attachLocally, clea
  \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
 
  \references{
-    ...
+  [1] The SAM Format Specification Working Group,
+      \emph{The SAM Format Specification}, Sept 7, 2011.\cr
  }
 
  \seealso{

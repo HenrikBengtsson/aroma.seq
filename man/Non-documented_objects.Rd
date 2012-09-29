@@ -151,6 +151,12 @@
 \alias{getSequenceNames.Bowtie2IndexSet}
 \alias{getSummary}
 \alias{getSummary.Bowtie2IndexSet}
+\alias{buildIndex}
+\alias{buildIndex.BamDataFile}
+\alias{getReadGroups}
+\alias{getReadGroups.BamDataFile}
+\alias{replaceAllReadGroups}
+\alias{replaceAllReadGroups.BamDataFile}
 
 \description{
   This page contains aliases for all "non-documented" objects that

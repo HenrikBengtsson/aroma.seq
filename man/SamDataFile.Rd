@@ -33,7 +33,7 @@ extends \emph{\link[R.filesets]{GenericDataFile}}\cr
 
 
 
-  A SamDataFile object represents a SAM file.
+  A SamDataFile object represents a Sequence Alignment/Map (SAM) file [1].
  }
 
  \usage{SamDataFile(...)}
@@ -47,6 +47,8 @@ extends \emph{\link[R.filesets]{GenericDataFile}}\cr
 \tabular{rll}{
  \tab \code{as.character} \tab  -\cr
  \tab \code{convertToBamDataFile} \tab  -\cr
+ \tab \code{readSamHeader} \tab  -\cr
+ \tab \code{readSamReadGroups} \tab  -\cr
 }
 
 
@@ -65,7 +67,8 @@ asThis, getChecksum, $, $<-, [[, [[<-, as.character, attach, attachLocally, clea
  \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
 
  \references{
-    ...
+  [1] The SAM Format Specification Working Group,
+      \emph{The SAM Format Specification}, Sept 7, 2011.\cr
  }
 
  \seealso{
