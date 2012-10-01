@@ -48,20 +48,25 @@ setMethodS3("findGATK", "default", function(mustExists=TRUE, ..., verbose=FALSE)
   path <- Sys.getenv("GATK_HOME");
   verbose && printf(verbose, "System variable 'GATK_HOME': '%s'\n", path);
   if (path == "") path <- NULL;
- 
-  if (!is.null(path) && isDirectory(path)) {
-    path <- Arguments$getReadablePath(path);
-    verbose && cat(verbose, "Located directory: ", path);
 
-    # Get main GATK jar file
-    filename <- "GenomeAnalysisTK.jar";
-    pathname <- Arguments$getReadablePathname(filename, path=path);
-    verbose && cat(verbose, "Located main jar file: ", pathname);
+  if (is.null(path) || !isDirectory(path)) {
+    if (mustExist) {
+      throw(sprintf("Failed to located GATK home directory"));
+    }
+    return(FALSE);
   }
 
-  if (mustExists && (is.null(path) || !isDirectory(path))) {
+  path <- Arguments$getReadablePath(path);
+  verbose && cat(verbose, "Located directory: ", path);
+ 
+  # Get main GATK jar file
+  filename <- "GenomeAnalysisTK.jar";
+  pathname <- Arguments$getReadablePathname(filename, path=path, mustExist=FALSE);
+  if (mustExists && !isFile(pathname)) {
     throw(sprintf("Failed to located GATK tools"));
   }
+
+  verbose && cat(verbose, "Located main jar file: ", pathname);
 
   verbose && exit(verbose);
 
