@@ -50,7 +50,7 @@ setMethodS3("findGATK", "default", function(mustExists=TRUE, ..., verbose=FALSE)
   if (path == "") path <- NULL;
 
   if (is.null(path) || !isDirectory(path)) {
-    if (mustExist) {
+    if (mustExists) {
       throw(sprintf("Failed to located GATK home directory"));
     }
     return(FALSE);
@@ -61,7 +61,7 @@ setMethodS3("findGATK", "default", function(mustExists=TRUE, ..., verbose=FALSE)
  
   # Get main GATK jar file
   filename <- "GenomeAnalysisTK.jar";
-  pathname <- Arguments$getReadablePathname(filename, path=path, mustExist=FALSE);
+  pathname <- Arguments$getReadablePathname(filename, path=path, mustExists=FALSE);
   if (mustExists && !isFile(pathname)) {
     throw(sprintf("Failed to located GATK tools"));
   }
@@ -77,7 +77,7 @@ setMethodS3("findGATK", "default", function(mustExists=TRUE, ..., verbose=FALSE)
 ############################################################################
 # HISTORY:
 # 2012-10-01
-# o BUG FIX: findGATK(mustExist=FALSE) would throw an error if GATK
+# o BUG FIX: findGATK(mustExists=FALSE) would throw an error if GATK
 #   was not found.
 # 2012-09-28
 # o Created.

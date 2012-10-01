@@ -73,7 +73,7 @@ setMethodS3("findPicard", "default", function(mustExists=TRUE, ..., verbose=FALS
 ############################################################################
 # HISTORY:
 # 2012-10-01
-# o BUG FIX: findPicard(mustExist=FALSE) would throw an error if Picard
+# o BUG FIX: findPicard(mustExists=FALSE) would throw an error if Picard
 #   was not found.
 # 2012-09-27
 # o Created.
