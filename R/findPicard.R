@@ -48,18 +48,20 @@ setMethodS3("findPicard", "default", function(mustExists=TRUE, ..., verbose=FALS
   path <- Sys.getenv("PICARD_HOME");
   verbose && printf(verbose, "System variable 'PICARD_HOME': '%s'\n", path);
   if (path == "") path <- NULL;
+
+  if (!is.null(path) && isDirectory(path))) {
+    path <- Arguments$getReadablePath(path);
+    verbose && cat(verbose, "Located directory: ", path);
+
+    # Validating
+    files <- list.files(path=path, pattern="[.]jar$");
+    if (length(files) == 0L) {
+      throw("The located Picard directory contains no *.jar files: ", path);
+    }
+  }
  
   if (mustExists && (is.null(path) || !isDirectory(path))) {
     throw(sprintf("Failed to located Picard tools"));
-  }
-
-  path <- Arguments$getReadablePath(path);
-  verbose && cat(verbose, "Located directory: ", path);
-
-  # Validating
-  files <- list.files(path=path, pattern="[.]jar$");
-  if (length(files) == 0L) {
-    throw("The located Picard directory contains no *.jar files: ", path);
   }
 
   verbose && exit(verbose);
@@ -70,6 +72,9 @@ setMethodS3("findPicard", "default", function(mustExists=TRUE, ..., verbose=FALS
 
 ############################################################################
 # HISTORY:
+# 2012-10-01
+# o BUG FIX: findPicard(mustExist=FALSE) would throw an error if Picard
+#   was not found.
 # 2012-09-27
 # o Created.
 ############################################################################
