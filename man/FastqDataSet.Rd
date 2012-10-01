@@ -26,7 +26,7 @@
 \code{~~~~~~~~~~~~+--}\code{FastqDataSet}\cr
 
 \bold{Directly known subclasses:}\cr
-\cr
+\link[aroma.seq]{IlluminaFastqDataSet}\cr
 
 public static class \bold{FastqDataSet}\cr
 extends \link[R.filesets]{GenericDataFileSet}\cr

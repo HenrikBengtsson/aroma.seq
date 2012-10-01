@@ -15,7 +15,7 @@
 #  \item{dataSet}{An @see "FastqDataSet".}
 #  \item{indexSet}{An @see "BwaIndexSet".}
 #  \item{tags}{Additional tags for the output data sets.}
-#  \item{readGroup}{(optional) An @see "SamReadGroup" for added 
+#  \item{rgSet}{(optional) An @see "SamReadGroup" for added 
 #    SAM read group to the results.}
 #  \item{...}{Additional BWA 'aln' arguments.}
 # }
@@ -26,7 +26,7 @@
 #
 # \author{Henrik Bengtsson and Pierre Neuvial}
 #*/########################################################################### 
-setConstructorS3("BwaAlignment", function(dataSet=NULL, indexSet=NULL, tags="*", readGroup=NULL, ...) {
+setConstructorS3("BwaAlignment", function(dataSet=NULL, indexSet=NULL, tags="*", rgSet=NULL, ...) {
   # Validate arguments
   if (!is.null(dataSet)) {
     # Argument 'dataSet':
@@ -38,9 +38,9 @@ setConstructorS3("BwaAlignment", function(dataSet=NULL, indexSet=NULL, tags="*",
     }
     indexSet <- Arguments$getInstanceOf(indexSet, "BwaIndexSet");
 
-    # Argument 'readGroup':
-    if (!is.null(readGroup)) {
-      readGroup <- Arguments$getInstanceOf(readGroup, "SamReadGroup");
+    # Argument 'rgSet':
+    if (!is.null(rgSet)) {
+      rgSet <- Arguments$getInstanceOf(rgSet, "SamReadGroup");
     }
   } # if (!is.null(dataSet))
 
@@ -51,7 +51,7 @@ setConstructorS3("BwaAlignment", function(dataSet=NULL, indexSet=NULL, tags="*",
     .ds = dataSet,
     .indexSet = indexSet,
     .tags = tags,
-    .readGroup = readGroup,
+    .rgSet = rgSet,
     .args = args
   );
 
@@ -103,9 +103,9 @@ setMethodS3("getParameters", "BwaAlignment", function(this, which=c("aln", "sams
   params <- list();
   params$aln <- getOptionalArguments(this, ...);
 
-  readGroup <- this$.readGroup;
-  if (!is.null(readGroup)) {
-    rgArg <- asString(readGroup, fmtstr="%s:%s", collapse="\t");
+  rgSet <- this$.rgSet;
+  if (!is.null(rgSet)) {
+    rgArg <- asString(rgSet, fmtstr="%s:%s", collapse="\t");
     rgArg <- sprintf("@RG\t%s", rgArg);
     # Don't forget to put within quotation marks
     rgArg <- sprintf("\"%s\"", rgArg);
@@ -299,6 +299,18 @@ setMethodS3("getOutputDataSet", "BwaAlignment", function(this, ...) {
 #*/###########################################################################  
 setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  asBwaParameter <- function(rg, ...) {
+    rgArg <- asString(rg, fmtstr="%s:%s", collapse="\t");
+    rgArg <- sprintf("@RG\t%s", rgArg);
+    # Don't forget to put within quotation marks
+    rgArg <- sprintf("\"%s\"", rgArg);
+    rgArg <- list(r=rgArg);
+  } # asBwaParameter()
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'verbose':
@@ -322,11 +334,11 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
   verbose && print(verbose, is);
   indexPrefix <- getIndexPrefix(is);
 
-  readGroup <- this$.readGroup;
-  if (!is.null(readGroup)) {
+  rgSet <- this$.rgSet;
+  if (!is.null(rgSet)) {
     verbose && cat(verbose, "Assigning SAM read group:");
-    verbose && print(verbose, readGroup);
-    validate(readGroup);
+    verbose && print(verbose, rgSet);
+    validate(rgSet);
   }
 
   
@@ -373,6 +385,18 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
     verbose && print(verbose, df);
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # Extract sample-specific read group
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    rgII <- extractSamReadGroup(df);
+    rgT <- merge(rgSet, rgII);
+    verbose && cat(verbose, "Writing SAM Read Groups:");
+    verbose && print(verbose, rgT);
+    verbose && cat(verbose, "BWA 'samse' parameter:");
+    rgArg <- asBwaParameter(rgT);
+    verbose && print(verbose, rgArg);
+
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # (a) Generate SAI file via BWA aln
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     if (!isFile(pathnameSAI)) {
@@ -393,7 +417,7 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
     if (!isFile(pathnameSAM)) {
       args <- list(pathnameSAI=pathnameSAI, pathnameFQ=pathnameFQ, 
                    indexPrefix=indexPrefix, pathnameD=pathnameSAM);
-      args <- c(args, paramsList$samse);
+      args <- c(args, rgArg);
       args$verbose <- less(verbose, 5);
       res <- do.call(bwaSamse, args=args);
       verbose && cat(verbose, "System result code: ", res);
@@ -434,7 +458,7 @@ setMethodS3("asBwaString", "SamReadGroup", function(this, ...) {
 ############################################################################
 # HISTORY:
 # 2012-09-28
-# o Added support for argument 'readGroup' to BwaAlignment().
+# o Added support for argument 'rgSet' to BwaAlignment().
 # 2012-09-25
 # o Now process() passes additional arguments to bwaAln().
 # o Created from Bowtie2Alignment.R.

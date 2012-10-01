@@ -32,13 +32,13 @@ extends \link[R.oo]{Object}\cr
   ...
  }
 
- \usage{BwaAlignment(dataSet=NULL, indexSet=NULL, tags="*", readGroup=NULL, ...)}
+ \usage{BwaAlignment(dataSet=NULL, indexSet=NULL, tags="*", rgSet=NULL, ...)}
 
  \arguments{
   \item{dataSet}{An \code{\link{FastqDataSet}}.}
   \item{indexSet}{An \code{\link{BwaIndexSet}}.}
   \item{tags}{Additional tags for the output data sets.}
-  \item{readGroup}{(optional) An \code{\link{SamReadGroup}} for added
+  \item{rgSet}{(optional) An \code{\link{SamReadGroup}} for added
     SAM read group to the results.}
   \item{...}{Additional BWA 'aln' arguments.}
  }

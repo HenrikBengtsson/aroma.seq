@@ -187,6 +187,24 @@
 \alias{hasSequencingCenter}
 \alias{hasSequencingCenter.SamReadGroup}
 \alias{validate.SamReadGroup}
+\alias{extractSamReadGroup}
+\alias{extractSamReadGroup.FastqDataFile}
+\alias{extractSamReadGroup.IlluminaFastqDataFile}
+\alias{getBarcodeSequence}
+\alias{getBarcodeSequence.IlluminaFastqDataFile}
+\alias{getFirstSequenceInfo}
+\alias{getFirstSequenceInfo.IlluminaFastqDataFile}
+\alias{getFlowcellId}
+\alias{getFlowcellId.IlluminaFastqDataFile}
+\alias{getInstrumentId}
+\alias{getInstrumentId.IlluminaFastqDataFile}
+\alias{getLane}
+\alias{getLane.IlluminaFastqDataFile}
+\alias{getPlatform.IlluminaFastqDataFile}
+\alias{getPlatformUnit}
+\alias{getPlatformUnit.IlluminaFastqDataFile}
+\alias{getSampleName.IlluminaFastqDataFile}
+\alias{merge.SamReadGroup}
 
 \description{
   This page contains aliases for all "non-documented" objects that

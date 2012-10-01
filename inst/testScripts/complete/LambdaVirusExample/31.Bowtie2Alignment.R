@@ -21,7 +21,7 @@ print(ds);
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Build BWA index set
+# Build Bowtie2 index set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 is <- buildBowtie2IndexSet(fa, verbose=-10);
 print(is);

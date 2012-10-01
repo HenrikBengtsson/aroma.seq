@@ -1,60 +1,60 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Do not modify this file since it was automatically generated from:
 % 
-%  FastqDataFile.R
+%  IlluminaFastqDataSet.R
 % 
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{FastqDataFile}
+ \name{IlluminaFastqDataSet}
 \docType{class}
-\alias{FastqDataFile}
+\alias{IlluminaFastqDataSet}
 
 
- \title{The abstract FastqDataFile class}
+ \title{The IlluminaFastqDataSet class}
 
  \description{
   Package:  aroma.seq \cr
-\bold{Class FastqDataFile}\cr
+\bold{Class IlluminaFastqDataSet}\cr
 
 \code{\link[R.oo]{Object}}\cr
 \code{~~|}\cr
 \code{~~+--}\code{\link[R.filesets]{FullNameInterface}}\cr
 \code{~~~~~~~|}\cr
-\code{~~~~~~~+--}\code{\link[R.filesets]{GenericDataFile}}\cr
+\code{~~~~~~~+--}\code{\link[R.filesets]{GenericDataFileSet}}\cr
 \code{~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~+--}\emph{\code{FastqDataFile}}\cr
+\code{~~~~~~~~~~~~+--}\code{\link[aroma.seq]{FastqDataSet}}\cr
+\code{~~~~~~~~~~~~~~~~~|}\cr
+\code{~~~~~~~~~~~~~~~~~+--}\code{IlluminaFastqDataSet}\cr
 
 \bold{Directly known subclasses:}\cr
-\emph{\link[aroma.seq]{IlluminaFastqDataFile}}\cr
+\cr
 
-public abstract static class \bold{FastqDataFile}\cr
-extends \emph{\link[R.filesets]{GenericDataFile}}\cr
+public static class \bold{IlluminaFastqDataSet}\cr
+extends \link[aroma.seq]{FastqDataSet}\cr
 
 
 
-  A FastqDataFile object represents a FASTQ data file.
+  An IlluminaFastqDataSet object represents a set of
+  \code{\link{IlluminaFastqDataFile}}:s.
  }
 
- \usage{FastqDataFile(...)}
+ \usage{IlluminaFastqDataSet(...)}
 
  \arguments{
-   \item{...}{Arguments passed to \code{\link[R.filesets]{GenericDataFile}}.}
+   \item{...}{Arguments passed to \code{\link{FastqDataSet}}.}
  }
 
  \section{Fields and Methods}{
   \bold{Methods:}\cr
-\tabular{rll}{
- \tab \code{as.character} \tab  -\cr
- \tab \code{extractSamReadGroup} \tab  -\cr
- \tab \code{getCommonSeqWidth} \tab  -\cr
- \tab \code{getGeometry} \tab  -\cr
- \tab \code{nbrOfSeqs} \tab  -\cr
-}
+\emph{No methods defined}.
 
 
- \bold{Methods inherited from GenericDataFile}:\cr
-getParentName, compareChecksum, copyTo, equals, fromFile, getAlias, getAttribute, getAttributes, getChecksum, getCreatedOn, getDefaultFullName, getExtension, getExtensionPattern, getFilename, getFilenameExtension, getFileSize, getFileType, getLastAccessedOn, getLastModifiedOn, getOutputExtension, getPath, getPathname, gunzip, gzip, hasBeenModified, isFile, readChecksum, renameTo, renameToUpperCaseExt, setAlias, setAttribute, setAttributes, setAttributesBy, setAttributesByTags, setExtensionPattern, testAttributes, validateChecksum, writeChecksum
+ \bold{Methods inherited from FastqDataSet}:\cr
+getDepth, validate
+
+ \bold{Methods inherited from GenericDataFileSet}:\cr
+getFullNameTranslatorSet, getParentName, append, appendFiles, appendFullNamesTranslator, appendFullNamesTranslatorBydata.frame, appendFullNamesTranslatorByfunction, appendFullNamesTranslatorBylist, appendFullNamesTranslatorByNULL, appendFullNamesTranslatorByTabularTextFile, appendFullNamesTranslatorByTabularTextFileSet, as.list, byName, byPath, clearCache, clearFullNamesTranslator, copyTo, equals, extract, findByName, getAlias, getChecksum, getChecksumObjects, getDefaultFullName, getFile, getFileClass, getFileSize, getFullNames, getNames, getPath, getPathnames, getSubdirs, hasFile, indexOf, lapply, nbrOfFiles, sapply, seq, setAlias, setFullNamesTranslator, sortBy, update2, updateFullName, updateFullNames, validate
 
  \bold{Methods inherited from FullNameInterface}:\cr
 appendFullNameTranslator, appendFullNameTranslatorBycharacter, appendFullNameTranslatorBydata.frame, appendFullNameTranslatorByfunction, appendFullNameTranslatorBylist, appendFullNameTranslatorByNULL, appendFullNameTranslatorByTabularTextFile, appendFullNameTranslatorByTabularTextFileSet, clearFullNameTranslator, clearListOfFullNameTranslators, getDefaultFullName, getFullName, getFullNameTranslator, getListOfFullNameTranslators, getName, getTags, hasTag, hasTags, setFullName, setFullNameTranslator, setListOfFullNameTranslators, setName, setTags, updateFullName
@@ -66,14 +66,4 @@ asThis, getChecksum, $, $<-, [[, [[<-, as.character, attach, attachLocally, clea
  }
 
  \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
-
- \references{
-   Wikipedia, FASTQ format,
-   \url{http://en.wikipedia.org/wiki/FASTQ_format}.\cr
- }
-
- \seealso{
-   An object of this class is typically part of an
-   \code{\link{FastqDataSet}}.
- }
 \keyword{classes}

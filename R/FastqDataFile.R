@@ -79,6 +79,12 @@ setMethodS3("readGeometry", "FastqDataFile", function(this, ...) {
 }, private=TRUE)
 
 
+setMethodS3("extractSamReadGroup", "FastqDataFile", function(this, ...) {
+  SamReadGroup();
+})
+
+
+
 ############################################################################
 # HISTORY:
 # 2012-06-28

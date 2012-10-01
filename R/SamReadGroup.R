@@ -61,6 +61,8 @@ setConstructorS3("SamReadGroup", function(sample=NULL, library=NULL, platform=NU
   description <- Arguments$getCharacter(description);
 
   # Argument 'runDate':
+  # Should be ISO 8601 date (e.g. 2012-09-28) or date/time format
+  # (e.g. 2012-09-28T02:13Z).
   if (inherits(runDate, "Date")) {
     runDate <- Arguments$getCharacter(runDate);
   } else if (inherits(runDate, "POSIXct") || inherits(runDate, "POSIXlt")) {
@@ -70,7 +72,7 @@ setConstructorS3("SamReadGroup", function(sample=NULL, library=NULL, platform=NU
   }
 
 
-  extend(Object(), "SamReadGroup",
+  extend(BasicObject(), "SamReadGroup",
     SM=sample,
     LB=library,
     PL=platform,
@@ -125,16 +127,21 @@ setMethodS3("byScanBamHeader", "SamReadGroup", function(static, header, ...) {
 
 
 
-setMethodS3("assignBy", "SamReadGroup", function(this, other, ...) {
+setMethodS3("merge", "SamReadGroup", function(x, y, ...) {
+  # To please R CMD check
+  this <- x;
+  other <- y;
+
   # Argument 'other':
   other <- Arguments$getInstanceOf(other, "SamReadGroup");
 
+  res <- this;
   rgList <- asSamList(other);
   for (key in names(rgList)) {
-    this[[key]] <- rgList[[key]];
+    res[[key]] <- rgList[[key]];
   }
 
-  invisible(this);
+  res;
 })
 
 
@@ -168,8 +175,7 @@ setMethodS3("hasRunDate", "SamReadGroup", function(this, ...) {
 
 
 setMethodS3("asSamList", "SamReadGroup", function(this, drop=TRUE, ...) {
-  env <- getEnvironment(this);
-  res <- as.list(env);
+  res <- attributes(this);
   keep <- (nchar(names(res)) == 2L);
   res <- res[keep];
   if (drop) {
@@ -200,7 +206,7 @@ setMethodS3("validate", "SamReadGroup", function(this, ...) {
   rgList <- asSamList(this, ...);
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Validate platform
+  # Platform
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   platform <- rgList[["PL"]];
   if (!is.null(platform)) {
@@ -212,9 +218,25 @@ setMethodS3("validate", "SamReadGroup", function(this, ...) {
   }
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Validate run date
+  # Platform unit
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (toupper(platform) == "ILLUMINA") {
+    platformUnit <- rgList[["PL"]];
+    if (!is.null(platformUnit)) {
+      # convention: Illumina flowcell barcode suffixed with a period and 
+      # the lane number (and further suffixed with period followed by
+      # sample member name for pooled runs) [From NHI/SRA below]
+      # TODO ...
+      # Example(?): <flowcell barcode>.<lane nbr>[.<sample name>]
+    }
+  }
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Run date
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   runDate <- rgList[["DT"]];
+  # Should be ISO 8601 date (e.g. 2012-09-28) or date/time format
+  # (e.g. 2012-09-28T02:13Z).
   # TODO...
 
   invisible(TRUE);
@@ -222,7 +244,61 @@ setMethodS3("validate", "SamReadGroup", function(this, ...) {
 
 
 ############################################################################
+# NOTES ON READ GROUPS
+############################################################################
+# http://www.ncbi.nlm.nih.gov/books/NBK49167/#SRA_Analysis_BK.2_Data_Model:
+#
+# NCBI Object	Accession	Sequencer Production Unit	BAM Component
+# Submission envelope	SRA	n/a	n/a
+# Analysis	SRZ	n/a	BAM file
+# Study	SRP	n/a	n/a
+# Experiment	SRX	n/a	Library (LB)
+# Sample	SRS	n/a	Sample (SM)
+# Run	SRR	Lane/slide/plate	Read Group (RG)
+# Reference Sequence	NC_ and others	n/a	Sequence Dictionary (SQ)
+# Probe set	Pr	capture array	n/a
+#
+#
+# http://www.ncbi.nlm.nih.gov/books/NBK49167/#SRA_Analysis_BK.4_BAM_File_Format:
+# 4.4 BAM Header
+#   The text header block described in the SAM specification is optional
+#   for BAM files, but is required for submission. The header should 
+#   consist of:
+#
+#  3. One record per sequencing production unit starting with @RG, to
+#     be configured as follows:
+#
+#    ID: an arbitrary ID used to link reads back to the read group header
+#
+#    PL: the sequencing platform that generated the reads.
+#
+#    PU: the "platform unit" - a unique identifier which tells you what
+#        run/experiment created the data.  For Illumina, please follow this
+#        convention: Illumina flowcell barcode suffixed with a period and 
+#        the lane number (and further suffixed with period followed by
+#        sample member name for pooled runs). If referencing an existing
+#        already archived run, then please use the run alias in the SRA.
+#
+#    LB: the unique identifier of the sequencing library that was sequenced.
+#        This should correspond to the SRA library name for already-archived
+#        runs.
+#
+#    DT: the run start date of the instrument run. Please use ISO-8601
+#        format.
+#
+#    SM: the sample identifier. This should be the sample alias loaded in 
+#        the SRA or in the metadata being submitted to the SRA.
+#
+#    CN: the sequencing center that produced the data (This should be the
+#        INSDC short name for the Center.) [http://www.insdc.org]
+#
+#  4. One or more records starting with @PG that records the program
+#     invocation that created the alignment product.
+#
+############################################################################
 # HISTORY:
+# 2012-10-01
+# o Made SamReadGroup a BasicObject (was Object).
 # 2012-09-28
 # o Created.
 ############################################################################

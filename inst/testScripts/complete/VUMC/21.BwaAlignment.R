@@ -17,7 +17,7 @@ print(fa);
 dataSet <- "AlbertsonD_2012-SCC";
 platform <- "Generic";
 path <- file.path("fastqData", dataSet, platform);
-ds <- FastqDataSet$byPath(path);
+ds <- IlluminaFastqDataSet$byPath(path);
 print(ds);
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -33,8 +33,11 @@ print(is);
 # Process at most two FASTQ files
 ds <- extract(ds, 1:min(3, length(ds)));
 
+rgSet <- SamReadGroup(LB="MPS-034");
+print(rgSet);
+
 # BWA with BWA 'aln' options '-n 2' and '-q 40'.
-alg <- BwaAlignment(ds, indexSet=is, n=2, q=40);
+alg <- BwaAlignment(ds, indexSet=is, rgSet=rgSet, n=2, q=40);
 print(alg);
 
 bs <- process(alg, verbose=-20);

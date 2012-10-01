@@ -17,15 +17,17 @@
   Package:  aroma.seq \cr
 \bold{Class SamReadGroup}\cr
 
-\code{\link[R.oo]{Object}}\cr
+\code{logical}\cr
 \code{~~|}\cr
-\code{~~+--}\code{SamReadGroup}\cr
+\code{~~+--}\code{\link[R.oo]{BasicObject}}\cr
+\code{~~~~~~~|}\cr
+\code{~~~~~~~+--}\code{SamReadGroup}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
 
 public static class \bold{SamReadGroup}\cr
-extends \link[R.oo]{Object}\cr
+extends \link[R.oo]{BasicObject}\cr
 
 
 
@@ -56,7 +58,6 @@ extends \link[R.oo]{Object}\cr
  \tab \code{as.character} \tab  -\cr
  \tab \code{asBwaString} \tab  -\cr
  \tab \code{asSamList} \tab  -\cr
- \tab \code{assignBy} \tab  -\cr
  \tab \code{asString} \tab  -\cr
  \tab \code{byScanBamHeader} \tab  -\cr
  \tab \code{hasDescription} \tab  -\cr
@@ -66,12 +67,16 @@ extends \link[R.oo]{Object}\cr
  \tab \code{hasRunDate} \tab  -\cr
  \tab \code{hasSample} \tab  -\cr
  \tab \code{hasSequencingCenter} \tab  -\cr
+ \tab \code{merge} \tab  -\cr
  \tab \code{validate} \tab  -\cr
 }
 
 
- \bold{Methods inherited from Object}:\cr
-asThis, getChecksum, $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save
+ \bold{Methods inherited from BasicObject}:\cr
+asThis, $, $<-, [[, [[<-, as.character, attach, detach, equals, extend, getFields, getInstantiationTime, hasField, hashCode, isReferable, objectSize, print
+
+ \bold{Methods inherited from logical}:\cr
+as.data.frame, as.raster, whichVector
 
 
  }
