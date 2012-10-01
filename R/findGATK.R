@@ -49,7 +49,7 @@ setMethodS3("findGATK", "default", function(mustExists=TRUE, ..., verbose=FALSE)
   verbose && printf(verbose, "System variable 'GATK_HOME': '%s'\n", path);
   if (path == "") path <- NULL;
  
-  if (!is.null(path) && isDirectory(path))) {
+  if (!is.null(path) && isDirectory(path)) {
     path <- Arguments$getReadablePath(path);
     verbose && cat(verbose, "Located directory: ", path);
 

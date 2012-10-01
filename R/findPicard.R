@@ -49,7 +49,7 @@ setMethodS3("findPicard", "default", function(mustExists=TRUE, ..., verbose=FALS
   verbose && printf(verbose, "System variable 'PICARD_HOME': '%s'\n", path);
   if (path == "") path <- NULL;
 
-  if (!is.null(path) && isDirectory(path))) {
+  if (!is.null(path) && isDirectory(path)) {
     path <- Arguments$getReadablePath(path);
     verbose && cat(verbose, "Located directory: ", path);
 
