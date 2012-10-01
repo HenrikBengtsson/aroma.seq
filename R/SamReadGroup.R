@@ -220,16 +220,19 @@ setMethodS3("validate", "SamReadGroup", function(this, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Platform unit
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  if (toupper(platform) == "ILLUMINA") {
-    platformUnit <- rgList[["PL"]];
-    if (!is.null(platformUnit)) {
-      # convention: Illumina flowcell barcode suffixed with a period and 
-      # the lane number (and further suffixed with period followed by
-      # sample member name for pooled runs) [From NHI/SRA below]
-      # TODO ...
-      # Example(?): <flowcell barcode>.<lane nbr>[.<sample name>]
+  if (!is.null(platform)) {
+    if (toupper(platform) == "ILLUMINA") {
+      platformUnit <- rgList[["PL"]];
+      if (!is.null(platformUnit)) {
+        # convention: Illumina flowcell barcode suffixed with a period and 
+        # the lane number (and further suffixed with period followed by
+        # sample member name for pooled runs) [From NHI/SRA below]
+        # TODO ...
+        # Example(?): <flowcell barcode>.<lane nbr>[.<sample name>]
+      }
     }
   }
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Run date
