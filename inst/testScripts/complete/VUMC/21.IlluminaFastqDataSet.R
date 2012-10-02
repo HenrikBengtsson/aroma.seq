@@ -19,6 +19,9 @@ print(ds);
 df <- getFile(ds, 1);
 print(df);
 
+rg <- getSamReadGroup(df);
+print(rg);
+
 
 ############################################################################
 # HISTORY:
