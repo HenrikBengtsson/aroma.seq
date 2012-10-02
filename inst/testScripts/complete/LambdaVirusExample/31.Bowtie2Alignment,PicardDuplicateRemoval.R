@@ -46,8 +46,8 @@ print(bs);
 dr <- PicardDuplicateRemoval(bs);
 print(dr);
 
-bs2 <- process(dr, verbose=-20);
-print(bs2);
+bsU <- process(dr, verbose=-20);
+print(bsU);
 
 
 

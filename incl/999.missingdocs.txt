@@ -129,3 +129,9 @@ getReadDirection.IlluminaFastqDataFile
 getRootPath.PicardDuplicateRemoval getTags.PicardDuplicateRemoval
 nbrOfFiles.PicardDuplicateRemoval process.PicardDuplicateRemoval
 setTags.PicardDuplicateRemoval
+as.character.BamIndexDataFile getIndexFile
+getIndexFile.BamDataFile getIndexPrefix.Bowtie2IndexFile
+getIndexStats getIndexStats.BamDataFile getReadCounts
+getReadCounts.BamDataFile nbrOfMappedReads
+nbrOfMappedReads.BamDataFile nbrOfReads.BamDataFile
+nbrOfUnmappedReads nbrOfUnmappedReads.BamDataFile

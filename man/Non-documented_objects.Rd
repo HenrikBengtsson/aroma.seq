@@ -258,6 +258,19 @@
 \alias{nbrOfFiles.PicardDuplicateRemoval}
 \alias{process.PicardDuplicateRemoval}
 \alias{setTags.PicardDuplicateRemoval}
+\alias{as.character.BamIndexDataFile}
+\alias{getIndexFile}
+\alias{getIndexFile.BamDataFile}
+\alias{getIndexPrefix.Bowtie2IndexFile}
+\alias{getIndexStats}
+\alias{getIndexStats.BamDataFile}
+\alias{getReadCounts}
+\alias{getReadCounts.BamDataFile}
+\alias{nbrOfMappedReads}
+\alias{nbrOfMappedReads.BamDataFile}
+\alias{nbrOfReads.BamDataFile}
+\alias{nbrOfUnmappedReads}
+\alias{nbrOfUnmappedReads.BamDataFile}
 
 \description{
   This page contains aliases for all "non-documented" objects that

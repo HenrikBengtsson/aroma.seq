@@ -110,12 +110,15 @@ setMethodS3("getIndexStats", "BamDataFile", function(this, ..., force=FALSE) {
     bfr <- strsplit(bfr, split="\t", fixed=TRUE);
     seqName <- sapply(bfr, FUN=.subset, 1L);
     seqLength <- as.integer(sapply(bfr, FUN=.subset, 2L));
-    countMapped <- as.integer(sapply(bfr, FUN=.subset, 3L));
-    countUnmapped <- as.integer(sapply(bfr, FUN=.subset, 4L));
+    countMapped <- as.numeric(sapply(bfr, FUN=.subset, 3L));
+    countUnmapped <- as.numeric(sapply(bfr, FUN=.subset, 4L));
 
     # NOTE: samtools idxstats can return ridicolously(!) large read
-    # counts.  Those will become NAs in as.integer() above.  Let's
-    # assume they are errors. /HB 2010-10-02
+    # counts.  Let's assume they are errors and set to NAs. /HB 2010-10-02
+    countMapped[countMapped >= .Machine$integer.max] <- NA;
+    countUnmapped[countUnmapped >= .Machine$integer.max] <- NA;
+    countMapped <- as.integer(countMapped);
+    countUnmapped <- as.integer(countUnmapped);
 
     stats <- data.frame(length=seqLength, mapped=countMapped, unmapped=countUnmapped);
     rownames(stats) <- seqName;
