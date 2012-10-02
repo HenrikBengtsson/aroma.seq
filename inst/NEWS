@@ -6,6 +6,7 @@ o Added IlluminaFastqData(File|Set), which is aware of Illumina
   specific filenames and sequence information.
 o Now BwaAlignment and Bowtie2Alignment inherits AbstactAlignment
   and both write SAM read groups, if available/provided.
+o Package now utilizes the ShortRead package.
 
 
 Version: 0.1.11 [2012-09-28]
