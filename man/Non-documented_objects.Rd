@@ -238,6 +238,26 @@
 \alias{getReadGroup.BamDataFile}
 \alias{hasID}
 \alias{hasID.SamReadGroup}
+\alias{as.character.PicardDuplicateRemoval}
+\alias{getAsteriskTags.PicardDuplicateRemoval}
+\alias{getFileVersion}
+\alias{getFileVersion.IlluminaFastqDataFile}
+\alias{getFlavor.PicardDuplicateRemoval}
+\alias{getFullName.PicardDuplicateRemoval}
+\alias{getInputDataSet.PicardDuplicateRemoval}
+\alias{getName.PicardDuplicateRemoval}
+\alias{getOptionalArguments.PicardDuplicateRemoval}
+\alias{getOutputDataSet.PicardDuplicateRemoval}
+\alias{getParameters.PicardDuplicateRemoval}
+\alias{getParametersAsString.PicardDuplicateRemoval}
+\alias{getPath.PicardDuplicateRemoval}
+\alias{getReadDirection}
+\alias{getReadDirection.IlluminaFastqDataFile}
+\alias{getRootPath.PicardDuplicateRemoval}
+\alias{getTags.PicardDuplicateRemoval}
+\alias{nbrOfFiles.PicardDuplicateRemoval}
+\alias{process.PicardDuplicateRemoval}
+\alias{setTags.PicardDuplicateRemoval}
 
 \description{
   This page contains aliases for all "non-documented" objects that

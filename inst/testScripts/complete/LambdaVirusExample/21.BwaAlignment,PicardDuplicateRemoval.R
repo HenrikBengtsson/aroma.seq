@@ -1,0 +1,56 @@
+#!/usr/bin/env Rscript
+
+############################################################################
+#
+############################################################################
+library("aroma.seq");
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Setup
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+path <- "annotationData/organisms/LambdaPhage";
+fa <- FastaReferenceFile("lambda_virus.fa", path=path);
+print(fa);
+
+# Data set
+dataSet <- "LambdaVirusExample";
+platform <- "Generic";
+path <- file.path("fastqData", dataSet, platform);
+ds <- FastqDataSet$byPath(path);
+print(ds);
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Build BWA index set
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+is <- buildBwaIndexSet(fa, method="is", verbose=-10);
+print(is);
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Single-end alignment
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# BWA with BWA 'aln' options '-n 2' and '-q 40'.
+alg <- BwaAlignment(ds, indexSet=is, n=2, q=40);
+print(alg);
+
+bs <- process(alg, verbose=-20);
+print(bs);
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Remove duplicated reads using Picard
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+dr <- PicardDuplicateRemoval(bs);
+print(dr);
+
+bs2 <- process(dr, verbose=-20);
+print(bs2);
+
+
+
+############################################################################
+# HISTORY:
+# 2012-10-02
+# o Created.
+############################################################################

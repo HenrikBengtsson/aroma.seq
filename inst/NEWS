@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.1.13 [2012-10-02]
+o Added PicardDuplicateRemoval.
+
+
 Version: 0.1.12 [2012-10-01]
 o Added IlluminaFastqData(File|Set), which is aware of Illumina
   specific filenames and sequence information.

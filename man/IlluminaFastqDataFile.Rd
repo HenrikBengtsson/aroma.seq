@@ -49,11 +49,13 @@ extends \emph{\link[aroma.seq]{FastqDataFile}}\cr
 \tabular{rll}{
  \tab \code{getBarcodeSequence} \tab  -\cr
  \tab \code{getDefaultSamReadGroup} \tab  -\cr
+ \tab \code{getFileVersion} \tab  -\cr
  \tab \code{getFlowcellId} \tab  -\cr
  \tab \code{getInstrumentId} \tab  -\cr
  \tab \code{getLane} \tab  -\cr
  \tab \code{getPlatform} \tab  -\cr
  \tab \code{getPlatformUnit} \tab  -\cr
+ \tab \code{getReadDirection} \tab  -\cr
  \tab \code{getSampleName} \tab  -\cr
 }
 

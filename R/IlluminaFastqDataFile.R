@@ -32,14 +32,34 @@ setConstructorS3("IlluminaFastqDataFile", function(...) {
 
 
 
+setMethodS3("getFileVersion", "IlluminaFastqDataFile", function(this, ...) {
+  name <- getFullName(this, ...);
+  patterns <- c("Casava_v1.4"="^[^_]+_[ACGTN]+_L[0-9]+_R[0-9]");
+  for (key in names(patterns)) {
+    pattern <- patterns[key];
+    if (regexpr(pattern, name) != -1) {
+      return(key);
+    }
+  }
+  as.character(NA);
+})
+
+
 setMethodS3("getSampleName", "IlluminaFastqDataFile", function(this, ...) {
   name <- getFullName(this, ...);
-  barcode <- getBarcodeSequence(this);
-  # AD HOC patch for observing ATGNCA when expected ATGTCA. /HB 2012-10-01
-  barcode <- gsub("N", ".", barcode, fixed=TRUE);
-  pattern <- sprintf("_%s_L.*$", barcode);
-  stopifnot(regexpr(pattern, name) != -1);
-  name <- gsub(pattern, "", name);
+
+  ver <- getFileVersion(this);
+  if (ver == "Casava_v1.4") {
+    barcode <- getBarcodeSequence(this);
+    # AD HOC patch for observing ATGNCA when expected ATGTCA. /HB 2012-10-01
+    barcode <- gsub("N", ".", barcode, fixed=TRUE);
+    pattern <- sprintf("_%s_L[0-9]+_R[0-9]$", barcode);
+    stopifnot(regexpr(pattern, name) != -1);
+    name <- gsub(pattern, "", name);
+  } else {
+    warning("Unknown Illumina FASTQ file version. Using fullname as sample name: ", name);
+  }
+
   name;
 })
 
@@ -65,6 +85,11 @@ setMethodS3("getFlowcellId", "IlluminaFastqDataFile", function(this, ...) {
 setMethodS3("getBarcodeSequence", "IlluminaFastqDataFile", function(this, ...) {
   info <- getFirstSequenceInfo(this);
   info$indexSequence;
+})
+
+setMethodS3("getReadDirection", "IlluminaFastqDataFile", function(this, ...) {
+  info <- getFirstSequenceInfo(this);
+  info$read;
 })
 
 setMethodS3("getPlatformUnit", "IlluminaFastqDataFile", function(this, ...) {
@@ -108,7 +133,7 @@ setMethodS3("getFirstSequenceInfo", "IlluminaFastqDataFile", function(this, forc
       tileIdx=as.integer(gsub(patternA, "\\5", infoA)),
       x=as.integer(gsub(patternA, "\\6", infoA)),
       y=as.integer(gsub(patternA, "\\7", infoA)),
-      read=gsub(patternB, "\\1", infoB),
+      read=as.integer(gsub(patternB, "\\1", infoB)),
       isFiltered=gsub(patternB, "\\2", infoB),
       controlNumber=as.integer(gsub(patternB, "\\3", infoB)),
       indexSequence=gsub(patternB, "\\4", infoB)
@@ -136,6 +161,8 @@ setMethodS3("getDefaultSamReadGroup", "IlluminaFastqDataFile", function(this, ..
 
 ############################################################################
 # HISTORY:
+# 2012-10-02
+# o Added getFileVersion().
 # 2012-06-29
 # o Created.
 ############################################################################
