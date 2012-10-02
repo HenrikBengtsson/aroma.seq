@@ -35,6 +35,8 @@ setConstructorS3("IlluminaFastqDataFile", function(...) {
 setMethodS3("getSampleName", "IlluminaFastqDataFile", function(this, ...) {
   name <- getFullName(this, ...);
   barcode <- getBarcodeSequence(this);
+  # AD HOC patch for observing ATGNCA when expected ATGTCA. /HB 2012-10-01
+  barcode <- gsub("N", ".", barcode, fixed=TRUE);
   pattern <- sprintf("_%s_L.*$", barcode);
   stopifnot(regexpr(pattern, name) != -1);
   name <- gsub(pattern, "", name);
