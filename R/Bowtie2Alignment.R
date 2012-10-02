@@ -115,8 +115,6 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
   } 
 
 
-  units <- NULL;
-
   verbose && enter(verbose, "Bowtie2 alignment");
 
   ds <- getInputDataSet(this);

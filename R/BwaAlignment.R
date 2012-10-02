@@ -106,8 +106,6 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
   } 
 
 
-  units <- NULL;
-
   verbose && enter(verbose, "BWA alignment");
 
   ds <- getInputDataSet(this);
