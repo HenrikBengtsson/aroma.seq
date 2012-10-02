@@ -295,7 +295,6 @@ setMethodS3("replaceAllReadGroups", "BamDataFile", function(this, rg="*", ..., v
     rg <- Arguments$getInstanceOf(rg, "SamReadGroup");
   }
 
-
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
   if (verbose) {
@@ -401,10 +400,88 @@ setMethodS3("extractReadStartPositions", "BamDataFile", function(this, param=Sca
 })
 
 
+setMethodS3("readDataFrame", "BamDataFile", function(this, fields=NULL, flag=scanBamFlag(isUnmappedQuery=FALSE, isDuplicate=FALSE), ..., verbose=FALSE) {
+  require("Rsamtools") || throw("Package not loaded: Rsamtools");
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'fields':
+  knownFields <- c("qname", "flag", "rname", "strand", "pos", "qwidth", "mapq", "cigar", "mrnm", "mpos", "isize");
+  if (is.null(fields)) {
+    fields <- knownFields;
+  }
+  fields <- match.arg(fields, choices=knownFields, several.ok=TRUE);
+
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
+
+  verbose && enter(verbose, "Reading data frame");
+
+  pathname <- getPathname(this);
+  verbose && cat(verbose, "Pathname: ", pathname);
+
+  param <- ScanBamParam(what=fields);
+  verbose && cat(verbose, "scanBam() parameters:");
+  verbose && print(verbose, param);
+  
+  data <- scanBam(pathname, param=param, ...);
+
+  # Sanity check
+  stopifnot(is.list(data) && length(data) == 1L);
+  data <- data[[1L]];
+  stopifnot(is.list(data));
+  verbose && str(verbose, data);
+
+  verbose && enter(verbose, "Coercing list to data frame");
+  # Sanity check
+  ns <- sapply(data, FUN=length);
+  stopifnot(all(ns == ns[1L]));
+
+  data <- as.data.frame(data, stringsAsFactors=TRUE);
+  verbose && str(verbose, data);
+  verbose && exit(verbose);
+
+  verbose && exit(verbose);
+
+  data;
+})
+
+
+setMethodS3("readReadPositions", "BamDataFile", function(this, ..., flag=scanBamFlag(isUnmappedQuery=FALSE, isDuplicate=FALSE), verbose=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
+  verbose && enter(verbose, "Reading (rname,pos)");
+
+  verbose && cat(verbose, "scanBam() flags:");
+  verbose && print(verbose, flag);
+
+  data <- readDataFrame(this, fields=c("rname", "pos"), flag=flag, ..., verbose=less(verbose, 5));
+
+  verbose && exit(verbose);
+
+  data;
+}) # readReadPositions()
+
+
+
 ############################################################################
 # HISTORY:
 # 2012-10-02
-# o Added extractReadStartPositions() for BamDataFile.
+# o Added readReadPositions() for BamDataFile.
+# o Added readDataFrame() for BamDataFile.
 # o Added getIndexStats() for BamDataFile.
 # o Now buildIndex() for BamDataFile returns a BamIndexDataFile.
 # o Added getIndexFile() for BamDataFile.
