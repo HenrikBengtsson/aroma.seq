@@ -50,6 +50,7 @@ extends \emph{\link[R.filesets]{GenericDataFile}}\cr
  \tab \code{getHeader} \tab  -\cr
  \tab \code{getIndexFile} \tab  -\cr
  \tab \code{getIndexStats} \tab  -\cr
+ \tab \code{getReadCounts} \tab  -\cr
  \tab \code{getReadGroup} \tab  -\cr
  \tab \code{getReadGroups} \tab  -\cr
  \tab \code{getTargetLengths} \tab  -\cr
@@ -58,8 +59,11 @@ extends \emph{\link[R.filesets]{GenericDataFile}}\cr
  \tab \code{getTotalTargetLength} \tab  -\cr
  \tab \code{hasIndex} \tab  -\cr
  \tab \code{isSorted} \tab  -\cr
+ \tab \code{nbrOfMappedReads} \tab  -\cr
+ \tab \code{nbrOfReads} \tab  -\cr
  \tab \code{nbrOfSeqs} \tab  -\cr
  \tab \code{nbrOfTargets} \tab  -\cr
+ \tab \code{nbrOfUnmappedReads} \tab  -\cr
  \tab \code{replaceAllReadGroups} \tab  -\cr
  \tab \code{sort} \tab  -\cr
 }

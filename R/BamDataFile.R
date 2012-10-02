@@ -99,9 +99,9 @@ setMethodS3("hasIndex", "BamDataFile", function(this, ...) {
 
 
 setMethodS3("getIndexStats", "BamDataFile", function(this, ..., force=FALSE) {
-  idxStats <- this$.idxStats;
+  stats <- this$.idxStats;
 
-  if (force || is.null(idxStats)) {
+  if (force || is.null(stats)) {
     pathname <- getPathname(this);
     if (!hasIndex(this)) {
       throw("Cannot get index statistics. Index does not exists: ", pathname);
@@ -109,17 +109,13 @@ setMethodS3("getIndexStats", "BamDataFile", function(this, ..., force=FALSE) {
     bfr <- systemSamtools("idxstats", pathname, stdout=TRUE, ...);
     bfr <- strsplit(bfr, split="\t", fixed=TRUE);
     seqName <- sapply(bfr, FUN=.subset, 1L);
-    seqLength <- sapply(bfr, FUN=.subset, 2L);
-    seqLength <- Arguments$getIntegers(seqLength);
-    countMapped <- sapply(bfr, FUN=.subset, 3L);
-    countMapped <- Arguments$getIntegers(countMapped);
-    countUnmapped <- sapply(bfr, FUN=.subset, 4L);
-    countUnmapped <- Arguments$getIntegers(countUnmapped);
+    seqLength <- as.integer(sapply(bfr, FUN=.subset, 2L));
+    countMapped <- as.integer(sapply(bfr, FUN=.subset, 3L));
+    countUnmapped <- as.integer(sapply(bfr, FUN=.subset, 4L));
 
-    # AD HOC/WORKAROUND: samtools idxstats can return ridicolously(!)
-    # large read counts. Let's assume they are errors.
-    countMapped[countMapped >= .Machine$integer.max] <- NA;
-    countUnmapped[countUnmapped >= .Machine$integer.max] <- NA;
+    # NOTE: samtools idxstats can return ridicolously(!) large read
+    # counts.  Those will become NAs in as.integer() above.  Let's
+    # assume they are errors. /HB 2010-10-02
 
     stats <- data.frame(length=seqLength, mapped=countMapped, unmapped=countUnmapped);
     rownames(stats) <- seqName;
