@@ -91,6 +91,35 @@ setMethodS3("hasIndex", "BamDataFile", function(this, ...) {
   !is.null(getIndexFile(this));
 })
 
+
+
+setMethodS3("getIndexStats", "BamDataFile", function(this, ..., force=FALSE) {
+  idxStats <- this$.idxStats;
+
+  if (force || is.null(idxStats)) {
+    pathname <- getPathname(this);
+    if (!hasIndex(this)) {
+      throw("Cannot get index statistics. Index does not exists: ", pathname);
+    }
+    bfr <- systemSamtools("idxstats", pathname, stdout=TRUE, ...);
+    bfr <- strsplit(bfr, split="\t", fixed=TRUE);
+    seqName <- sapply(bfr, FUN=.subset, 1L);
+    seqLength <- sapply(bfr, FUN=.subset, 2L);
+    seqLength <- Arguments$getIntegers(seqLength);
+    countMapped <- sapply(bfr, FUN=.subset, 3L);
+    countMapped <- Arguments$getIntegers(countMapped);
+    countUnmapped <- sapply(bfr, FUN=.subset, 4L);
+    countUnmapped <- Arguments$getIntegers(countUnmapped);
+    stats <- data.frame(length=seqLength, mapped=countMapped, unmapped=countUnmapped);
+    rownames(stats) <- seqName;
+    this$.stats <- stats;
+  }
+
+  stats;
+})
+
+
+
 # \details{
 #   BAM headers typically contain an \code{"@HD VN:1.0 SO:<value>"} entry,
 #   where \code{<value>} indicates whether the aligned reads are sorted 
