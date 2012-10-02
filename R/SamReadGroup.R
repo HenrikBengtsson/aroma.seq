@@ -174,6 +174,10 @@ setMethodS3("hasRunDate", "SamReadGroup", function(this, ...) {
 })
 
 
+setMethodS3("isEmpty", "SamReadGroup", function(this, ...) {
+  (length(asSamList(this, ...)) == 0L);
+})
+
 setMethodS3("asSamList", "SamReadGroup", function(this, drop=TRUE, ...) {
   res <- attributes(this);
   keep <- (nchar(names(res)) == 2L);

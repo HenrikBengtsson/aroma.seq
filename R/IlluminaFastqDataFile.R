@@ -120,7 +120,7 @@ setMethodS3("getFirstSequenceInfo", "IlluminaFastqDataFile", function(this, forc
 
 
 
-setMethodS3("extractSamReadGroup", "IlluminaFastqDataFile", function(this, ...) {
+setMethodS3("getDefaultSamReadGroup", "IlluminaFastqDataFile", function(this, ...) {
   # SM: Sample
   # PL: Platform unit
   # PU: Platform

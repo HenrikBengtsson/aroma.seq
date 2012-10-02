@@ -36,6 +36,26 @@ setMethodS3("getDepth", "FastqDataSet", function(this, ...) {
   1L;
 }, protected=TRUE);
 
+setMethodS3("getDefaultSamReadGroup", "FastqDataSet", function(this, ...) {
+  SamReadGroup();
+})
+
+setMethodS3("setSamReadGroup", "FastqDataSet", function(this, rg, ...) {
+  # Argument 'rg':
+  if (!is.null(rg)) {
+    rg <- Arguments$getInstanceOf(rg, "SamReadGroup");
+  }
+  this$.rg <- rg;
+  invisible(this);
+})
+
+setMethodS3("getSamReadGroup", "FastqDataSet", function(this, ...) {
+  rg <- this$.rg;
+  if (is.null(rg)) {
+    rg <- getDefaultSamReadGroup(this, ...);
+  }
+  rg;
+})
 
 
 ############################################################################
