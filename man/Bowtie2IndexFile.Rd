@@ -46,7 +46,9 @@ extends \emph{\link[aroma.seq]{AbstractIndexFile}}\cr
 
  \section{Fields and Methods}{
   \bold{Methods:}\cr
-\emph{No methods defined}.
+\tabular{rll}{
+ \tab \code{getIndexPrefix} \tab  -\cr
+}
 
 
  \bold{Methods inherited from AbstractIndexFile}:\cr

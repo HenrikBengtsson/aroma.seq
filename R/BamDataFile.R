@@ -52,6 +52,11 @@ setMethodS3("as.character", "BamDataFile", function(x, ...) {
     s <- c(s, sprintf("Total target length: %.3gMb (%.0f bases)", len/1e9, len));
     names <- getTargetNames(this);
     s <- c(s, sprintf("Targets: [%d] %s", n, hpaste(names)));
+
+    counts <- getReadCounts(this);
+    total <- sum(counts, na.rm=TRUE);
+    s <- c(s, sprintf("Number of mapped reads: %d (%.1f%%) out of %d", counts[["mapped"]], 100*counts[["mapped"]]/total, total));
+    s <- c(s, sprintf("Number of unmapped reads: %d (%.1f%%) out of %d", counts[["unmapped"]], 100*counts[["unmapped"]]/total, total));
   }
 
   class(s) <- class;
@@ -110,14 +115,42 @@ setMethodS3("getIndexStats", "BamDataFile", function(this, ..., force=FALSE) {
     countMapped <- Arguments$getIntegers(countMapped);
     countUnmapped <- sapply(bfr, FUN=.subset, 4L);
     countUnmapped <- Arguments$getIntegers(countUnmapped);
+
+    # AD HOC/WORKAROUND: samtools idxstats can return ridicolously(!)
+    # large read counts. Let's assume they are errors.
+    countMapped[countMapped >= .Machine$integer.max] <- NA;
+    countUnmapped[countUnmapped >= .Machine$integer.max] <- NA;
+
     stats <- data.frame(length=seqLength, mapped=countMapped, unmapped=countUnmapped);
     rownames(stats) <- seqName;
-    this$.stats <- stats;
+    this$.idxStats <- stats;
   }
 
   stats;
 })
 
+
+setMethodS3("getReadCounts", "BamDataFile", function(this, ...) {
+  stats <- getIndexStats(this, ...);
+  counts <- colSums(stats[,c("mapped", "unmapped")], na.rm=TRUE);
+  counts;
+})
+
+
+setMethodS3("nbrOfReads", "BamDataFile", function(this, ...) {
+  counts <- getReadCounts(this, ...);
+  sum(counts, na.rm=TRUE);
+})
+
+setMethodS3("nbrOfMappedReads", "BamDataFile", function(this, ...) {
+  counts <- getReadCounts(this, ...);
+  counts["mapped"];
+})
+
+setMethodS3("nbrOfUnmappedReads", "BamDataFile", function(this, ...) {
+  counts <- getReadCounts(this, ...);
+  counts["unmapped"];
+})
 
 
 # \details{
@@ -358,6 +391,7 @@ setMethodS3("replaceAllReadGroups", "BamDataFile", function(this, rg="*", ..., v
 ############################################################################
 # HISTORY:
 # 2012-10-02
+# o Added getIndexStats() for BamDataFile.
 # o Now buildIndex() for BamDataFile returns a BamIndexDataFile.
 # o Added getIndexFile() for BamDataFile.
 # 2012-06-28

@@ -48,6 +48,8 @@ extends \emph{\link[R.filesets]{GenericDataFile}}\cr
  \tab \code{as.character} \tab  -\cr
  \tab \code{buildIndex} \tab  -\cr
  \tab \code{getHeader} \tab  -\cr
+ \tab \code{getIndexFile} \tab  -\cr
+ \tab \code{getIndexStats} \tab  -\cr
  \tab \code{getReadGroup} \tab  -\cr
  \tab \code{getReadGroups} \tab  -\cr
  \tab \code{getTargetLengths} \tab  -\cr

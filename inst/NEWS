@@ -2,6 +2,7 @@ Package: aroma.seq
 ==================
 
 Version: 0.1.13 [2012-10-02]
+o Added getIndexStats() for BamDataFile:s.
 o Added PicardDuplicateRemoval.
 o BUG FIX: systemSamtools(), systemJava() and systemBWA() did
   not handle cases with only non-named arguments.
