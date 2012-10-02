@@ -12,12 +12,8 @@
 # @synopsis
 #
 # \arguments{
-#  \item{dataSet}{An @see "FastqDataSet".}
+#  \item{...}{Arguments passed to @see "AbstractAlignment".}
 #  \item{indexSet}{An @see "Bowtie2IndexSet".}
-#  \item{tags}{Additional tags for the output data sets.}
-#  \item{readGroup}{(optional) An @see "SamReadGroup" for added 
-#    SAM read group to the results.}
-#  \item{...}{Additional BWA 'aln' arguments.}
 # }
 #
 # \section{Fields and Methods}{
@@ -26,227 +22,22 @@
 #
 # \author{Henrik Bengtsson and Pierre Neuvial}
 #*/########################################################################### 
-setConstructorS3("Bowtie2Alignment", function(dataSet=NULL, indexSet=NULL, tags="*", readGroup=NULL, ...) {
+setConstructorS3("Bowtie2Alignment", function(..., indexSet=NULL) {
   # Validate arguments
-  if (!is.null(dataSet)) {
-    # Argument 'dataSet':
-    dataSet <- Arguments$getInstanceOf(dataSet, "FastqDataSet");
-
-    # Argument 'indexSet':
-    if (inherits(indexSet, "FastaReferenceFile")) {
-      throw("Argument 'indexSet' should be a Bowtie2IndexSet object (not ", class(indexSet)[1], "). Use buildBowtie2IndexSet().");
-    }
+  if (!is.null(indexSet)) {
     indexSet <- Arguments$getInstanceOf(indexSet, "Bowtie2IndexSet");
-  } # if (!is.null(dataSet))
+  }
 
   # Arguments '...':
   args <- list(...);
 
-  this <- extend(Object(), "Bowtie2Alignment",
-    .ds = dataSet,
-    .indexSet = indexSet,
-    .tags = tags,
-    .readGroup = readGroup,
-    .args = args
-  );
-
-  setTags(this, tags);
-
-  this;
+  extend(AbstractAlignment(..., indexSet=indexSet), "Bowtie2Alignment");
 })
 
-
-setMethodS3("as.character", "Bowtie2Alignment", function(x, ...) {
-  # To please R CMD check
-  this <- x;
-
-  s <- sprintf("%s:", class(this)[1]);
-
-  ds <- getInputDataSet(this);
-  s <- c(s, "Input data set:");
-  s <- c(s, as.character(ds));
-
-  is <- getIndexSet(this);
-  s <- c(s, "Reference index set:");
-  s <- c(s, as.character(is));
- 
-  params <- getParametersAsString(this, collapse=", ");
-  s <- c(s, sprintf("Additional parameters: %s", params));
-
-  class(s) <- "GenericSummary";
-  s;
-}, private=TRUE)
-
-
-setMethodS3("getInputDataSet", "Bowtie2Alignment", function(this, ...) {
-  this$.ds;
-})
-
-setMethodS3("getIndexSet", "Bowtie2Alignment", function(this, ...) {
-  this$.indexSet;
-})
-
-setMethodS3("getOptionalArguments", "Bowtie2Alignment", function(this, ...) {
-  this$.args;
-})
 
 setMethodS3("getParameters", "Bowtie2Alignment", function(this, ...) {
   params <- getOptionalArguments(this, ...);
-
-  readGroup <- this$.readGroup;
-  if (!is.null(readGroup)) {
-    rgArg <- asString(readGroup, fmtstr="%s:%s", collapse=NULL);
-    # Don't forget to put within quotation marks
-    rgArg <- sprintf("\"%s\"", rgArg);
-    rgArg <- as.list(rgArg);
-    names(rgArg) <- rep("rg", times=length(rgArg));
-    params <- c(params, rgArg);
-  }
-
   params;
-})
-
-
-setMethodS3("getParametersAsString", "Bowtie2Alignment", function(this, ..., collapse=NULL) {
-  params <- getParameters(this, drop=FALSE, ...);
-  params <- trim(capture.output(str(params)))[-1];
-  params <- gsub("^[$][ ]*", "", params);
-  params <- gsub(" [ ]*", " ", params);
-  params <- gsub("[ ]*:", ":", params);
-  if (!is.null(collapse)) {
-    params <- paste(params, collapse=collapse);
-  }
-  params;
-})
-
-
-setMethodS3("getAsteriskTags", "Bowtie2Alignment", function(this, collapse=NULL, ...) {
-  is <- getIndexSet(this);
-  tags <- c("bowtie2", getTags(is, collapse=NULL));
-  tags <- unique(tags);
-
-  if (!is.null(collapse)) {
-    tags <- paste(tags, collapse=collapse);
-  }
-
-  tags;
-}, private=TRUE)
-
-
-setMethodS3("getName", "Bowtie2Alignment", function(this, ...) {
-  ds <- getInputDataSet(this);
-  getName(ds);
-})
-
-setMethodS3("getFlavor", "Bowtie2Alignment", function(this, ...) {
-  this$.flavor;
-}, protected=TRUE)
-
-
-setMethodS3("getTags", "Bowtie2Alignment", function(this, collapse=NULL, ...) {
-  # "Pass down" tags from input data set
-  ds <- getInputDataSet(this);
-  tags <- getTags(ds, collapse=collapse);
-
-  # Get class-specific tags
-  tags <- c(tags, this$.tags);
-
-  # Update default tags
-  tags[tags == "*"] <- getAsteriskTags(this, collapse=",");
-
-  # Collapsed or split?
-  if (!is.null(collapse)) {
-    tags <- paste(tags, collapse=collapse);
-  } else {
-    tags <- unlist(strsplit(tags, split=","));
-  }
-
-  if (length(tags) == 0) {
-    tags <- NULL;
-  }
-
-  tags;
-})
-
-
-setMethodS3("setTags", "Bowtie2Alignment", function(this, tags="*", ...) {
-  # Argument 'tags':
-  if (!is.null(tags)) {
-    tags <- Arguments$getCharacters(tags);
-    tags <- trim(unlist(strsplit(tags, split=",")));
-    tags <- tags[nchar(tags) > 0];
-  }
-  
-  this$.tags <- tags;
-})
-
- 
-setMethodS3("getFullName", "Bowtie2Alignment", function(this, ...) {
-  name <- getName(this);
-  tags <- getTags(this);
-  fullname <- paste(c(name, tags), collapse=",");
-  fullname <- gsub("[,]$", "", fullname);
-  fullname;
-})
-
-
-setMethodS3("getRootPath", "Bowtie2Alignment", function(this, ...) {
-  "bowtie2Data";
-})
-
-setMethodS3("getPath", "Bowtie2Alignment", function(this, create=TRUE, ...) {
-  # Create the (sub-)directory tree for the data set
-
-  # Root path
-  rootPath <- getRootPath(this);
-
-  # Full name
-  fullname <- getFullName(this);
-
-  # Platform    
-  ds <- getInputDataSet(this);
-  platform <- "Generic";
-
-  # The full path
-  path <- filePath(rootPath, fullname, platform, expandLinks="any");
-
-  # Verify that it is not the same as the input path
-  ds <- getInputDataSet(this);
-  inPath <- getPath(ds);
-  if (getAbsolutePath(path) == getAbsolutePath(inPath)) {
-    throw("The generated output data path equals the input data path: ", path, " == ", inPath);
-  }
-
-  # Create path?
-  if (create) {
-    if (!isDirectory(path)) {
-      mkdirs(path);
-      if (!isDirectory(path))
-        throw("Failed to create output directory: ", path);
-    }
-  }
-
-  path;
-})
-
-
-setMethodS3("nbrOfFiles", "Bowtie2Alignment", function(this, ...) {
-  ds <- getInputDataSet(this);
-  nbrOfFiles(ds);
-})
-
-
-setMethodS3("getOutputDataSet", "Bowtie2Alignment", function(this, ...) {
-  ## Find all existing output data files
-  path <- getPath(this);
-  res <- BamDataSet$byPath(path, ...);
-
-  ## Keep only those samples that exists in the input data set
-  ds <- getInputDataSet(this);
-  res <- extract(res, getFullNames(ds));
-  
-  ## TODO: Assert completeness
-  res;
 })
 
 
@@ -278,6 +69,31 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Local functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  asBowtie2Parameters <- function(rg, ...) {
+    if (isEmpty(rg)) {
+      return(NULL);
+    }
+
+    # Validate
+##    if (!hasID(rg)) {
+##      throw("Bowtie requires that the SAM read group has an ID.");
+##    }
+
+    rgArgs <- asString(rg, fmtstr="%s:%s");
+    rgArgs <- rgArgs[regexpr("^ID:", rgArgs) == -1];
+
+    # Don't forget to put within quotation marks
+    rgArgs <- sprintf("\"%s\"", rgArgs);
+
+    rgArgs <- as.list(rgArgs);
+    names(rgArgs) <- rep("rg", times=length(rgArgs));
+
+    rgArgs <- c(list("rg-id"=asSamList(rg)$ID), rgArgs);
+
+    rgArgs;
+  } # asBowtie2Parameters()
+
+
   bowtie2 <- function(pathnameFQ, indexPrefix, pathnameSAM, ..., verbose=FALSE) {
     pathnameFQ <- Arguments$getReadablePathname(pathnameFQ);
     indexPrefix <- Arguments$getCharacter(indexPrefix);
@@ -285,6 +101,7 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
     pathnameSAM <- Arguments$getWritablePathname(pathnameSAM);
     systemBowtie2(optionsList=list(x=indexPrefix, U=pathnameFQ, S=pathnameSAM), ...);
   } # bowtie2()
+
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -310,6 +127,13 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
   verbose && cat(verbose, "Aligning using index set:");
   verbose && print(verbose, is);
   indexPrefix <- getIndexPrefix(is);
+
+  rgSet <- this$.rgSet;
+  if (!is.null(rgSet)) {
+    verbose && cat(verbose, "Assigning SAM read group:");
+    verbose && print(verbose, rgSet);
+    validate(rgSet);
+  }
 
   params <- getParameters(this);
   verbose && cat(verbose, "Additional bowtie2 arguments:");
@@ -350,7 +174,23 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
     # (a) Generate SAM file
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     if (!isFile(pathnameSAM)) {
-      args <- list(pathnameFQ, indexPrefix=indexPrefix, pathnameSAM=pathnameSAM);
+      # Extract sample-specific read group
+      rgII <- getSamReadGroup(df);
+      if (length(rgSet) > 0L) {
+        rgII <- merge(rgSet, rgII);
+      }
+      verbose && cat(verbose, "Writing SAM Read Groups:");
+      verbose && print(verbose, rgII);
+      verbose && cat(verbose, "Bowtie2 parameter:");
+      rgArgs <- asBowtie2Parameters(rgII);
+      verbose && print(verbose, rgArgs);
+
+      args <- list(
+        pathnameFQ,
+        indexPrefix=indexPrefix, 
+        pathnameSAM=pathnameSAM
+      );
+      args <- c(args, rgArgs);
       args <- c(args, params);
       verbose && cat(verbose, "Arguments:");
       verbose && str(verbose, args);
@@ -358,6 +198,16 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 
       res <- do.call(bowtie2, args=args);
       verbose && cat(verbose, "System result code: ", res);
+
+      # In case bowtie2 generates empty SAM files
+      # /HB 2012-10-01 (still to be observed)
+      if (isFile(pathnameSAM)) {
+        if (file.info(pathnameSAM)$size == 0L) {
+          verbose && cat(verbose, "Removing empty SAM file falsely created by Bowtie2: ", pathnameSAM);
+          file.remove(pathnameSAM);
+        }
+      }
+ 
     }
 
     # Sanity check
@@ -387,6 +237,9 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 
 ############################################################################
 # HISTORY:
+# 2012-10-01
+# o Now process() Bowtie2Alignment write SAM read groups, iff given.
+# o Now Bowtie2Alignment inherits from AbstractAlignment.
 # 2012-09-28
 # o Added support for argument 'readGroup' to Bowtie2Alignment().
 # 2012-09-27

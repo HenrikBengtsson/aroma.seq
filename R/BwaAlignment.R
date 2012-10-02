@@ -75,7 +75,7 @@ setMethodS3("getParameters", "BwaAlignment", function(this, which=c("aln", "sams
 #*/###########################################################################  
 setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # 
+  # Local functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   asBwaParameter <- function(rg, ...) {
     if (isEmpty(rg)) {
@@ -169,17 +169,6 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
 
     verbose && print(verbose, df);
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Extract sample-specific read group
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    rgII <- getSamReadGroup(df);
-    rgT <- merge(rgSet, rgII);
-    verbose && cat(verbose, "Writing SAM Read Groups:");
-    verbose && print(verbose, rgT);
-    verbose && cat(verbose, "BWA 'samse' parameter:");
-    rgArg <- asBwaParameter(rgT);
-    verbose && print(verbose, rgArg);
-
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # (a) Generate SAI file via BWA aln
@@ -200,12 +189,31 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
     # (b) Generate SAM file via BWA samse
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     if (!isFile(pathnameSAM)) {
+      # Extract sample-specific read group
+      rgII <- getSamReadGroup(df);
+      if (length(rgSet) > 0L) {
+        rgII <- merge(rgSet, rgII);
+      }
+      verbose && cat(verbose, "Writing SAM Read Groups:");
+      verbose && print(verbose, rgII);
+      verbose && cat(verbose, "BWA 'samse' parameter:");
+      rgArg <- asBwaParameter(rgII);
+      verbose && print(verbose, rgArg);
+
       args <- list(pathnameSAI=pathnameSAI, pathnameFQ=pathnameFQ, 
                    indexPrefix=indexPrefix, pathnameD=pathnameSAM);
       args <- c(args, rgArg);
       args$verbose <- less(verbose, 5);
       res <- do.call(bwaSamse, args=args);
       verbose && cat(verbose, "System result code: ", res);
+
+      # BWA 'samse' can generate empty SAM files
+      if (isFile(pathnameSAM)) {
+        if (file.info(pathnameSAM)$size == 0L) {
+          verbose && cat(verbose, "Removing empty SAM file falsely created by BWA: ", pathnameSAM);
+          file.remove(pathnameSAM);
+        }
+      }
     }
     # Sanity check
     stopifnot(isFile(pathnameSAM));
@@ -233,15 +241,11 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
 
 
 
-setMethodS3("asBwaString", "SamReadGroup", function(this, ...) {
-  res <- asString(this, fmtstr="%s:%s", collapse="\t", ...)
-  res <- sprintf("@RG\t%s", res);
-  res;
-})
-
-
 ############################################################################
 # HISTORY:
+# 2012-10-01
+# o Now process() BwaAlignment write SAM read groups, iff given.
+# o Now BwaAlignment inherits from AbstractAlignment.
 # 2012-09-28
 # o Added support for argument 'rgSet' to BwaAlignment().
 # 2012-09-25

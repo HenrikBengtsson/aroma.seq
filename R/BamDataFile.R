@@ -191,7 +191,7 @@ setMethodS3("getReadGroups", "BamDataFile", function(this, ...) {
 
 setMethodS3("getReadGroup", "BamDataFile", function(this, ...) {
   rgList <- getReadGroups(this, ...);
-  if (length(rgList) > 1L) {
+  if (length(rgList) >= 1L) {
     rgList <- rgList[[1L]];
   } else {
     rgList <- SamReadGroup();

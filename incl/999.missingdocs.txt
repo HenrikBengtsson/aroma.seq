@@ -111,3 +111,5 @@ getTags.AbstractAlignment isEmpty isEmpty.SamReadGroup
 nbrOfFiles.AbstractAlignment process.AbstractAlignment
 setSamReadGroup setSamReadGroup.FastqDataFile
 setSamReadGroup.FastqDataSet setTags.AbstractAlignment
+getReadGroup getReadGroup.BamDataFile hasID
+hasID.SamReadGroup

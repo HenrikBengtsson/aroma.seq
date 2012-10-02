@@ -12,17 +12,18 @@
 # @synopsis
 #
 # \arguments{
-#  \item{sample}{Specifies the \code{SM} read group.}
-#  \item{library}{Specifies the \code{LB} read group.}
-#  \item{platform}{Specifies the \code{PL} read group.}
-#  \item{platformUnit}{Specifies the \code{PU} read group.}
-#  \item{sequencingCenter}{Specifies the \code{CN} read group.}
-#  \item{description}{Specifies the \code{DS} read group.}
-#  \item{runDate}{Specifies the \code{DT} read group.}
-#  \item{flowOrder}{Specifies the \code{FO} read group.}
-#  \item{keySequence}{Specifies the \code{KS} read group.}
-#  \item{program}{Specifies the \code{PG} read group.}
-#  \item{predictedInsertSize}{Specifies the \code{PI} read group.}
+#  \item{id}{Specifies the \code{ID} read group field.}
+#  \item{sample}{Specifies the \code{SM} read group field.}
+#  \item{library}{Specifies the \code{LB} read group field.}
+#  \item{platform}{Specifies the \code{PL} read group field.}
+#  \item{platformUnit}{Specifies the \code{PU} read group field.}
+#  \item{sequencingCenter}{Specifies the \code{CN} read group field.}
+#  \item{description}{Specifies the \code{DS} read group field.}
+#  \item{runDate}{Specifies the \code{DT} read group field.}
+#  \item{flowOrder}{Specifies the \code{FO} read group field.}
+#  \item{keySequence}{Specifies the \code{KS} read group field.}
+#  \item{program}{Specifies the \code{PG} read group field.}
+#  \item{predictedInsertSize}{Specifies the \code{PI} read group field.}
 #  \item{...}{Additional named arguments, including two-letter read 
 #    group keys for the above, e.g. 'SM'.}
 # }

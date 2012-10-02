@@ -234,6 +234,10 @@
 \alias{setSamReadGroup.FastqDataFile}
 \alias{setSamReadGroup.FastqDataSet}
 \alias{setTags.AbstractAlignment}
+\alias{getReadGroup}
+\alias{getReadGroup.BamDataFile}
+\alias{hasID}
+\alias{hasID.SamReadGroup}
 
 \description{
   This page contains aliases for all "non-documented" objects that

@@ -2,7 +2,10 @@ Package: aroma.seq
 ==================
 
 Version: 0.1.12 [2012-10-01]
-o Added IlluminaFastqData(File|Set).
+o Added IlluminaFastqData(File|Set), which is aware of Illumina
+  specific filenames and sequence information.
+o Now BwaAlignment and Bowtie2Alignment inherits AbstactAlignment
+  and both write SAM read groups, if available/provided.
 
 
 Version: 0.1.11 [2012-09-28]

@@ -22,7 +22,7 @@
 \code{~~+--}\emph{\code{AbstractAlignment}}\cr
 
 \bold{Directly known subclasses:}\cr
-\link[aroma.seq]{BwaAlignment}\cr
+\link[aroma.seq]{Bowtie2Alignment}, \link[aroma.seq]{BwaAlignment}\cr
 
 public abstract static class \bold{AbstractAlignment}\cr
 extends \link[R.oo]{Object}\cr
