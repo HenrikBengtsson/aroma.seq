@@ -47,9 +47,14 @@ setMethodS3("systemSamtools", "default", function(command, ..., .fake=FALSE, ver
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Split up '...' arguments by system2() and samtools executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  keep <- is.element(names(args), names(formals(base::system2)));
-  system2Args <- args[keep];
-  args <- args[!keep];
+  keys <- names(args);
+  if (is.null(keys)) {
+    system2Args <- NULL;
+  } else {
+    keep <- is.element(keys, names(formals(base::system2)));
+    system2Args <- args[keep];
+    args <- args[!keep];
+  }
 
   verbose && cat(verbose, "Arguments passed to system2():");
   verbose && str(verbose, system2Args);
@@ -106,6 +111,9 @@ setMethodS3("systemSamtools", "default", function(command, ..., .fake=FALSE, ver
 
 ############################################################################
 # HISTORY:
+# 2012-10-02
+# o BUG FIX: systemSamtools(), systemJava() and systemBWA() did not
+#   handle cases with only non-named arguments.
 # 2012-09-25
 # o Created from systemBWA.R.
 ############################################################################

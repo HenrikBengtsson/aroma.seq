@@ -35,7 +35,7 @@ setConstructorS3("Bowtie2IndexFile", function(...) {
 })
 
 
-setMethodS3("getIndexPrefix", "AbstractIndexFile", function(this, ...) {
+setMethodS3("getIndexPrefix", "Bowtie2IndexFile", function(this, ...) {
   path <- getPath(this);
   fullname <- getFullName(this);
   fullname <- gsub("(|[.]rev)[.][0-9]$", "", fullname);

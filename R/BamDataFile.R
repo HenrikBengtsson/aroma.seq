@@ -64,7 +64,7 @@ setMethodS3("buildIndex", "BamDataFile", function(this, ..., skip=!overwrite, ov
 
   if (hasIndex(this)) {
     if (skip) {
-      return(invisible(pathnameBAI));
+      return(invisible(getIndexFile(this)));
     }
     if (!overwrite) {
       throw("Cannot build index file (*.bai). File already exists: ", pathnameBAI);
@@ -73,14 +73,22 @@ setMethodS3("buildIndex", "BamDataFile", function(this, ..., skip=!overwrite, ov
 
   pathnameT <- Rsamtools::indexBam(pathname);
 
-  invisible(pathnameBAI);
+  getIndexFile(this);
+})
+
+
+setMethodS3("getIndexFile", "BamDataFile", function(this, ...) {
+  pathname <- getPathname(this);
+  pathnameBAI <- sprintf("%s.bai", pathname);
+  if (!isFile(pathnameBAI)) {
+    return(NULL);
+  }
+  BamIndexDataFile(pathnameBAI);
 })
 
 
 setMethodS3("hasIndex", "BamDataFile", function(this, ...) {
-  pathname <- getPathname(this);
-  pathnameBAI <- sprintf("%s.bai", pathname);
-  isFile(pathnameBAI);
+  !is.null(getIndexFile(this));
 })
 
 # \details{
@@ -320,6 +328,9 @@ setMethodS3("replaceAllReadGroups", "BamDataFile", function(this, rg="*", ..., v
 
 ############################################################################
 # HISTORY:
+# 2012-10-02
+# o Now buildIndex() for BamDataFile returns a BamIndexDataFile.
+# o Added getIndexFile() for BamDataFile.
 # 2012-06-28
 # o Added getReadGroups() and replaceAllReadGroups() and buildIndex().
 # o Created.

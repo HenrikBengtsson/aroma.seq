@@ -47,9 +47,14 @@ setMethodS3("systemBWA", "default", function(command, ..., .fake=FALSE, verbose=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Split up '...' arguments by system2() and BWA executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  keep <- is.element(names(args), names(formals(base::system2)));
-  system2Args <- args[keep];
-  args <- args[!keep];
+  keys <- names(args);
+  if (is.null(keys)) {
+    system2Args <- NULL;
+  } else {
+    keep <- is.element(keys, names(formals(base::system2)));
+    system2Args <- args[keep];
+    args <- args[!keep];
+  }
 
   verbose && cat(verbose, "Arguments passed to system2():");
   verbose && str(verbose, system2Args);

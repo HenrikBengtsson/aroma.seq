@@ -49,9 +49,13 @@ setMethodS3("systemJava", "default", function(..., .fmtArg=c("( |=)$"="%s%s", ".
   # Split up '...' arguments by system2() and Java executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   keys <- names(args);
-  keep <- is.element(keys, names(formals(base::system2)));
-  system2Args <- args[keep];
-  args <- args[!keep];
+  if (is.null(keys)) {
+    system2Args <- NULL;
+  } else {
+    keep <- is.element(keys, names(formals(base::system2)));
+    system2Args <- args[keep];
+    args <- args[!keep];
+  }
 
   verbose && cat(verbose, "Arguments passed to system2():");
   verbose && str(verbose, system2Args);
