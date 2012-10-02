@@ -271,6 +271,8 @@
 \alias{nbrOfReads.BamDataFile}
 \alias{nbrOfUnmappedReads}
 \alias{nbrOfUnmappedReads.BamDataFile}
+\alias{extractReadStartPositions}
+\alias{extractReadStartPositions.BamDataFile}
 
 \description{
   This page contains aliases for all "non-documented" objects that

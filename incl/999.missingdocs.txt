@@ -135,3 +135,4 @@ getIndexStats getIndexStats.BamDataFile getReadCounts
 getReadCounts.BamDataFile nbrOfMappedReads
 nbrOfMappedReads.BamDataFile nbrOfReads.BamDataFile
 nbrOfUnmappedReads nbrOfUnmappedReads.BamDataFile
+extractReadStartPositions extractReadStartPositions.BamDataFile

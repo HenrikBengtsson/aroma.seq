@@ -387,9 +387,24 @@ setMethodS3("replaceAllReadGroups", "BamDataFile", function(this, rg="*", ..., v
 }) # replaceAllReadGroups()
 
 
+# See help("scanBam", package="Rsamtools") for definition of 'pos'.
+setMethodS3("extractReadStartPositions", "BamDataFile", function(this, param=ScanBamParam(what=c("rname", "pos")), flag=scanBamFlag(isUnmappedQuery=FALSE, isDuplicate=FALSE), ..., verbose=FALSE) {
+  require("Rsamtools") || throw("Package not loaded: Rsamtools");
+
+  pathname <- getPathname(this);
+  
+  data <- scanBam(pathname, flag=flag, param=param, ...);
+  data <- data[[1L]];
+  data <- as.data.frame(data);
+  data$rname <- as.character(data$rname);
+  data;
+})
+
+
 ############################################################################
 # HISTORY:
 # 2012-10-02
+# o Added extractReadStartPositions() for BamDataFile.
 # o Added getIndexStats() for BamDataFile.
 # o Now buildIndex() for BamDataFile returns a BamIndexDataFile.
 # o Added getIndexFile() for BamDataFile.
