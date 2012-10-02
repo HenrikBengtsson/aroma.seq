@@ -38,10 +38,13 @@
 #      \emph{The SAM Format Specification}, Sept 7, 2011.\cr
 # }
 #*/###########################################################################
-setConstructorS3("SamReadGroup", function(sample=NULL, library=NULL, platform=NULL, platformUnit=NULL, sequencingCenter=NULL, description=NULL, runDate=NULL, flowOrder=NULL, keySequence=NULL, program=NULL, predictedInsertSize=NULL, ...) {
+setConstructorS3("SamReadGroup", function(id=NULL, sample=NULL, library=NULL, platform=NULL, platformUnit=NULL, sequencingCenter=NULL, description=NULL, runDate=NULL, flowOrder=NULL, keySequence=NULL, program=NULL, predictedInsertSize=NULL, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'id':
+  id <- Arguments$getCharacter(id);
+
   # Argument 'sample':
   sample <- Arguments$getCharacter(sample);
 
@@ -73,6 +76,7 @@ setConstructorS3("SamReadGroup", function(sample=NULL, library=NULL, platform=NU
 
 
   extend(BasicObject(), "SamReadGroup",
+    ID=id,
     SM=sample,
     LB=library,
     PL=platform,
@@ -142,6 +146,11 @@ setMethodS3("merge", "SamReadGroup", function(x, y, ...) {
   }
 
   res;
+})
+
+
+setMethodS3("hasID", "SamReadGroup", function(this, ...) {
+  !is.null(this$ID);
 })
 
 

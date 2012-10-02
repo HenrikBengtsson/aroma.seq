@@ -51,7 +51,7 @@ extends \link[aroma.seq]{FastqDataSet}\cr
 
 
  \bold{Methods inherited from FastqDataSet}:\cr
-getDepth, validate
+getDefaultSamReadGroup, getDepth, getSamReadGroup, setSamReadGroup, validate
 
  \bold{Methods inherited from GenericDataFileSet}:\cr
 getFullNameTranslatorSet, getParentName, append, appendFiles, appendFullNamesTranslator, appendFullNamesTranslatorBydata.frame, appendFullNamesTranslatorByfunction, appendFullNamesTranslatorBylist, appendFullNamesTranslatorByNULL, appendFullNamesTranslatorByTabularTextFile, appendFullNamesTranslatorByTabularTextFileSet, as.list, byName, byPath, clearCache, clearFullNamesTranslator, copyTo, equals, extract, findByName, getAlias, getChecksum, getChecksumObjects, getDefaultFullName, getFile, getFileClass, getFileSize, getFullNames, getNames, getPath, getPathnames, getSubdirs, hasFile, indexOf, lapply, nbrOfFiles, sapply, seq, setAlias, setFullNamesTranslator, sortBy, update2, updateFullName, updateFullNames, validate

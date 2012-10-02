@@ -34,7 +34,7 @@ extends \link[R.oo]{BasicObject}\cr
   A SamReadGroup object represents a SAM Read Group.
  }
 
- \usage{SamReadGroup(sample=NULL, library=NULL, platform=NULL, platformUnit=NULL, sequencingCenter=NULL, description=NULL, runDate=NULL, flowOrder=NULL, keySequence=NULL, program=NULL, predictedInsertSize=NULL, ...)}
+ \usage{SamReadGroup(id=NULL, sample=NULL, library=NULL, platform=NULL, platformUnit=NULL, sequencingCenter=NULL, description=NULL, runDate=NULL, flowOrder=NULL, keySequence=NULL, program=NULL, predictedInsertSize=NULL, ...)}
 
  \arguments{
   \item{sample}{Specifies the \code{SM} read group.}
@@ -61,12 +61,14 @@ extends \link[R.oo]{BasicObject}\cr
  \tab \code{asString} \tab  -\cr
  \tab \code{byScanBamHeader} \tab  -\cr
  \tab \code{hasDescription} \tab  -\cr
+ \tab \code{hasID} \tab  -\cr
  \tab \code{hasLibrary} \tab  -\cr
  \tab \code{hasPlatform} \tab  -\cr
  \tab \code{hasPlatformUnit} \tab  -\cr
  \tab \code{hasRunDate} \tab  -\cr
  \tab \code{hasSample} \tab  -\cr
  \tab \code{hasSequencingCenter} \tab  -\cr
+ \tab \code{isEmpty} \tab  -\cr
  \tab \code{merge} \tab  -\cr
  \tab \code{validate} \tab  -\cr
 }

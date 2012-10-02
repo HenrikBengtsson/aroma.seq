@@ -45,7 +45,11 @@ extends \link[R.filesets]{GenericDataFileSet}\cr
 
  \section{Fields and Methods}{
   \bold{Methods:}\cr
-\emph{No methods defined}.
+\tabular{rll}{
+ \tab \code{getDefaultSamReadGroup} \tab  -\cr
+ \tab \code{getSamReadGroup} \tab  -\cr
+ \tab \code{setSamReadGroup} \tab  -\cr
+}
 
 
  \bold{Methods inherited from GenericDataFileSet}:\cr

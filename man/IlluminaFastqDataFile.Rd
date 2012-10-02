@@ -47,8 +47,8 @@ extends \emph{\link[aroma.seq]{FastqDataFile}}\cr
  \section{Fields and Methods}{
   \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{extractSamReadGroup} \tab  -\cr
  \tab \code{getBarcodeSequence} \tab  -\cr
+ \tab \code{getDefaultSamReadGroup} \tab  -\cr
  \tab \code{getFlowcellId} \tab  -\cr
  \tab \code{getInstrumentId} \tab  -\cr
  \tab \code{getLane} \tab  -\cr
@@ -59,7 +59,7 @@ extends \emph{\link[aroma.seq]{FastqDataFile}}\cr
 
 
  \bold{Methods inherited from FastqDataFile}:\cr
-as.character, extractSamReadGroup, getCommonSeqWidth, getGeometry, nbrOfSeqs
+as.character, getCommonSeqWidth, getDefaultSamReadGroup, getGeometry, getSamReadGroup, nbrOfSeqs, setSamReadGroup
 
  \bold{Methods inherited from GenericDataFile}:\cr
 getParentName, compareChecksum, copyTo, equals, fromFile, getAlias, getAttribute, getAttributes, getChecksum, getCreatedOn, getDefaultFullName, getExtension, getExtensionPattern, getFilename, getFilenameExtension, getFileSize, getFileType, getLastAccessedOn, getLastModifiedOn, getOutputExtension, getPath, getPathname, gunzip, gzip, hasBeenModified, isFile, readChecksum, renameTo, renameToUpperCaseExt, setAlias, setAttribute, setAttributes, setAttributesBy, setAttributesByTags, setExtensionPattern, testAttributes, validateChecksum, writeChecksum

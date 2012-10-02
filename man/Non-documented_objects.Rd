@@ -205,6 +205,35 @@
 \alias{getPlatformUnit.IlluminaFastqDataFile}
 \alias{getSampleName.IlluminaFastqDataFile}
 \alias{merge.SamReadGroup}
+\alias{as.character.AbstractAlignment}
+\alias{getAsteriskTags.AbstractAlignment}
+\alias{getDefaultSamReadGroup}
+\alias{getDefaultSamReadGroup.FastqDataFile}
+\alias{getDefaultSamReadGroup.FastqDataSet}
+\alias{getDefaultSamReadGroup.IlluminaFastqDataFile}
+\alias{getFlavor.AbstractAlignment}
+\alias{getFullName.AbstractAlignment}
+\alias{getIndexSet.AbstractAlignment}
+\alias{getInputDataSet.AbstractAlignment}
+\alias{getName.AbstractAlignment}
+\alias{getOptionalArguments.AbstractAlignment}
+\alias{getOutputDataSet.AbstractAlignment}
+\alias{getParameters.AbstractAlignment}
+\alias{getParametersAsString.AbstractAlignment}
+\alias{getPath.AbstractAlignment}
+\alias{getRootPath.AbstractAlignment}
+\alias{getSamReadGroup}
+\alias{getSamReadGroup.FastqDataFile}
+\alias{getSamReadGroup.FastqDataSet}
+\alias{getTags.AbstractAlignment}
+\alias{isEmpty}
+\alias{isEmpty.SamReadGroup}
+\alias{nbrOfFiles.AbstractAlignment}
+\alias{process.AbstractAlignment}
+\alias{setSamReadGroup}
+\alias{setSamReadGroup.FastqDataFile}
+\alias{setSamReadGroup.FastqDataSet}
+\alias{setTags.AbstractAlignment}
 
 \description{
   This page contains aliases for all "non-documented" objects that

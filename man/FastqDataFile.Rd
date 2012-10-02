@@ -46,10 +46,12 @@ extends \emph{\link[R.filesets]{GenericDataFile}}\cr
   \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{as.character} \tab  -\cr
- \tab \code{extractSamReadGroup} \tab  -\cr
  \tab \code{getCommonSeqWidth} \tab  -\cr
+ \tab \code{getDefaultSamReadGroup} \tab  -\cr
  \tab \code{getGeometry} \tab  -\cr
+ \tab \code{getSamReadGroup} \tab  -\cr
  \tab \code{nbrOfSeqs} \tab  -\cr
+ \tab \code{setSamReadGroup} \tab  -\cr
 }
 
 

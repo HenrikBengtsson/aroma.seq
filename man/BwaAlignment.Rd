@@ -19,49 +19,38 @@
 
 \code{\link[R.oo]{Object}}\cr
 \code{~~|}\cr
-\code{~~+--}\code{BwaAlignment}\cr
+\code{~~+--}\code{\link[aroma.seq]{AbstractAlignment}}\cr
+\code{~~~~~~~|}\cr
+\code{~~~~~~~+--}\code{BwaAlignment}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
 
 public static class \bold{BwaAlignment}\cr
-extends \link[R.oo]{Object}\cr
+extends \emph{\link[aroma.seq]{AbstractAlignment}}\cr
 
 
 
   ...
  }
 
- \usage{BwaAlignment(dataSet=NULL, indexSet=NULL, tags="*", rgSet=NULL, ...)}
+ \usage{BwaAlignment(..., indexSet=NULL)}
 
  \arguments{
-  \item{dataSet}{An \code{\link{FastqDataSet}}.}
+  \item{...}{Arguments passed to \code{\link{AbstractAlignment}}.}
   \item{indexSet}{An \code{\link{BwaIndexSet}}.}
-  \item{tags}{Additional tags for the output data sets.}
-  \item{rgSet}{(optional) An \code{\link{SamReadGroup}} for added
-    SAM read group to the results.}
-  \item{...}{Additional BWA 'aln' arguments.}
  }
 
  \section{Fields and Methods}{
   \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{getFullName} \tab  -\cr
- \tab \code{getIndexSet} \tab  -\cr
- \tab \code{getInputDataSet} \tab  -\cr
- \tab \code{getName} \tab  -\cr
- \tab \code{getOptionalArguments} \tab  -\cr
- \tab \code{getOutputDataSet} \tab  -\cr
  \tab \code{getParameters} \tab  -\cr
- \tab \code{getParametersAsString} \tab  -\cr
- \tab \code{getPath} \tab  -\cr
- \tab \code{getRootPath} \tab  -\cr
- \tab \code{getTags} \tab  -\cr
- \tab \code{nbrOfFiles} \tab  -\cr
  \tab \code{\link[aroma.seq:process.BwaAlignment]{process}} \tab Runs the BWA aligner.\cr
- \tab \code{setTags} \tab  -\cr
 }
 
+
+ \bold{Methods inherited from AbstractAlignment}:\cr
+getFlavor, getFullName, getIndexSet, getInputDataSet, getName, getOptionalArguments, getOutputDataSet, getParameters, getParametersAsString, getPath, getRootPath, getTags, nbrOfFiles, process, setTags
 
  \bold{Methods inherited from Object}:\cr
 asThis, getChecksum, $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save
@@ -69,5 +58,5 @@ asThis, getChecksum, $, $<-, [[, [[<-, as.character, attach, attachLocally, clea
 
  }
 
- \author{Henrik Bengtsson and Pierre Neuvial}
+ \author{Henrik Bengtsson}
 \keyword{classes}

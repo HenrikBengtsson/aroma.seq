@@ -30,6 +30,11 @@ print(is);
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Single-end alignment
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+rg <- SamReadGroup(ID=1L, LB="MPS-034", PL="Illumina");
+print(rg);
+
+setSamReadGroup(ds, rg);
+
 # BWA with BWA 'aln' options '-n 2' and '-q 40'.
 alg <- BwaAlignment(ds, indexSet=is, n=2, q=40);
 print(alg);

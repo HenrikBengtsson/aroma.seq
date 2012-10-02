@@ -1,4 +1,4 @@
-###########################################################################/**
+##########################################################################/**
 # @RdocClass BamDataFile
 #
 # @title "The abstract BamDataFile class"
@@ -189,6 +189,16 @@ setMethodS3("getReadGroups", "BamDataFile", function(this, ...) {
   SamReadGroup$byScanBamHeader(hdr, ...);
 })
 
+setMethodS3("getReadGroup", "BamDataFile", function(this, ...) {
+  rgList <- getReadGroups(this, ...);
+  if (length(rgList) > 1L) {
+    rgList <- rgList[[1L]];
+  } else {
+    rgList <- SamReadGroup();
+  }
+  rgList;
+})
+
 
 # @RdocMethod replaceAllReadGroups
 # @title "Writes a new BAM file with all existing read groups replaced by one new read group"
@@ -259,15 +269,12 @@ setMethodS3("replaceAllReadGroups", "BamDataFile", function(this, rg="*", ..., v
   keys <- names(rgList)[keep];
   if (length(keys) > 0L) {
     rgDefault <- getReadGroups(this);
-    rgDefault <- Reduce(assignBy, rgDefault);
+    rgDefault <- Reduce(merge, rgDefault);
     # Sanity check
     stopifnot(inherits(rgDefault, "SamReadGroup"));
 
-    # Don't write to the original 'rg' object
-    rg <- clone(rg);
     for (key in keys) {
-      value <- rgDefault[[key]];
-      rg[[key]] <- value;
+      rg[[key]] <- rgDefault[[key]];
     }
   } # for (key ...)
 

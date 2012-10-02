@@ -85,6 +85,12 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
     rgArg <- sprintf("@RG\t%s", rgArg);
     # Don't forget to put within quotation marks
     rgArg <- sprintf("\"%s\"", rgArg);
+
+    # Validate
+    if (!hasID(rg)) {
+      throw("BWA 'samse/sampe' requires that the SAM read group has an ID: ", rgArg);
+    }
+
     rgArg <- list(r=rgArg);
   } # asBwaParameter()
 
