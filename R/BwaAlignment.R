@@ -166,7 +166,7 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Extract sample-specific read group
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    rgII <- extractSamReadGroup(df);
+    rgII <- getSamReadGroup(df);
     rgT <- merge(rgSet, rgII);
     verbose && cat(verbose, "Writing SAM Read Groups:");
     verbose && print(verbose, rgT);
