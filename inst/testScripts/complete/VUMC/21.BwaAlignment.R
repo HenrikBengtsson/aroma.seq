@@ -33,11 +33,12 @@ print(is);
 # Process at most two FASTQ files
 ds <- extract(ds, 1:min(3, length(ds)));
 
-rgSet <- SamReadGroup(LB="MPS-034");
-print(rgSet);
+# In addition to SAM read group data inferred from the Illumina FASTQ
+# files, manual set the library information for the whole data set.
+setSamReadGroup(ds, SamReadGroup(LB="MPS-034"));
 
 # BWA with BWA 'aln' options '-n 2' and '-q 40'.
-alg <- BwaAlignment(ds, indexSet=is, rgSet=rgSet, n=2, q=40);
+alg <- BwaAlignment(ds, indexSet=is, n=2, q=40);
 print(alg);
 
 bs <- process(alg, verbose=-20);
