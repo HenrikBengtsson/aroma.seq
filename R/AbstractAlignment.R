@@ -128,6 +128,7 @@ setMethodS3("getAsteriskTags", "AbstractAlignment", function(this, collapse=NULL
   is <- getIndexSet(this);
 
   alignName <- gsub("Alignment", "", class(this)[1], fixed=TRUE);
+  alignName <- tolower(alignName);
   tags <- c(alignName, getTags(is, collapse=NULL));
   tags <- unique(tags);
 
@@ -198,6 +199,7 @@ setMethodS3("getFullName", "AbstractAlignment", function(this, ...) {
 
 setMethodS3("getRootPath", "AbstractAlignment", function(this, ...) {
   alignName <- gsub("Alignment", "", class(this)[1], fixed=TRUE);
+  alignName <- tolower(alignName);
   sprintf("%sData", alignName);
 })
 
