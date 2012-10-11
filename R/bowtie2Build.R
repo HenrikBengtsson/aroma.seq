@@ -36,7 +36,7 @@ setMethodS3("bowtie2Build", "default", function(inPathnames,   ## vector of file
     ## - Using the first infile may be confusing, if e.g. it is a subscripted name like "_1"; oh well
   }
   outPrefix <- file.path(outPath, outName); ## e.g. path/to/lambda_virus
-  outPrefix <- Arguments$getWritablePathname(outPrefix, mustNotExist=T)
+  outPrefix <- Arguments$getWritablePathname(outPrefix, mustNotExist=TRUE)
 
   ## Additional arguments
   args <- list(...);  ## Not used here; just passed along
