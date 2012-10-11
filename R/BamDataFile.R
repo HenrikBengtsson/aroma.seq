@@ -400,8 +400,9 @@ setMethodS3("extractReadStartPositions", "BamDataFile", function(this, param=Sca
 })
 
 
-setMethodS3("readDataFrame", "BamDataFile", function(this, fields=NULL, flag=scanBamFlag(isUnmappedQuery=FALSE, isDuplicate=FALSE), ..., verbose=FALSE) {
+setMethodS3("readDataFrame", "BamDataFile", function(this, fields=NULL, flag=scanBamFlag(isUnmappedQuery=FALSE, isDuplicate=FALSE), which=which, ..., verbose=FALSE) {
   require("Rsamtools") || throw("Package not loaded: Rsamtools");
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -425,7 +426,7 @@ setMethodS3("readDataFrame", "BamDataFile", function(this, fields=NULL, flag=sca
   pathname <- getPathname(this);
   verbose && cat(verbose, "Pathname: ", pathname);
 
-  param <- ScanBamParam(what=fields);
+  param <- ScanBamParam(what=fields, which=which);
   verbose && cat(verbose, "scanBam() parameters:");
   verbose && print(verbose, param);
   
@@ -453,6 +454,8 @@ setMethodS3("readDataFrame", "BamDataFile", function(this, fields=NULL, flag=sca
 
 
 setMethodS3("readReadPositions", "BamDataFile", function(this, ..., flag=scanBamFlag(isUnmappedQuery=FALSE, isDuplicate=FALSE), verbose=FALSE) {
+  require("Rsamtools") || throw("Package not loaded: Rsamtools");
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -479,6 +482,8 @@ setMethodS3("readReadPositions", "BamDataFile", function(this, ..., flag=scanBam
 
 ############################################################################
 # HISTORY:
+# 2012-10-10
+# o Added argument 'which' to readDataFrame() for BamDataFile.
 # 2012-10-02
 # o Added readReadPositions() for BamDataFile.
 # o Added readDataFrame() for BamDataFile.

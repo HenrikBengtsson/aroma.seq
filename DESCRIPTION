@@ -1,6 +1,6 @@
 Package: aroma.seq
-Version: 0.1.13
-Date: 2012-10-02
+Version: 0.1.14
+Date: 2012-10-10
 Title: Sequence analysis in the Aroma Framework
 Maintainer: Henrik Bengtsson <henrikb@braju.com>
 Author: Henrik Bengtsson et al.

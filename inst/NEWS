@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.1.14 [2012-10-10]
+o Added argument 'which' to readDataFrame() for BamDataFile.
+
+
 Version: 0.1.13 [2012-10-02]
 o Added getIndexStats(), nbrOfReads(), ... for BamDataFile:s.
 o Added readDataFrame() for BamDataFile.

@@ -65,6 +65,8 @@ extends \emph{\link[R.filesets]{GenericDataFile}}\cr
  \tab \code{nbrOfSeqs} \tab  -\cr
  \tab \code{nbrOfTargets} \tab  -\cr
  \tab \code{nbrOfUnmappedReads} \tab  -\cr
+ \tab \code{readDataFrame} \tab  -\cr
+ \tab \code{readReadPositions} \tab  -\cr
  \tab \code{replaceAllReadGroups} \tab  -\cr
  \tab \code{sort} \tab  -\cr
 }

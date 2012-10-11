@@ -136,3 +136,5 @@ getReadCounts.BamDataFile nbrOfMappedReads
 nbrOfMappedReads.BamDataFile nbrOfReads.BamDataFile
 nbrOfUnmappedReads nbrOfUnmappedReads.BamDataFile
 extractReadStartPositions extractReadStartPositions.BamDataFile
+readDataFrame.BamDataFile  readReadPositions
+readReadPositions.BamDataFile

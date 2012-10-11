@@ -4,10 +4,19 @@
 #
 ############################################################################
 library("aroma.seq");
+library("matrixStats");
+library("GenomicRanges"); # GRanges()
+library("IRanges"); # IRanges()
+
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+by <- 50e3;
+byTag <- sprintf("%dkb", by/1e3);
+ugp <- AromaUgpFile$byChipType("GenericHuman", tags=byTag);
+print(ugp);
+
 # Data set
 dataSet <- "AlbertsonD_2012-Bladder_VUMC";
 platform <- "Generic";
@@ -19,6 +28,14 @@ setFullNamesTranslator(bs, function(names, ...) {
   names;
 });
 print(bs);
+
+
+chrLabels <- names(getTargets(getFile(bs,1)));
+chrMap <- c(1:25);
+labels <- sprintf("chr%d", chrMap);
+labels[23:25] <- sprintf("chr%s", c("X", "Y", "M"));
+names(chrMap) <- labels;
+
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -35,49 +52,61 @@ print(bfN);
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Get read (start) position
+# Bin reads chromosome by chromosome
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-dataT <- readReadPositions(bfT, verbose=-20);
-str(dataT);
+for (kk in seq(along=chrLabels)) {
+  chrLabel <- chrLabels[kk];
+  verbose && enter(verbose, sprintf("Chromosome #%d ('%s') of %d", kk, chrLabel, length(chrLabels)));
 
-dataN <- readReadPositions(bfN, verbose=-20);
-str(dataN);
+  chr <- chrMap[chrLabel];
+  units <- getUnitsOnChromosome(ugp, chromosome=chr);
+  xOut <- getPositions(ugp, units=units);
+  nOut <- length(xOut);
+  verbose && printf(verbose, "Target loci: [%d] %s\n", nOut, hpaste(xOut));
 
+  # Nothing to do?
+  if (nOut == 0) {
+    verbose && cat(verbose, "No target loci on chromosome. Skipping.");
+    verbose && exit(verbose);
+    next;
+  }
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Bin reads for a chromosome
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chr <- "chr3";
-xT <- subset(dataT, rname == chr, select="pos")$pos;
-xN <- subset(dataN, rname == chr, select="pos")$pos;
+  # Read (start) positions on current chromosome
+  gr <- GRanges(seqnames=Rle(chrLabel), ranges=IRanges(-500e6, +500e6));
+  xT <- readReadPositions(bfT, which=gr, verbose=-20)$pos;
+  verbose && str(verbose, xT);
+  xN <- readReadPositions(bfN, which=gr, verbose=-20)$pos;
+  verbose && str(verbose, xN);
 
-xRange <- range(c(range(xT),range(xN)));
-xOut <- seq(from=0, to=xRange[2], by=50e3);
+  # Bin
+  bx <- c(xOut[1]-by/2, xOut+by/2);
+  yTs <- binCounts(xT, bx=bx);
+  yNs <- binCounts(xN, bx=bx);
 
-count <- function(x, ...) length(x);
-yTs <- binnedSmoothing(xT, x=xT, xOut=xOut, FUN=count, verbose=-10);
-yNs <- binnedSmoothing(xN, x=xN, xOut=xOut, FUN=count, verbose=-10);
+  # Calculate binned total copy numbers (assuming diploid genome)
+  C <- 2*yTs/yNs;
+  x <- xOut;
 
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Calculate binned total copy numbers
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-C <- 2*yTs/yNs;
-x <- xOut;
-
-sampleName <- getName(bfT);
-toPNG(sampleName, tags=c(chr, "50kb", "TCN"), width=1024, aspectRatio=0.3, {
-  Clim <- c(0,5);
-  plot(x/1e6,C, ylim=Clim, xlab="Position (Mb)", ylab="CN ratio");
-  stext(side=3, pos=0, sampleName);
-  stext(side=3, pos=1, chr);
-  stext(side=4, pos=1, sprintf("(nT,nN)=(%d,%d)", length(xT), length(xN)));
-});
+  sampleName <- getName(bfT);
+  chrTag <- sprintf("chr%02d", chr);
+  toPNG(sampleName, tags=c(chrTag, "50kb", "TCN"), width=1024, aspectRatio=0.3, {
+    Clim <- c(0,5);
+    plot(x/1e6,C, ylim=Clim, xlab="Position (Mb)", ylab="CN ratio");
+    stext(side=3, pos=0, sampleName);
+    stext(side=3, pos=1, chr);
+    stext(side=4, pos=1, sprintf("(nT,nN)=(%d,%d)", length(xT), length(xN)));
+  });
+ 
+  verbose && exit(verbose);
+} # for (kk ...)
 
 
 
 ############################################################################
 # HISTORY:
+# 2012-10-10
+# o Now plotting whole-genome TCN tracks, where data is loaded chromosome
+#   by chromosome. Also utilizing generic UGP files.
 # 2012-10-02
 # o Created.
 ############################################################################
