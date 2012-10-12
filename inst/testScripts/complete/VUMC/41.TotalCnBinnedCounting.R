@@ -9,7 +9,7 @@ library("aroma.seq");
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-by <- 50e3;
+by <- 10e3;
 byTag <- sprintf("%dkb", by/1e3);
 ugp <- AromaUgpFile$byChipType("GenericHuman", tags=byTag);
 print(ugp);
