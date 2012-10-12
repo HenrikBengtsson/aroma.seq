@@ -103,6 +103,8 @@ setMethodS3("smoothRawCopyNumbers", "TotalCnBinnedCounting", function(this, rawC
 
 
 setMethodS3("extractRawCopyNumbers", "BamDataFile", function(this, chromosome, ..., verbose=FALSE) {
+  require("GenomicRanges") || throw("Package not loaded: GenomicRanges");
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
