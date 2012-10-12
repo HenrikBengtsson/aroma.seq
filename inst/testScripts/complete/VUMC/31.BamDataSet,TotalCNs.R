@@ -39,6 +39,17 @@ names(chrMap) <- labels;
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Bin reads chromosome by chromosome
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bc <- TotalCnBinnedCounting(bs, targetUgp=ugp);
+print(bc);
+
+dsN <- process(bc, verbose=verbose);
+verbose && print(verbose, dsN);
+
+stop();
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Extract tumor-normal pairs
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bsT <- extract(bs, sapply(bs, hasTag, "T"));
@@ -49,6 +60,7 @@ bfT <- getFile(bsT, 1);
 bfN <- getFile(bsN, 1);
 print(bfT);
 print(bfN);
+
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -89,12 +101,14 @@ for (kk in seq(along=chrLabels)) {
 
   sampleName <- getName(bfT);
   chrTag <- sprintf("chr%02d", chr);
-  toPNG(sampleName, tags=c(chrTag, "50kb", "TCN"), width=1024, aspectRatio=0.3, {
+  toPNG(sampleName, tags=c(chrTag, byTag, "TCN"), width=1024, aspectRatio=0.3, {
+    par(mar=c(5,4,2,2)+0.1);
     Clim <- c(0,5);
     plot(x/1e6,C, ylim=Clim, xlab="Position (Mb)", ylab="CN ratio");
     stext(side=3, pos=0, sampleName);
-    stext(side=3, pos=1, chr);
-    stext(side=4, pos=1, sprintf("(nT,nN)=(%d,%d)", length(xT), length(xN)));
+    stext(side=3, pos=1, chrTag);
+    stext(side=3, pos=1, line=-1, cex=0.8, sprintf("n=%d @ %s", sum(is.finite(C)), byTag));
+    stext(side=4, pos=0, cex=0.8, sprintf("nT/nN=%d/%d=%.2f", length(xT), length(xN), length(xT)/length(xN)));
   });
  
   verbose && exit(verbose);

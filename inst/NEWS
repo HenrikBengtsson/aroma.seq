@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.1.15 [2012-10-11]
+o Added TotalCnBinnedCounting().
+
+
 Version: 0.1.14 [2012-10-10]
 o Added argument 'which' to readDataFrame() for BamDataFile.
 
