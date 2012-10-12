@@ -9,7 +9,7 @@ library("aroma.seq");
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-by <- 10e3;
+by <- 50e3;
 byTag <- sprintf("%dkb", by/1e3);
 ugp <- AromaUgpFile$byChipType("GenericHuman", tags=byTag);
 print(ugp);
@@ -51,77 +51,25 @@ verbose && print(verbose, ds);
 dsT <- extract(ds, sapply(bs, hasTag, "T"));
 dsN <- extract(ds, sapply(bs, hasTag, "N"));
 
-# Extract one pair
-dfT <- getFile(dsT, 1);
-dfN <- getFile(dsN, 1);
-print(dfT);
-print(dfN);
-
-
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# CNs chromosome by chromosome
+# Segmentation and Chromosome Explorer
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-chrs <- getChromosomes(ugp);
-for (kk in seq(along=chrs)) {
-  chr <- chrs[kk];
-  verbose && enter(verbose, sprintf("Chromosome #%d ('chr%02d') of %d", kk, chr, length(chrs)));
+seg <- CbsModel(dsT, ref=dsN);
+verbose && print(verbose, seg);
 
-  cnT <- extractRawCopyNumbers(dfT, chromosome=chr);
-  # Nothing to do?
-  if (nOut == 0) {
-    verbose && cat(verbose, "No target loci on chromosome. Skipping.");
-    verbose && exit(verbose);
-    next;
-  }
-  nOut <- length(xOut);
-  cnN <- extractRawCopyNumbers(dfN, chromosome=chr);
-
-  units <- getUnitsOnChromosome(ugp, chromosome=chr);
-  xOut <- getPositions(ugp, units=units);
-  verbose && printf(verbose, "Target loci: [%d] %s\n", nOut, hpaste(xOut));
-
-  # Nothing to do?
-  if (nOut == 0) {
-    verbose && cat(verbose, "No target loci on chromosome. Skipping.");
-    verbose && exit(verbose);
-    next;
-  }
-
-  # Read (start) positions on current chromosome
-  gr <- GRanges(seqnames=Rle(chrLabel), ranges=IRanges(-500e6, +500e6));
-  xT <- readReadPositions(bfT, which=gr, verbose=-20)$pos;
-  verbose && str(verbose, xT);
-  xN <- readReadPositions(bfN, which=gr, verbose=-20)$pos;
-  verbose && str(verbose, xN);
-
-  # Bin
-  bx <- c(xOut[1]-by/2, xOut+by/2);
-  yTs <- binCounts(xT, bx=bx);
-  yNs <- binCounts(xN, bx=bx);
-
-  # Calculate binned total copy numbers (assuming diploid genome)
-  C <- 2*yTs/yNs;
-  x <- xOut;
-
-  sampleName <- getName(bfT);
-  chrTag <- sprintf("chr%02d", chr);
-  toPNG(sampleName, tags=c(chrTag, byTag, "TCN"), width=1024, aspectRatio=0.3, {
-    par(mar=c(5,4,2,2)+0.1);
-    Clim <- c(0,5);
-    plot(x/1e6,C, ylim=Clim, xlab="Position (Mb)", ylab="CN ratio");
-    stext(side=3, pos=0, sampleName);
-    stext(side=3, pos=1, chrTag);
-    stext(side=3, pos=1, line=-1, cex=0.8, sprintf("n=%d @ %s", sum(is.finite(C)), byTag));
-    stext(side=4, pos=0, cex=0.8, sprintf("nT/nN=%d/%d=%.2f", length(xT), length(xN), length(xT)/length(xN)));
-  });
- 
-  verbose && exit(verbose);
-} # for (kk ...)
+ce <- ChromosomeExplorer(seg);
+verbose && print(verbose, ce);
+process(ce, maxNAFraction=2/3, verbose=verbose);
 
 
 
 ############################################################################
 # HISTORY:
+# 2012-10-11
+# o Now generating a Chromosome Explorer report.
+# o Added TotalCnBinnedCounting() which calculates bin counts centered
+#   at target loci specified by an UGP annotation file and outputs an
+#   AromaUnitTotalCnBinarySet data set of DNAseq bin counts.
 # 2012-10-10
 # o Now plotting whole-genome TCN tracks, where data is loaded chromosome
 #   by chromosome. Also utilizing generic UGP files.
