@@ -2,6 +2,8 @@ Package: aroma.seq
 ==================
 
 Version: 0.1.16 [2012-10-16]
+o Added AromaUnitNucleotideCountsFile and methods for importing
+  binned nucleotide counts from a BSgenome object.
 o Added binTabulate() for MaskedDNAString.
 
 

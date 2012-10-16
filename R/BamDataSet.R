@@ -38,8 +38,7 @@ setMethodS3("getDepth", "BamDataSet", function(this, ...) {
 
 
 setMethodS3("byPath", "BamDataSet", function(static, ..., pattern="[.](bam|BAM)$") {
-  # Method dispatching is not working here
-  byPath.GenericDataFileSet(static, ..., pattern=pattern);
+  NextMethod("byPath", static, ..., pattern=pattern);
 }, static=TRUE)
 
 
