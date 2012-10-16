@@ -23,12 +23,12 @@
 \code{~~~~~~~|}\cr
 \code{~~~~~~~+--}\code{\link[R.filesets]{GenericDataFile}}\cr
 \code{~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~+--}\emph{\code{BamDataFile}}\cr
+\code{~~~~~~~~~~~~+--}\code{BamDataFile}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
 
-public abstract static class \bold{BamDataFile}\cr
+public static class \bold{BamDataFile}\cr
 extends \emph{\link[R.filesets]{GenericDataFile}}\cr
 
 
@@ -48,9 +48,11 @@ extends \emph{\link[R.filesets]{GenericDataFile}}\cr
  \tab \code{as.character} \tab  -\cr
  \tab \code{buildIndex} \tab  -\cr
  \tab \code{extractReadStartPositions} \tab  -\cr
+ \tab \code{getChipType} \tab  -\cr
  \tab \code{getHeader} \tab  -\cr
  \tab \code{getIndexFile} \tab  -\cr
  \tab \code{getIndexStats} \tab  -\cr
+ \tab \code{getPlatform} \tab  -\cr
  \tab \code{getReadCounts} \tab  -\cr
  \tab \code{getReadGroup} \tab  -\cr
  \tab \code{getReadGroups} \tab  -\cr

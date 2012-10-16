@@ -276,6 +276,21 @@
 \alias{readDataFrame.BamDataFile}
 \alias{readReadPositions}
 \alias{readReadPositions.BamDataFile}
+\alias{binTabulate.MaskedDNAString}
+\alias{binTabulate}
+\alias{extractRawCopyNumbers.BamDataFile}
+\alias{getChipType.BamDataFile}
+\alias{getChipType.BamDataSet}
+\alias{getExpectedOutputFullnames.TotalCnBinnedCounting}
+\alias{getFilenameExtension.BamDataFile}
+\alias{getOutputFileExtension}
+\alias{getOutputFileExtension.TotalCnBinnedCounting}
+\alias{getOutputFileSetClass}
+\alias{getOutputFileSetClass.TotalCnBinnedCounting}
+\alias{getPlatform.BamDataFile}
+\alias{getPlatform.BamDataSet}
+\alias{smoothRawCopyNumbers}
+\alias{smoothRawCopyNumbers.TotalCnBinnedCounting}
 
 \description{
   This page contains aliases for all "non-documented" objects that

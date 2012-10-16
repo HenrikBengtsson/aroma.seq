@@ -11,7 +11,8 @@
 # @synopsis
 #
 # \arguments{
-#  \item{...}{Arguments passed to @see "TotalCnSmoothing".}
+#  \item{...}{Arguments passed to @see "aroma.cn::TotalCnSmoothing".}
+#  \item{.reqSetClass}{(internal) ...}
 # }
 #
 # \section{Fields and Methods}{

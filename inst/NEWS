@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.1.16 [2012-10-16]
+o Added binTabulate() for MaskedDNAString.
+
+
 Version: 0.1.15 [2012-10-11]
 o Added TotalCnBinnedCounting().
 

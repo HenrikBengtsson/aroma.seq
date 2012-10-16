@@ -47,6 +47,8 @@ extends \link[R.filesets]{GenericDataFileSet}\cr
   \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{byPath} \tab  -\cr
+ \tab \code{getChipType} \tab  -\cr
+ \tab \code{getPlatform} \tab  -\cr
 }
 
 
