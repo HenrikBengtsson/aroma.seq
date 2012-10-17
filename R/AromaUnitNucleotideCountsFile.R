@@ -38,7 +38,7 @@ setMethodS3("allocateFromUgp", "AromaUnitNucleotideCountsFile", function(static,
 
   unc <- AromaUnitNucleotideCountsFile$allocateFromUnitAnnotationDataFile(ugp, ..., types=rep("integer", times=4L), sizes=rep(4L, times=4L));
 
-  ftr <- readFooter(this);
+  ftr <- readFooter(unc);
   ftr$sources <- list(
     binning = list(
       fullname=getFullName(ugp),
@@ -49,7 +49,7 @@ setMethodS3("allocateFromUgp", "AromaUnitNucleotideCountsFile", function(static,
   );
   ftr$createdOn <- createdOn;
   ftr$createdBy <- createdBy;
-  writeFooter(this, ftr);
+  writeFooter(unc, ftr);
 
   unc;
 }, static=TRUE)

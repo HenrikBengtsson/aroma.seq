@@ -291,6 +291,19 @@
 \alias{getPlatform.BamDataSet}
 \alias{smoothRawCopyNumbers}
 \alias{smoothRawCopyNumbers.TotalCnBinnedCounting}
+\alias{AromaUncFile}
+\alias{AromaUnitNucleotideCountsFile}
+\alias{allocateFromUgp}
+\alias{allocateFromUgp.AromaUnitNucleotideCountsFile}
+\alias{getAromaUncFile}
+\alias{getAromaUncFile.AromaUgpFile}
+\alias{getColumnNames.AromaUnitNucleotideCountsFile}
+\alias{getExtensionPattern.AromaUnitNucleotideCountsFile}
+\alias{getFilenameExtension.AromaUnitNucleotideCountsFile}
+\alias{importFromBSgenome}
+\alias{importFromBSgenome.AromaUnitNucleotideCountsFile}
+\alias{normalizeGcContent}
+\alias{normalizeGcContent.default}
 
 \description{
   This page contains aliases for all "non-documented" objects that
