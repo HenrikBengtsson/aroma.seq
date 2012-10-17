@@ -1,6 +1,12 @@
 Package: aroma.seq
 ==================
 
+Version: 0.1.17 [2012-10-17]
+o ROBUSTNESS: Now binTabulate(seq, ...) also handles the case where
+  sequence 'seq' is offsetted, i.e. starts at a different position
+  than the first one.
+
+
 Version: 0.1.16 [2012-10-16]
 o Added AromaUnitNucleotideCountsFile and methods for importing
   binned nucleotide counts from a BSgenome object.

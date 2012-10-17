@@ -21,7 +21,32 @@ setMethodS3("binTabulate", "MaskedDNAString", function(seq, bx, letters=c("A", "
 
   # Pull out the actual sequence data
   # NB: Can this be done more efficient?
+  # Alt 1: Not sure this is guaranteed to start with base #1. /HB 2012-10-17
+  # x <- toString(seq);
+
+  # Alt 2:
+  seq <- unmasked(seq);
+  # Get the offset of the sequences to be binned.  Should be zero
+  # in most (all?) cases.  If non-zero, we'll adjust the binning
+  # accordingly.
+  offset <- seq@offset;
+  stopifnot(offset >= 0L);
+
+  # Adjust for sequence offset?
+  if (offset != 0L) {
+    # Adjusting the bins, rather than the sequence offset,
+    # should be more efficient since they are fewer and it
+    # has only to be once.
+    bx <- bx - offset;
+  }
+
+  # Coerce to a character string.
   x <- toString(seq);
+
+  # Not needed anymore
+  rm(seq);
+
+  # Coerce into raw
   x <- charToRaw(x);
 
   # Tabulate
@@ -32,6 +57,8 @@ setMethodS3("binTabulate", "MaskedDNAString", function(seq, bx, letters=c("A", "
     counts[,letter] <- binCounts(z, bx=bx, ...);
     rm(z);
   }
+
+  # Not needed anymore
   rm(x);
 
   counts;
@@ -40,6 +67,10 @@ setMethodS3("binTabulate", "MaskedDNAString", function(seq, bx, letters=c("A", "
 
 ############################################################################
 # HISTORY:
+# 2012-10-17
+# o ROBUSTNESS: Now binTabulate(seq, ...) also handles the case where
+#   sequence 'seq' is offsetted, i.e. starts at a different position
+#   than the first one.
 # 2012-10-16
 # o Added binTabulate() for MaskedDNAString.
 # o Created.

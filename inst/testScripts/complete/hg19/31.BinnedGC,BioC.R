@@ -2,6 +2,8 @@
 #
 ############################################################################
 library("aroma.seq");
+library("R.devices");
+library("aroma.light");
 
 verbose <- Arguments$getVerbose(-10, timestamp=TRUE);
 
@@ -21,15 +23,29 @@ verbose && print(verbose, db);
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Tabulate (A,C,G,T) in bins defined by the UGP
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-unc <- AromaUncFile$allocateFromUgp(ugp, tags=c("HB20121016"), createdBy="Henrik Bengtsson, hb@biostat.ucsf.edu");
+unc <- tryCatch({
+  getAromaUncFile(ugp);
+}, error=function(ex) { NULL });
+
+# Build if missing
+if (is.null(unc)) {
+  unc <- AromaUncFile$allocateFromUgp(ugp, tags=c("HB20121016"), createdBy="Henrik Bengtsson, hb@biostat.ucsf.edu");
+  verbose && print(verbose, unc);
+  
+  unc <- importFromBSgenome(unc, db=db, verbose=verbose);
+}
 verbose && print(verbose, unc);
 
-unc <- importFromBSgenome(unc, db=db, verbose=verbose);
-verbose && print(verbose, unc);
 
-
-# Calculate GC fractions for each bin
-gc <- (Y[,"G"] + Y[,"C"]) / rowSums(Y, na.rm=TRUE);
+toPNG(getFullName(unc), tags="GcContent", width=840, aspectRatio=0.5, {
+  par(mar=c(4,4,1,1)+0.1);
+  Y <- as.matrix(readDataFrame(unc));
+  # Calculate GC fractions for each bin (=unit)
+  gc <- (Y[,"G"] + Y[,"C"]) / rowSums(Y, na.rm=TRUE);
+  plotDensity(gc, lwd=2, xlab="Fraction of GC nucleotides per bin");
+  stext(side=3, pos=0, getFullName(unc));
+  stext(side=3, pos=1, line=-1, cex=0.8, sprintf("n=%d", sum(is.finite(gc))));
+})
 
 
 ############################################################################
