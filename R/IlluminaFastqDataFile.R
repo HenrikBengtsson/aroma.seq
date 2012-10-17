@@ -53,7 +53,7 @@ setMethodS3("getSampleName", "IlluminaFastqDataFile", function(this, ...) {
     barcode <- getBarcodeSequence(this);
     # AD HOC patch for observing ATGNCA when expected ATGTCA. /HB 2012-10-01
     barcode <- gsub("N", ".", barcode, fixed=TRUE);
-    pattern <- sprintf("_%s_L[0-9]+_R[0-9]$", barcode);
+    pattern <- sprintf("_%s_L[0-9]+_R[0-9](_[0-9]+)$", barcode);
     stopifnot(regexpr(pattern, name) != -1);
     name <- gsub(pattern, "", name);
   } else {
@@ -161,6 +161,8 @@ setMethodS3("getDefaultSamReadGroup", "IlluminaFastqDataFile", function(this, ..
 
 ############################################################################
 # HISTORY:
+# 2012-10-16
+# o BUG FIX: getSampleName() did not handle trailing indices, e.g. _002.
 # 2012-10-02
 # o Added getFileVersion().
 # 2012-06-29

@@ -31,7 +31,7 @@ setMethodS3("as.character", "AbstractIndexSet", function(x, ...) {
   # To please R CMD check
   this <- x;
 
-  s <- NextMethod("as.character", ...);
+  s <- NextMethod("as.character");
   class <- class(s);
 
   s <- c(s, sprintf("Index prefix: %s", getIndexPrefix(this)));

@@ -30,7 +30,7 @@ setMethodS3("as.character", "BamIndexDataFile", function(x, ...) {
   # To please R CMD check
   this <- x;
 
-  s <- NextMethod("as.character", ...);
+  s <- NextMethod("as.character");
   class <- class(s);
 
   class(s) <- class;

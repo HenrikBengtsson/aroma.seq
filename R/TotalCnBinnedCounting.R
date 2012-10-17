@@ -29,7 +29,7 @@ setConstructorS3("TotalCnBinnedCounting", function(..., .reqSetClass="BamDataSet
 
 
 setMethodS3("getExpectedOutputFullnames", "TotalCnBinnedCounting", function(this, ...) {
-  names <- NextMethod("getExpectedOutputFullnames", this, ...);
+  names <- NextMethod("getExpectedOutputFullnames");
   names <- paste(names, "counts", sep=",");
   names;
 }, protected=TRUE)

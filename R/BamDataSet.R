@@ -28,7 +28,7 @@ setConstructorS3("BamDataSet", function(files=NULL, ...) {
 
 
 setMethodS3("validate", "BamDataSet", function(this, ...) {
-  NextMethod("validate", this, ...);
+  NextMethod("validate");
 }, protected=TRUE)
 
 
@@ -38,7 +38,7 @@ setMethodS3("getDepth", "BamDataSet", function(this, ...) {
 
 
 setMethodS3("byPath", "BamDataSet", function(static, ..., pattern="[.](bam|BAM)$") {
-  NextMethod("byPath", static, ..., pattern=pattern);
+  NextMethod("byPath", pattern=pattern);
 }, static=TRUE)
 
 

@@ -5,6 +5,9 @@ Version: 0.1.16 [2012-10-16]
 o Added AromaUnitNucleotideCountsFile and methods for importing
   binned nucleotide counts from a BSgenome object.
 o Added binTabulate() for MaskedDNAString.
+o ROBUSTNESS/BUG FIX: No longer passing '...' to NextMethod(), cf.
+  R-devel thread 'Do *not* pass '...' to NextMethod() - it'll do it 
+  for you; missing documentation, a bug or just me?' on Oct 16, 2012.  
 
 
 Version: 0.1.15 [2012-10-11]

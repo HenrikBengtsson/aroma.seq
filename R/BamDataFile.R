@@ -40,7 +40,8 @@ setMethodS3("as.character", "BamDataFile", function(x, ...) {
   # To please R CMD check
   this <- x;
 
-  s <- NextMethod("as.character", ...);
+  # Never pass '...' to NextMethod(); they'll be duplicated.
+  s <- NextMethod("as.character");
   class <- class(s);
 
   s <- c(s, sprintf("Has index file (*.bai): %s", hasIndex(this)));

@@ -28,7 +28,7 @@ setConstructorS3("FastqDataSet", function(files=NULL, ...) {
 
 
 setMethodS3("validate", "FastqDataSet", function(this, ...) {
-  NextMethod("validate", this, ...);
+  NextMethod("validate");
 }, protected=TRUE)
 
 
