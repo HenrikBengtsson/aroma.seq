@@ -155,4 +155,3 @@ getExtensionPattern.AromaUnitNucleotideCountsFile
 getFilenameExtension.AromaUnitNucleotideCountsFile
 importFromBSgenome
 importFromBSgenome.AromaUnitNucleotideCountsFile
-normalizeGcContent normalizeGcContent.default

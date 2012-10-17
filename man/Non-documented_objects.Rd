@@ -302,8 +302,6 @@
 \alias{getFilenameExtension.AromaUnitNucleotideCountsFile}
 \alias{importFromBSgenome}
 \alias{importFromBSgenome.AromaUnitNucleotideCountsFile}
-\alias{normalizeGcContent}
-\alias{normalizeGcContent.default}
 
 \description{
   This page contains aliases for all "non-documented" objects that

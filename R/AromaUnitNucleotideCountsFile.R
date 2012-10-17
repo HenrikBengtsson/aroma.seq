@@ -156,6 +156,8 @@ setMethodS3("importFromBSgenome", "AromaUnitNucleotideCountsFile", function(this
 
   verbose && enter(verbose, "Updating file footer");
 
+  pkg <- db@seqs_pkgname;
+
   ftr <- readFooter(this);
   ftr$sources <- list(
     sequence = list(

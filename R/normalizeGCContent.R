@@ -13,7 +13,10 @@
 # \arguments{
 #   \item{y}{A @numeric @vector of length K of signals to be normalized.}
 #   \item{gcContent}{A @numeric @vector of GC fractions.}
-#   \item{subsetToFit}{The subset of data points used to fit the 
+#   \item{targetFcn}{An optional @function.
+#     If @NULL, the data is normalized to have constant GC content effects
+#     (all equal to zero on the log-scale).}
+##   \item{subsetToFit}{The subset of data points used to fit the 
 #      normalization function.
 #      If @NULL, all data points are considered.}
 #   \item{onMissing}{Specifies how data points for which there is no
