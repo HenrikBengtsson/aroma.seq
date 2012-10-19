@@ -29,6 +29,15 @@ setMethodS3("getColumnNames", "AromaUnitNucleotideCountsFile", function(this, ..
   c("A", "C", "G", "T");
 })
 
+setMethodS3("getGcContent", "AromaUnitNucleotideCountsFile", function(this, ..., fields=c("G", "C")) {
+  data <- readDataFrame(this, ...);
+  y <- Reduce("+", data[fields])
+  total <- Reduce("+", data);
+  y <- y / total;
+  y;
+})
+
+
 setMethodS3("allocateFromUgp", "AromaUnitNucleotideCountsFile", function(static, ugp=NULL, createdOn=Sys.time(), createdBy=NULL, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -196,6 +205,8 @@ setConstructorS3("AromaUncFile", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2012-10-18
+# o Added getGcContent().
 # 2012-10-16
 # o Added getAromaUncFile() for AromaUgpFile.
 # o Added allocateFromUgp().

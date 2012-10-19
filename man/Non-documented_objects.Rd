@@ -302,6 +302,22 @@
 \alias{getFilenameExtension.AromaUnitNucleotideCountsFile}
 \alias{importFromBSgenome}
 \alias{importFromBSgenome.AromaUnitNucleotideCountsFile}
+\alias{as.character.BinnedGcNormalization}
+\alias{getAsteriskTags.BinnedGcNormalization}
+\alias{getGcContent}
+\alias{getGcContent.AromaUnitNucleotideCountsFile}
+\alias{getGcContentFile}
+\alias{getGcContentFile.BinnedGcNormalization}
+\alias{getOutputDataSet0.BinnedGcNormalization}
+\alias{getOutputFileClass}
+\alias{getOutputFileClass.BinnedGcNormalization}
+\alias{getOutputFileExtension.BinnedGcNormalization}
+\alias{getOutputFileSetClass.BinnedGcNormalization}
+\alias{getOutputFiles.BinnedGcNormalization}
+\alias{getParameters.BinnedGcNormalization}
+\alias{getPath.BinnedGcNormalization}
+\alias{getRootPath.BinnedGcNormalization}
+\alias{process.BinnedGcNormalization}
 
 \description{
   This page contains aliases for all "non-documented" objects that

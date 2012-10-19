@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.1.18 [2012-10-18]
+o Added trial version of BinnedGcNormalization.
+
+
 Version: 0.1.17 [2012-10-17]
 o ROBUSTNESS: Now binTabulate(seq, ...) also handles the case where
   sequence 'seq' is offsetted, i.e. starts at a different position

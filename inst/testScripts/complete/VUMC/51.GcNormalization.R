@@ -51,50 +51,27 @@ verbose && print(verbose, ds);
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Normalize GC content
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Get GC contents for all units
-ugp <- getAromaUgpFile(ds);
-unc <- getAromaUncFile(ugp);
-counts <- as.matrix(unc[]);
-gc <- rowSums(counts[,c("G","C")])/rowSums(counts);
+bgn <- BinnedGcNormalization(ds);
+verbose && print(verbose, bgn);
 
+dsN <- process(bgn, verbose=verbose);
+verbose && print(verbose, dsN);
 
-for (ii in seq(ds)) {
-  df <- getFile(ds, ii);
-  name <- getFullName(df);
-  verbose && enter(verbose, sprintf("Sample %d ('%s') of %d", ii, name, length(ds)));
+# DEBUG...
+if (FALSE) {
+  muN <- median(yN, na.rm=TRUE);
+  rho <- muN / median(y, na.rm=TRUE);
+  xlab <- "GC content fraction";
+  ylab <- "Signals";
+  gcLim <- c(0.25,0.75);
+  Clim <- c(0,6);
+  plot(gc, rho*y, pch=".", col="#999999", xlim=gcLim, ylim=c(0,6), xlab=xlab, ylab=ylab);
+  points(gc, yN, pch=".");
+  abline(h=muN, col="#cccccc");
+  stext(side=3, pos=1, line=-1, cex=0.8, sprintf("n=%d", sum(is.finite(yN))));
+}
 
-  y <- extractMatrix(df, drop=TRUE, verbose=less(verbose, 10));
-  verbose && cat(verbose, "Signals:");
-  verbose && str(verbose, y);
-
-  verbose && enter(verbose, "Normalizing signals (on the log scale) for GC content");
-  ly <- log2(y);
-  targetFcn <- function(...) 1;
-  lyN <- normalizeGcContent(ly, gcContent=gc, targetFcn=targetFcn, .isLogged=TRUE, .returnFit=TRUE);
-  yN <- 2^lyN;
-  fit <- attr(lyN, "modelFit");
-  verbose && cat(verbose, "Model fit:");
-  verbose && str(verbose, fit);
-  verbose && exit(verbose);
-
-
-  # DEBUG...
-  if (FALSE) {
-    muN <- median(yN, na.rm=TRUE);
-    rho <- muN / median(y, na.rm=TRUE);
-    xlab <- "GC content fraction";
-    ylab <- "Signals";
-    gcLim <- c(0.25,0.75);
-    Clim <- c(0,6);
-    plot(gc, rho*y, pch=".", col="#999999", xlim=gcLim, ylim=c(0,6), xlab=xlab, ylab=ylab);
-    points(gc, yN, pch=".");
-    abline(h=muN, col="#cccccc");
-    stext(side=3, pos=1, line=-1, cex=0.8, sprintf("n=%d", sum(is.finite(yN))));
-  }
-
-  verbose && exit(verbose);
-} # for (ii ...)
-
+ds <- dsN;
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Extract tumor-normal pairs
@@ -105,6 +82,7 @@ dsN <- extract(ds, sapply(bs, hasTag, "N"));
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Segmentation and Chromosome Explorer
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+seg <- CbsModel(dsT, ref=dsT, calculateRatios=FALSE, tags=c("*", "onlyT"));
 seg <- CbsModel(dsT, ref=dsN);
 verbose && print(verbose, seg);
 
