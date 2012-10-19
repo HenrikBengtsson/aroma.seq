@@ -40,7 +40,6 @@ setMethodS3("as.character", "BamDataFile", function(x, ...) {
   # To please R CMD check
   this <- x;
 
-  # Never pass '...' to NextMethod(); they'll be duplicated.
   s <- NextMethod("as.character");
   class <- class(s);
 
