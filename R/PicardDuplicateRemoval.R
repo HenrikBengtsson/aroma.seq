@@ -202,9 +202,7 @@ setMethodS3("getPath", "PicardDuplicateRemoval", function(this, create=TRUE, ...
   # Create path?
   if (create) {
     if (!isDirectory(path)) {
-      mkdirs(path);
-      if (!isDirectory(path))
-        throw("Failed to create output directory: ", path);
+      path <- Arguments$getWritablePath(path);
     }
   }
 

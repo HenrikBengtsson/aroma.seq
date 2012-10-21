@@ -26,7 +26,7 @@ testSystemBowtie2Build <- function(
     ##  (i.e. "outPath <- Arguments$getWritablePath(outPath);")
     if (!file.exists(OutPath))
     {
-        mkdirs(OutPath)
+      path <- Arguments$getWritablePath(OutPath);
     }
     IndexPrefix <- "lambda_virus"
 
