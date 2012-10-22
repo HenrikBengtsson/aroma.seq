@@ -82,8 +82,7 @@ dsN <- extract(ds, sapply(bs, hasTag, "N"));
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Segmentation and Chromosome Explorer
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-seg <- CbsModel(dsT, ref=dsT, calculateRatios=FALSE, tags=c("*", "onlyT"));
-seg <- CbsModel(dsT, ref=dsN);
+seg <- CbsModel(dsT, ref="constant(2)");
 verbose && print(verbose, seg);
 
 ce <- ChromosomeExplorer(seg);
