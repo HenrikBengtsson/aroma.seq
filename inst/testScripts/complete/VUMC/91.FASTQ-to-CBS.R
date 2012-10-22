@@ -1,6 +1,8 @@
 #!/usr/bin/env Rscript
 
 ############################################################################
+# REQUIREMENTS:
+#
 # fastqData/
 #  AlbertsonD_2012-SCC/
 #   Generic/

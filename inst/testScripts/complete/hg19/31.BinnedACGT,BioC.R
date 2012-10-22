@@ -1,9 +1,15 @@
 ############################################################################
+# REQUIREMENTS:
 #
+# annotationData/
+#  chipTypes/
+#   GenericHuman/
+#    GenericHuman,50kb,HB20090503.ugp [1]
+#
+# REFERENCES:
+# [1] http://aroma-project.org/data/annotationData/chipTypes/GenericHuman/
 ############################################################################
 library("aroma.seq");
-library("R.devices");
-library("aroma.light");
 
 verbose <- Arguments$getVerbose(-10, timestamp=TRUE);
 
@@ -36,6 +42,13 @@ if (is.null(unc)) {
 }
 verbose && print(verbose, unc);
 
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Summaries
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+library("R.devices");
+library("aroma.light");
 
 toPNG(getFullName(unc), tags="GcContent", width=840, aspectRatio=0.5, {
   par(mar=c(4,4,1,1)+0.1);
