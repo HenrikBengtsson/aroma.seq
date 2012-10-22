@@ -93,6 +93,8 @@ process(ce, maxNAFraction=2/3, verbose=verbose);
 
 ############################################################################
 # HISTORY:
+# 2012-10-21
+# o Now we can do CbsModel(dsT, ref="constant(2)").
 # 2012-10-11
 # o Now generating a Chromosome Explorer report.
 # o Added TotalCnBinnedCounting() which calculates bin counts centered
