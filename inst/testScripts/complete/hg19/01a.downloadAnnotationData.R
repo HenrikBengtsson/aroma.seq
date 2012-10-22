@@ -5,14 +5,21 @@ source(pathname);
 library("aroma.seq");
 verbose <- Arguments$getVerbose(-8, timestamp=TRUE);
 
+ar <- AromaRepository(verbose=TRUE);
+
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Local functions
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 verbose && enter(verbose, "Downloading annotation data");
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Annotation data
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+chipType <- "GenericHuman";
+verbose && cat(verbose, "Chip type: ", chipType);
+
+pathname <- downloadUGP(ar, chipType, tags=c("50kb", ".*"));
+verbose && cat(verbose, "UGP: ", pathname);
+
+
 fa <- download1000GenomesHumanReferenceFile();
 print(fa);
 ## FastaReferenceFile:

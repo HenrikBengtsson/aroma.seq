@@ -29,7 +29,7 @@ unc <- tryCatch({
 
 # Build if missing
 if (is.null(unc)) {
-  unc <- AromaUncFile$allocateFromUgp(ugp, tags=c("HB20121016"), createdBy="Henrik Bengtsson, hb@biostat.ucsf.edu");
+  unc <- AromaUncFile$allocateFromUgp(ugp, tags=c("HB20121021"), createdBy="Henrik Bengtsson, hb@biostat.ucsf.edu");
   verbose && print(verbose, unc);
   
   unc <- importFromBSgenome(unc, db=db, verbose=verbose);
