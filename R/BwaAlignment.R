@@ -39,10 +39,10 @@ setMethodS3("getParameters", "BwaAlignment", function(this, which=c("aln", "sams
   params <- list();
   params$aln <- getOptionalArguments(this, ...);
 
-  keep <- na.omit(match(which, names(params)));
-  params <- params[which];
+  keep <- intersect(names(params), which);
+  params <- params[keep];
 
-  if (length(params) == 1L) {
+  if (drop && length(params) == 1L) {
     params <- params[[1L]];
   }
 
@@ -84,7 +84,7 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
 
     # Validate
     if (!hasID(rg)) {
-      msg <- sprintf("BWA 'samse/sampe' requires that the SAM read group has an ID. Will use default ID=1: %s", rgArg);
+      msg <- sprintf("BWA 'samse/sampe' requires that the SAM read group has an ID. Will use default ID=1: %s", paste(as.character(rg), collapse=", "));
       warning(msg);
       rg$ID <- 1L;
     }
@@ -128,7 +128,7 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
   }
 
   
-  paramsList <- getParameters(this);
+  paramsList <- getParameters(this, drop=FALSE);
   if (verbose) {
     for (key in names(paramsList)) {
       verbose && printf(verbose, "Additional BWA '%s' arguments:\n", key);
@@ -244,6 +244,9 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
 
 ############################################################################
 # HISTORY:
+# 2012-10-21
+# o Added argument 'drop' to getParameters().
+# o Now a default 'ID' tag is added to the SAM read group if missing.
 # 2012-10-01
 # o Now process() BwaAlignment write SAM read groups, iff given.
 # o Now BwaAlignment inherits from AbstractAlignment.
