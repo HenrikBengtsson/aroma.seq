@@ -1,12 +1,20 @@
 #!/usr/bin/env Rscript
 
 ############################################################################
-# REQUIREMENTS:
+# DESCRIPTION:
+# This script shows how to (1) align single-end DNAseq reads in FASTQ files
+# to the human genome (FASTA file), (2) count the aligned reads (BAM files)
+# in uniformely distributed 50kb bins (UGP file), (3) normalize the counts
+# for amount of GC-content in each bins (UNC file), and (4) finally 
+# segment the normalized DNAseq total copy-number counts using 
+# Circular Binary Segmentation (CBS) and (5) generate an interactive
+# Chromosome Explorer report viewable in the browser.
 #
+# REQUIREMENTS:
 # fastqData/
 #  AlbertsonD_2012-SCC/
 #   Generic/
-#    <sample>_<barcode>_L[0-9]{3}_R[12]_[0-9]{3}.fastq
+#    <sample>_<barcode>_L[0-9]{3}_R[12]_[0-9]{3}.fastq [private data]
 #
 # annotationData/
 #  chipTypes/

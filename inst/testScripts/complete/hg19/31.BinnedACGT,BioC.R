@@ -1,6 +1,5 @@
 ############################################################################
 # REQUIREMENTS:
-#
 # annotationData/
 #  chipTypes/
 #   GenericHuman/
