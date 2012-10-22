@@ -71,25 +71,6 @@ if (FALSE) {
   stext(side=3, pos=1, line=-1, cex=0.8, sprintf("n=%d", sum(is.finite(yN))));
 }
 
-ds <- dsN;
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Extract tumor-normal pairs
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-dsT <- extract(ds, sapply(bs, hasTag, "T"));
-dsN <- extract(ds, sapply(bs, hasTag, "N"));
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Segmentation and Chromosome Explorer
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-seg <- CbsModel(dsT, ref="constant(2)");
-verbose && print(verbose, seg);
-
-ce <- ChromosomeExplorer(seg);
-verbose && print(verbose, ce);
-process(ce, maxNAFraction=2/3, verbose=verbose);
-
-
 
 ############################################################################
 # HISTORY:

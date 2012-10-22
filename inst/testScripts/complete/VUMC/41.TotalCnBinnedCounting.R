@@ -54,12 +54,12 @@ dsN <- extract(ds, sapply(bs, hasTag, "N"));
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Segmentation and Chromosome Explorer
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-seg <- CbsModel(dsT, ref=dsN);
+seg <- CbsModel(dsT, ref=dsN, maxNAFraction=2/3);
 verbose && print(verbose, seg);
 
 ce <- ChromosomeExplorer(seg);
 verbose && print(verbose, ce);
-process(ce, maxNAFraction=2/3, verbose=verbose);
+process(ce, verbose=verbose);
 
 
 

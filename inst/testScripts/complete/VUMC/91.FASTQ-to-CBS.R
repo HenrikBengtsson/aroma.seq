@@ -107,12 +107,12 @@ verbose && print(verbose, dsG);
 # Segmentation of tumors and normals independently (without a reference)
 # and generation of a Chromosome Explorer report
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-seg <- CbsModel(dsG, ref="constant(2)");
+seg <- CbsModel(dsG, ref="constant(2)", maxNAFraction=2/3);
 verbose && print(verbose, seg);
 
 ce <- ChromosomeExplorer(seg);
 verbose && print(verbose, ce);
-process(ce, maxNAFraction=2/3, verbose=verbose);
+process(ce, verbose=verbose);
 
 
 
