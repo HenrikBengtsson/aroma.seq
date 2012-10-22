@@ -6,6 +6,9 @@ o ROBUSTNESS: Now using Arguments$getWritablePath() everywhere instead
   of mkdirs(), because the former will do a better job in creating
   and asserting directories on slow shared file systems, and when it
   fails it gives a more informative error message.
+o FIX: Now BwaAligment will use a default SAM read group ID of 1
+  (cf. Picard AddOrReplaceReadGroups) if missing.  Previously it
+  gave an error instead.
 
 
 Version: 0.1.18 [2012-10-18]
