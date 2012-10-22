@@ -105,7 +105,7 @@ verbose && print(verbose, dsG);
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Segmentation of tumors and normals independently (without a reference)
-# and generate Chromosome Explorer report
+# and generation of a Chromosome Explorer report
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 seg <- CbsModel(dsG, ref="constant(2)");
 verbose && print(verbose, seg);
