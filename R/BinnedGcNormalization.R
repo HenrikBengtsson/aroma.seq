@@ -82,19 +82,18 @@ setMethodS3("getPath", "BinnedGcNormalization", function(this, create=TRUE, ...)
   chipType <- getChipType(ds, fullname=FALSE);
 
   # The full path
-  path <- filePath(parent, chipType, expandLinks="any");
+  path <- filePath(parent, chipType);
+
+  if (create) {
+    path <- Arguments$getWritablePath(path);
+  } else {
+    path <- Arguments$getReadablePath(path, mustExist=FALSE);
+  }
 
   # Verify that it is not the same as the input path
   inPath <- getPath(ds);
   if (getAbsolutePath(path) == getAbsolutePath(inPath)) {
     throw("The generated output data path equals the input data path: ", path, " == ", inPath);
-  }
-
-  # Create path?
-  if (create) {
-    if (!isDirectory(path)) {
-      path <- Arguments$getWritablePath(path);
-    }
   }
 
   path;

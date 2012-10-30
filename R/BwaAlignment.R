@@ -20,6 +20,13 @@
 #  @allmethods "public"
 # }
 #
+# \references{
+#  \item Li H. and Durbin R., \emph{Fast and accurate short read alignment
+#    with Burrows-Wheeler Transform}. Bioinformatics, 2009.\cr
+#  \item Li H. and Durbin R., \emph{Fast and accurate long-read alignment
+#    with Burrows-Wheeler Transform}. Bioinformatics, 2010.\cr
+# }
+#
 # \author{Henrik Bengtsson}
 #*/########################################################################### 
 setConstructorS3("BwaAlignment", function(..., indexSet=NULL) {

@@ -190,20 +190,18 @@ setMethodS3("getPath", "PicardDuplicateRemoval", function(this, create=TRUE, ...
   platform <- "Generic";
 
   # The full path
-  path <- filePath(rootPath, fullname, platform, expandLinks="any");
+  path <- filePath(rootPath, fullname, platform);
+
+  if (create) {
+    path <- Arguments$getWritablePath(path);
+  } else {
+    path <- Arguments$getReadablePath(path, mustExist=FALSE);
+  }
 
   # Verify that it is not the same as the input path
-  ds <- getInputDataSet(this);
   inPath <- getPath(ds);
   if (getAbsolutePath(path) == getAbsolutePath(inPath)) {
     throw("The generated output data path equals the input data path: ", path, " == ", inPath);
-  }
-
-  # Create path?
-  if (create) {
-    if (!isDirectory(path)) {
-      path <- Arguments$getWritablePath(path);
-    }
   }
 
   path;

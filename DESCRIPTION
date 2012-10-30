@@ -1,11 +1,11 @@
 Package: aroma.seq
-Version: 0.1.19
-Date: 2012-10-21
+Version: 0.1.20
+Date: 2012-10-29
 Title: Sequence analysis in the Aroma Framework
 Maintainer: Henrik Bengtsson <henrikb@braju.com>
 Author: Henrik Bengtsson, Adam B. Olshen, Taku Tokuyasu
-Depends: R (>= 2.15.0), R.methodsS3 (>= 1.4.2), R.oo (>= 1.10.1), R.utils (>= 1.17.2), R.filesets (>= 1.3.2), aroma.core (>= 2.6.7)
-Imports: R.methodsS3 (>= 1.4.2), R.oo (>= 1.10.1), R.utils (>= 1.17.2), R.filesets (>= 1.3.2)
+Depends: R (>= 2.15.0), R.methodsS3 (>= 1.4.2), R.oo (>= 1.10.1), R.utils (>= 1.18.0), R.filesets (>= 1.3.3), aroma.core (>= 2.6.8)
+Imports: R.methodsS3 (>= 1.4.2), R.oo (>= 1.10.1), R.utils (>= 1.18.0), R.filesets (>= 1.3.3)
 Suggests: Biostrings (>= 2.26.2), ShortRead (>= 1.16.0), Rsamtools (>= 1.10.1), aroma.light (>= 1.28.0), aroma.cn (>= 1.2.9), GenomicRanges (>= 1.10.2), R.devices (>= 2.1.2)
 Description: [STUB ONLY/DON'T INSTALL] Methods for performing common sequence analysis.  Most of the actual analysis is performed by external software, which this package provides transparent wrappers for.
 License: LGPL (>= 2.1)

@@ -1,6 +1,11 @@
 Package: aroma.seq
 ==================
 
+Version: 0.1.20 [2012-10-29]
+o CLEANUP: Now using Arguments$get(Read|Writ)ablePath() instead of
+  filePath(..., expandLinks="any").
+
+
 Version: 0.1.19 [2012-10-21]
 o ROBUSTNESS: Now using Arguments$getWritablePath() everywhere instead
   of mkdirs(), because the former will do a better job in creating
