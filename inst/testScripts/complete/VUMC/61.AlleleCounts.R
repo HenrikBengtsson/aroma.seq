@@ -30,43 +30,73 @@ print(bs);
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Count allele for chromosome 22
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ac <- AlleleCounting(bs, snpUgp=ugp);
-print(ac);
+## ac <- AlleleCounting(bs, snpUgp=ugp);
+## print(ac);
+## dsC <- process(ac, verbose=verbose);
+## print(dsC);
 
-dsC <- process(ac, verbose=verbose);
-print(dsC);
 
+# Validate
+overwrite <- FALSE;
+ugp <- Arguments$getInstanceOf(ugp, "AromaUgpFile");
+fa <- Arguments$getInstanceOf(fa, "FastaReferenceFile");
 
-chromosomes <- getChromosomes(ugp);
-chrTags <- sprintf("chr%s", seqToHumanReadable(chromosomes));
-for (kk in seq(along=chromosomes)) {
-  chr <- chromosomes[kk];
-  pathnameL <- sprintf("SNPs,chr%d.bed", chr);
-  if (!isFile(pathnameL)) {
-    units <- getUnitsOnChromosome(ugp, chr);
-    data <- readDataFrame(ugp, units=units);
-    dups <- duplicated(data);
-    if (any(dups)) {
-      printf("Dropping duplicated genome positions: %d\n", sum(dups));
-      data <- data[!dups,];
-      units <- units[!dups];
-    }
-    pathnameL <- writeDataFrame(data, file=pathnameL, col.names=FALSE, header=NULL);
-    print(pathnameL);
-  }
+verbose && enter(verbose, "Counting alleles for known SNPs");
+verbose && print(verbose, bs);
+verbose && print(verbose, ugp);
 
-  for (ii in seq(bs)) {
-    bf <- getFile(bs, ii);
-    print(bf);
+dataSet <- getFullName(bs);
+chipType <- getChipType(bs);
 
-    pathnameD <- sprintf("%s,chr%d,allelCounts.txt", getFullName(bf), chr);
-    if (!isFile(pathnameD)) {
-      # Instead of having GATK build a missing FAI index file, build it here
-      buildIndex(fa, verbose=verbose);
+# Get output path
+rootPath <- "gatkData"
+pathD <- file.path(rootPath, dataSet, chipType);
+
+#chromosomes <- getChromosomes(ugp);
+#chrTags <- sprintf("chr%s", seqToHumanReadable(chromosomes));
+
+bedf <- NULL;
+
+for (ii in seq(bs)) {
+  bf <- getFile(bs, ii);
+  verbose && enter(verbose, sprintf("Sample #%d ('%s') of %d", ii, getName(bf), length(bs)));
+
+  filename <- sprintf("%s,allelCounts.txt", getFullName(bf));
+  pathnameD <- Arguments$getReadablePathname(filename, path=pathD, mustExist=FALSE);
+
+  if (overwrite || !isFile(pathnameD)) {
+    pathnameD <- Arguments$getWritablePathname(pathnameD, mustNotExist=!overwrite);
+
+    # (a) Instead of having GATK build a missing FAI index file, build it here
+    buildIndex(fa, verbose=verbose);
     
-      res <- systemGATK(T="DepthOfCoverage", I=getPathname(bf), R=getPathname(fa), L=pathnameL,
-             "--omitIntervalStatistics", "--omitLocusTable", "--omitPerSampleStats", "--printBaseCounts",
-             "o"=pathnameD, verbose=verbose);
+    # (b) Get the BED file representation of UGP file
+    if (is.null(bedf)) {
+      bedf <- writeBedDataFile(ugp, chrMap=c(X=23, Y=24, MT=25), verbose=verbose);
+      verbose && print(verbose, bedf);
+    }
+
+    # (c) Call GATK
+    verbose && enter(verbose, "Calling GATK DepthOfCoverage");
+    pathnameDT <- pushTemporaryFile(pathnameD);
+    verbose && cat(verbose, "Writing to temporary file: ", pathnameDT);
+    res <- systemGATK(T="DepthOfCoverage", I=getPathname(bf), R=getPathname(fa), L=getPathname(bedf), "--omitIntervalStatistics", "--omitLocusTable", "--omitPerSampleStats", "--printBaseCounts", "o"=pathnameDT, verbose=verbose);
+    verbose && cat(verbose, "System result: ", res);
+    pathnameD <- popTemporaryFile(pathnameDT);
+    verbose && exit(verbose);
+  } # if (overwrite || !isFile(...))
+
+  # Parse GATK output file
+  db <- TabularTextFile(pathnameD);
+  verbose && print(verbose, db);
+
+  verbose && exit(verbose);
+} # for (ii ...)
+
+verbose && exit(verbose);
+
+
+
 
       # Parse GATK results
       db <- TabularTextFile(pathnameD);
@@ -118,11 +148,6 @@ for (kk in seq(along=chromosomes)) {
       # Store counts
 #      data <- data.frame(chromosome=chr, position=pos, coverage=coverage);
 #      data <- cbind(data, counts);
-    }
-  } # for (ii ...)
-} # for (kk ...)
-
-
 
 
 
