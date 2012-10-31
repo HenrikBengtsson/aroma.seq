@@ -1,6 +1,15 @@
 Package: aroma.seq
 ==================
 
+Version: 0.1.22 [2012-10-31]
+o Added buildScripts/.  First script is creating an Aroma UGP file
+  containing the positions of Chr1-25 SNPs of a SNP135 BED file.
+
+
+Version: 0.1.21 [2012-10-30]
+o Added validate() for BamDataFile.
+
+
 Version: 0.1.20 [2012-10-29]
 o CLEANUP: Now using Arguments$get(Read|Writ)ablePath() instead of
   filePath(..., expandLinks="any").

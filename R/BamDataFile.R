@@ -479,9 +479,64 @@ setMethodS3("readReadPositions", "BamDataFile", function(this, ..., flag=scanBam
 }) # readReadPositions()
 
 
+setMethodS3("validate", "BamDataFile", function(this, method=c("picard"), ..., skip=TRUE, overwrite=!skip, verbose=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'method':
+  method <- match.arg(method);
+
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
+  verbose && enter(verbose, sprintf("Validating %s", class(this)[1]));
+  verbose && cat(verbose, "Validation method: ", method);
+
+  pathname <- getPathname(this);
+  verbose && cat(verbose, "Pathname: ", pathname);
+
+  pathnameR <- sprintf("%s.log", getPathname(this));
+  pathnameR <- Arguments$getWritablePathname(pathnameR, mustNotExist=FALSE);
+  verbose && cat(verbose, "Log pathname: ", pathnameR);
+
+  if (method == "picard") {
+    if (skip && isFile(pathnameR)) {
+    } else if (overwrite || !isFile(pathnameR)) {
+      res <- systemPicard("ValidateSamFile", INPUT=pathname, stdout=pathnameR, stderr=pathnameR);
+    }
+
+    # Parse output
+    bfr <- readLines(pathnameR);
+    for (type in c("WARNING", "ERROR")) {
+      pattern <- sprintf("^%s: ", type);
+      values <- grep(pattern, bfr, value=TRUE);
+      if (length(values) == 0L) next;
+
+      verbose && print(verbose, values);
+      msgs <- gsub(pattern, "", values);
+      msgs <- paste(msgs, collapse="\n");
+      if (type == "WARNING") {
+        warning(msgs);
+      } else if (type == "ERROR") {
+        throw(msgs);
+      }
+    } # for (type ...)
+  }
+
+  verbose && exit(verbose);
+
+  invisible(TRUE);
+})
+
 
 ############################################################################
 # HISTORY:
+# 2012-10-30
+# o Added validate() for BamDataFile.
 # 2012-10-10
 # o Added argument 'which' to readDataFrame() for BamDataFile.
 # 2012-10-02
