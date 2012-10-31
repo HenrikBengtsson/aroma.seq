@@ -92,6 +92,66 @@ setMethodS3("readSeqLengths", "FastaReferenceFile", function(this, ...) {
 }, private=TRUE)
 
 
+###########################################################################/** 
+# @RdocMethod buildIndex
+#
+# @title "Builds an FAI index file"
+#
+# \description{
+#   @get "title".
+# }
+#
+# @synopsis
+#
+# \arguments{
+#  \item{...}{Additional arguments passed to @see "Rsamtools::indexFa".}
+#  \item{skip}{If @TRUE, the index files are not rebuilt if already available.}
+#  \item{verbose}{See @see "R.utils::Verbose".}
+# }
+#
+# \value{
+#   Returns a @see "R.filesets::GenericDataFileSet" consisting of the BWA index files.
+# }
+#
+# @author
+#*/########################################################################### 
+setMethodS3("buildIndex", "FastaReferenceFile", function(this, ..., skip=TRUE, verbose=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'skip':
+  skip <- Arguments$getLogical(skip);
+
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  } 
+
+
+  verbose && enter(verbose, "Building FASTA FAI index");
+  pathname <- getPathname(this);
+  verbose && cat(verbose, "FASTA pathname: ", pathname);
+
+  pathnameFAI <- sprintf("%s.fai", pathname);
+  verbose && cat(verbose, "FASTA FAI pathname: ", pathnameFAI);
+
+  pathnameFAI <- Arguments$getWritablePathname(pathnameFAI, mustNotExist=FALSE);
+  if (!skip || !isFile(pathnameFAI)) {
+    verbose && enter(verbose, "Building index using Rsamtools");
+    require("Rsamtools") || throw("Package not loaded: Rsamtools");
+    pathnameD <- indexFa(file=pathname);
+    verbose && cat(verbose, "Generated file: ", pathname);
+    verbose && exit(verbose);
+  }
+  pathnameFAI <- Arguments$getReadablePathname(pathnameFAI);
+
+  verbose && exit(verbose);
+
+  invisible(pathnameFAI);
+}) # buildIndex()
+
 
 ###########################################################################/** 
 # @RdocMethod buildBwaIndexSet
@@ -274,6 +334,8 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
 
 ############################################################################
 # HISTORY:
+# 2012-10-31
+# o Added buildIndex() for FastaReferenceFile for building FAI index files.
 # 2012-09-27
 # o Added buildBowtie2IndexSet() for FastaReferenceFile.
 # 2012-09-25
