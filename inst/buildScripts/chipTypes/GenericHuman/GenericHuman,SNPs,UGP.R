@@ -60,8 +60,17 @@ chr[chr == "Y"] <- 24;
 chr[chr == "M"] <- 25;
 chr <- as.integer(chr);
 data$chromosome <- chr;
+
+# Drop non-interesting "chromosomes"
 keep <- is.finite(chr);
 data <- data[keep,];
+
+# Drop duplicates
+dups <- duplicated(data);
+if (any(dups)) {
+  data <- data[!dups,];
+}
+
 str(data);
 
 nbrOfUnits <- nrow(data);
@@ -105,6 +114,26 @@ writeFooter(ugp, ftr);
 # Statistics
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 print(ugp);
+## AromaUgpFile:
+## Name: GenericHuman
+## Tags: SNPs,chr1-25,snp135,HB20121031
+## Full name: GenericHuman,SNPs,chr1-25,snp135,HB20121031
+## Pathname: annotationData/chipTypes/GenericHuman/GenericHuman,SNPs,chr1-25,snp135
+## ,HB20121031.ugp
+## File size: 53.87 MB (56483592 bytes)
+## RAM: 0.00 MB
+## Number of data rows: 11296623
+## File format: v1
+## Dimensions: 11296623x2
+## Column classes: integer, integer
+## Number of bytes per column: 1, 4
+## Footer: <createdOn>20121031 14:21:24 PDT</createdOn><platform>Generic</platform>
+## <chipType>GenericHuman</chipType><createdBy><fullname>GenericHuman,SNPs,chr1-25,
+## snp135,HB20121031</fullname><email>henrik.bengtsson@aroma-project.org</email></c
+## reatedBy><srcFile><filename>snp135-UCSCGenomeBrowser.bed</filename><filesize>445
+## 617891</filesize><checksum>0e52557c814e0e1fb93482e9b7894c1e</checksum></srcFile>
+## Chip type: GenericHuman
+## Platform: Generic
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 # WHAT'S NEW:
@@ -112,10 +141,10 @@ print(ugp);
 print(table(ugp[,1], exclude=NULL));
 
 ##      1      2      3      4      5      6      7      8
-## 862464 920182 778682 797371 703636 748582 636497 615317
+## 861880 919552 778274 795895 703201 724540 636155 614952
 ##      9     10     11     12     13     14     15     16
-## 479177 556367 543581 526795 402736 361481 324059 349745
+## 478897 556050 543244 526533 402432 361286 323849 349564
 ##     17     18     19     20     21     22     23     24
-## 299864 316677 247408 250148 162748 153284 286306   6629
+## 297842 316472 247287 250035 162652 153139 286110   6628
 ##     25   <NA>
 ##    154      0

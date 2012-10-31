@@ -2,6 +2,7 @@ Package: aroma.seq
 ==================
 
 Version: 0.1.22 [2012-10-31]
+o Added anyDuplicated() and writeBedDataFile() for AromaUgpFile.
 o Added buildIndex() for FastaReferenceFile for building FAI index files.
 o Added buildScripts/.  First script is creating an Aroma UGP file
   containing the positions of Chr1-25 SNPs of a SNP135 BED file.

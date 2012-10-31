@@ -14,6 +14,6 @@ pathname <- downloadChipTypeFile(ar, chipType, tags=c("50kb", ".*"), ext="unc");
 verbose && cat(verbose, "UNC: ", pathname);
 
 pathname <- downloadChipTypeFile(ar, chipType, tags=c("SNPs", "chr1-25", ".*"), ext="ugp");
-verbose && cat(verbose, "UNC: ", pathname);
+verbose && cat(verbose, "SNP UGP: ", pathname);
 
 verbose && exit(verbose);
