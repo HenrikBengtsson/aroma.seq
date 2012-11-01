@@ -30,7 +30,7 @@ print(bs);
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Count allele for chromosome 22
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ac <- GatkAlleleCounting(bs, fa=fa, ugp=ugp);
+ac <- GatkAlleleCounting(bs, targetUgp=ugp, fa=fa);
 print(ac);
 dsC <- process(ac, verbose=verbose);
 print(dsC);

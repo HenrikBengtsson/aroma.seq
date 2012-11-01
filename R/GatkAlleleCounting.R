@@ -41,7 +41,8 @@ setMethodS3("getRootPath", "GatkAlleleCounting", function(this, ...) {
 setMethodS3("getPath", "GatkAlleleCounting", function(this, ...) {
   path <- NextMethod("getPath", create=FALSE);
   path <- dirname(path);
-  targetUgp <- getTargetUgpFile(this);
+  params <- getParameters(this);
+  targetUgp <- params$targetUgp;
   chipType <- getChipType(targetUgp, fullname=FALSE);
 
   # The full path
@@ -93,7 +94,7 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
       
       # (b) Get the BED file representation of UGP file
       if (is.null(bedf)) {
-        bedf <- writeBedDataFile(ugp, chrMap=c(X=23, Y=24, MT=25), verbose=verbose);
+        bedf <- writeBedDataFile(targetUgp, chrMap=c(X=23, Y=24, MT=25), verbose=verbose);
         verbose && print(verbose, bedf);
       }
 
