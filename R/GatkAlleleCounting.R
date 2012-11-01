@@ -1,12 +1,14 @@
-## ac <- GatkAlleleCounting(bs, fa=fa, ugp=ugp);
+## ac <- GatkAlleleCounting(bs, targetUgp=ugp, fa=fa);
 ## print(ac);
 ## dsC <- process(ac, verbose=verbose);
 ## print(dsC);
 
-setConstructorS3("GatkAlleleCounting", function(dataSet=NULL, fa=NULL, ugp=NULL, ...) {
-  # Argument 'dataSet':
-  if (!is.null(dataSet)) {
-    dataSet <- Arguments$getInstanceOf(dataSet, "BamDataSet");
+setConstructorS3("GatkAlleleCounting", function(dataSet=NULL, targetUgp=NULL, fa=NULL, ..., .reqSetClass="BamDataSet") {
+  require("aroma.cn") || throw("Package not loaded: aroma.cn");
+
+  # Argument 'targetUgp':
+  if (!is.null(targetUgp)) {
+    targetUgp <- Arguments$getInstanceOf(targetUgp, "AromaUgpFile");
   }
 
   # Argument 'fa':
@@ -14,58 +16,65 @@ setConstructorS3("GatkAlleleCounting", function(dataSet=NULL, fa=NULL, ugp=NULL,
     fa <- Arguments$getInstanceOf(fa, "FastaReferenceFile");
   }
 
-  # Argument 'ugp':
-  if (!is.null(ugp)) {
-    ugp <- Arguments$getInstanceOf(ugp, "AromaUgpFile");
-  }
 
-  extend(Object(), "GatkAlleleCounting",
-    .dataSet = dataSet,
-    .fa = fa,
-    .ugp = ugp
+  extend(AromaTransform(dataSet=dataSet, ..., .reqSetClass=.reqSetClass), "GatkAlleleCounting",
+    .targetUgp = targetUgp,
+    .fa = fa
   );
 }) # GatkAlleleCounting()
 
 
-setMethodS3("getFastaReferenceFile", "GatkAlleleCounting", function(this, ...) {
-  this$.fa;
-})
+setMethodS3("getParameters", "GatkAlleleCounting", function(this, ...) {
+  params <- list(
+    targetUgp = this$.targetUgp,
+    fa = this$.fa
+  );
+  params;
+}, protected=TRUE);
 
-setMethodS3("getAromaUgpFile", "GatkAlleleCounting", function(this, ...) {
-  this$.ugp;
-})
 
-setMethodS3("getInputDataSet", "GatkAlleleCounting", function(this, ...) {
-  dataSet <- this$.dataSet;
-  dataSet;
-})
+setMethodS3("getRootPath", "GatkAlleleCounting", function(this, ...) {
+  "gatkData";
+}, private=TRUE)
+
 
 setMethodS3("getPath", "GatkAlleleCounting", function(this, ...) {
-  bs <- getInputDataSet(this, ...);
-  dataSet <- getFullName(bs);
-  chipType <- getChipType(bs);
-  rootPath <- "gatkData";
-  path <- file.path(rootPath, dataSet, chipType);
-  path <- Arguments$getWritablePath(path);
+  path <- NextMethod("getPath", create=FALSE);
+  path <- dirname(path);
+  targetUgp <- getTargetUgpFile(this);
+  chipType <- getChipType(targetUgp, fullname=FALSE);
+
+  # The full path
+  path <- filePath(path, chipType);
+  path <- Arguments$getWritablePath(path); 
+
+  # Verify that it is not the same as the input path
+  inPath <- getPath(getInputDataSet(this));
+  if (getAbsolutePath(path) == getAbsolutePath(inPath)) {
+    throw("The generated output data path equals the input data path: ", path, " == ", inPath);
+  }
+
   path;
 })
 
 
 setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE, verbose=FALSE) {
-  ugp <- getAromaUgpFile(this);
-  fa <- getFastaReferenceFile(this);
-  bs <- getInputDataSet(this);
+
 
   verbose && enter(verbose, "Counting alleles for known SNPs");
+  bs <- getInputDataSet(this);
   verbose && print(verbose, bs);
-  verbose && print(verbose, ugp);
-  verbose && print(verbose, fa);
 
-  dataSet <- getFullName(bs);
-  chipType <- getChipType(bs);
+  params <- getParameters(this);
+  targetUgp <- params$targetUgp;
+  fa <- params$fa;
+
+  verbose && print(verbose, targetUgp);
+  verbose && print(verbose, fa);
 
   # Get output path
   pathD <- getPath(this);
+  verbose && cat(verbose, "Output path: ", pathD);
 
   bedf <- NULL;
 
