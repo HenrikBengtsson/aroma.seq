@@ -166,3 +166,10 @@ getOutputFileSetClass.BinnedGcNormalization
 getOutputFiles.BinnedGcNormalization
 getParameters.BinnedGcNormalization getPath.BinnedGcNormalization
 getRootPath.BinnedGcNormalization process.BinnedGcNormalization
+GatkAlleleCounting anyDuplicated.AromaUgpFile
+getParameters.GatkAlleleCounting getPath.GatkAlleleCounting
+getRootPath.GatkAlleleCounting process.GatkAlleleCounting
+readGatkCountFile readGatkCountFile.GatkAlleleCounting
+validate.BamDataFile writeBedDataFile
+writeBedDataFile.AromaUgpFile
+

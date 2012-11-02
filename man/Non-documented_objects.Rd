@@ -318,6 +318,17 @@
 \alias{getPath.BinnedGcNormalization}
 \alias{getRootPath.BinnedGcNormalization}
 \alias{process.BinnedGcNormalization}
+\alias{GatkAlleleCounting}
+\alias{anyDuplicated.AromaUgpFile}
+\alias{getParameters.GatkAlleleCounting}
+\alias{getPath.GatkAlleleCounting}
+\alias{getRootPath.GatkAlleleCounting}
+\alias{process.GatkAlleleCounting}
+\alias{readGatkCountFile}
+\alias{readGatkCountFile.GatkAlleleCounting}
+\alias{validate.BamDataFile}
+\alias{writeBedDataFile}
+\alias{writeBedDataFile.AromaUgpFile}
 
 \description{
   This page contains aliases for all "non-documented" objects that

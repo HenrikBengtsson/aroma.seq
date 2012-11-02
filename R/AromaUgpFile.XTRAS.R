@@ -1,8 +1,8 @@
-setMethodS3("anyDuplicated", "AromaUgpFile", function(this, ...) {
+setMethodS3("anyDuplicated", "AromaUgpFile", function(x, ...) {
+  # To please R CMD check
+  this <- x;
   data <- readDataFrame(this, ...);
-  dups <- duplicated(data);
-  rm(data);
-  any(dups);
+  anyDuplicated(data, ...);
 })
 
 

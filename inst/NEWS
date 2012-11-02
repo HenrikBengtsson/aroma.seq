@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.1.23 [2012-11-02]
+o Now process() for GatkAlleleCounting outputs cleaner files.
+
+
 Version: 0.1.22 [2012-10-31]
 o Added GatkAlleleCounting.
 o Added anyDuplicated() and writeBedDataFile() for AromaUgpFile.

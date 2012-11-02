@@ -103,7 +103,101 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
       pathnameDT <- pushTemporaryFile(pathnameD);
       verbose && cat(verbose, "Writing to temporary file: ", pathnameDT);
       res <- systemGATK(T="DepthOfCoverage", I=getPathname(bf), R=getPathname(fa), L=getPathname(bedf), "--omitIntervalStatistics", "--omitLocusTable", "--omitPerSampleStats", "--printBaseCounts", "o"=pathnameDT, verbose=verbose);
-      verbose && cat(verbose, "System result: ", res);
+      verbose && cat(verbose, "GATK system result: ", res);
+
+      # (d) Cleanup GATK output file and resave
+      verbose && enter(verbose, "Parsing and cleaning up the GATK output file");
+      db <- TabularTextFile(pathnameDT);
+      verbose && print(verbose, db);
+    
+      colClassPatterns <- c("(Locus|_base_counts)"="character");
+      data <- readDataFrame(db, colClassPatterns=colClassPatterns);
+      verbose && str(verbose, data);
+    
+      # Parse (chromosome, position)
+      chr <- gsub(":.*", "", data$Locus);
+      pos <- gsub(".*:", "", data$Locus);
+      pos <- as.integer(pos);
+      stopifnot(length(pos) == length(chr));
+
+      # Parse (A,C,G,T) counts
+      # NOTE: Some allele have non-zero "N" counts, which happens
+      # when a read is aligned to a SNP, but its nucleotide at the
+      # SNP position could not be called.  Because of this, we need
+      # to keep the "N" column as well.
+      counts <- data[[ncol(data)]];
+      rm(data);
+      counts <- gsub("[ACGTN]:", ":", counts);
+      counts <- gsub(" ", "", counts, fixed=TRUE);
+      counts <- gsub("^:", "", counts);
+      counts <- strsplit(counts, split=":", fixed=TRUE);
+      ns <- sapply(counts, FUN=length);
+      stopifnot(all(ns == 5L));
+      counts <- unlist(counts, use.names=FALSE);
+      counts <- as.integer(counts);
+      counts <- matrix(counts, ncol=5L, byrow=TRUE);
+      colnames(counts) <- c("A", "C", "G", "T", "N");
+      stopifnot(nrow(counts) == length(chr));
+
+      # Summaries
+      countsT <- counts[,c("A", "C", "G", "T"),drop=FALSE];
+
+      # Per-nucleotide coverage
+      alleleCoverage <- colSums(countsT);
+      alleleCoverage <- as.integer(alleleCoverage);
+
+      # Total coverage
+      totalCoverage <- sum(alleleCoverage);
+      verbose && printf(verbose, "Total number of reads (with called alleles) covering a SNP: %d\n", totalCoverage);
+
+      # Per-SNP coverage
+      coverage <- rowSums(countsT, na.rm=TRUE);
+      coverage <- as.integer(coverage);
+      tblCoverage <- table(coverage);
+      verbose && cat(verbose, "Distribution of SNP coverages:");
+      verbose && print(verbose, tblCoverage);
+
+      # Identify homozygous and heterozygous SNPs (with coverage >= 2)
+      isHom <- rowAnys(counts == coverage);
+      isHom[(coverage < 2L)] <- NA; # Unknown
+      isHet <- !isHom;
+      nbrOfHoms <- sum(isHom, na.rm=TRUE);
+      nbrOfHets <- sum(isHet, na.rm=TRUE);
+      verbose && printf(verbose, "Number of homozygous SNPs (with coverage >= 2): %d\n", nbrOfHoms);
+      verbose && printf(verbose, "Number of heterozygous SNPs (with coverage >= 2): %d\n", nbrOfHets);
+
+      tblHetCoverage <- table(isHet);
+      verbose && cat(verbose, "Distribution of heterozygous SNP coverages:");
+      verbose && print(verbose, tblHetCoverage);
+
+      header <- list(
+        description = "GATK DepthOfCoverage Results",
+        totalCoverage = totalCoverage,
+        alleleCoverage = sprintf("%s:%d", names(alleleCoverage), alleleCoverage),
+        nbrOfHoms = nbrOfHoms,
+        nbrOfHets = nbrOfHets,
+        tblCoverage = sprintf("%s:%d", names(tblCoverage), tblCoverage),
+        tblHetCoverage = sprintf("%s:%d", names(tblHetCoverage), tblHetCoverage)
+      );
+
+      # Updated allele count data
+      data <- data.frame(chromosome=chr, position=pos, counts);
+      data <- cbind(data, counts);
+      rm(ns, chr, pos, counts);
+
+      # Store
+      pathnameDTT <- sprintf("%s.tmp", pathnameDT); # AD HOC
+      pathnameDTT <- Arguments$getWritablePathname(pathnameDTT, mustNotExist=TRUE);
+
+      pkg <- aroma.seq;
+      createdBy <- sprintf("%s v%s (%s)", getName(pkg), getVersion(pkg), getDate(pkg));
+      pp <- writeDataFrame(data, file=pathnameDTT, header=header, createdBy=createdBy);
+
+      file.remove(pathnameDT); # AD HOC
+      pathnameDT <- popTemporaryFile(pathnameDTT);
+
+      verbose && exit(verbose);
+      
       pathnameD <- popTemporaryFile(pathnameDT);
       verbose && exit(verbose);
     } # if (overwrite || !isFile(...))
@@ -137,53 +231,8 @@ setMethodS3("readGatkCountFile", "GatkAlleleCounting", function(this, array, ...
   db <- TabularTextFile(pathname);
   print(db);
 
-  colClassPatterns <- c("(Locus|_base_counts)"="character");
+  colClassPatterns <- c("*"="integer", "chromosome"="character");
   data <- readDataFrame(db, colClassPatterns=colClassPatterns);
-
-  # Parse (chromosome,position)
-  chr <- gsub(":.*", "", data$Locus);
-  pos <- gsub(".*:", "", data$Locus);
-  pos <- as.integer(pos);
-
-  # Parse (A,C,G,T) counts
-  counts <- data[[2L]];
-  counts <- gsub("[ACGTN]:", ":", counts);
-  counts <- gsub(" ", "", counts, fixed=TRUE);
-  counts <- gsub("^:", "", counts);
-  counts <- strsplit(counts, split=":", fixed=TRUE);
-  ns <- sapply(counts, FUN=length);
-  stopifnot(all(ns == 5L));
-  counts <- unlist(counts, use.names=FALSE);
-  counts <- as.integer(counts);
-  counts <- matrix(counts, ncol=5L, byrow=TRUE);
-  colnames(counts) <- c("A", "C", "G", "T", "N");
-  # Sanity check
-  stopifnot(all(counts[,"N"] == 0L));
-  counts <- counts[, c("A", "C", "G", "T"), drop=FALSE];
-
-  # Summarize results
-  coverage <- rowSums(counts, na.rm=TRUE);
-  coverage <- as.integer(coverage);
-  isHom <- rowAnys(counts == coverage);
-  isHet <- !isHom;
-  tt1 <- colSums(counts);
-  tt2 <- table(coverage);
-  printf("Total number of reads covering a SNP: %d\n", sum(tt1));
-  cat("Distribution of SNP coverages:");
-  print(tt2);
-  cat("Distribution of SNP alleles:");
-  print(tt1);
-  tt1b <- colSums(counts[isHet,,drop=FALSE]);
-  tt2b <- table(coverage[isHet]);
-  printf("Number of heterozygous SNPs: %d\n", sum(tt1));
-  cat("Distribution of heterozygous SNP coverages:");
-  print(tt2b);
-  cat("Distribution of heterzygous SNP alleles:");
-  print(tt1b);
-
-  # Store counts
-  data <- data.frame(chromosome=chr, position=pos, coverage=coverage);
-  data <- cbind(data, counts);
 
   data;
 }, protected=TRUE) # readGatkCountFile()
@@ -191,6 +240,9 @@ setMethodS3("readGatkCountFile", "GatkAlleleCounting", function(this, array, ...
 
 ############################################################################
 # HISTORY:
+# 2012-11-02
+# o Now process() also cleans up the GATK output file by dropping
+#   redundant columns and parsing the allele counts into integers.
 # 2012-10-31
 # o Added GatkAlleleCounting.
 # o Created.
