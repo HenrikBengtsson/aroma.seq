@@ -25,7 +25,7 @@ setMethodS3("getExtensionPattern", "AromaUnitNucleotideCountsFile", function(sta
 }, static=TRUE, protected=TRUE)
 
 
-setMethodS3("getColumnNames", "AromaUnitNucleotideCountsFile", function(this, ...) {
+setMethodS3("getDefaultColumnNames", "AromaUnitNucleotideCountsFile", function(this, ...) {
   c("A", "C", "G", "T");
 })
 

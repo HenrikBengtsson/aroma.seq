@@ -172,4 +172,4 @@ getRootPath.GatkAlleleCounting process.GatkAlleleCounting
 readGatkCountFile readGatkCountFile.GatkAlleleCounting
 validate.BamDataFile writeBedDataFile
 writeBedDataFile.AromaUgpFile
-
+getDefaultColumnNames.AromaUnitNucleotideCountsFile
