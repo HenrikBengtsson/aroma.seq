@@ -182,7 +182,6 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
 
       # Updated allele count data
       data <- data.frame(chromosome=chr, position=pos, counts);
-      data <- cbind(data, counts);
       rm(ns, chr, pos, counts);
 
       # Store
@@ -191,8 +190,8 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
 
       pkg <- aroma.seq;
       createdBy <- sprintf("%s v%s (%s)", getName(pkg), getVersion(pkg), getDate(pkg));
-      pp <- writeDataFrame(data, file=pathnameDTT, header=header, createdBy=createdBy);
-
+      writeDataFrame(data, file=pathnameDTT, header=header, createdBy=createdBy);
+      rm(data, header);
       file.remove(pathnameDT); # AD HOC
       pathnameDT <- popTemporaryFile(pathnameDTT);
 
