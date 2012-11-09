@@ -162,6 +162,7 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
       # Per-nucleotide coverage
       alleleCoverage <- colSums(countsT);
       alleleCoverage <- as.integer(alleleCoverage);
+      names(alleleCoverage) <- colnames(counts);
 
       # Total coverage
       totalCoverage <- sum(alleleCoverage);
