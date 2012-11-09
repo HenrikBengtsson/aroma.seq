@@ -1,6 +1,17 @@
 Package: aroma.seq
 ==================
 
+Version: 0.1.26 [2012-11-09]
+o Added argument 'dropEmpty' to GatkAlleleCounting, which will drop
+  all SNPs with zero coverage from the output files making the
+  smaller and faster to read, particularly for low coverage samples.
+
+
+Version: 0.1.25 [2012-11-08]
+o Implemented getOutputDataSet() for GatkAlleleCounting, which
+  returns a TabularTextFileSet.
+
+
 Version: 0.1.24 [2012-11-08]
 o Renamed getColumnNames() to getDefaultColumnNames() for all
   classes inheriting from GenericTabularFile, because of the

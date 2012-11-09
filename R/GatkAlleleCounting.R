@@ -3,7 +3,7 @@
 ## dsC <- process(ac, verbose=verbose);
 ## print(dsC);
 
-setConstructorS3("GatkAlleleCounting", function(dataSet=NULL, targetUgp=NULL, fa=NULL, ..., .reqSetClass="BamDataSet") {
+setConstructorS3("GatkAlleleCounting", function(dataSet=NULL, targetUgp=NULL, fa=NULL, dropEmpty=TRUE, ..., .reqSetClass="BamDataSet") {
   require("aroma.cn") || throw("Package not loaded: aroma.cn");
 
   # Argument 'targetUgp':
@@ -16,10 +16,14 @@ setConstructorS3("GatkAlleleCounting", function(dataSet=NULL, targetUgp=NULL, fa
     fa <- Arguments$getInstanceOf(fa, "FastaReferenceFile");
   }
 
+  # Argument 'dropEmpty':
+  dropEmpty <- Arguments$getLogical(dropEmpty);
+
 
   extend(AromaTransform(dataSet=dataSet, ..., .reqSetClass=.reqSetClass), "GatkAlleleCounting",
     .targetUgp = targetUgp,
-    .fa = fa
+    .fa = fa,
+    .dropEmpty = dropEmpty
   );
 }) # GatkAlleleCounting()
 
@@ -27,7 +31,8 @@ setConstructorS3("GatkAlleleCounting", function(dataSet=NULL, targetUgp=NULL, fa
 setMethodS3("getParameters", "GatkAlleleCounting", function(this, ...) {
   params <- list(
     targetUgp = this$.targetUgp,
-    fa = this$.fa
+    fa = this$.fa,
+    dropEmpty = this$.dropEmpty
   );
   params;
 }, protected=TRUE);
@@ -58,6 +63,17 @@ setMethodS3("getPath", "GatkAlleleCounting", function(this, ...) {
   path;
 })
 
+setMethodS3("getExpectedOutputFullnames", "GatkAlleleCounting", function(this, ...) {
+  names <- NextMethod("getExpectedOutputFullNames");
+  names <- paste(names, "alleleCounts", sep=",");
+  names;
+}, protected=TRUE)
+
+
+setMethodS3("getOutputDataSet0", "GatkAlleleCounting", function(this, ...) {
+  NextMethod("getOutputDataSet0", className="TabularTextFileSet", pattern=".*,allel[e]*Counts[.]txt$");
+})
+
 
 setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE, verbose=FALSE) {
 
@@ -69,6 +85,7 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
   params <- getParameters(this);
   targetUgp <- params$targetUgp;
   fa <- params$fa;
+  dropEmpty <- params$dropEmpty;
 
   verbose && print(verbose, targetUgp);
   verbose && print(verbose, fa);
@@ -83,7 +100,7 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
     bf <- getFile(bs, ii);
     verbose && enter(verbose, sprintf("Sample #%d ('%s') of %d", ii, getName(bf), length(bs)));
 
-    filename <- sprintf("%s,allelCounts.txt", getFullName(bf));
+    filename <- sprintf("%s,alleleCounts.txt", getFullName(bf));
     pathnameD <- Arguments$getReadablePathname(filename, path=pathD, mustExist=FALSE);
 
     if (overwrite || !isFile(pathnameD)) {
@@ -170,6 +187,18 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
       verbose && cat(verbose, "Distribution of heterozygous SNP coverages:");
       verbose && print(verbose, tblHetCoverage);
 
+      # Drop SNPs with no coverage?
+      if (dropEmpty) {
+        keep <- (coverage > 0L);
+        if (sum(keep) < length(keep)) {
+          chr <- chr[keep];
+          pos <- pos[keep];
+          counts <- counts[keep,,drop=FALSE];
+        }
+        rm(keep);
+      } #if (dropEmpty)
+
+
       header <- list(
         description = "GATK DepthOfCoverage Results",
         totalCoverage = totalCoverage,
@@ -177,7 +206,8 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
         nbrOfHoms = nbrOfHoms,
         nbrOfHets = nbrOfHets,
         tblCoverage = sprintf("%s:%d", names(tblCoverage), tblCoverage),
-        tblHetCoverage = sprintf("%s:%d", names(tblHetCoverage), tblHetCoverage)
+        tblHetCoverage = sprintf("%s:%d", names(tblHetCoverage), tblHetCoverage),
+        dropEmpty = dropEmpty
       );
 
       # Updated allele count data
@@ -237,8 +267,67 @@ setMethodS3("readGatkCountFile", "GatkAlleleCounting", function(this, array, ...
 }, protected=TRUE) # readGatkCountFile()
 
 
+setMethodS3("getCombineBy", "GatkAlleleCounting", function(this, ...) {
+  combineBy <- function(dfList) {
+    # Drop loci with zero coverage
+    countKeys <- c("A", "C", "G", "T", "N");
+    dfList <- lapply(dfList, FUN=function(df) {
+      dfT <- df[,countKeys];
+      counts <- Reduce("+", dfT);
+      df[counts > 0L,];
+    });
+  
+    # Stack
+    df <- Reduce(rbind, dfList);
+    rm(dfList);
+  
+    dfK <- df[,c("chromosome", "position")];
+    counts <- as.matrix(df[,countKeys]);
+    keys <- Reduce(function(...) paste(..., sep="\t"), dfK);
+    dups <- duplicated(keys);
+    
+    # Unique (chromosome,position)
+    dfU <- dfK[!dups,];
+    keysU <- keys[!dups];
+    countsU <- counts[!dups,,drop=FALSE];
+  
+    # Remainders
+    keys <- keys[dups];
+    counts <- counts[dups,,drop=FALSE];
+  
+    while(length(keys) > 0L) {
+      dups <- duplicated(keys);
+  
+      # Unique (chromosome,position)
+      keysT <- keys[!dups];
+      countsT <- counts[!dups,,drop=FALSE];
+  
+      # Add to total counts
+      idxs <- match(keysT, table=keys);
+      stopifnot(all(is.finite(idxs)));
+      countsU[idxs,] <- countsU[idxs,] + countsT;
+      
+      # Remainders
+      keys <- keys[dups];
+      counts <- counts[dups,,drop=FALSE];
+    } # while()
+  
+    data <- cbind(dfU, countsU);
+    data;
+  } # combineBy()
+
+  combineBy;
+}, protected=TRUE, static=TRUE)
+
+
+
 ############################################################################
 # HISTORY:
+# 2012-11-09
+# o Added argument 'dropEmpty' to GatkAlleleCounting, which will drop
+#   all SNPs with zero coverage from the output files.
+# 2012-11-08
+# o Implemented getOutputDataSet().
 # 2012-11-02
 # o Now process() also cleans up the GATK output file by dropping
 #   redundant columns and parsing the allele counts into integers.
