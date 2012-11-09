@@ -330,6 +330,10 @@
 \alias{writeBedDataFile}
 \alias{writeBedDataFile.AromaUgpFile}
 \alias{getDefaultColumnNames.AromaUnitNucleotideCountsFile}
+\alias{getCombineBy}
+\alias{getCombineBy.GatkAlleleCounting}
+\alias{getExpectedOutputFullnames.GatkAlleleCounting}
+\alias{getOutputDataSet0.GatkAlleleCounting}
 
 \description{
   This page contains aliases for all "non-documented" objects that

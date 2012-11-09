@@ -173,3 +173,6 @@ readGatkCountFile readGatkCountFile.GatkAlleleCounting
 validate.BamDataFile writeBedDataFile
 writeBedDataFile.AromaUgpFile
 getDefaultColumnNames.AromaUnitNucleotideCountsFile
+getCombineBy getCombineBy.GatkAlleleCounting
+getExpectedOutputFullnames.GatkAlleleCounting
+getOutputDataSet0.GatkAlleleCounting
