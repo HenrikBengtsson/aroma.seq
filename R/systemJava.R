@@ -94,7 +94,7 @@ setMethodS3("systemJava", "default", function(..., .fmtArg=c("( |=)$"="%s%s", ".
   if (verbose) verbose <- less(verbose, 10);
   patterns <- names(.fmtArg);
   options <- NULL;
-  for (kk in seq(along=patterns)) {
+  for (kk in seq_along(patterns)) {
     patternKK <- patterns[kk];
     fmtArgKK <- .fmtArg[kk];
     keys <- names(args);

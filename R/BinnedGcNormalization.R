@@ -231,7 +231,7 @@ setMethodS3("process", "BinnedGcNormalization", function(this, ..., verbose=FALS
   ext <- getOutputFileExtension(this);
 
 
-  for (ii in seq(ds)) {
+  for (ii in seq_along(ds)) {
     df <- getFile(ds, ii);
     name <- getFullName(df);
     verbose && enter(verbose, sprintf("Sample %d ('%s') of %d", ii, name, length(ds)));

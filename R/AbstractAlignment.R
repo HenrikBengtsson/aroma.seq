@@ -237,7 +237,7 @@ setMethodS3("getPath", "AbstractAlignment", function(this, create=TRUE, ...) {
 
 setMethodS3("nbrOfFiles", "AbstractAlignment", function(this, ...) {
   ds <- getInputDataSet(this);
-  nbrOfFiles(ds);
+  length(ds);
 })
 
 

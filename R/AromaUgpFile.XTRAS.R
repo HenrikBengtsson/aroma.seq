@@ -59,7 +59,7 @@ setMethodS3("writeBedDataFile", "AromaUgpFile", function(this, ..., path=getPath
     verbose && print(verbose, chrMap);
     keys <- names(chrMap);
     chrs <- data$chromosome;
-    for (kk in seq(along=keys)) {
+    for (kk in seq_along(keys)) {
       key <- keys[kk];
       chr <- chrMap[kk];
       idxs <- which(chrs == chr);

@@ -118,7 +118,7 @@ setMethodS3("byScanBamHeader", "SamReadGroup", function(static, header, ...) {
   });
 
   resList <- vector("list", length=length(rgList));
-  for (kk in seq(along=rgList)) {
+  for (kk in seq_along(rgList)) {
     rg <- rgList[[kk]];
     res <- newInstance(static);
     for (key in names(rg)) {

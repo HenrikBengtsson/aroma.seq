@@ -96,7 +96,7 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
 
   bedf <- NULL;
 
-  for (ii in seq(bs)) {
+  for (ii in seq_along(bs)) {
     bf <- getFile(bs, ii);
     verbose && enter(verbose, sprintf("Sample #%d ('%s') of %d", ii, getName(bf), length(bs)));
 

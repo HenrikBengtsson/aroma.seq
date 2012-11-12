@@ -120,7 +120,7 @@ setMethodS3("importFromBSgenome", "AromaUnitNucleotideCountsFile", function(this
   verbose && enter(verbose, "Binning chromosome by chromosome");
 
   by <- NULL;
-  for (kk in seq(along=chromosomes)) {
+  for (kk in seq_along(chromosomes)) {
     chr <- chromosomes[kk];
     chrLabel <- names(chromosomes)[kk];
     verbose && enter(verbose, sprintf("Chromosome #%d ('%s') of %d", kk, chrLabel, length(chromosomes)));

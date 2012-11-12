@@ -210,7 +210,7 @@ setMethodS3("getPath", "PicardDuplicateRemoval", function(this, create=TRUE, ...
 
 setMethodS3("nbrOfFiles", "PicardDuplicateRemoval", function(this, ...) {
   ds <- getInputDataSet(this);
-  nbrOfFiles(ds);
+  length(ds);
 })
 
 
@@ -253,11 +253,8 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
   verbose && cat(verbose, "Additional Picard MarkDuplicates arguments:");
   verbose && str(verbose, params);
 
-  nbrOfFiles <- nbrOfFiles(this);
-  verbose && cat(verbose, "Number of files: ", nbrOfFiles);
-
   outPath <- getPath(this);
-  for (kk in seq(length=nbrOfFiles)) {
+  for (kk in seq_len(nbrOfFiles)) {
     df <- getFile(ds, kk);
     name <- getName(df);
     verbose && enter(verbose, sprintf("Sample #%d ('%s') of %d", 

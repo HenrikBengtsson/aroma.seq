@@ -92,7 +92,7 @@ setMethodS3("convertToBamDataSet", "SamDataSet", function(this, path=getPath(thi
   verbose && print(verbose, this);
   verbose && cat(verbose, "BAM path: ", path);
 
-  for (ii in seq(this)) {
+  for (ii in seq_along(this)) {
     sf <- getFile(this, ii);
     verbose && enter(verbose, sprintf("File #%d ('%s') of %d", ii, getName(sf), length(this)));
     bf <- convertToBamDataFile(sf, path=path, ..., verbose=less(verbose,1));

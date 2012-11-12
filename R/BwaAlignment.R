@@ -144,11 +144,11 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
   }
 
 
-  nbrOfFiles <- nbrOfFiles(this);
+  nbrOfFiles <- length(this);
   verbose && cat(verbose, "Number of files: ", nbrOfFiles);
 
   outPath <- getPath(this);
-  for (kk in seq(length=nbrOfFiles)) {
+  for (kk in seq_len(nbrOfFiles)) {
     df <- getFile(ds, kk);
     name <- getName(df);
     verbose && enter(verbose, sprintf("Sample #%d ('%s') of %d", 
