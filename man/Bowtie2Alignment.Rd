@@ -19,9 +19,11 @@
 
 \code{\link[R.oo]{Object}}\cr
 \code{~~|}\cr
-\code{~~+--}\code{\link[aroma.seq]{AbstractAlignment}}\cr
+\code{~~+--}\code{\link[aroma.core]{ParametersInterface}}\cr
 \code{~~~~~~~|}\cr
-\code{~~~~~~~+--}\code{Bowtie2Alignment}\cr
+\code{~~~~~~~+--}\code{\link[aroma.seq]{AbstractAlignment}}\cr
+\code{~~~~~~~~~~~~|}\cr
+\code{~~~~~~~~~~~~+--}\code{Bowtie2Alignment}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
@@ -44,16 +46,18 @@ extends \emph{\link[aroma.seq]{AbstractAlignment}}\cr
  \section{Fields and Methods}{
   \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{getParameters} \tab  -\cr
  \tab \code{\link[aroma.seq:process.Bowtie2Alignment]{process}} \tab Runs the aligner.\cr
 }
 
 
  \bold{Methods inherited from AbstractAlignment}:\cr
-getFlavor, getFullName, getIndexSet, getInputDataSet, getName, getOptionalArguments, getOutputDataSet, getParameters, getParametersAsString, getPath, getRootPath, getTags, nbrOfFiles, process, setTags
+as.character, getAsteriskTags, getFlavor, getFullName, getIndexSet, getInputDataSet, getName, getOptionalArguments, getOutputDataSet, getParameters, getParametersAsString, getPath, getRootPath, getTags, nbrOfFiles, process, setTags
+
+ \bold{Methods inherited from ParametersInterface}:\cr
+getParameters, getParametersAsString
 
  \bold{Methods inherited from Object}:\cr
-asThis, getChecksum, $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save
+asThis, $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, print
 
 
  }

@@ -40,7 +40,7 @@ setMethodS3("getParameters", "GatkAlleleCounting", function(this, ...) {
 
 setMethodS3("getRootPath", "GatkAlleleCounting", function(this, ...) {
   "gatkData";
-}, private=TRUE)
+}, protected=TRUE)
 
 
 setMethodS3("getPath", "GatkAlleleCounting", function(this, ...) {
@@ -61,7 +61,7 @@ setMethodS3("getPath", "GatkAlleleCounting", function(this, ...) {
   }
 
   path;
-})
+}, protected=TRUE)
 
 setMethodS3("getExpectedOutputFullnames", "GatkAlleleCounting", function(this, ...) {
   names <- NextMethod("getExpectedOutputFullNames");
@@ -72,7 +72,7 @@ setMethodS3("getExpectedOutputFullnames", "GatkAlleleCounting", function(this, .
 
 setMethodS3("getOutputDataSet0", "GatkAlleleCounting", function(this, ...) {
   NextMethod("getOutputDataSet0", className="TabularTextFileSet", pattern=".*,allel[e]*Counts[.]txt$");
-})
+}, protected=TRUE)
 
 
 setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE, verbose=FALSE) {

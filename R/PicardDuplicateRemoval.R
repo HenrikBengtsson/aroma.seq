@@ -39,7 +39,7 @@ setConstructorS3("PicardDuplicateRemoval", function(dataSet=NULL, tags="*", ASSU
   );
 
 
-  this <- extend(Object(), "PicardDuplicateRemoval",
+  this <- extend(Object(), c("PicardDuplicateRemoval", uses("ParametersInterface")),
     .ds = dataSet,
     .tags = tags,
     .args = args
@@ -67,7 +67,7 @@ setMethodS3("as.character", "PicardDuplicateRemoval", function(x, ...) {
   
   class(s) <- "GenericSummary";
   s;
-}, private=TRUE)
+}, protected=TRUE)
 
 
 setMethodS3("getInputDataSet", "PicardDuplicateRemoval", function(this, ...) {
@@ -76,12 +76,14 @@ setMethodS3("getInputDataSet", "PicardDuplicateRemoval", function(this, ...) {
 
 setMethodS3("getOptionalArguments", "PicardDuplicateRemoval", function(this, ...) {
   this$.args;
-})
+}, protected=TRUE)
+
 
 setMethodS3("getParameters", "PicardDuplicateRemoval", function(this, ...) {
-  params <- getOptionalArguments(this);
+  params <- NextMethod("getParameters");
+  params <- c(params, getOptionalArguments(this));
   params;
-})
+}, protected=TRUE)
 
 
 setMethodS3("getParametersAsString", "PicardDuplicateRemoval", function(this, ..., collapse=NULL) {
@@ -94,7 +96,7 @@ setMethodS3("getParametersAsString", "PicardDuplicateRemoval", function(this, ..
     params <- paste(params, collapse=collapse);
   }
   params;
-})
+}, protected=TRUE)
 
 
 setMethodS3("getAsteriskTags", "PicardDuplicateRemoval", function(this, collapse=NULL, ...) {
@@ -105,13 +107,14 @@ setMethodS3("getAsteriskTags", "PicardDuplicateRemoval", function(this, collapse
   }
 
   tags;
-}, private=TRUE)
+}, protected=TRUE)
 
 
 setMethodS3("getName", "PicardDuplicateRemoval", function(this, ...) {
   ds <- getInputDataSet(this);
   getName(ds);
-})
+}, protected=TRUE)
+
 
 setMethodS3("getFlavor", "PicardDuplicateRemoval", function(this, ...) {
   this$.flavor;
@@ -141,7 +144,7 @@ setMethodS3("getTags", "PicardDuplicateRemoval", function(this, collapse=NULL, .
   }
 
   tags;
-})
+}, protected=TRUE)
 
 
 setMethodS3("setTags", "PicardDuplicateRemoval", function(this, tags="*", ...) {
@@ -153,7 +156,7 @@ setMethodS3("setTags", "PicardDuplicateRemoval", function(this, tags="*", ...) {
   }
   
   this$.tags <- tags;
-})
+}, protected=TRUE)
 
  
 setMethodS3("getFullName", "PicardDuplicateRemoval", function(this, ...) {
@@ -173,7 +176,7 @@ setMethodS3("getRootPath", "PicardDuplicateRemoval", function(this, ...) {
   # Sanity check
   stopifnot(regexpr("Data$", path) != -1);
   path;
-})
+}, protected=TRUE)
 
 
 setMethodS3("getPath", "PicardDuplicateRemoval", function(this, create=TRUE, ...) {
@@ -205,7 +208,7 @@ setMethodS3("getPath", "PicardDuplicateRemoval", function(this, create=TRUE, ...
   }
 
   path;
-})
+}, protected=TRUE)
 
 
 setMethodS3("nbrOfFiles", "PicardDuplicateRemoval", function(this, ...) {

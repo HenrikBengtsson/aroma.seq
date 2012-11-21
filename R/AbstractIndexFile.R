@@ -45,7 +45,7 @@ setMethodS3("as.character", "AbstractIndexFile", function(x, ...) {
 
   class(s) <- class;
   s;
-})
+}, protected=TRUE)
 
 
 setMethodS3("getIndexPrefix", "AbstractIndexFile", function(this, ...) {

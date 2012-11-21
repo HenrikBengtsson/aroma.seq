@@ -45,7 +45,7 @@ setMethodS3("as.character", "SamDataFile", function(x, ...) {
 
   class(s) <- class;
   s;
-})
+}, protected=TRUE)
 
 
 setMethodS3("convertToBamDataFile", "SamDataFile", function(this, path=getPath(this), ..., skip=!overwrite, overwrite=FALSE, verbose=FALSE) {

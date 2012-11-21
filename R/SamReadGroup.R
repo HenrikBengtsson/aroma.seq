@@ -102,7 +102,7 @@ setMethodS3("as.character", "SamReadGroup", function(x, ...) {
   s <- c(s, asString(this, fmtstr=" %s:%s", ...));
   class(s) <- c("GenericSummary", class(s));
   s;
-})
+}, protected=TRUE)
 
 
 setMethodS3("byScanBamHeader", "SamReadGroup", function(static, header, ...) {

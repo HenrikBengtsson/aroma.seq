@@ -61,7 +61,8 @@ setMethodS3("as.character", "BamDataFile", function(x, ...) {
 
   class(s) <- class;
   s;
-})
+}, protected=TRUE)
+
 
 setMethodS3("buildIndex", "BamDataFile", function(this, ..., skip=!overwrite, overwrite=FALSE) {
   pathname <- getPathname(this);
@@ -530,7 +531,7 @@ setMethodS3("validate", "BamDataFile", function(this, method=c("picard"), ..., s
   verbose && exit(verbose);
 
   invisible(TRUE);
-})
+}, protected=TRUE)
 
 
 ############################################################################

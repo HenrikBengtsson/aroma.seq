@@ -35,7 +35,7 @@ setMethodS3("as.character", "BamIndexDataFile", function(x, ...) {
 
   class(s) <- class;
   s;
-})
+}, protected=TRUE)
 
 
 

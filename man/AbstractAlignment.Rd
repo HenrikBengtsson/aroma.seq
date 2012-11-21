@@ -19,13 +19,15 @@
 
 \code{\link[R.oo]{Object}}\cr
 \code{~~|}\cr
-\code{~~+--}\emph{\code{AbstractAlignment}}\cr
+\code{~~+--}\code{\link[aroma.core]{ParametersInterface}}\cr
+\code{~~~~~~~|}\cr
+\code{~~~~~~~+--}\emph{\code{AbstractAlignment}}\cr
 
 \bold{Directly known subclasses:}\cr
 \link[aroma.seq]{Bowtie2Alignment}, \link[aroma.seq]{BwaAlignment}\cr
 
 public abstract static class \bold{AbstractAlignment}\cr
-extends \link[R.oo]{Object}\cr
+extends \link[aroma.core]{ParametersInterface}\cr
 
 
 
@@ -50,12 +52,7 @@ extends \link[R.oo]{Object}\cr
  \tab \code{getIndexSet} \tab  -\cr
  \tab \code{getInputDataSet} \tab  -\cr
  \tab \code{getName} \tab  -\cr
- \tab \code{getOptionalArguments} \tab  -\cr
  \tab \code{getOutputDataSet} \tab  -\cr
- \tab \code{getParameters} \tab  -\cr
- \tab \code{getParametersAsString} \tab  -\cr
- \tab \code{getPath} \tab  -\cr
- \tab \code{getRootPath} \tab  -\cr
  \tab \code{getTags} \tab  -\cr
  \tab \code{nbrOfFiles} \tab  -\cr
  \tab \code{process} \tab  -\cr
@@ -63,8 +60,11 @@ extends \link[R.oo]{Object}\cr
 }
 
 
+ \bold{Methods inherited from ParametersInterface}:\cr
+getParameters, getParametersAsString
+
  \bold{Methods inherited from Object}:\cr
-asThis, getChecksum, $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save
+asThis, $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, print
 
 
  }

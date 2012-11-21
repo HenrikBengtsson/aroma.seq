@@ -43,7 +43,7 @@ setConstructorS3("BwaAlignment", function(..., indexSet=NULL) {
 
 
 setMethodS3("getParameters", "BwaAlignment", function(this, which=c("aln", "samse"), ..., drop=TRUE) {
-  params <- list();
+  params <- NextMethod("getParameters");
   params$aln <- getOptionalArguments(this, ...);
 
   keep <- intersect(names(params), which);
@@ -54,7 +54,8 @@ setMethodS3("getParameters", "BwaAlignment", function(this, which=c("aln", "sams
   }
 
   params;
-})
+}, protected=TRUE)
+
 
 ###########################################################################/** 
 # @RdocMethod process

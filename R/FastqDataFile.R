@@ -49,7 +49,8 @@ setMethodS3("as.character", "FastqDataFile", function(x, ...) {
 
   class(s) <- class;
   s;
-})
+}, protected=TRUE)
+
 
 setMethodS3("nbrOfSeqs", "FastqDataFile", function(this, ...) {
   geo <- getGeometry(this, ...);

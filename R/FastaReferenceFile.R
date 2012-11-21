@@ -45,7 +45,7 @@ setMethodS3("as.character", "FastaReferenceFile", function(x, ...) {
 
   class(s) <- class;
   s;
-})
+}, protected=TRUE)
 
 
 setMethodS3("getSeqLengths", "FastaReferenceFile", function(this, force=FALSE, onlyIfCached=FALSE, ...) {

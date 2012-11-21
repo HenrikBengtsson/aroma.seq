@@ -39,7 +39,7 @@ setMethodS3("as.character", "AbstractIndexSet", function(x, ...) {
 
   class(s) <- class;
   s;
-})
+}, protected=TRUE)
 
 
 setMethodS3("byPrefix", "AbstractIndexSet", function(static, prefix, ...) {

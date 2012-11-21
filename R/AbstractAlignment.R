@@ -47,7 +47,7 @@ setConstructorS3("AbstractAlignment", function(dataSet=NULL, indexSet=NULL, tags
   args <- list(...);
 
 
-  this <- extend(Object(), "AbstractAlignment",
+  this <- extend(Object(), c("AbstractAlignment", uses("ParametersInterface")),
     .ds = dataSet,
     .indexSet = indexSet,
     .tags = tags,
@@ -84,7 +84,7 @@ setMethodS3("as.character", "AbstractAlignment", function(x, ...) {
   
   class(s) <- "GenericSummary";
   s;
-}, private=TRUE)
+}, protected=TRUE)
 
 
 setMethodS3("getInputDataSet", "AbstractAlignment", function(this, ...) {
@@ -97,11 +97,12 @@ setMethodS3("getIndexSet", "AbstractAlignment", function(this, ...) {
 
 setMethodS3("getOptionalArguments", "AbstractAlignment", function(this, ...) {
   this$.args;
-})
+}, protected=TRUE)
 
 setMethodS3("getParameters", "AbstractAlignment", function(this, ...) {
-  list();
-})
+  params <- NextMethod("getParameters");
+  params;
+}, protected=TRUE)
 
 
 setMethodS3("getParametersAsString", "AbstractAlignment", function(this, ..., collapse=NULL, drop=TRUE) {
@@ -121,7 +122,7 @@ setMethodS3("getParametersAsString", "AbstractAlignment", function(this, ..., co
   }
 
   paramsList;
-})
+}, protected=TRUE)
 
 
 setMethodS3("getAsteriskTags", "AbstractAlignment", function(this, collapse=NULL, ...) {
@@ -137,7 +138,7 @@ setMethodS3("getAsteriskTags", "AbstractAlignment", function(this, collapse=NULL
   }
 
   tags;
-}, private=TRUE)
+}, protected=TRUE)
 
 
 setMethodS3("getName", "AbstractAlignment", function(this, ...) {
@@ -201,7 +202,8 @@ setMethodS3("getRootPath", "AbstractAlignment", function(this, ...) {
   alignName <- gsub("Alignment", "", class(this)[1], fixed=TRUE);
   alignName <- tolower(alignName);
   sprintf("%sData", alignName);
-})
+}, protected=TRUE)
+
 
 setMethodS3("getPath", "AbstractAlignment", function(this, create=TRUE, ...) {
   # Create the (sub-)directory tree for the data set
@@ -232,7 +234,7 @@ setMethodS3("getPath", "AbstractAlignment", function(this, create=TRUE, ...) {
   }
 
   path;
-})
+}, protected=TRUE)
 
 
 setMethodS3("nbrOfFiles", "AbstractAlignment", function(this, ...) {

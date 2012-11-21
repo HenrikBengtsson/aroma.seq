@@ -56,7 +56,6 @@ extends \link[R.oo]{BasicObject}\cr
  \section{Fields and Methods}{
   \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{as.character} \tab  -\cr
  \tab \code{asSamList} \tab  -\cr
  \tab \code{asString} \tab  -\cr
  \tab \code{byScanBamHeader} \tab  -\cr

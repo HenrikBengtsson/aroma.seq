@@ -40,15 +40,14 @@ setMethodS3("as.character", "BinnedGcNormalization", function(x, ...) {
   s <- c(s, as.character(unc));
   class(s) <- clazz;
   s;
-})
+}, protected=TRUE)
 
 
 
 setMethodS3("getParameters", "BinnedGcNormalization", function(this, ...) {
-  params <- list(
-  );
+  params <- NextMethod("getParameters");
   params;
-}, private=TRUE);
+}, protected=TRUE)
 
 
 setMethodS3("getAsteriskTags", "BinnedGcNormalization", function(this, collapse=NULL, ...) {
@@ -70,7 +69,7 @@ setMethodS3("getAsteriskTags", "BinnedGcNormalization", function(this, collapse=
 
 setMethodS3("getRootPath", "BinnedGcNormalization", function(this, ...) {
   "smoothCnData";
-}, private=TRUE)
+}, protected=TRUE)
 
 
 
@@ -97,7 +96,7 @@ setMethodS3("getPath", "BinnedGcNormalization", function(this, create=TRUE, ...)
   }
 
   path;
-}, private=TRUE)
+}, protected=TRUE)
 
 
 setMethodS3("getGcContentFile", "BinnedGcNormalization", function(this, ...) {

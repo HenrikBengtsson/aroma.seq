@@ -36,9 +36,10 @@ setConstructorS3("Bowtie2Alignment", function(..., indexSet=NULL) {
 
 
 setMethodS3("getParameters", "Bowtie2Alignment", function(this, ...) {
-  params <- getOptionalArguments(this, ...);
+  params <- NextMethod("getParameters");
+  params <- c(params, getOptionalArguments(this, ...));
   params;
-})
+}, protected=TRUE)
 
 
 ###########################################################################/** 
