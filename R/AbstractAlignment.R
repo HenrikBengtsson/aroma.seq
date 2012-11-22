@@ -75,12 +75,8 @@ setMethodS3("as.character", "AbstractAlignment", function(x, ...) {
   s <- c(s, "Reference index set:");
   s <- c(s, as.character(is));
 
-  # Additional arguments
-  paramsList <- getParametersAsString(this, collapse=", "); 
-  for (key in names(paramsList)) {
-    params <- paramsList[[key]];
-    s <- c(s, sprintf("Additional '%s' parameters: %s", key, params));
-  }
+  # Algorithm parameters
+  s <- c(s, sprintf("Parameters: %s", getParametersAsString(this)));
   
   class(s) <- "GenericSummary";
   s;
@@ -99,30 +95,11 @@ setMethodS3("getOptionalArguments", "AbstractAlignment", function(this, ...) {
   this$.args;
 }, protected=TRUE)
 
-setMethodS3("getParameters", "AbstractAlignment", function(this, ...) {
-  params <- NextMethod("getParameters");
-  params;
-}, protected=TRUE)
-
-
-setMethodS3("getParametersAsString", "AbstractAlignment", function(this, ..., collapse=NULL, drop=TRUE) {
-  paramsList <- getParameters(this, drop=FALSE, ...);
-  paramsList <- lapply(paramsList, FUN=function(params) {
-    params <- trim(capture.output(str(params)))[-1];
-    params <- gsub("^[$][ ]*", "", params);
-    params <- gsub(" [ ]*", " ", params);
-    params <- gsub("[ ]*:", ":", params);
-    if (!is.null(collapse)) {
-      params <- paste(params, collapse=collapse);
-    }
-  });
-
-  if (length(paramsList) == 1L) {
-    paramsList <- paramsList[[1L]];
-  }
-
+setMethodS3("getParameterSets", "AbstractAlignment", function(this, ...) {
+  paramsList <- NextMethod("getParameterSets");
   paramsList;
 }, protected=TRUE)
+
 
 
 setMethodS3("getAsteriskTags", "AbstractAlignment", function(this, collapse=NULL, ...) {

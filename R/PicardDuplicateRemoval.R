@@ -62,8 +62,7 @@ setMethodS3("as.character", "PicardDuplicateRemoval", function(x, ...) {
   s <- c(s, as.character(ds));
 
   # Additional arguments
-  params <- getParametersAsString(this, collapse=", "); 
-  s <- c(s, sprintf("Additional parameters: %s", params));
+  s <- c(s, sprintf("Picard arguments: %s", getParametersAsString(this)));
   
   class(s) <- "GenericSummary";
   s;
@@ -82,19 +81,6 @@ setMethodS3("getOptionalArguments", "PicardDuplicateRemoval", function(this, ...
 setMethodS3("getParameters", "PicardDuplicateRemoval", function(this, ...) {
   params <- NextMethod("getParameters");
   params <- c(params, getOptionalArguments(this));
-  params;
-}, protected=TRUE)
-
-
-setMethodS3("getParametersAsString", "PicardDuplicateRemoval", function(this, ..., collapse=NULL) {
-  params <- getParameters(this, drop=FALSE, ...);
-  params <- trim(capture.output(str(params)))[-1];
-  params <- gsub("^[$][ ]*", "", params);
-  params <- gsub(" [ ]*", " ", params);
-  params <- gsub("[ ]*:", ":", params);
-  if (!is.null(collapse)) {
-    params <- paste(params, collapse=collapse);
-  }
   params;
 }, protected=TRUE)
 

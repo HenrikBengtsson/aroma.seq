@@ -42,19 +42,12 @@ setConstructorS3("BwaAlignment", function(..., indexSet=NULL) {
 })
 
 
-setMethodS3("getParameters", "BwaAlignment", function(this, which=c("aln", "samse"), ..., drop=TRUE) {
-  params <- NextMethod("getParameters");
-  params$aln <- getOptionalArguments(this, ...);
-
-  keep <- intersect(names(params), which);
-  params <- params[keep];
-
-  if (drop && length(params) == 1L) {
-    params <- params[[1L]];
-  }
-
-  params;
+setMethodS3("getParameterSets", "BwaAlignment", function(this, ...) {
+  paramsList <- NextMethod("getParameterSets");
+  paramsList$aln <- getOptionalArguments(this, ...);
+  paramsList;
 }, protected=TRUE)
+
 
 
 ###########################################################################/** 
@@ -135,15 +128,7 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
     validate(rgSet);
   }
 
-  
-  paramsList <- getParameters(this, drop=FALSE);
-  if (verbose) {
-    for (key in names(paramsList)) {
-      verbose && printf(verbose, "Additional BWA '%s' arguments:\n", key);
-      verbose && str(verbose, paramsList[[key]]);
-    }
-  }
-
+  verbose && printf(verbose, "Additional BWA arguments: %s\n", getParametersAsString(this));
 
   nbrOfFiles <- length(this);
   verbose && cat(verbose, "Number of files: ", nbrOfFiles);

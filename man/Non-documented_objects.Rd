@@ -170,8 +170,6 @@
 \alias{byScanBamHeader.SamReadGroup}
 \alias{getParameters.Bowtie2Alignment}
 \alias{getParameters.BwaAlignment}
-\alias{getParametersAsString.Bowtie2Alignment}
-\alias{getParametersAsString.BwaAlignment}
 \alias{hasDescription}
 \alias{hasDescription.SamReadGroup}
 \alias{hasLibrary}
@@ -218,8 +216,7 @@
 \alias{getName.AbstractAlignment}
 \alias{getOptionalArguments.AbstractAlignment}
 \alias{getOutputDataSet.AbstractAlignment}
-\alias{getParameters.AbstractAlignment}
-\alias{getParametersAsString.AbstractAlignment}
+\alias{getParameterSets.AbstractAlignment}
 \alias{getPath.AbstractAlignment}
 \alias{getRootPath.AbstractAlignment}
 \alias{getSamReadGroup}
@@ -248,8 +245,7 @@
 \alias{getName.PicardDuplicateRemoval}
 \alias{getOptionalArguments.PicardDuplicateRemoval}
 \alias{getOutputDataSet.PicardDuplicateRemoval}
-\alias{getParameters.PicardDuplicateRemoval}
-\alias{getParametersAsString.PicardDuplicateRemoval}
+\alias{getParameterSets.PicardDuplicateRemoval}
 \alias{getPath.PicardDuplicateRemoval}
 \alias{getReadDirection}
 \alias{getReadDirection.IlluminaFastqDataFile}

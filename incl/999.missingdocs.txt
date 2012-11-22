@@ -79,8 +79,7 @@ asSamList asSamList.SamReadGroup asString
 asString.SamReadGroup assignBy assignBy.SamReadGroup
 byScanBamHeader byScanBamHeader.SamReadGroup
 getParameters.Bowtie2Alignment getParameters.BwaAlignment
-getParametersAsString.Bowtie2Alignment
-getParametersAsString.BwaAlignment hasDescription
+hasDescription
 hasDescription.SamReadGroup hasLibrary hasLibrary.SamReadGroup
 hasPlatform hasPlatform.SamReadGroup hasPlatformUnit
 hasPlatformUnit.SamReadGroup hasRunDate hasRunDate.SamReadGroup
@@ -103,8 +102,8 @@ getFlavor.AbstractAlignment getFullName.AbstractAlignment
 getIndexSet.AbstractAlignment getInputDataSet.AbstractAlignment
 getName.AbstractAlignment getOptionalArguments.AbstractAlignment
 getOutputDataSet.AbstractAlignment
-getParameters.AbstractAlignment
-getParametersAsString.AbstractAlignment getPath.AbstractAlignment
+getParameterSets.AbstractAlignment
+getPath.AbstractAlignment
 getRootPath.AbstractAlignment getSamReadGroup
 getSamReadGroup.FastqDataFile getSamReadGroup.FastqDataSet
 getTags.AbstractAlignment isEmpty isEmpty.SamReadGroup
@@ -122,8 +121,7 @@ getInputDataSet.PicardDuplicateRemoval
 getName.PicardDuplicateRemoval
 getOptionalArguments.PicardDuplicateRemoval
 getOutputDataSet.PicardDuplicateRemoval
-getParameters.PicardDuplicateRemoval
-getParametersAsString.PicardDuplicateRemoval
+getParameterSets.PicardDuplicateRemoval
 getPath.PicardDuplicateRemoval getReadDirection
 getReadDirection.IlluminaFastqDataFile
 getRootPath.PicardDuplicateRemoval getTags.PicardDuplicateRemoval
