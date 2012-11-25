@@ -174,3 +174,5 @@ getDefaultColumnNames.AromaUnitNucleotideCountsFile
 getCombineBy getCombineBy.GatkAlleleCounting
 getExpectedOutputFullnames.GatkAlleleCounting
 getOutputDataSet0.GatkAlleleCounting
+getParameterSets.BwaAlignment
+getParameters.PicardDuplicateRemoval

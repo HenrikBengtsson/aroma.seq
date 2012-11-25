@@ -330,6 +330,8 @@
 \alias{getCombineBy.GatkAlleleCounting}
 \alias{getExpectedOutputFullnames.GatkAlleleCounting}
 \alias{getOutputDataSet0.GatkAlleleCounting}
+\alias{getParameterSets.BwaAlignment}
+\alias{getParameters.PicardDuplicateRemoval}
 
 \description{
   This page contains aliases for all "non-documented" objects that

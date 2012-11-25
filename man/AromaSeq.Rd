@@ -53,10 +53,10 @@ extends \link[aroma.core]{AromaPackage}\cr
 fixSearchPath, fixSearchPathInternal, patch
 
  \bold{Methods inherited from Package}:\cr
-browseRsp, as.character, getAuthor, getBundle, getBundlePackages, getChangeLog, getClasses, getContents, getDataPath, getDate, getDescription, getDescriptionFile, getDocPath, getEnvironment, getExamplePath, getHistory, getHowToCite, getLicense, getMaintainer, getName, getNews, getPath, getPosition, getTitle, getUrl, getVersion, isLoaded, isOlderThan, ll, load, showChangeLog, showContents, showDescriptionFile, showHistory, showHowToCite, showNews, unload, update
+browseRsp, getAuthor, getBundle, getBundlePackages, getChangeLog, getClasses, getContents, getDataPath, getDate, getDescription, getDescriptionFile, getDocPath, getExamplePath, getHistory, getHowToCite, getLicense, getMaintainer, getName, getNews, getPath, getPosition, getTitle, getUrl, getVersion, isLoaded, isOlderThan, showChangeLog, showContents, showDescriptionFile, showHistory, showHowToCite, showNews, unload, update
 
  \bold{Methods inherited from Object}:\cr
-asThis, $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, print
+asThis, $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save
 
 
  }

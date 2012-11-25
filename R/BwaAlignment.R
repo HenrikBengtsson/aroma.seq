@@ -128,6 +128,7 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
     validate(rgSet);
   }
 
+  paramsList <- getParameterSets(this);
   verbose && printf(verbose, "Additional BWA arguments: %s\n", getParametersAsString(this));
 
   nbrOfFiles <- length(this);

@@ -1,6 +1,9 @@
 Package: aroma.seq
 ==================
 
+Version: 0.2.1 [2012-11-24x]
+
+
 Version: 0.2.0 [2012-11-21]
 o Updated verbose output of parameters.
 
