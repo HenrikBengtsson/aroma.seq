@@ -32,6 +32,20 @@
 ############################################################################
 library("aroma.seq");
 verbose <- Arguments$getVerbose(-10, timestamp=TRUE);
+args <- commandArgs(asValues=TRUE, excludeReserved=TRUE)[-1L];
+verbose && cat(verbose, "Command line arguments:");
+verbose && str(verbose, args);
+
+# Argument 'arrays':
+arrays <- args$arrays;
+if (!is.null(arrays)) {
+  arrays <- sprintf("c(%s)", arrays);
+  expr <- parse(text=arrays);
+  arrays <- eval(expr);
+  arrays <- Arguments$getIndices(arrays);
+}
+print(arrays)
+
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup
@@ -60,8 +74,10 @@ print(ds);
 
 
 # Work with a subset of all FASTQ files
-#ds <- extract(ds, 1:3);
-print(ds);
+if (!is.null(arrays)) {
+  ds <- extract(ds, arrays);
+  print(ds);
+}
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
