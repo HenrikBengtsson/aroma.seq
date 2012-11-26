@@ -76,6 +76,15 @@ setMethodS3("getOutputDataSet0", "GatkAlleleCounting", function(this, ...) {
 
 
 setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE, verbose=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
 
 
   verbose && enter(verbose, "Counting alleles for known SNPs");
@@ -122,21 +131,41 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
       res <- systemGATK(T="DepthOfCoverage", I=getPathname(bf), R=getPathname(fa), L=getPathname(bedf), "--omitIntervalStatistics", "--omitLocusTable", "--omitPerSampleStats", "--printBaseCounts", "o"=pathnameDT, verbose=verbose);
       verbose && cat(verbose, "GATK system result: ", res);
 
+
       # (d) Cleanup GATK output file and resave
       verbose && enter(verbose, "Parsing and cleaning up the GATK output file");
       db <- TabularTextFile(pathnameDT);
       verbose && print(verbose, db);
     
+      verbose && enter(verbose, "Reading");
       colClassPatterns <- c("(Locus|_base_counts)"="character");
       data <- readDataFrame(db, colClassPatterns=colClassPatterns);
       verbose && str(verbose, data);
-    
+      verbose && exit(verbose);
+
+      # Drop SNPs with no coverage?
+      if (dropEmpty) {
+        verbose && enter(verbose, "Dropping SNPs with zero coverage");
+        pattern <- "A:0 C:0 G:0 T:0 N:0";
+        empty <- grep(pattern, data[[ncol(data)]], fixed=TRUE);
+        verbose && printf(verbose, "Number of empty SNPs: %d (%g%%) of %d\n", length(empty), 100*length(empty)/nrow(data), nrow(data));
+        if (length(empty) > 0L) {
+          data <- data[-empty,];
+        }
+        rm(empty);
+        verbose && str(verbose, data);
+        verbose && exit(verbose);
+      } #if (dropEmpty)
+
+      verbose && enter(verbose, "Parsing genomic locations");
       # Parse (chromosome, position)
       chr <- gsub(":.*", "", data$Locus);
       pos <- gsub(".*:", "", data$Locus);
       pos <- as.integer(pos);
       stopifnot(length(pos) == length(chr));
+      verbose && exit(verbose);
 
+      verbose && enter(verbose, "Parsing (A,C,G,T,N) counts");
       # Parse (A,C,G,T) counts
       # NOTE: Some allele have non-zero "N" counts, which happens
       # when a read is aligned to a SNP, but its nucleotide at the
@@ -155,18 +184,24 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
       counts <- matrix(counts, ncol=5L, byrow=TRUE);
       colnames(counts) <- c("A", "C", "G", "T", "N");
       stopifnot(nrow(counts) == length(chr));
+      verbose && exit(verbose);
 
-      # Summaries
+      verbose && enter(verbose, "Summaries of nucleotide counts");
       countsT <- counts[,c("A", "C", "G", "T"),drop=FALSE];
 
       # Per-nucleotide coverage
       alleleCoverage <- colSums(countsT);
       alleleCoverage <- as.integer(alleleCoverage);
-      names(alleleCoverage) <- colnames(counts);
+      names(alleleCoverage) <- colnames(countsT);
 
       # Total coverage
       totalCoverage <- sum(alleleCoverage);
       verbose && printf(verbose, "Total number of reads (with called alleles) covering a SNP: %d\n", totalCoverage);
+
+      # Sanity check
+      if (dropEmpty) {
+        stopifnot(all(totalCoverage > 0L));
+      }
 
       # Per-SNP coverage
       coverage <- rowSums(countsT, na.rm=TRUE);
@@ -188,18 +223,10 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
       verbose && cat(verbose, "Distribution of heterozygous SNP coverages:");
       verbose && print(verbose, tblHetCoverage);
 
-      # Drop SNPs with no coverage?
-      if (dropEmpty) {
-        keep <- (coverage > 0L);
-        if (sum(keep) < length(keep)) {
-          chr <- chr[keep];
-          pos <- pos[keep];
-          counts <- counts[keep,,drop=FALSE];
-        }
-        rm(keep);
-      } #if (dropEmpty)
+      verbose && exit(verbose);
 
 
+      verbose && cat(verbose, "Write pruned GATK result file");
       header <- list(
         description = "GATK DepthOfCoverage Results",
         totalCoverage = totalCoverage,
@@ -225,6 +252,7 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
       rm(data, header);
       file.remove(pathnameDT); # AD HOC
       pathnameDT <- popTemporaryFile(pathnameDTT);
+      verbose && exit(verbose);
 
       verbose && exit(verbose);
       
@@ -324,6 +352,10 @@ setMethodS3("getCombineBy", "GatkAlleleCounting", function(this, ...) {
 
 ############################################################################
 # HISTORY:
+# 2012-11-26
+# o SPEEDUP: process(..., dropEmpty=TRUE) for GatkAlleleCounting is
+#   now much faster.
+# o BUG FIX: process() for GatkAlleleCounting would give an error.
 # 2012-11-09
 # o Added argument 'dropEmpty' to GatkAlleleCounting, which will drop
 #   all SNPs with zero coverage from the output files.
