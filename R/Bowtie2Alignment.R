@@ -138,15 +138,14 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
   verbose && cat(verbose, "Additional bowtie2 arguments:");
   verbose && str(verbose, params);
 
-  nbrOfFiles <- length(this);
-  verbose && cat(verbose, "Number of files: ", nbrOfFiles);
+  verbose && cat(verbose, "Number of files: ", length(ds));
 
   outPath <- getPath(this);
-  for (kk in seq_len(nbrOfFiles)) {
+  for (kk in seq_along(ds)) {
     df <- getFile(ds, kk);
     name <- getName(df);
     verbose && enter(verbose, sprintf("Sample #%d ('%s') of %d", 
-                                                    kk, name, nbrOfFiles));
+                                                    kk, name, length(ds)));
 
     pathnameFQ <- getPathname(df);
     verbose && cat(verbose, "FASTQ pathname: ", pathnameFQ);
@@ -236,6 +235,9 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 
 ############################################################################
 # HISTORY:
+# 2012-11-26
+# o BUG FIX: process() for BwaAlignment and Bowtie2Alignment was
+#   only align the first sample.
 # 2012-10-01
 # o Now process() Bowtie2Alignment write SAM read groups, iff given.
 # o Now Bowtie2Alignment inherits from AbstractAlignment.

@@ -227,7 +227,7 @@ setMethodS3("getOutputDataSet", "AbstractAlignment", function(this, ...) {
 
   ## Keep only those samples that exists in the input data set
   ds <- getInputDataSet(this);
-  res <- extract(res, getFullNames(ds));
+  res <- extract(res, getFullNames(ds), onMissing="drop");
   
   ## TODO: Assert completeness
   res;
@@ -239,6 +239,9 @@ setMethodS3("process", "AbstractAlignment", abstract=TRUE);
 
 ############################################################################
 # HISTORY:
+# 2012-11-26
+# o BUG FIX: getOutputDataSet() would return a data set with "missing" 
+#   files, if not complete.  Now it only returns the existing files.
 # 2012-10-01
 # o Created; extracted from BwaAlignment.R.
 ############################################################################ 

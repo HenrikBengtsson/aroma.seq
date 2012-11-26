@@ -100,8 +100,10 @@ setMethodS3("convertToBamDataSet", "SamDataSet", function(this, path=getPath(thi
   } # for (ii ...)
 
   bs <- BamDataSet$byPath(path);
-  bs <- extract(bs, getFullNames(this));
+  bs <- extract(bs, getFullNames(this), onMissing="error");
   verbose && print(verbose, bs);
+
+  ## TODO: Assert completeness
 
   verbose && exit(verbose);
 
@@ -111,6 +113,9 @@ setMethodS3("convertToBamDataSet", "SamDataSet", function(this, path=getPath(thi
 
 ############################################################################
 # HISTORY:
+# 2012-11-26
+# o ROBUSTNESS: Now convertToBamDataSet() for SamDataSet asserts that
+#   the output set is complete.
 # 2012-09-25
 # o Created from BamDataSet.R.
 ############################################################################

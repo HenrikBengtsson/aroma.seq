@@ -1,7 +1,16 @@
 Package: aroma.seq
 ==================
 
-Version: 0.2.1 [2012-11-24x]
+Version: 0.2.1 [2012-11-26]
+o ROBUSTNESS: Now convertToBamDataSet() for SamDataSet asserts 
+  that the output set is complete.
+o BUG FIX: process() for BwaAlignment and Bowtie2Alignment was
+  only align the first sample regardless on input data set.
+  This bug was introduced in aroma.seq v0.1.27.
+o BUG FIX: getOutputDataSet() for AbstractAlignment and
+  PicardDuplicateRemoval could return data sets with "missing"
+  files, if the method was not completed.  Now they only
+  returns the existing output files.
 
 
 Version: 0.2.0 [2012-11-21]

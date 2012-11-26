@@ -131,15 +131,14 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
   paramsList <- getParameterSets(this);
   verbose && printf(verbose, "Additional BWA arguments: %s\n", getParametersAsString(this));
 
-  nbrOfFiles <- length(this);
-  verbose && cat(verbose, "Number of files: ", nbrOfFiles);
+  verbose && cat(verbose, "Number of files: ", length(ds));
 
   outPath <- getPath(this);
-  for (kk in seq_len(nbrOfFiles)) {
+  for (kk in seq_along(ds)) {
     df <- getFile(ds, kk);
     name <- getName(df);
     verbose && enter(verbose, sprintf("Sample #%d ('%s') of %d", 
-                                                    kk, name, nbrOfFiles));
+                                                    kk, name, length(ds)));
 
     pathnameFQ <- getPathname(df);
     verbose && cat(verbose, "FASTQ pathname: ", pathnameFQ);
