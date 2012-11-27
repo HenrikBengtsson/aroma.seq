@@ -44,6 +44,7 @@ if (!is.null(arrays)) {
   arrays <- eval(expr);
   arrays <- Arguments$getIndices(arrays);
 }
+
 print(arrays)
 
 
@@ -67,17 +68,23 @@ print(unc);
 
 # FASTQ data set
 dataSet <- "AlbertsonD_2012-SCC";
+tags <- c();
+#tags <- c(tags, "AB042");
 platform <- "Generic";
 path <- file.path("fastqData", dataSet, platform);
 ds <- IlluminaFastqDataSet$byPath(path);
 print(ds);
 
-
-# Work with a subset of all FASTQ files
+# Work with a subset of all FASTQ files?
 if (!is.null(arrays)) {
   ds <- extract(ds, arrays);
   print(ds);
+} else {
+  arrays <- seq_along(ds);
 }
+
+arraysTag <- sprintf("arrays=%s", seqToHumanReadable(arrays));
+print(arraysTag);
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -166,57 +173,81 @@ rho[!isHet] <- NA;
 seg <- CbsModel(dsG, ref="constant(2)", maxNAFraction=2/3);
 verbose && print(verbose, seg);
 
-chr <- 4L;
-segs <- getRegions(seg, arrays=1, chromosomes=chr, flat=TRUE, url=NULL, verbose=verbose);
-print(segs);
+fit(seg, verbose=verbose);
 
-segsT <- subset(segs, chromosome == chr);
-idxsT <- which(gp$chromosome == chr);
-posT <- gp$position[idxsT];
-totalT <- total[idxsT];
-isHetT <- isHet[idxsT];
+array <- 1L;
+segList <- list();
+chrs <- getChromosomes(seg);
+for (kk in seq_along(chrs)) {
+  chr <- chrs[kk];
+  chrTag <- sprintf("Chr%02d", chr);
+  verbose && enter(verbose, sprintf("Chromosome #%d ('%s') of %d", kk, chrTag, length(chrs)));
 
-printf("Number of heterozygous SNPs: %d (out of %d)\n", sum(isHetT), length(idxsT));
+  segsK <- getRegions(seg, arrays=array, chromosomes=chr, flat=TRUE, url=NULL, verbose=verbose);
+  verbose && print(verbose, segsK);
+  
+  segsT <- subset(segsK, chromosome == chr);
+  idxsT <- which(gp$chromosome == chr);
+  posT <- gp$position[idxsT];
+  totalT <- total[idxsT];
+  isHetT <- isHet[idxsT];
+  
+  verbose && printf(verbose, "Number of heterozygous SNPs: %d (out of %d)\n", sum(isHetT), length(idxsT));
+  
+  cat("Total SNP read counts:\n");
+  verbose && print(verbose, table(totalT));
+  
+  # Only look at SNPs with 3 or more reads
+  minTotal <- 4L;
+  keepT <- (totalT >= minTotal);
+  verbose && summary(verbose, keepT);
+  
+  verbose && printf(verbose, "Number of heterozygous SNPs with coverage >= %d: %d (out of %d)\n", minTotal, sum(isHetT[keepT]), length(idxsT[keepT]));
+  
+  # For each segment...
+  mus <- sds <- double(nrow(segsT));
+  counts <- integer(nrow(segsT));
+  for (ss in seq_len(nrow(segsT))) {
+    segsSS <- segsT[ss,];
+    verbose && printf(verbose, "Segment #%d of %d\n", ss, nrow(segsT));
+    verbose && print(verbose, segsSS);
+    keepSS <- (segsSS$start <= posT & posT <= segsSS$stop);
+    verbose && printf(verbose, "Number of SNPs in segment: %d\n", sum(keepSS));
+    keepSS <- keepT & keepSS;
+    verbose && printf(verbose, "Number of SNPs with coverage >= %d in segment: %d\n", minTotal, sum(keepSS));
+    idxsSS <- idxsT[keepSS];
+    verbose && printf(verbose, "SNP indices:\n");
+    verbose && str(verbose, idxsSS);
+    rhoSS <- rho[idxsSS];
+    mu <- mean(rhoSS, na.rm=TRUE);
+    sd <- sd(rhoSS, na.rm=TRUE);
+    verbose && printf(verbose, "Average DH in segment: %f\n", mu);
+    mus[ss] <- mu;
+    sds[ss] <- sd;
+    if (length(idxsSS) > 0L) counts[ss] <- length(idxsSS);
+  } # for (ss ...)
+  
+  
+  segsT$dhCounts <- counts;
+  segsT$dhMean <- mus;
+  segsT$dhSE <- sds / sqrt(counts);
+  verbose && print(verbose, segsT[,-1]);
 
-cat("Total SNP read counts:\n");
-print(table(totalT));
+  segList[[chrTag]] <- segsT;
 
-# Only look at SNPs with 3 or more reads
-minTotal <- 4L;
-keepT <- (totalT >= minTotal);
-print(summary(keepT));
+  verbose && exit(verbose);
+} # for (kk ...)
 
-printf("Number of heterozygous SNPs with coverage >= %d: %d (out of %d)\n", minTotal, sum(isHetT[keepT]), length(idxsT[keepT]));
+segsB <- Reduce(rbind, segList);
+verbose && print(verbose, segsB[,-1]);
 
-# For each segment...
-mus <- sds <- double(nrow(segsT));
-counts <- integer(nrow(segsT));
-for (ss in seq_len(nrow(segsT))) {
-  segsSS <- segsT[ss,];
-  printf("Segment #%d of %d\n", ss, nrow(segsT));
-  print(segsSS);
-  keepSS <- (segsSS$start <= posT & posT <= segsSS$stop);
-  printf("Number of SNPs in segment: %d\n", sum(keepSS));
-  keepSS <- keepT & keepSS;
-  printf("Number of SNPs with coverage >= %d in segment: %d\n", minTotal, sum(keepSS));
-  idxsSS <- idxsT[keepSS];
-  printf("SNP indices:\n");
-  str(idxsSS);
-  rhoSS <- rho[idxsSS];
-  mu <- mean(rhoSS, na.rm=TRUE);
-  sd <- sd(rhoSS, na.rm=TRUE);
-  printf("Average DH in segment: %f\n", mu);
-  mus[ss] <- mu;
-  sds[ss] <- sd;
-  if (length(idxsSS) > 0L) counts[ss] <- length(idxsSS);
-} # for (ss ...)
-
-
-segsT$dhCounts <- counts;
-segsT$dhMean <- mus;
-segsT$dhSE <- sds / sqrt(counts);
-print(segsT[,-1]);
-
+sampleName <- getNames(dsG)[1];
+fullnameB <- paste(c(sampleName, arraysTag), collapse=",");
+filenameB <- sprintf("%s.tsv.xls", fullnameB);
+hdr <- list(
+  srcFiles=getFullNames(dsG)
+);
+pathnameB <- writeDataFrame(segsB[,-1L], header=hdr, file=filenameB, overwrite=TRUE);
 
 
 ############################################################################
