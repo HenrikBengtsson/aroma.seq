@@ -182,13 +182,15 @@ cat("Total SNP read counts:\n");
 print(table(totalT));
 
 # Only look at SNPs with 3 or more reads
-keepT <- (totalT >= 3L);
+minTotal <- 4L;
+keepT <- (totalT >= minTotal);
 print(summary(keepT));
 
-printf("Number of heterozygous SNPs with coverage >= 3: %d (out of %d)\n", sum(isHetT[keepT]), length(idxsT[keepT]));
-
+printf("Number of heterozygous SNPs with coverage >= %d: %d (out of %d)\n", minTotal, sum(isHetT[keepT]), length(idxsT[keepT]));
 
 # For each segment...
+mus <- sds <- double(nrow(segsT));
+counts <- integer(nrow(segsT));
 for (ss in seq_len(nrow(segsT))) {
   segsSS <- segsT[ss,];
   printf("Segment #%d of %d\n", ss, nrow(segsT));
@@ -196,16 +198,24 @@ for (ss in seq_len(nrow(segsT))) {
   keepSS <- (segsSS$start <= posT & posT <= segsSS$stop);
   printf("Number of SNPs in segment: %d\n", sum(keepSS));
   keepSS <- keepT & keepSS;
-  printf("Number of SNPs with coverage >= 3 in segment: %d\n", sum(keepSS));
+  printf("Number of SNPs with coverage >= %d in segment: %d\n", minTotal, sum(keepSS));
   idxsSS <- idxsT[keepSS];
   printf("SNP indices:\n");
   str(idxsSS);
   rhoSS <- rho[idxsSS];
   mu <- mean(rhoSS, na.rm=TRUE);
+  sd <- sd(rhoSS, na.rm=TRUE);
   printf("Average DH in segment: %f\n", mu);
-#  print(summary(rhoSS));
+  mus[ss] <- mu;
+  sds[ss] <- sd;
+  if (length(idxsSS) > 0L) counts[ss] <- length(idxsSS);
 } # for (ss ...)
 
+
+segsT$dhCounts <- counts;
+segsT$dhMean <- mus;
+segsT$dhSE <- sds / sqrt(counts);
+print(segsT[,-1]);
 
 
 
