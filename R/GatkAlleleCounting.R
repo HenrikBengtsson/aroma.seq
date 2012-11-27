@@ -88,6 +88,7 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
 
 
   verbose && enter(verbose, "Counting alleles for known SNPs");
+
   bs <- getInputDataSet(this);
   verbose && print(verbose, bs);
 
@@ -120,8 +121,10 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
       
       # (b) Get the BED file representation of UGP file
       if (is.null(bedf)) {
+        verbose && enter(verbose, "Writing BED file representation of UGP file");
         bedf <- writeBedDataFile(targetUgp, chrMap=c(X=23, Y=24, MT=25), verbose=verbose);
         verbose && print(verbose, bedf);
+        verbose && exit(verbose);
       }
 
       # (c) Call GATK
@@ -130,6 +133,7 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
       verbose && cat(verbose, "Writing to temporary file: ", pathnameDT);
       res <- systemGATK(T="DepthOfCoverage", I=getPathname(bf), R=getPathname(fa), L=getPathname(bedf), "--omitIntervalStatistics", "--omitLocusTable", "--omitPerSampleStats", "--printBaseCounts", "o"=pathnameDT, verbose=verbose);
       verbose && cat(verbose, "GATK system result: ", res);
+      verbose && exit(verbose);
 
 
       # (d) Cleanup GATK output file and resave
@@ -226,7 +230,7 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
       verbose && exit(verbose);
 
 
-      verbose && cat(verbose, "Write pruned GATK result file");
+      verbose && enter(verbose, "Writing pruned GATK result file");
       header <- list(
         description = "GATK DepthOfCoverage Results",
         totalCoverage = totalCoverage,
@@ -253,11 +257,8 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
       file.remove(pathnameDT); # AD HOC
       pathnameDT <- popTemporaryFile(pathnameDTT);
       verbose && exit(verbose);
-
-      verbose && exit(verbose);
       
       pathnameD <- popTemporaryFile(pathnameDT);
-      verbose && exit(verbose);
     } # if (overwrite || !isFile(...))
   
     # Parse GATK output file
