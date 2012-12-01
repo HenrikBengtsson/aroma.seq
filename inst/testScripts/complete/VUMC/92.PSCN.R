@@ -145,8 +145,9 @@ print(dsC);
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Extract SNP allele counts
 if (!exists("dataAC")) {
+  colClassPatterns <- c("*"="integer", "chromosome"="character");
   cb <- GatkAlleleCounting$getCombineBy();
-  dataAC <- readDataFrame(dsC, combineBy=cb, verbose=verbose);
+  dataAC <- readDataFrame(dsC, colClassPatterns=colClassPatterns, combineBy=cb, verbose=verbose);
   str(dataAC);
 }
 
@@ -178,16 +179,19 @@ fit(seg, verbose=verbose);
 array <- 1L;
 segList <- list();
 chrs <- getChromosomes(seg);
+chrLabels <- as.character(chrs);
+chrLabels[chrs == 23] <- "X";
+chrLabels[chrs == 24] <- "Y";
+chrLabels[chrs == 25] <- "MT";
 for (kk in seq_along(chrs)) {
   chr <- chrs[kk];
+  chrLabel <- chrLabels[kk];
   chrTag <- sprintf("Chr%02d", chr);
   verbose && enter(verbose, sprintf("Chromosome #%d ('%s') of %d", kk, chrTag, length(chrs)));
 
-  segsK <- getRegions(seg, arrays=array, chromosomes=chr, flat=TRUE, url=NULL, verbose=verbose);
-  verbose && print(verbose, segsK);
-  
-  segsT <- subset(segsK, chromosome == chr);
-  idxsT <- which(gp$chromosome == chr);
+  segsT <- getRegions(seg, arrays=array, chromosomes=chr, flat=TRUE, url=NULL, verbose=verbose);
+  verbose && print(verbose, segsT);
+  idxsT <- which(gp$chromosome == chrLabel);
   posT <- gp$position[idxsT];
   totalT <- total[idxsT];
   isHetT <- isHet[idxsT];
@@ -198,7 +202,7 @@ for (kk in seq_along(chrs)) {
   verbose && print(verbose, table(totalT));
   
   # Only look at SNPs with 3 or more reads
-  minTotal <- 4L;
+  minTotal <- 3L;
   keepT <- (totalT >= minTotal);
   verbose && summary(verbose, keepT);
   
@@ -206,7 +210,7 @@ for (kk in seq_along(chrs)) {
   
   # For each segment...
   mus <- sds <- double(nrow(segsT));
-  counts <- integer(nrow(segsT));
+  snpCounts <- dhCounts <- integer(nrow(segsT));
   for (ss in seq_len(nrow(segsT))) {
     segsSS <- segsT[ss,];
     verbose && printf(verbose, "Segment #%d of %d\n", ss, nrow(segsT));
@@ -215,22 +219,26 @@ for (kk in seq_along(chrs)) {
     verbose && printf(verbose, "Number of SNPs in segment: %d\n", sum(keepSS));
     keepSS <- keepT & keepSS;
     verbose && printf(verbose, "Number of SNPs with coverage >= %d in segment: %d\n", minTotal, sum(keepSS));
+    snpCounts[ss] <- sum(keepSS);
+    dhCounts[ss] <- sum(keepSS & isHetT);
+
     idxsSS <- idxsT[keepSS];
     verbose && printf(verbose, "SNP indices:\n");
     verbose && str(verbose, idxsSS);
+
     rhoSS <- rho[idxsSS];
     mu <- mean(rhoSS, na.rm=TRUE);
     sd <- sd(rhoSS, na.rm=TRUE);
     verbose && printf(verbose, "Average DH in segment: %f\n", mu);
     mus[ss] <- mu;
     sds[ss] <- sd;
-    if (length(idxsSS) > 0L) counts[ss] <- length(idxsSS);
   } # for (ss ...)
   
   
-  segsT$dhCounts <- counts;
+  segsT$snpCounts <- snpCounts;
+  segsT$dhCounts <- dhCounts;
   segsT$dhMean <- mus;
-  segsT$dhSE <- sds / sqrt(counts);
+  segsT$dhSE <- sds / sqrt(dhCounts);
   verbose && print(verbose, segsT[,-1]);
 
   segList[[chrTag]] <- segsT;
@@ -245,7 +253,9 @@ sampleName <- getNames(dsG)[1];
 fullnameB <- paste(c(sampleName, arraysTag), collapse=",");
 filenameB <- sprintf("%s.tsv.xls", fullnameB);
 hdr <- list(
-  srcFiles=getFullNames(dsG)
+  srcFiles = getFullNames(dsG),
+  arrays = arraysTag,
+  minCoverage = minTotal
 );
 pathnameB <- writeDataFrame(segsB[,-1L], header=hdr, file=filenameB, overwrite=TRUE);
 
