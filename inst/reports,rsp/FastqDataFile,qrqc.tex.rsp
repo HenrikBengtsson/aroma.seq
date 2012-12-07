@@ -1,0 +1,252 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Authors: Henrik Bengtsson
+%
+% Usage: (compiles *.tex.rsp => tex.rsp.R => *.tex => *.dvi)
+%  R.rsp::rsp("[...].tex.rsp", path="reports,rsp/");
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+<%
+library("aroma.seq");
+library("qrqc");
+library("R.cache");
+stopifnot(exists("rspArgs", mode="list"));
+%>
+
+
+<%
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# REPORT CONFIGURATION
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+%>
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% LATEX STARTUP
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[twoside,12pt]{article}
+\usepackage{fancyvrb}
+\usepackage{xspace}
+\usepackage{subfigure}  % \subfigure[<title>]{<figure>}
+\usepackage[round]{natbib}
+
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-0.8in}
+\addtolength{\textheight}{1.3in}
+
+\renewcommand{\topfraction}{1.00}   % max fraction of floats at top
+\renewcommand{\bottomfraction}{1.0} % max fraction of floats at bottom
+\renewcommand{\textfraction}{0.00}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+%% \fancyhead{} % clear all header fields
+%% \fancyfoot{} % clear all footer fields
+%% \fancyhead[LE,RO]{\slshape \rightmark}
+%% \fancyfoot[C]{\thepage}
+
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyhead[RE]{\textit{\nouppercase{\leftmark}}}
+\fancyhead[LO]{\textit{\nouppercase{\rightmark}}}
+
+\newcommand{\code}[1]{\texttt{#1}\xspace}
+
+
+<% reportBody <- function(df, dataSet, Clim=c(0,5), Blim=c(0,1), figPath="figures", ..., figForce=FALSE) { %>
+<%
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Validate arguments
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Argument 'df':
+df <- Arguments$getInstanceOf(df, "FastqDataFile");
+
+# Argument 'dataSet':
+dataSet <- Arguments$getCharacter(dataSet);
+
+# Argument 'figPath':
+figPath <- Arguments$getWritablePath(figPath);
+
+# Argument 'figForce':
+figForce <- Arguments$getLogical(figForce);
+%>
+
+<%
+oFigPath <- setOption("devEval/args/path", figPath);
+on.exit({
+  setOption("devEval/args/path", oFigPath);
+}, add=TRUE);
+
+oPar <- setOption("devNew/args/par", list(lwd=2));
+on.exit({
+  setOption("devNew/args/par", oPar);
+}, add=TRUE);
+%>
+
+<%
+dataSetLbl <- sprintf("Data set: %s\\\\", toLatex(dataSet));
+%>
+
+\title{Fastq Quality Report on '<%=toLatex(getFilename(df))%>'}
+\author{Report template by Henrik Bengtsson}
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+% GRAPHICS SETTINGS
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+<%
+setOption("devEval/args/force", figForce);
+%>
+\usepackage{graphicx}
+\graphicspath{{<%=figPath%>/} {../<%=figPath%>/}}
+
+<%
+require("ggplot2") || throw("Package not loaded: ggplot2");
+xnbrOpts <- theme_text(colour="grey50", size=20, hjust=1, lineheight=0.9);
+ynbrOpts <- theme_text(colour="grey50", size=20, vjust=1, lineheight=0.9);
+xlabOpts <- theme_text(colour="black", size=28, hjust=0.5);
+ylabOpts <- theme_text(colour="black", size=28, vjust=0.5, angle=90);
+
+labList <- list(
+  CT    = expression(C[T]),
+  betaN = expression(beta[N]),
+  betaT = expression(beta[T]),
+  betaTN = expression(tilde(beta)[T]),
+  rho = expression(rho),
+  rhoN = expression(tilde(rho)),
+  c1 = expression(C[1]),
+  c2 = expression(C[2]),
+  c1N = expression(tilde(C)[1]),
+  c2N = expression(tilde(C)[2])
+);
+
+symbolList <- list(
+  CT    = "$C_{T}$",
+  betaN = "$\\beta_{N}$",
+  betaT = "$\\beta_{T}$",
+  betaTN = "$\\tilde{\\beta}_{T}$",
+  rho = "$\\rho$",
+  rhoN = "$\\tilde{\\rho}$",
+  c1 = "$C_{1}$",
+  c2 = "$C_{2}$",
+  c1N = "$\\tilde{C}_{1}$",
+  c2N = "$\\tilde{C}_{2}$"
+);
+%>
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\section{Data}
+<%
+hash.prop <- 0.1;
+sampleName <- getFullName(df);
+qData <- readSeqFile(getPathname(df), hash.prop=hash.prop);
+nbrOfSeqs <- sum(qData@seq.lengths);
+stopifnot(nbrOfSeqs == nbrOfSeqs(df)); # Sanity check
+nbrOfUniqueSeqs <- length(qData@hash);
+seqLenRange <- qrqc:::seqLengthRange(qData);
+%>
+Filename: <%=toLatex(getFilename(df))%>\\
+File size: <%=getFileSize(df)%>\\
+MD5 checksum: <%=getChecksum(df)%>\\
+Number of sequences: <%=nbrOfSeqs%>\\
+Number of unique sequences: <%=nbrOfUniqueSeqs%>\\
+Sequence Length Range: <%=sprintf("[%d,%d]",seqLenRange[1], seqLenRange[2])%>
+Sample size: <%=sprintf("%.3g", 100*hash.prop)%>\% of all available sequences.
+
+\section{Quality summaries}
+
+
+\subsection{Quality score by position}
+\begin{figure}[htbp]
+ \begin{center} 
+  \resizebox{0.5\textwidth}{!}{%
+   \includegraphics{<%=toPNG(name=sampleName, tags="qrqc_qualPlot", tags, width=640, aspectRatio=0.7, {
+       gg <- qualPlot(qData);
+       print(gg);
+   })%>}
+  }
+  \end{center} 
+ \caption{ 
+  Legend:
+   10\% and 90\% quantiles (grey lines),
+   25\% and 75\% quartiles (orange lines),
+   median (blue point),
+   mean (green dash), and
+   lowess curve fit (purple line).
+ }
+ \label{fig:qualPlot} 
+\end{figure}
+
+
+
+\subsection{Summaries by position}
+\begin{figure}[htbp]
+ \begin{center}
+  \subfigure[Nucleotide frequency by position]{
+  \resizebox{0.49\textwidth}{!}{%
+   \includegraphics{<%=toPNG(name=sampleName, tags="qrqc_basePlot-freq", tags, width=640, aspectRatio=0.7, {
+       gg <- basePlot(qData);
+       print(gg);
+   })%>}
+  }}%
+  \subfigure[GC proportion by position]{
+  \resizebox{0.49\textwidth}{!}{%
+   \includegraphics{<%=toPNG(name=sampleName, tags="qrqc_gcPlot", tags, width=640, aspectRatio=0.7, {
+       gg <- gcPlot(qData);
+       print(gg);
+   })%>}
+  }}%
+
+  \subfigure[Nucleotide proportion by position]{
+  \resizebox{0.49\textwidth}{!}{%
+   \includegraphics{<%=toPNG(name=sampleName, tags="qrqc_basePlot-prop", tags, width=640, aspectRatio=0.7, {
+       gg <- basePlot(qData, type="proportion");
+       print(gg);
+   })%>}
+  }}%
+  \subfigure[Sequence-length distribution]{
+  \resizebox{0.49\textwidth}{!}{%
+   \includegraphics{<%=toPNG(name=sampleName, tags="qrqc_seqlenPlot", tags, width=640, aspectRatio=0.7, {
+       gg <- seqlenPlot(qData);
+       print(gg);
+   })%>}
+  }}%
+ \end{center} 
+ \label{fig:byPosition} 
+\end{figure}
+
+
+<%--
+\subsection{Most common sequences}
+<% if (qData@hashed) { %>
+\begin{itemize}
+<%  tbl <- qrqc:::makeHashTable(qData); %>
+<%  for (rr in seq_len(nrow(tbl))) { %>
+ \item <%=tbl[rr,"count"]%> (<%=sprintf("%.2f", tbl[rr,"proportion of total"])%>\%) sequences: [<%=nchar(as.character(tbl[rr,"sequence"]))%> bases] <%=tbl[rr,"sequence"]%>
+<%  } # for (kk ...) %>
+\end{itemize}
+<% } %>
+--%>
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Session information
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\section*{Session information}
+<%=toLatex(sessionInfo())%>
+This report was automatically generated using \code{rsp()} of the R.rsp package.
+\end{document}
+<% } # reportBody() %>
+
+<%=do.call("reportBody", args=rspArgs)%> 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% HISTORY:
+# 2012-12-06
+% o Created. Adopted from the HTML report of qcqr v1.13.0.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

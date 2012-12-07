@@ -332,6 +332,12 @@
 \alias{getOutputDataSet0.GatkAlleleCounting}
 \alias{getParameterSets.BwaAlignment}
 \alias{getParameters.PicardDuplicateRemoval}
+\alias{FastqQualityReport}
+\alias{findRspReportTemplate}
+\alias{findRspReportTemplate.Object}
+\alias{report}
+\alias{report.FastqDataFile}
+\alias{report.FastqDataSet}
 
 \description{
   This page contains aliases for all "non-documented" objects that

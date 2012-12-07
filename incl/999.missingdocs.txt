@@ -176,3 +176,6 @@ getExpectedOutputFullnames.GatkAlleleCounting
 getOutputDataSet0.GatkAlleleCounting
 getParameterSets.BwaAlignment
 getParameters.PicardDuplicateRemoval
+FastqQualityReport findRspReportTemplate
+findRspReportTemplate.Object report report.FastqDataFile
+report.FastqDataSet

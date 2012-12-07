@@ -1,6 +1,15 @@
 Package: aroma.seq
 ==================
 
+Version: 0.2.3 [2012-12-06]
+o Added report() for FastqDataFile and FastqDataSet.
+o Added findRspReportTemplate().
+
+
+Version: 0.2.2 [2012-12-03]
+o Bumped up package dependencies.
+
+
 Version: 0.2.1 [2012-11-26]
 o SPEEDUP: process(..., dropEmpty=TRUE) for GatkAlleleCounting
   is now much faster.

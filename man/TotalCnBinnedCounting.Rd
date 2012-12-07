@@ -25,12 +25,12 @@
 \code{~~~~~~~~~~~~|}\cr
 \code{~~~~~~~~~~~~+--}\code{\link[aroma.cn]{TotalCnSmoothing}}\cr
 \code{~~~~~~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~~~~~~+--}\code{TotalCnBinnedCounting}\cr
+\code{~~~~~~~~~~~~~~~~~+--}\emph{\code{TotalCnBinnedCounting}}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
 
-public static class \bold{TotalCnBinnedCounting}\cr
+public abstract static class \bold{TotalCnBinnedCounting}\cr
 extends \emph{\link[aroma.cn]{TotalCnSmoothing}}\cr
 
 
@@ -53,13 +53,13 @@ extends \emph{\link[aroma.cn]{TotalCnSmoothing}}\cr
 getAsteriskTags, getOutputDataSet0, getOutputFileClass, getOutputFileExtension, getOutputFiles, getOutputFileSetClass, getParameters, getPath, getRootPath, getTargetPositions, getTargetUgpFile, process, smoothRawCopyNumbers
 
  \bold{Methods inherited from AromaTransform}:\cr
-as.character, getAsteriskTags, getExpectedOutputFiles, getExpectedOutputFullnames, getFullName, getInputDataSet, getName, getOutputDataSet, getOutputDataSet0, getOutputFiles, getPath, getRootPath, getTags, isDone, process, setTags
+getAsteriskTags, getExpectedOutputFiles, getExpectedOutputFullnames, getFullName, getInputDataSet, getName, getOutputDataSet, getOutputDataSet0, getOutputFiles, getPath, getRootPath, getTags, isDone, process, setTags
 
  \bold{Methods inherited from ParametersInterface}:\cr
-getParameters, getParametersAsString
+getParameters, getParametersAsString, getParameterSets
 
  \bold{Methods inherited from Object}:\cr
-asThis, $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, print
+findRspReportTemplate, asThis, $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save
 
 
  }

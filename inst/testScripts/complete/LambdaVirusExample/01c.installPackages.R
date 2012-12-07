@@ -10,7 +10,7 @@ verbose <- Arguments$getVerbose(-8, timestamp=TRUE);
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 verbose && enter(verbose, "Installing test-specific packages");
 
-pkgs <- c("BioC:BSgenome.Hsapiens.UCSC.hg19");
+pkgs <- c("BioC:qrqc");
 for (pkg in pkgs) {
   verbose && cat(verbose, "Package: ", pkg);
   installPkg(pkg);
