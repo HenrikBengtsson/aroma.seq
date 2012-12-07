@@ -109,7 +109,7 @@ setMethodS3("getGcContentFile", "BinnedGcNormalization", function(this, ...) {
 
 setMethodS3("getOutputFileExtension", "BinnedGcNormalization", function(this, ...) {
   ds <- getInputDataSet(this);
-  df <- getFile(ds, 1);
+  df <- getOneFile(this, mustExist=TRUE);
   ext <- getFilenameExtension(df);
   sprintf(".%s", ext);
 }, protected=TRUE)
@@ -117,7 +117,7 @@ setMethodS3("getOutputFileExtension", "BinnedGcNormalization", function(this, ..
 
 setMethodS3("getOutputFileSetClass", "BinnedGcNormalization", function(this, ...) {
   ds <- getInputDataSet(this);
-  className <- class(ds)[1];
+  className <- class(ds)[1L];
   Class$forName(className);
 }, protected=TRUE)
 

@@ -279,19 +279,33 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
 
 
 setMethodS3("readGatkCountFile", "GatkAlleleCounting", function(this, array, ..., verbose=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
+  verbose && enter(verbose, "Reading GATK count file");
+
   ds <- getOutputDataSet(this);
   array <- Arguments$getIndex(array, max=length(ds));
 
   df <- getFile(ds, array);
-  print(df);
+  verbose && print(verbose, df);
 
   # Parse GATK results
   pathname <- getPathname(df);
   db <- TabularTextFile(pathname);
-  print(db);
+  verbose && print(verbose, db);
 
   colClassPatterns <- c("*"="integer", "chromosome"="character");
   data <- readDataFrame(db, colClassPatterns=colClassPatterns);
+
+  verbose && exit(verbose);
 
   data;
 }, protected=TRUE) # readGatkCountFile()

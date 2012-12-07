@@ -49,8 +49,7 @@ setMethodS3("byPrefix", "AbstractIndexSet", function(static, prefix, ...) {
 
 
 setMethodS3("getIndexPrefix", "AbstractIndexSet", function(this, ...) {
-  if (length(this) == 0L) return(as.character(NA));
-  df <- getFile(this, 1L);
+  df <- getOneFile(this);
   getIndexPrefix(df, ...);
 })
 

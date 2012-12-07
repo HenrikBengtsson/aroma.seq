@@ -145,11 +145,11 @@ setMethodS3("extractRawCopyNumbers", "BamDataFile", function(this, chromosome, .
 
 
 setMethodS3("getPlatform", "BamDataSet", function(this, ...) {
-  getPlatform(getFile(this, 1));
+  getPlatform(getOneFile(this));
 })
 
 setMethodS3("getChipType", "BamDataSet", function(this, ...) {
-  getChipType(getFile(this, 1));
+  getChipType(getOneFile(this));
 })
 
 setMethodS3("getPlatform", "BamDataFile", function(this, ...) {
