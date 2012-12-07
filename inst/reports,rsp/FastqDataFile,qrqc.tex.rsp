@@ -154,7 +154,7 @@ File size: <%=getFileSize(df)%>\\
 MD5 checksum: <%=getChecksum(df)%>\\
 Number of sequences: <%=nbrOfSeqs%>\\
 Number of unique sequences: <%=nbrOfUniqueSeqs%>\\
-Sequence Length Range: <%=sprintf("[%d,%d]",seqLenRange[1], seqLenRange[2])%>
+Sequence Length Range: <%=sprintf("[%d,%d]",seqLenRange[1], seqLenRange[2])%>\\
 Sample size: <%=sprintf("%.3g", 100*hash.prop)%>\% of all available sequences.
 
 \section{Quality summaries}
