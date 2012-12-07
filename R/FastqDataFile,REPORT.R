@@ -39,11 +39,8 @@ setMethodS3("report", "FastqDataFile", function(this, dataSetSet, ..., flavor="q
   copyFile(pathname, pathnameT, overwrite=TRUE);
   verbose && cat(verbose, "Report template (renamed): ", pathnameT);
 
-  # WORKAROUND: Force absolute path
-  thisT <- newInstance(this, getAbsolutePath(getPathname(this)));
-  rspArgs <- list(thisT, dataSet=dataSet);
-
   # Generate PDF report
+  rspArgs <- list(this, dataSet=dataSet);
   pathnameR <- rsp(pathnameT, ..., outPath=outPath, verbose=less(verbose, 5));
 
   verbose && cat(verbose, "Generated report: ", pathnameR);
