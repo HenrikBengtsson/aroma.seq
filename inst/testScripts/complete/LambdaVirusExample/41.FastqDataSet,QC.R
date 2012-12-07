@@ -16,6 +16,9 @@ dataSet <- "LambdaVirusExample";
 platform <- "Generic";
 path <- file.path("fastqData", dataSet, platform);
 ds <- FastqDataSet$byPath(path);
+
+# Keep only the small FASTQ files
+ds <- extract(ds, "reads");
 print(ds);
 
 pdfs <- report(ds, verbose=verbose);
