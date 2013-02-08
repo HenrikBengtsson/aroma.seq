@@ -1,14 +1,7 @@
-## source("s0.R")
-
-if (FALSE) {  ## (for standalone testing)
-  library(R.filesets)
-  source("findTopHat.R")
-}
-
 ###########################################################################/**
-# @RdocDefault systemTopHatBuild
+# @RdocDefault systemTophat
 #
-# @title "Calls the TopHat executable, specifically to build a transcriptome index"
+# @title "Calls the TopHat executable to align input reads"
 #
 # \description{
 #  @get "title".
@@ -24,16 +17,16 @@ if (FALSE) {  ## (for standalone testing)
 #
 # @author
 #*/###########################################################################
-setMethodS3("systemTopHatBuild", "default", function( ## ( No 'command' arg in this case )
-                                                     ...,
-                                                     system2Args,  ## explicitly split off arguments to be passed to system2
-                                                     .fake=FALSE, verbose=FALSE) {
+setMethodS3("systemTophat", "default", function(commandName,
+                                                ...,
+                                                system2ArgsList=list(),  ## For now, explicitly split off arguments to be passed to system2
+                                                .fake=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   # Arguments '...':
-  args <- list(...);  ## These are the arguments to *tophat*
+  dotArgs <- list(...);  ## list with one item named 'args'; these are the arguments to *tophat*
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -47,41 +40,39 @@ setMethodS3("systemTopHatBuild", "default", function( ## ( No 'command' arg in t
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Locate executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  bin <- findTopHat(verbose=less(verbose, 50));
+  bin <- findCmd(commandName, verbose=less(verbose, 50));
   verbose && cat(verbose, "Executable: ", bin);
 
   verbose && cat(verbose, "Arguments passed to system2():");
-  verbose && str(verbose, system2Args);
+  verbose && str(verbose, system2ArgsList)
   verbose && cat(verbose, "Arguments passed to TopHat:");
-  verbose && str(verbose, args);
+  verbose && str(verbose, dotArgs);
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup command line switches
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  ## args <- paste(keys, args, sep=" ");
-  args <- trim(args);
+  ## dotArgs <- trim(dotArgs);
   verbose && cat(verbose, "Command line options:");
-  verbose && print(verbose, args);
-
-  nms <- optionsList
-  nms <- paste(ifelse(nchar(nms) == 1, "-", "--"), nms, sep="")
-  names(optionsList) <- nms
+  verbose && print(verbose, dotArgs);
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # System call
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && cat(verbose, "System call:");
-  cmd <- sprintf("%s %s", bin, paste(args, collapse=" "));
+  cmd <- sprintf("%s %s", bin, paste(dotArgs, collapse=" "));
   verbose && print(verbose, cmd);
-  verbose && str(verbose, system2Args);
+  verbose && str(verbose, system2ArgsList);
 
   verbose && enter(verbose, "system2() call");
-  callArgs <- list(command=bin, args=args);
-  callArgs <- c(callArgs, system2Args);
+  ## callArgs <- list(command=bin, args=dotArgs);
+  callArgs <- list(command=bin, args=paste(names(dotArgs$args), dotArgs$args, sep=" "))
+
+
+
   verbose && str(verbose, callArgs);
   if (!.fake) {
-    res <- do.call(base::system2, callArgs);
+    res <- do.call(what=base::system2, args=callArgs);
   } else {
     res <- "<fake run>";
   }
@@ -89,7 +80,7 @@ setMethodS3("systemTopHatBuild", "default", function( ## ( No 'command' arg in t
   verbose && exit(verbose);
   verbose && exit(verbose);
   res;
-}) # systemTopHatBuild()
+}) # systemTophat()
 
 
 ############################################################################
