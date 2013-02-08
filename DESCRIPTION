@@ -1,9 +1,9 @@
 Package: aroma.seq
-Version: 0.2.3
-Depends: R (>= 2.15.0), R.oo (>= 1.11.3), R.utils (>= 1.19.1), R.filesets (>= 1.8.0), aroma.core (>= 2.7.5)
-Imports: R.methodsS3 (>= 1.4.2), R.oo (>= 1.11.3), R.utils (>= 1.19.1), R.filesets (>= 1.8.0), R.cache (>= 0.6.7)
+Version: 0.2.4
+Depends: R (>= 2.15.0), R.oo (>= 1.11.7), R.utils (>= 1.19.5), R.filesets (>= 2.0.0), aroma.core (>= 2.8.0)
+Imports: R.methodsS3 (>= 1.4.2), R.oo (>= 1.11.7), R.utils (>= 1.19.5), R.filesets (>= 2.0.0), R.cache (>= 0.6.5)
 Suggests: Biostrings (>= 2.26.2), ShortRead (>= 1.16.2), Rsamtools (>= 1.10.2), aroma.light (>= 1.28.0), aroma.cn (>= 1.2.18), GenomicRanges (>= 1.10.5), R.devices (>= 2.1.3), R.rsp (>= 0.8.3), qrqc (>= 1.13.0)
-Date: 2012-12-06
+Date: 2013-02-08
 Title: Sequence analysis in the Aroma Framework
 Maintainer: Henrik Bengtsson <henrikb@braju.com>
 Author: Henrik Bengtsson, Adam B. Olshen, Taku Tokuyasu

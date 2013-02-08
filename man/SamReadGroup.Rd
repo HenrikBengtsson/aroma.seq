@@ -74,7 +74,7 @@ extends \link[R.oo]{BasicObject}\cr
 
 
  \bold{Methods inherited from BasicObject}:\cr
-asThis, $, $<-, [[, [[<-, as.character, attach, detach, equals, extend, getFields, getInstantiationTime, hasField, hashCode, isReferable, objectSize, print
+$, $<-, [[, [[<-, as.character, attach, detach, equals, extend, getFields, getInstantiationTime, hasField, hashCode, isReferable, objectSize, print, asThis
 
  \bold{Methods inherited from logical}:\cr
 as.data.frame, as.raster, whichVector

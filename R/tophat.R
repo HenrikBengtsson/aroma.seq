@@ -7,13 +7,11 @@
 #  @get "title".
 # }
 #
-# @synopsis  - level2
+# @synopsis
 #
 # \arguments{
+#   \item{...}{...}
 # }
-#
-# \examples{\dontrun{
-# }}
 #
 # @author
 #*/###########################################################################

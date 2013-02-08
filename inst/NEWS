@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.2.4 [2013-02-08]
+o Added systemTophat() and systemTophatBuild() and tophat().
+
+
 Version: 0.2.3 [2012-12-06]
 o Added report() for FastqDataFile and FastqDataSet.
 o Added findRspReportTemplate().
