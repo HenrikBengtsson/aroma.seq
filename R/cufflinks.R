@@ -25,14 +25,14 @@ setMethodS3("cufflinks", "default", function(commandName='cufflinks',
   ## ( Support a call like this: "cufflinks <options> bams" )
 
   # Argument 'bams'
-  bams <- sapply(bams, Arguments$getReadablePathname)
-  cufflinksArgs <- as.vector(bams)
+  bams <- sapply(bams, FUN=Arguments$getReadablePathname)
+  cufflinksArgs <- as.vector(bams)  ##  (DEV: UNLIST BETTER?)
 
   ## Add dashes as appropriate to names of "cufflinks options"
   nms <- names(cufflinksOptions)
   names(cufflinksOptions) <- paste(ifelse(nchar(nms) == 1, "-", "--"), nms, sep="")
 
-  res <- do.call(what="systemCufflinks", args=list(commandName=commandName, args=c(cufflinksOptions, cufflinksArgs)))
+  res <- do.call(what=systemCufflinks, args=list(commandName=commandName, args=c(cufflinksOptions, cufflinksArgs)))
 
   return(res)
 })

@@ -13,12 +13,15 @@
 #   \item{...}{...}
 # }
 #
+# \examples{\dontrun{
+# }}
+#
 # @author
 #*/###########################################################################
 setMethodS3("tophat", "default", function(commandName='tophat',
                                           bowtieRefIndexPrefix,  ## partial pathname (e.g. append .1.bt2 to get to a real file)
-                                          reads1=NA,  ## vector of pathnames
-                                          reads2=NA,  ## vector of pathnames
+                                          reads1=NULL,  ## vector of pathnames
+                                          reads2=NULL,  ## vector of pathnames
                                           tophatOptions, ## vector of named options
                                           ..., verbose=FALSE) {
 
@@ -30,41 +33,31 @@ setMethodS3("tophat", "default", function(commandName='tophat',
   bowtieRefIndex1 <- Arguments$getReadablePathname(bowtieRefIndex1);
 
   # Argument 'reads1'
-  if (!is.na(reads1))
+  if (!is.null(reads1))
     {
-      reads1 <-
-        sapply(reads1, function(r)
-               {
-                 r <- Arguments$getReadablePathname(r);
-                 return(r)
-               })
+      reads1 <- sapply(reads1, FUN=Arguments$getReadablePathname)
     } else {
       throw("Argument reads1 is empty; need at least one input read")
     }
 
   # Argument 'reads2'
-  if (!is.na(reads2))
+  if (!is.null(reads2))
     {
-      reads2 <-
-        sapply(reads2, function(r)
-               {
-                 r <- Arguments$getReadablePathname(r);
-                 return(r)
-               })
+      reads2 <- sapply(reads2, FUN=Arguments$getReadablePathname)
     }
 
   ## Combine the above into "tophat arguments"
-  if (!is.na(reads2)) {
-    tophatArgs <- c(bowtieRefIndexPrefix, as.vector(reads1), as.vector(reads2))  ## (use as.vector to get rid of names)
-  } else {
-    tophatArgs <- c(bowtieRefIndexPrefix, as.vector(reads1))
+  if (!is.null(reads2)) {
+    tophatArgs <- c(bowtieRefIndexPrefix, unname(reads1), unname(reads2))  ## (use unname to get rid of names)
+  } else {  ## Technically just the above is probably ok
+    tophatArgs <- c(bowtieRefIndexPrefix, unname(reads1))
   }
 
   ## Add dashes as appropriate to names of "tophat options"
   nms <- names(tophatOptions)
   names(tophatOptions) <- paste(ifelse(nchar(nms) == 1, "-", "--"), nms, sep="")
 
-  res <- do.call(what="systemTophat", args=list(commandName=commandName, args=c(tophatOptions, tophatArgs)))
+  res <- do.call(what=systemTophat, args=list(commandName=commandName, args=c(tophatOptions, tophatArgs)))
 
   return(res)
 })

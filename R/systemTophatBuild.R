@@ -1,4 +1,5 @@
-## source("s0.R")
+## source("systemTophatBuild.R")
+## - 20130215 This code will likely be superseded by systemTophat.R; call that from a 'tophatBuild.R' (to be written)
 
 if (FALSE) {  ## (for standalone testing)
   library(R.filesets)
