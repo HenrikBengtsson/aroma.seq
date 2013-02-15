@@ -1,7 +1,7 @@
 ###########################################################################/**
-# @RdocDefault systemTophat
+# @RdocDefault systemCufflinks
 #
-# @title "Calls the TopHat executable to align input reads"
+# @title "Calls the Cufflinks executable to perform isoform abundance estimation"
 #
 # \description{
 #  @get "title".
@@ -10,23 +10,23 @@
 # @synopsis
 #
 # \arguments{
-#   \item{...}{Additional arguments specifying TopHat command line switches.}
+#   \item{...}{Additional arguments specifying Cufflinks command line switches.}
 #   \item{.fake}{If @TRUE, the executable is not called.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
 # @author
 #*/###########################################################################
-setMethodS3("systemTophat", "default", function(commandName,
-                                                ...,
-                                                system2ArgsList=list(),  ## For now, explicitly split off arguments to be passed to system2
-                                                .fake=FALSE, verbose=FALSE) {
+setMethodS3("systemCufflinks", "default", function(commandName="cufflinks",
+                                                   ...,
+                                                   system2ArgsList=list(stdout=FALSE),  ## For now, explicitly split off arguments to be passed to system2
+                                                   .fake=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   # Arguments '...':
-  dotArgs <- list(...);  ## list with one item named 'args'; these are the arguments to *tophat*
+  dotArgs <- list(...);  ## list with one item named 'args'; these are the arguments to *cufflinks*
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -35,7 +35,7 @@ setMethodS3("systemTophat", "default", function(commandName,
     on.exit(popState(verbose));
   }
 
-  verbose && enter(verbose, "Calling TopHat executable");
+  verbose && enter(verbose, "Calling Cufflinks executable");
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Locate executable
@@ -45,7 +45,7 @@ setMethodS3("systemTophat", "default", function(commandName,
 
   verbose && cat(verbose, "Arguments passed to system2():");
   verbose && str(verbose, system2ArgsList)
-  verbose && cat(verbose, "Arguments passed to TopHat:");
+  verbose && cat(verbose, "Arguments passed to Cufflinks:");
   verbose && str(verbose, dotArgs);
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -66,6 +66,7 @@ setMethodS3("systemTophat", "default", function(commandName,
 
   verbose && enter(verbose, "system2() call");
   callArgs <- list(command=bin, args=paste(names(dotArgs$args), dotArgs$args, sep=" "))
+  callArgs <- c(callArgs, system2ArgsList)
 
   verbose && str(verbose, callArgs);
   if (!.fake) {
@@ -77,11 +78,11 @@ setMethodS3("systemTophat", "default", function(commandName,
   verbose && exit(verbose);
   verbose && exit(verbose);
   res;
-}) # systemTophat()
+}) # systemCufflinks()
 
 
 ############################################################################
 # HISTORY:
-# 2013-01-24
+# 2013-02-15
 # o Created. TAT
 ############################################################################
