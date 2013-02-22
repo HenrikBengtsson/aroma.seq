@@ -1,7 +1,7 @@
 ###########################################################################/**
-# @RdocDefault findTopHat
+# @RdocDefault findTopHatv
 #
-# @title "Locates the TopHat executable"
+# @title "Locates the TopHat executable and tests version"
 #
 # \description{
 #  @get "title" on the current system.
@@ -26,12 +26,17 @@
 # @author
 #*/###########################################################################
 
-setMethodS3("findTopHat", "default", function(mustExists=TRUE, ..., verbose=FALSE) {
+setMethodS3("findTopHatv", "default", function(version=NULL, mustExists=TRUE, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'mustExists':
   mustExists <- Arguments$getLogical(mustExists);
+
+  # Argument 'version'"
+  if (is.null(version)) {
+    throw("findTopHatv:  version argument is null")
+  }
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -55,6 +60,11 @@ setMethodS3("findTopHat", "default", function(mustExists=TRUE, ..., verbose=FALS
   if (mustExists && !isFile(pathname)) {
     throw(sprintf("Failed to located TopHat (executable '%s').", command));
   }
+
+  versionStr <- system2(pathname, args="--version", stdout=TRUE)
+  versionStr <- sub("^[^0-9]+", "", versionStr)
+  stopifnot(package_version(versionStr) >= version &&
+            package_version(versionStr) < (version+1))
 
   verbose && exit(verbose);
 
