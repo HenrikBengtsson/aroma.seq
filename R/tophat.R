@@ -57,7 +57,7 @@ setMethodS3("tophat", "default", function(commandName='tophat',
   nms <- names(tophatOptions)
   names(tophatOptions) <- paste(ifelse(nchar(nms) == 1, "-", "--"), nms, sep="")
 
-  res <- do.call(what=systemTophat, args=list(commandName=commandName, args=c(tophatOptions, tophatArgs)))
+  res <- do.call(what=systemTopHat, args=list(commandName=commandName, args=c(tophatOptions, tophatArgs)))
 
   return(res)
 })
