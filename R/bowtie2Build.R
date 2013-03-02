@@ -80,9 +80,9 @@ setMethodS3("bowtie2Build", "default", function(inPathnames,   ## vector of file
 
 ############################################################################
 # HISTORY:
-# 2012-07-18
-# o Created bowtie2-build() stub. (HB)
 # 2012-09-14
 # o First real draft of "level 2" code (TAT)
+# 2012-07-18
+# o Created bowtie2-build() stub. (HB)
 ############################################################################
 
