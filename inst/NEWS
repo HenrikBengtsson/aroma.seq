@@ -1,6 +1,12 @@
 Package: aroma.seq
 ==================
 
+Version: 0.2.6 [2013-02-22]
+o Added findTopHat() et al.
+
+Version: 0.2.5 [2013-02-15]
+o Added systemTophat(), and tophat().
+
 Version: 0.2.4 [2013-02-08]
 o Added systemTophat() and systemTophatBuild() and tophat().
 
