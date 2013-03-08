@@ -1,84 +1,92 @@
-## source("systemBowtie2Build.R")
+###########################################################################/**
+# @RdocDefault systemBowtie2Build
+#
+# @title "Creates an index on a reference genome using bowtie2-build"
+#
+# \description{
+#  @get "title".
+# }
+#
+# @synopsis
+#
+# \arguments{
+#   \item{...}{Additional arguments specifying bowtie2-build command line switches.}
+#   \item{system2ArgsList}{Arguments passed to system2.}
+#   \item{.fake}{If @TRUE, the executable is not called.}
+#   \item{verbose}{See @see "R.utils::Verbose".}
+# }
+#
+# @author
+#*/###########################################################################
+setMethodS3("systemBowtie2Build", "default", function(command="bowtie2-build",
+                                                      ...,
+                                                      system2ArgsList=list(stdout=TRUE, stderr=FALSE),  ## For now, explicitly split off arguments to be passed to system2
+                                                      .fake=FALSE, verbose=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-## Usage:  systemBowtie2Build referenceIn, bt2IndexBase, optionsList, <unsupported option>=1, ...)
+  # Arguments '...':
+  dotArgs <- list(...);  ## list with one item named 'args'; these are the arguments to *bowtie2-build*
 
-setMethodS3("systemBowtie2Build", "default", function(
-                                               ## Required args for bowtie2 index builder
-                                               referenceIn,             ## comma-separated string = list of files with ref sequences
-                                               bt2IndexBase,            ## write .bt2 data to files with this dir/basename
-                                               ## *** Bowtie 2 indexes work only with v2 (not v1). ***
-
-                                               ## Supported options ( bowtiew2 options w/o values are boolean; nonlogicals are integers, so far )
-                                               optionsList=list(
-                                                 f = FALSE,               ## reference files are Fasta (default)
-                                                 c = FALSE,               ## reference sequences given on cmd line (as <seq_in>)
-                                                 a = FALSE,               ## disable automatic -p/--bmax/--dcv memory-fitting
-                                                 noauto = FALSE,          ## disable automatic -p/--bmax/--dcv memory-fitting
-                                                 p = FALSE,               ## use packed strings internally; slower, uses less mem
-                                                 packed = FALSE,          ## use packed strings internally; slower, uses less mem
-                                                 bmax = NULL,             ## <int> = max bucket sz for blockwise suffix-array builder
-                                                 bmaxdivn = NULL,         ## <int> = max bucket sz as divisor of ref len (default: 4)
-                                                 dcv = NULL,              ## <int> = diff-cover period for blockwise (default: 1024)
-                                                 nodc = FALSE,            ## disable diff-cover (algorithm becomes quadratic)
-                                                 r = FALSE,               ## don't build .3/.4.bt2 (packed reference) portion
-                                                 noref = FALSE,           ## don't build .3/.4.bt2 (packed reference) portion
-                                                 `3` = FALSE,             ## just build .3/.4.bt2 (packed reference) portion
-                                                 justref = FALSE,         ## just build .3/.4.bt2 (packed reference) portion
-                                                 o = NULL,                ## <int>: SA is sampled every 2^offRate BWT chars (default: 5)
-                                                 offrate = NULL,          ## <int>: SA is sampled every 2^offRate BWT chars (default: 5)
-                                                 t = NULL,                ## <int>: # of chars consumed in initial lookup (default: 10)
-                                                 ftabchars = NULL,        ## <int>: # of chars consumed in initial lookup (default: 10)
-                                                 seed = NULL,             ## <int>: ## seed for random number generator
-                                                 q = FALSE,               ## verbose output (for debugging)
-                                                 quiet = FALSE,           ## verbose output (for debugging)
-                                                 h = FALSE,               ## print detailed description of tool and its options
-                                                 help = FALSE,            ## print detailed description of tool and its options
-                                                 usage = FALSE,           ## print this usage message
-                                                 version = FALSE          ## print version information and quit
-                                                 ),
-                                               bin="bowtie2-build",      ## full pathname to bowtie2-build executable
-                                               ... ) {
-  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  ## Create string of supported options, and unsupported options; paste together
-  cmdOptions <- .optionsList2String(optionsList)
-  cmdOptionsAdd <- .optionsList2String(list(...))
-  cmdOptions <- paste(cmdOptions, cmdOptionsAdd)
-
-  ## Set up command line
-  binWithArgs <- sprintf("%s", bin)
-  binWithArgs <- sprintf("%s %s", binWithArgs, cmdOptions)
-  binWithArgs <- sprintf("%s %s", binWithArgs, referenceIn)
-  binWithArgs <- sprintf("%s %s", binWithArgs, bt2IndexBase)
-  binWithArgs <- gsub("  +", " ", binWithArgs)  ## prettify
-
-  ## cmd <- sprintf("%s", binWithArgs)  ## In emacs/ess, shQuote() version with single quotes added does not run
-  cmd <- binWithArgs
-
+  # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
   if (verbose) {
     pushState(verbose);
     on.exit(popState(verbose));
   }
 
-  verbose && enter(verbose, "Running bowtie2-build");
-  verbose && cat(verbose, "System call: ", cmd)
+  verbose && enter(verbose, "Calling bowtie2-build executable");
 
-  ##
-  ## ADDITIONAL TESTING FOR BOWTIE2-BUILD IN HERE?
-  ##
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Locate executable
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  bin <- findCmd(command, verbose=less(verbose, 50));
+  verbose && cat(verbose, "Executable: ", bin);
 
-  res <- system(cmd);
+  verbose && cat(verbose, "Arguments passed to system2():");
+  verbose && str(verbose, system2ArgsList)
+  verbose && cat(verbose, "Arguments passed to bowtie2-build:");
+  verbose && str(verbose, dotArgs);
 
-  if (verbose) {
-    verbose && exit(verbose);
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Setup command line switches
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  ## dotArgs <- trim(dotArgs);
+  verbose && cat(verbose, "Command line options:");
+  verbose && print(verbose, dotArgs);
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # System call
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  verbose && cat(verbose, "System call:");
+  cmd <- sprintf("%s %s", bin, paste(dotArgs, collapse=" "));
+  verbose && print(verbose, cmd);
+  verbose && str(verbose, system2ArgsList);
+
+  verbose && enter(verbose, "system2() call");
+  callArgs <- list(command=bin, args=paste(names(dotArgs$args), dotArgs$args, sep=" "))
+  callArgs <- c(callArgs, system2ArgsList)
+
+  verbose && str(verbose, callArgs);
+  if (!.fake) {
+    res <- do.call(what=base::system2, args=callArgs);
+  } else {
+    cat("<fake run>\n")
+    res <- "<fake run>";
   }
 
-  return(res)
-})
+  verbose && exit(verbose);
+  verbose && exit(verbose);
+  res;
+}) # systemBowtie2Build()
+
 
 ############################################################################
 # HISTORY:
+# 2013-03-07
+# o TT:  Rewritten to conform to systemTopHat.R template.
 # 2012-08-22
 # o TT:  First implementation of low-level system wrapper, including all bowtie2-build options; not tested
 # 2012-08-21
@@ -86,5 +94,3 @@ setMethodS3("systemBowtie2Build", "default", function(
 # 2012-08-20
 # o HB:  Created systemBowtie2Build stub
 ############################################################################
-
-
