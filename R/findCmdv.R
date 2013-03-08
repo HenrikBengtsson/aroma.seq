@@ -1,7 +1,7 @@
 ###########################################################################/**
-# @RdocDefault findCmd
+# @RdocDefault findCmdv
 #
-# @title "Locates the executable given by 'command'"
+# @title "Locates the executable given by 'command'; tests version if possible"
 #
 # \description{
 #  @get "title" on the current system.
@@ -13,6 +13,7 @@
 #   \item{command}{Name of executable to find}
 #   \item{mustExists}{If @TRUE, an exception is thrown if the executable
 #      could not be located.}
+#   \item{version}{}
 #   \item{...}{Not used.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
@@ -22,13 +23,18 @@
 #  \enumerate{
 #   \item \code{Sys.which(command)}
 #  }
-#  NB: This method does NOT do any version checking!
+#  The software version is obtained by trying to parse
+#  \enumerate{
+#   \item \code{'cmd --version'}
+#  }
 # }
 #
 # @author
 #*/###########################################################################
 
-setMethodS3("findCmd", "default", function(command, mustExists=TRUE, ..., verbose=FALSE) {
+setMethodS3("findCmdv", "default", function(command=NULL,
+                                            version=NULL,
+                                            mustExists=TRUE, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -48,6 +54,11 @@ setMethodS3("findCmd", "default", function(command, mustExists=TRUE, ..., verbos
     on.exit(popState(verbose));
   }
 
+  # Argument 'version'"
+  if (is.null(version)) {
+    throw("findCmdv:  version argument is null")
+  }
+
   verbose && enter(verbose, "Locating software");
   verbose && cat(verbose, "Command: ", command);
 
@@ -59,14 +70,27 @@ setMethodS3("findCmd", "default", function(command, mustExists=TRUE, ..., verbos
     throw(sprintf("Failed to locate (executable '%s').", command));
   }
 
+  ## Primitive parsing to get version string
+  versionStr <- system2(pathname, args="--version", stdout=TRUE, stderr=FALSE)[1]
+  versionStr <- sub(".*version", "", versionStr)
+  versionStr <- sub("^[^0-9]+", "", versionStr)
+  versionPv <- try(package_version(versionStr))
+  if (inherits(versionPv, "try-error")) {
+    throw(sprintf("Unable to parse the '%s' version string, sorry!", command))
+  } else {
+    if (versionPv < version ||
+        versionPv >= (version+1) )
+      throw(sprintf("Failed to locate '%s', version '%s'.", command, version))
+  }
+
   verbose && exit(verbose);
 
   pathname;
-}) # findCmd()
+}) # findCmdv()
 
 
 ############################################################################
 # HISTORY:
-# 2013-01-29
+# 2013-03-07
 # o Created TAT
 ############################################################################
