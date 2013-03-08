@@ -17,9 +17,9 @@
 #
 # @author
 #*/###########################################################################
-setMethodS3("systemTopHat", "default", function(commandName,
+setMethodS3("systemTopHat", "default", function(command="tophat",
                                                 ...,
-                                                system2ArgsList=list(),  ## For now, explicitly split off arguments to be passed to system2
+                                                system2ArgsList=list(stdout=TRUE, stderr=FALSE),  ## For now, explicitly split off arguments to be passed to system2
                                                 .fake=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -40,7 +40,7 @@ setMethodS3("systemTopHat", "default", function(commandName,
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Locate executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  bin <- findCmd(commandName, verbose=less(verbose, 50));
+  bin <- findCmd(command, verbose=less(verbose, 50));
   verbose && cat(verbose, "Executable: ", bin);
 
   verbose && cat(verbose, "Arguments passed to system2():");
@@ -66,11 +66,13 @@ setMethodS3("systemTopHat", "default", function(commandName,
 
   verbose && enter(verbose, "system2() call");
   callArgs <- list(command=bin, args=paste(names(dotArgs$args), dotArgs$args, sep=" "))
+  callArgs <- c(callArgs, system2ArgsList)
 
   verbose && str(verbose, callArgs);
   if (!.fake) {
     res <- do.call(what=base::system2, args=callArgs);
   } else {
+    cat("<fake run>\n")
     res <- "<fake run>";
   }
 
