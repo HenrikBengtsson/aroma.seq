@@ -1,6 +1,9 @@
 Package: aroma.seq
 ==================
 
+Version: 0.2.7 [2013-03-08]
+o Rewrote several bowtie methods to align with tophat.R as a template
+
 Version: 0.2.6 [2013-02-22]
 o Added findTopHat() et al.
 

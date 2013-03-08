@@ -43,7 +43,7 @@
    Returns a \code{\link[base]{numeric}} \code{\link[base]{vector}} of the normalized signals.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{TBA}
 
 
 

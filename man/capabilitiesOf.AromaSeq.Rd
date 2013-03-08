@@ -43,6 +43,6 @@
    print(isCapableOf(aroma.seq, "bwa"))
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{TBA}
 \keyword{internal}
 \keyword{methods}

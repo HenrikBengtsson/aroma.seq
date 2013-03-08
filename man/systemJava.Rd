@@ -26,5 +26,5 @@
    \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{TBA}
 

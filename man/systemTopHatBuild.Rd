@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Do not modify this file since it was automatically generated from:
 % 
-%  systemTophatBuild.R
+%  systemTopHatBuild.R
 % 
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -24,5 +24,5 @@
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{TBA}
 

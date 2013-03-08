@@ -32,6 +32,6 @@
    Returns a \code{\link[R.filesets]{GenericDataFileSet}} consisting of the BWA index files.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{TBA}
 \keyword{internal}
 \keyword{methods}

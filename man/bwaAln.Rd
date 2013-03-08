@@ -34,5 +34,5 @@
    bwaAln("fastqData/LambdaVirusExample/Generic/reads_1.fq", indexPrefix=indexPrefix, pathnameD="fastqData/LambdaVirusExample/Generic/reads_1.sai")
  }}
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{TBA}
 

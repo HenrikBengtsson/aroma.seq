@@ -36,6 +36,6 @@
    Internally \code{\link[Rsamtools]{asBam}} is utilized.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{TBA}
 \keyword{internal}
 \keyword{methods}

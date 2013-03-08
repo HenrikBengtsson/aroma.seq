@@ -23,5 +23,5 @@
    \item{...}{Additional arguments specifying Java command line switches.}
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{TBA}
 

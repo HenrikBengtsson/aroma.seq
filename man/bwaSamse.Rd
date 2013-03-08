@@ -38,5 +38,5 @@
    bwaSamse(pathnameSAI=pathnameSAI, pathnameFQ=pathnameFQ, pathnameFA=pathnameFA, pathnameD=pathnameD);
  }}
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{TBA}
 

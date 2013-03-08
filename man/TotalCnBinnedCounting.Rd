@@ -50,19 +50,19 @@ extends \emph{\link[aroma.cn]{TotalCnSmoothing}}\cr
 
 
  \bold{Methods inherited from TotalCnSmoothing}:\cr
-getAsteriskTags, getOutputDataSet0, getOutputFileClass, getOutputFileExtension, getOutputFiles, getOutputFileSetClass, getParameters, getPath, getRootPath, getTargetPositions, getTargetUgpFile, process, smoothRawCopyNumbers
+getAsteriskTags, getOutputFiles, getTargetPositions, getTargetUgpFile, process, smoothRawCopyNumbers
 
  \bold{Methods inherited from AromaTransform}:\cr
-as.character, getAsteriskTags, getExpectedOutputFiles, getExpectedOutputFullnames, getFullName, getInputDataSet, getName, getOutputDataSet, getOutputDataSet0, getOutputFiles, getPath, getRootPath, getTags, isDone, process, setTags
+as.character, getAsteriskTags, getExpectedOutputFiles, getExpectedOutputFullnames, getFullName, getInputDataSet, getName, getOutputDataSet0, getOutputDataSet, getOutputFiles, getPath, getRootPath, getTags, isDone, process, setTags
 
  \bold{Methods inherited from ParametersInterface}:\cr
-getParameters, getParametersAsString, getParameterSets
+getParametersAsString, getParameterSets, getParameters
 
  \bold{Methods inherited from Object}:\cr
-$, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
+as.character, attachLocally, attach, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, [[<-, [[, $<-, $, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
 
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{TBA}
 \keyword{classes}

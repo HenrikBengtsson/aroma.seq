@@ -351,7 +351,7 @@
   The rest are deprecated methods.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{TBA}
 
 
 \keyword{documentation}

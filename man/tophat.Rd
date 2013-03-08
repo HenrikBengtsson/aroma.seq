@@ -10,17 +10,26 @@
 \alias{tophat.default}
 \alias{tophat}
 
-\title{Calls tophat on input reads}
+\title{Calls the TopHat executable to align input reads}
 
 \description{
- Calls tophat on input reads.
+ Calls the TopHat executable to align input reads.
 }
 
-\usage{\method{tophat}{default}(commandName="tophat", bowtieRefIndexPrefix, reads1=NA, reads2=NA, tophatOptions, ..., verbose=FALSE)}
+\usage{\method{tophat}{default}(command="tophat", bowtieRefIndexPrefix=NULL, reads1=NULL, reads2=NULL, optionsVec=NULL, ..., verbose=FALSE)}
 
 \arguments{
-  \item{...}{...}
+  \item{command}{Name of executable}
+  \item{bowtieRefIndexPrefix}{bowtie2 reference index (partial pathname, i.e. minus the .x.bt2 suffix)}
+  \item{reads1}{(required) Vector of fastq files to align}
+  \item{reads2}{(optional) Vector of fastq files to align, paired with reads1}
+  \item{optionsVec}{Vector of named options to pass to tophat}
+  \item{...}{(Not used)}
+  \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\examples{\dontrun{
+}}
+
+\author{TBA}
 

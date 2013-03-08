@@ -54,10 +54,10 @@ extends \emph{\link[aroma.seq]{AbstractAlignment}}\cr
 as.character, getAsteriskTags, getFlavor, getFullName, getIndexSet, getInputDataSet, getName, getOptionalArguments, getOutputDataSet, getParameterSets, getPath, getRootPath, getTags, nbrOfFiles, process, setTags
 
  \bold{Methods inherited from ParametersInterface}:\cr
-getParameters, getParametersAsString, getParameterSets
+getParametersAsString, getParameterSets, getParameters
 
  \bold{Methods inherited from Object}:\cr
-$, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
+as.character, attachLocally, attach, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, [[<-, [[, $<-, $, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
 
  }

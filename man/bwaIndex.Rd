@@ -33,5 +33,5 @@
    bwaIndex("annotationData/organisms/LambdaPhage/lambda_virus.fa")
  }}
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{TBA}
 

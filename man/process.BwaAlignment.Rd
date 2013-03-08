@@ -32,6 +32,6 @@
    Returns a \code{\link{BamDataSet}}.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{TBA}
 \keyword{internal}
 \keyword{methods}
