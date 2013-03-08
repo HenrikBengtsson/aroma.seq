@@ -1,7 +1,7 @@
 ###########################################################################/**
 # @RdocDefault systemBowtie2Build
 #
-# @title "Creates an index on a reference genome using bowtie2-build"
+# @title "Wrapper for bowtie2-build"
 #
 # \description{
 #  @get "title".
@@ -10,6 +10,7 @@
 # @synopsis
 #
 # \arguments{
+#   \item{command}{A @character string specifying the bowtie2 build command.}
 #   \item{...}{Additional arguments specifying bowtie2-build command line switches.}
 #   \item{system2ArgsList}{Arguments passed to system2.}
 #   \item{.fake}{If @TRUE, the executable is not called.}

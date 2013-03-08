@@ -1,7 +1,7 @@
 ###########################################################################/**
 # @RdocDefault tophat
 #
-# @title "Calls tophat on input reads"
+# @title "Calls the TopHat executable to align input reads"
 #
 # \description{
 #  @get "title".
@@ -25,7 +25,7 @@ setMethodS3("tophat", "default", function(command='tophat',
                                           optionsVec, ## vector of named options
                                           ..., verbose=FALSE) {
 
-  ## ( Support a call like this: "tophat <options> bowtieRefIndex reads1 reads2" )
+  ## ( Support a call like this: "tophat <options> bowtieRefIndexPrefix reads1 reads2" )
 
   # Argument 'bowtieRefIndexPrefix'
   # - check for bowtie2 reference index  ## TODO: ADD SUPPORT FOR BOWTIE1 INDICES

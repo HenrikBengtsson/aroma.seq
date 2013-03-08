@@ -1,7 +1,7 @@
 ###########################################################################/**
 # @RdocDefault systemTopHat
 #
-# @title "Calls the TopHat executable to align input reads"
+# @title "Wrapper for tophat"
 #
 # \description{
 #  @get "title".
@@ -10,7 +10,9 @@
 # @synopsis
 #
 # \arguments{
+#   \item{command}{A @character string specifying the tophat command.}
 #   \item{...}{Additional arguments specifying TopHat command line switches.}
+#   \item{system2ArgsList}{Arguments passed to system2.}
 #   \item{.fake}{If @TRUE, the executable is not called.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
@@ -52,7 +54,6 @@ setMethodS3("systemTopHat", "default", function(command="tophat",
   # Setup command line switches
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  ## dotArgs <- trim(dotArgs);
   verbose && cat(verbose, "Command line options:");
   verbose && print(verbose, dotArgs);
 
