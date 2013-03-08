@@ -1,81 +1,109 @@
-# bowtie2(c("/path/to/reads/reads_1.fq", "/path/to/reads/reads_2.fq"), outPath="bamData/LambdaVirusExample_bowtie2/", refPath="annotationData/organisms/lambda_virus/", refName="lambda_virus")
-# 
-# systemBowtie2(x="lambda_virus", U=c("/path/to/reads/reads_1.fq", "/path/to/reads/reads_2.fq"), S="eg1.sam")
+###########################################################################/**
+# @RdocDefault bowtie2
 #
-setMethodS3("bowtie2", "default", function(inPathname, outPathname=NULL, referencePrefix, ..., overwrite=FALSE, verbose=FALSE) {
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Argument 'inPathname':
-  inPathname <- Arguments$getReadablePathname(inPathname);
+# @title "Calls the Bowtie2 executable to align input reads"
+#
+# \description{
+#  @get "title".
+# }
+#
+# @synopsis
+#
+# \arguments{
+#   \item{command}{Name of executable}
+#   \item{bowtieRefIndexPrefix}{bowtie2 reference index (partial pathname, i.e. minus the .x.bt2 suffix)}
+#   \item{reads1}{Vector of fastq files to align, paired with reads2}
+#   \item{reads2}{Vector of fastq files to align, paired with reads1}
+#   \item{readsU}{Vector of fastq files to align (at least one of reads1 or readsU must be non-null}
+#   \item{optionsVec}{Vector of named options (do not include names x, 1, 2, U, or S)}
+#   \item{...}{...}
+# }
+#
+# \examples{\dontrun{
+# }}
+#
+# @author
+#*/###########################################################################
 
-  # Argument 'outPathname':
-  if (is.null(outPathname)) {
-    outPathname <- gsub("[.][^.]$", ".bam", inPathname);
+## TODO:  This function has not been tested; the logic may not be complete; etc.
+
+setMethodS3("bowtie2", "default", function(command='bowtie2',
+                                           bowtieRefIndexPrefix=NULL, ##  ## Index filename prefix (i.e. minus trailing .X.bt2)
+                                           reads1=NULL,  ## vector of pathnames, #1 mates
+                                           reads2=NULL,  ## vector of pathnames, #2 mates
+                                           readsU=NULL,  ## vector of pathnames, unpaired reads
+                                           samFile=NULL,  ## SAM file for output
+                                           optionsVec,
+                                          ..., verbose=FALSE) {
+
+  ## System call usage:  "bowtie2 [options]* -x <bt2-idx> {-1 <m1> -2 <m2> | -U <r>} [-S <sam>]"
+
+  # Argument 'bowtieRefIndexPrefix'
+  # - check for bowtie2 reference index  ## TODO: ADD SUPPORT FOR BOWTIE1 INDICES
+  if (!is.null(bowtieRefIndexPrefix)) {
+    bowtieRefIndex1 <- paste(bowtieRefIndexPrefix, ".1.bt2", sep="")  ## (<<< assumes bowtie2)
+    bowtieRefIndex1 <- Arguments$getReadablePathname(bowtieRefIndex1);
+  } else {
+    throw("Argument bowtieRefIndexPrefix is empty; supply (prefix of) bowtie reference index")
   }
-  outPathname <- Arguments$getWritablePathname(outPathname, mustNotExist=!overwrite);
 
-  # Additional arguments
-  args <- list(...);
-
-  # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
-  if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+  if ((is.null(reads1) && is.null(reads2)) &&
+      is.null(readsU)) {
+    throw("Arguments ('reads1' and 'reads2') and 'readsU' cannot all be empty; specify paired and/or unpaired reads")
   }
 
-  verbose && enter(verbose, "Running bowtie2");
-  verbose && cat(verbose, "Input pathname: ", inPathname);
-  verbose && cat(verbose, "Arguments:");
-  verbose && str(verbose, args);
+  # Argument 'reads1'
+  if (!is.null(reads1)) {
+    reads1 <- sapply(reads1, FUN=Arguments$getReadablePathname)
 
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Locate external software
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Locating external software");
-  command <- "bowtie2";
-  verbose && cat(verbose, "Command: ", command)
-
-  bin <- Sys.which(command);
-  verbose && cat(verbose, "Located pathname: ", bin)
-  
-  # Assert existence
-  if (identical(bin, "") || !isFile(bin)) {
-    throw("Failed to located external software (via the system PATH): ", command);
+    # Argument 'reads2'
+    if (!is.null(reads2)) {
+      reads2 <- sapply(reads2, FUN=Arguments$getReadablePathname)
+    } else {
+      throw("Argument 'reads2' is empty; supply reads2 when using reads1 (or just supply readsU)")
+    }
   }
-  verbose && exit(verbose);
 
+  # Argument 'readsU'
+  if (!is.null(readsU)) {
+    readsU <- sapply(readsU, FUN=Arguments$getReadablePathname)
+  }
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Call external software
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Calling external software");
+  # Argument 'samFile'
+  if (!is.null(samFile)) {
+    samFile <- Arguments$getWritablePathname(samFile)
+  } else {
+    throw("Argument 'samFile' is empty; supply an output file name")
+  }
 
-  # Setup the external command
-  cmd <- sprintf("%s", shQuote(bin));
-  verbose && cat(verbose, "System call: ", cmd)
+  ## Combine the above into "bowtie2 arguments"
+  bowtie2Args <- NULL  ## bowtie2 does not use 'arguments', just 'options'
+  bowtie2Options <- c(x=bowtieRefIndexPrefix)
+  if (!is.null(reads1)) {
+    bowtie2Options <- c(bowtie2Options, '1'=unname(reads1))
+    if (!is.null(reads2)) {
+      bowtie2Options <- c(bowtie2Options, '2'=unname(reads2))
+    }
+  }
+  if (!is.null(readsU)) {
+    bowtie2Options <- c(bowtie2Options, 'U'=unname(reads1))
+  }
+  bowtie2Options <- c(bowtie2Options, 'S'=unname(samFile))
 
-  # Add input and output file arguments
-  cmd <- sprintf("%s <something>", cmd, inPathname);
-  cmd <- sprintf("%s <something>", cmd, outPathname);
+  ## Add dashes as appropriate to names of "bowtie2 options"
+  bowtie2Options <- c(optionsVec, bowtie2Options)
+  nms <- names(bowtie2Options)
+  names(bowtie2Options) <- paste(ifelse(nchar(nms) == 1, "-", "--"), nms, sep="")
 
-  # Add additional arguments from '...'
-  # ...
+  res <- do.call(what=systemBowtie2, args=list(command=command, args=c(bowtie2Options, bowtie2Args)))
 
-  res <- system(cmd, ...);
-
-  verbose && exit(verbose);
-
-  verbose && exit(verbose);
-
-  invisible(res);
-}) # bowtie2()
-
+  return(res)
+})
 
 ############################################################################
 # HISTORY:
+# 2013-03-08
+# o TT:  Completely rewritten to follow tophat template
 # 2012-07-11
 # o Created bowtie2() stub.
 ############################################################################

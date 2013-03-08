@@ -17,6 +17,9 @@
 #
 # @author
 #*/###########################################################################
+
+## TODO:  Add version restriction on cufflinks (cufflinks2, cuffdiff2); doesn't support --version option though!
+
 setMethodS3("systemCufflinks", "default", function(commandName="cufflinks",
                                                    ...,
                                                    system2ArgsList=list(stdout=FALSE),  ## For now, explicitly split off arguments to be passed to system2

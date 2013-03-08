@@ -1,88 +1,76 @@
+###########################################################################/**
+# @RdocDefault bowtie2Build
 #
-# Command line call:
-#  bowtie2-build path/to/lambda_virus.fa lambda_virus
+# @title "Creates index on reference genome using bowtie2-build"
 #
-# R system call:
-#  bowtie2Build("path/to/lambda_virus.fa");
-#  bowtie2Build("path/to/lambda_virus.fa", outPath="path/to/", name="lambda_virus");
-#  => calls =>
-#  systemBowtie2Build("path/to/lambda_virus.fa", "lambda_virus");
-#  => calls =>
-#  system("bowtie2-build path/to/lambda_virus.fa lambda_virus");
+# \description{
+#  @get "title".
+# }
 #
+# @synopsis
+#
+# \arguments{
+#   \item{command}{Name of executable}
+#   \item{reads1}{Vector of fastq files to align, paired with reads2}
+#   \item{bowtieRefIndexPrefix}{bowtie2 reference index to be built (partial pathname, i.e. minus the .x.bt2 suffix)}
+#   \item{optionsVec}{Vector of named options (do not include names x, 1, 2, U, or S)}
+#   \item{overwrite}{(logical; not used)}
+#   \item{...}{...}
 
-setMethodS3("bowtie2Build", "default", function(inPathnames,   ## vector of filenames
-                                                outPath=NULL,  ## path to index
-                                                outName=NULL,  ## basename of index
-                                                optionsList,   ## list of bowtie2 options, for power users
-                                                ...,
-                                                overwrite=FALSE,
-                                                verbose=FALSE,
-                                                command="bowtie2-build") {
+# }
+#
+# \examples{\dontrun{
+# }}
+#
+# @author
+#*/###########################################################################
+setMethodS3("bowtie2-build", "default", function(command='bowtie2-build',
+                                                 refReads=NULL,  ## vector of pathnames
+                                                 bowtieRefIndexPrefix=NULL, ##  ## Index filename prefix (i.e. minus trailing .X.bt2)
+                                                 optionsVec=NULL, ## vector of named options
+                                                 overwrite=FALSE,  ##
+                                                 ..., verbose=FALSE) {
 
-  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  ## Validate arguments
-  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  inPathnames <- sapply(inPathnames, Arguments$getReadablePathname)
-  inPathsStr <- paste(inPathnames, collapse=",")   ## bowtie2 wants a comma-delimited string
+  ## System usage: bowtie2-build [options]* <reference_in> <bt2_index_base>
 
-  ## Default for outPath is the inPath
-  if (is.null(outPath)) {
-    outPath <- dirname(inPathnames[1])
+  browser()
+
+  # Argument 'refReads'
+  if (!is.null(refReads))
+    {
+      refReads <- sapply(refReads, FUN=Arguments$getReadablePathname)
+    } else {
+      throw("Argument 'refReads' is empty; supply at least one input read file")
+    }
+
+
+  # Argument 'bowtieRefIndexPrefix'
+  # - check for bowtie2 reference index  ## TODO: ADD SUPPORT FOR BOWTIE1 INDICES
+  if (!is.null(bowtieRefIndexPrefix)) {
+    bowtieRefIndexPrefix <- Arguments$getWritablePathname(bowtieRefIndexPrefix);
+  } else {
+    throw("Argument bowtieRefIndexPrefix is empty; supply (prefix of) bowtie reference index")
   }
-  outPath <- Arguments$getWritablePath(outPath);
-  if (is.null(outPath)) {
-    outName <- gsub("\\.fa$", "", basename(inPathnames[1]))   ## e.g. lambda_virus
-    ## - Using the first infile may be confusing, if e.g. it is a subscripted name like "_1"; oh well
-  }
-  outPrefix <- file.path(outPath, outName); ## e.g. path/to/lambda_virus
-  outPrefix <- Arguments$getWritablePathname(outPrefix, mustNotExist=TRUE)
 
-  ## Additional arguments
-  args <- list(...);  ## Not used here; just passed along
+  ## Combine the above into "bowtie2 arguments"
+  bowtie2Args <- c(bowtieRefIndexPrefix, unname(refReads))
 
-  ## Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
-  if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
-  }
-  verbose && enter(verbose, paste("Running", command));
-  verbose && cat(verbose, "Input pathnames: ", inPathsStr);
-  verbose && cat(verbose, "Arguments:");
-  verbose && str(verbose, args);
+  ## Add dashes as appropriate to names of "bowtie2 options"
+  bowtie2Options <- optionsVec
+  nms <- names(bowtie2Options)
+  names(bowtie2Options) <- paste(ifelse(nchar(nms) == 1, "-", "--"), nms, sep="")
 
-  ## Locate external software
-  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Locating external software");
-  verbose && cat(verbose, "Command: ", command)
-  bin <- Sys.which(command);
-  verbose && cat(verbose, "Located pathname: ", bin)
+  res <- do.call(what=systemBowtie2Build, args=list(command=command, args=c(bowtie2Options, bowtie2Args)))
 
-  ## Assert existence
-  if (identical(bin, "") || !isFile(bin)) {
-    throw("Failed to located external software (via the system PATH): ", command);
-  }
-  verbose && exit(verbose);
-
-  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  ## Call external software
-  ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Calling external software");
-
-  res <- systemBowtie2Build(inPathsStr, outPrefix, optionsList, ..., bin=bin)
-
-  verbose && exit(verbose);
-  verbose && exit(verbose);
-  invisible(res);
-}) ## bowtie2-build()
-
+  return(res)
+})
 
 ############################################################################
 # HISTORY:
+# 2013-03-08
+# o TT:  Completely rewritten to follow tophat.R template
 # 2012-09-14
 # o First real draft of "level 2" code (TAT)
 # 2012-07-18
 # o Created bowtie2-build() stub. (HB)
 ############################################################################
-

@@ -54,7 +54,6 @@ setMethodS3("systemBowtie2Build", "default", function(command="bowtie2-build",
   # Setup command line switches
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  ## dotArgs <- trim(dotArgs);
   verbose && cat(verbose, "Command line options:");
   verbose && print(verbose, dotArgs);
 

@@ -10,7 +10,13 @@
 # @synopsis
 #
 # \arguments{
-#   \item{...}{...}
+#   \item{command}{Name of executable}
+#   \item{bowtieRefIndexPrefix}{bowtie2 reference index (partial pathname, i.e. minus the .x.bt2 suffix)}
+#   \item{reads1}{(required) Vector of fastq files to align}
+#   \item{reads2}{(optional) Vector of fastq files to align, paired with reads1}
+#   \item{optionsVec}{Vector of named options to pass to tophat}
+#   \item{...}{(Not used)}
+#   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
 # \examples{\dontrun{
@@ -19,10 +25,11 @@
 # @author
 #*/###########################################################################
 setMethodS3("tophat", "default", function(command='tophat',
-                                          bowtieRefIndexPrefix=NULL,  ## partial pathname (e.g. append .1.bt2 to get to a real file)
-                                          reads1=NULL,  ## vector of pathnames
-                                          reads2=NULL,  ## vector of pathnames
-                                          optionsVec, ## vector of named options
+                                          bowtieRefIndexPrefix=NULL,  ##
+                                          reads1=NULL,
+                                          reads2=NULL,
+                                          optionsVec=NULL,
+                                          ## systems2ArgsList
                                           ..., verbose=FALSE) {
 
   ## ( Support a call like this: "tophat <options> bowtieRefIndexPrefix reads1 reads2" )
@@ -58,9 +65,12 @@ setMethodS3("tophat", "default", function(command='tophat',
   }
 
   ## Add dashes as appropriate to names of "tophat options"
-  tophatOptions <- optionsVec
-  nms <- names(tophatOptions)
-  names(tophatOptions) <- paste(ifelse(nchar(nms) == 1, "-", "--"), nms, sep="")
+  tophatOptions <- NULL
+  if (!is.null(optionsVec)) {
+    tophatOptions <- optionsVec
+    nms <- names(tophatOptions)
+    names(tophatOptions) <- paste(ifelse(nchar(nms) == 1, "-", "--"), nms, sep="")
+  }
 
   res <- do.call(what=systemTopHat, args=list(command=command, args=c(tophatOptions, tophatArgs)))
 
