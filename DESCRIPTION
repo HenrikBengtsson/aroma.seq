@@ -5,8 +5,9 @@ Imports: R.methodsS3 (>= 1.4.2), R.oo (>= 1.11.7), R.utils (>= 1.19.5), R.filese
 Suggests: Biostrings (>= 2.26.2), ShortRead (>= 1.16.2), Rsamtools (>= 1.10.2), aroma.light (>= 1.28.0), aroma.cn (>= 1.2.18), GenomicRanges (>= 1.10.5), R.devices (>= 2.1.3), R.rsp (>= 0.8.3), qrqc (>= 1.13.0)
 Date: 2013-03-08
 Title: Sequence analysis in the Aroma Framework
-Maintainer: Henrik Bengtsson <henrikb@braju.com>
+Authors@R: c(person("Henrik", "Bengtsson", email = "henrikb@braju.com", role = c("aut", "cre", "cph")), person("Adam B.", "Olshen", role = c("aut")), person("Taku", "Tokuyasu", role = c("aut")))
 Author: Henrik Bengtsson, Adam B. Olshen, Taku Tokuyasu
+Maintainer: Henrik Bengtsson <henrikb@braju.com>
 Description: [STUB ONLY/DON'T INSTALL] Methods for performing common sequence analysis.  Most of the actual analysis is performed by external software, which this package provides transparent wrappers for.
 License: LGPL (>= 2.1)
 LazyLoad: TRUE
