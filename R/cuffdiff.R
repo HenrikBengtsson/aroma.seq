@@ -1,5 +1,5 @@
 ###########################################################################/**
-# @Rdocdefault cuffdiff
+# @RdocDefault cuffdiff
 #
 # @title "Calls cuffdiff on input bam file(s)"
 #
