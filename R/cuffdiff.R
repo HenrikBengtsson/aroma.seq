@@ -1,5 +1,5 @@
 ###########################################################################/**
-# @RdocDefault cuffdiff
+# @Rdocdefault cuffdiff
 #
 # @title "Calls cuffdiff on input bam file(s)"
 #
@@ -17,10 +17,12 @@
 #
 # @author
 #*/###########################################################################
-setMethodS3("cuffdiff", "default", function(commandName='cuffdiff',
-                                          bams=NULL,  ## vector of pathnames
-                                          cuffdiffOptions, ## vector of named options
-                                          ..., verbose=FALSE) {
+setMethodS3("cuffdiff", "default", function(transcriptsGtf, ## e.g. from TopHat?
+                                            bams=NULL,  ## vector of pathnames (will assume bam or sam works here)
+                                            optionsVec, ## vector of named options
+                                            ...,
+                                            commandName='cuffdiff',
+                                            verbose=FALSE) {
 
   ## ( Support a call like this: "cuffdiff <options> bams" )
 
@@ -29,6 +31,7 @@ setMethodS3("cuffdiff", "default", function(commandName='cuffdiff',
   cuffdiffArgs <- as.vector(bams)  ##  (DEV: UNLIST BETTER?)
 
   ## Add dashes as appropriate to names of "cuffdiff options"
+  cuffdiffOptions <- optionsVec
   nms <- names(cuffdiffOptions)
   names(cuffdiffOptions) <- paste(ifelse(nchar(nms) == 1, "-", "--"), nms, sep="")
 

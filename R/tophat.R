@@ -24,13 +24,13 @@
 #
 # @author
 #*/###########################################################################
-setMethodS3("tophat", "default", function(command='tophat',
-                                          bowtieRefIndexPrefix=NULL,  ##
+setMethodS3("tophat", "default", function(bowtieRefIndexPrefix=NULL,  ##
                                           reads1=NULL,
                                           reads2=NULL,
                                           optionsVec=NULL,
                                           ## systems2ArgsList
-                                          ..., verbose=FALSE) {
+                                          ..., command='tophat',
+                                          verbose=FALSE) {
 
   ## ( Support a call like this: "tophat <options> bowtieRefIndexPrefix reads1 reads2" )
 

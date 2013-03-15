@@ -24,13 +24,14 @@
 #
 # @author
 #*/###########################################################################
-setMethodS3("bowtie2Build", "default", function(command='bowtie2-build',
-                                                refReads=NULL,  ## vector of pathnames
+setMethodS3("bowtie2Build", "default", function(refReads=NULL,  ## vector of pathnames
                                                 bowtieRefIndexPrefix=NULL, ## Index filename prefix (i.e. minus trailing .X.bt2)
                                                 ## bowtieRefIndexPrefix=file.path("refIdx", "refGenome"), ## (20130308 THIS IS CAUSING PROBLEMS)
                                                 optionsVec=NULL, ## vector of named options
                                                 overwrite=FALSE,  ##
-                                                ..., verbose=FALSE) {
+                                                ...,
+                                                command='bowtie2-build',
+                                                verbose=FALSE) {
 
   ## System usage: bowtie2-build [options]* <reference_in> <bt2_index_base>
 

@@ -17,10 +17,11 @@
 #
 # @author
 #*/###########################################################################
-setMethodS3("cufflinks", "default", function(commandName='cufflinks',
-                                          bams=NULL,  ## vector of pathnames
-                                          cufflinksOptions, ## vector of named options
-                                          ..., verbose=FALSE) {
+setMethodS3("cufflinks", "default", function(bams=NULL,  ## vector of pathnames
+                                             optionsVec, ## vector of named options
+                                             ...,
+                                             commandName='cufflinks',
+                                             verbose=FALSE) {
 
   ## ( Support a call like this: "cufflinks <options> bams" )
 
@@ -29,7 +30,8 @@ setMethodS3("cufflinks", "default", function(commandName='cufflinks',
   cufflinksArgs <- as.vector(bams)  ##  (DEV: UNLIST BETTER?)
 
   ## Add dashes as appropriate to names of "cufflinks options"
-  nms <- names(cufflinksOptions)
+  cufflinksOptions <- optionsVec
+  nms <- names(optionsVec)
   names(cufflinksOptions) <- paste(ifelse(nchar(nms) == 1, "-", "--"), nms, sep="")
 
   res <- do.call(what=systemCufflinks, args=list(commandName=commandName, args=c(cufflinksOptions, cufflinksArgs)))
