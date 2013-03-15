@@ -1,6 +1,9 @@
 Package: aroma.seq
 ==================
 
+Version: 0.2.8 [2013-03-14]
+o Standardize args in bowtie/tophat/cuff*: Move 'command' to end, use 'optionsVec'
+
 Version: 0.2.7 [2013-03-08]
 o Rewrote several bowtie methods to align with tophat.R as a template
 
