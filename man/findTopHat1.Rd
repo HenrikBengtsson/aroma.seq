@@ -16,7 +16,9 @@
  Locates the TopHat executable and tests version on the current system.
 }
 
-\usage{\method{findTopHat1}{default}(mustExists=TRUE, ..., verbose=FALSE)}
+\usage{
+\method{findTopHat1}{default}(mustExists=TRUE, ..., verbose=FALSE)
+}
 
 \arguments{
   \item{mustExists}{If \code{\link[base:logical]{TRUE}}, an exception is thrown if the executable
@@ -32,5 +34,5 @@
  }
 }
 
-\author{TBA}
+\author{Henrik Bengtsson}
 

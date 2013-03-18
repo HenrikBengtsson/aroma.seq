@@ -16,7 +16,9 @@
   Calls the BWA 'aln' command.
  }
 
- \usage{\method{bwaAln}{default}(pathnameFQ, indexPrefix, pathnameD, ..., verbose=FALSE)}
+ \usage{
+\method{bwaAln}{default}(pathnameFQ, indexPrefix, pathnameD, ..., verbose=FALSE)
+}
 
  \arguments{
    \item{pathnameFQ}{The FASTQ file to be aligned.}
@@ -34,5 +36,5 @@
    bwaAln("fastqData/LambdaVirusExample/Generic/reads_1.fq", indexPrefix=indexPrefix, pathnameD="fastqData/LambdaVirusExample/Generic/reads_1.sai")
  }}
 
- \author{TBA}
+ \author{Henrik Bengtsson}
 

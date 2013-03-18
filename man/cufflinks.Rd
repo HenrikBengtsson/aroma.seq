@@ -16,7 +16,9 @@
  Calls cufflinks on input bam file(s).
 }
 
-\usage{\method{cufflinks}{default}(commandName="cufflinks", bams=NULL, cufflinksOptions, ..., verbose=FALSE)}  - level2
+\usage{
+\method{cufflinks}{default}(bams=NULL, optionsVec, ..., commandName="cufflinks", verbose=FALSE)
+}  - level2
 
 \arguments{
 }
@@ -24,5 +26,5 @@
 \examples{\dontrun{
 }}
 
-\author{TBA}
+\author{Henrik Bengtsson}
 

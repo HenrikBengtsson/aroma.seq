@@ -9,9 +9,7 @@
  \name{process.Bowtie2Alignment}
 \alias{process.Bowtie2Alignment}
 \alias{Bowtie2Alignment.process}
-\alias{process.Bowtie2Alignment}
 \alias{process,Bowtie2Alignment-method}
-
 
  \title{Runs the aligner}
 
@@ -20,7 +18,9 @@
    The generated BAM files are all sorted and indexed.
  }
 
- \usage{\method{process}{Bowtie2Alignment}(this, ..., skip=TRUE, force=FALSE, verbose=FALSE)}
+ \usage{
+\method{process}{Bowtie2Alignment}(this, ..., skip=TRUE, force=FALSE, verbose=FALSE)
+}
 
  \arguments{
   \item{...}{Not used.}
@@ -32,6 +32,6 @@
    Returns a \code{\link{BamDataSet}}.
  }
 
- \author{TBA}
+ \author{Henrik Bengtsson}
 \keyword{internal}
 \keyword{methods}

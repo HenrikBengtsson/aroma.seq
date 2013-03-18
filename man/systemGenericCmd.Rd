@@ -16,7 +16,9 @@
  Wrapper to call 'command' using system2().
 }
 
-\usage{\method{systemGenericCmd}{default}(command=NULL, ..., system2ArgsList=list(), .fake=FALSE, verbose=FALSE)}
+\usage{
+\method{systemGenericCmd}{default}(command=NULL, ..., system2ArgsList=list(), .fake=FALSE, verbose=FALSE)
+}
 
 \arguments{
   \item{command}{Name of command to run}
@@ -25,5 +27,5 @@
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }
 
-\author{TBA}
+\author{Henrik Bengtsson}
 

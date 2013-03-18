@@ -16,7 +16,9 @@
  Calls the Cuffdiff executable to perform isoform abundance estimation.
 }
 
-\usage{\method{systemCuffdiff}{default}(commandName="cuffdiff", gtfFile, samFiles, ..., system2ArgsList=list(stdout = FALSE), .fake=FALSE, verbose=FALSE)}
+\usage{
+\method{systemCuffdiff}{default}(commandName="cuffdiff", gtfFile, samFiles, ..., system2ArgsList=list(stdout = FALSE), .fake=FALSE, verbose=FALSE)
+}
 
 \arguments{
   \item{...}{Additional arguments specifying Cuffdiff command line switches.}
@@ -24,5 +26,5 @@
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }
 
-\author{TBA}
+\author{Henrik Bengtsson}
 

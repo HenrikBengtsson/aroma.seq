@@ -16,7 +16,9 @@
  Calls the Cufflinks executable to perform isoform abundance estimation.
 }
 
-\usage{\method{systemCufflinks}{default}(commandName="cufflinks", ..., system2ArgsList=list(stdout = FALSE), .fake=FALSE, verbose=FALSE)}
+\usage{
+\method{systemCufflinks}{default}(commandName="cufflinks", ..., system2ArgsList=list(stdout = FALSE), .fake=FALSE, verbose=FALSE)
+}
 
 \arguments{
   \item{...}{Additional arguments specifying Cufflinks command line switches.}
@@ -24,5 +26,5 @@
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }
 
-\author{TBA}
+\author{Henrik Bengtsson}
 

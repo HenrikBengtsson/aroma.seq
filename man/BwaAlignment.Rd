@@ -36,7 +36,9 @@ extends \emph{\link[aroma.seq]{AbstractAlignment}}\cr
   ...
  }
 
- \usage{BwaAlignment(..., indexSet=NULL)}
+ \usage{
+BwaAlignment(..., indexSet=NULL)
+}
 
  \arguments{
   \item{...}{Arguments passed to \code{\link{AbstractAlignment}}.}
@@ -54,10 +56,10 @@ extends \emph{\link[aroma.seq]{AbstractAlignment}}\cr
 as.character, getAsteriskTags, getFlavor, getFullName, getIndexSet, getInputDataSet, getName, getOptionalArguments, getOutputDataSet, getParameterSets, getPath, getRootPath, getTags, nbrOfFiles, process, setTags
 
  \bold{Methods inherited from ParametersInterface}:\cr
-getParametersAsString, getParameterSets, getParameters
+getParameters, getParametersAsString, getParameterSets
 
  \bold{Methods inherited from Object}:\cr
-as.character, attachLocally, attach, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, [[<-, [[, $<-, $, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
+$, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
 
  }

@@ -351,7 +351,7 @@
   The rest are deprecated methods.
 }
 
-\author{TBA}
+\author{Henrik Bengtsson}
 
 
 \keyword{documentation}

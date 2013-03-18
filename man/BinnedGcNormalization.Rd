@@ -35,7 +35,9 @@ extends \emph{\link[aroma.core]{AromaTransform}}\cr
 
  }
 
- \usage{BinnedGcNormalization(dataSet=NULL, ..., .reqSetClass="AromaUnitTotalCnBinarySet")}
+ \usage{
+BinnedGcNormalization(dataSet=NULL, ..., .reqSetClass="AromaUnitTotalCnBinarySet")
+}
 
  \arguments{
   \item{dataSet}{An \code{\link[aroma.core]{AromaUnitTotalCnBinarySet}}.}
@@ -52,16 +54,16 @@ extends \emph{\link[aroma.core]{AromaTransform}}\cr
 
 
  \bold{Methods inherited from AromaTransform}:\cr
-as.character, getAsteriskTags, getExpectedOutputFiles, getExpectedOutputFullnames, getFullName, getInputDataSet, getName, getOutputDataSet0, getOutputDataSet, getOutputFiles, getPath, getRootPath, getTags, isDone, process, setTags
+as.character, getAsteriskTags, getExpectedOutputFiles, getExpectedOutputFullnames, getFullName, getInputDataSet, getName, getOutputDataSet, getOutputDataSet0, getOutputFiles, getPath, getRootPath, getTags, isDone, process, setTags
 
  \bold{Methods inherited from ParametersInterface}:\cr
-getParametersAsString, getParameterSets, getParameters
+getParameters, getParametersAsString, getParameterSets
 
  \bold{Methods inherited from Object}:\cr
-as.character, attachLocally, attach, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, [[<-, [[, $<-, $, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
+$, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
 
  }
 
- \author{TBA}
+ \author{Henrik Bengtsson}
 \keyword{classes}

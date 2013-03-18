@@ -16,7 +16,9 @@
  Calls the TopHat executable to align input reads.
 }
 
-\usage{\method{tophat}{default}(command="tophat", bowtieRefIndexPrefix=NULL, reads1=NULL, reads2=NULL, optionsVec=NULL, ..., verbose=FALSE)}
+\usage{
+\method{tophat}{default}(bowtieRefIndexPrefix=NULL, reads1=NULL, reads2=NULL, optionsVec=NULL, ..., command="tophat", verbose=FALSE)
+}
 
 \arguments{
   \item{command}{Name of executable}
@@ -31,5 +33,5 @@
 \examples{\dontrun{
 }}
 
-\author{TBA}
+\author{Henrik Bengtsson}
 

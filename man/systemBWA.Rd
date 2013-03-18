@@ -16,7 +16,9 @@
   Calls the BWA executable.
  }
 
- \usage{\method{systemBWA}{default}(command, ..., .fake=FALSE, verbose=FALSE)}
+ \usage{
+\method{systemBWA}{default}(command, ..., .fake=FALSE, verbose=FALSE)
+}
 
  \arguments{
    \item{command}{A \code{\link[base]{character}} string specifying the BWA command.}
@@ -25,5 +27,5 @@
    \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
  }
 
- \author{TBA}
+ \author{Henrik Bengtsson}
 

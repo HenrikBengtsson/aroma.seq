@@ -16,7 +16,9 @@
  Locates the executable given by 'command' on the current system.
 }
 
-\usage{\method{findCmd}{default}(command, mustExists=TRUE, ..., verbose=FALSE)}
+\usage{
+\method{findCmd}{default}(command, mustExists=TRUE, ..., verbose=FALSE)
+}
 
 \arguments{
   \item{command}{Name of executable to find}
@@ -34,5 +36,5 @@
  NB: This method does NOT do any version checking!
 }
 
-\author{TBA}
+\author{Henrik Bengtsson}
 

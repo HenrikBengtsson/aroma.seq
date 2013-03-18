@@ -16,7 +16,9 @@
  Creates index on reference genome using bowtie2-build.
 }
 
-\usage{\method{bowtie2Build}{default}(command="bowtie2-build", refReads=NULL, bowtieRefIndexPrefix=file.path("refIdx", "refGenome"), optionsVec=NULL, overwrite=FALSE, ..., verbose=FALSE)}
+\usage{
+\method{bowtie2Build}{default}(refReads=NULL, bowtieRefIndexPrefix=NULL, optionsVec=NULL, overwrite=FALSE, ..., command="bowtie2-build", verbose=FALSE)
+}
 
 \arguments{
   \item{command}{Name of executable}
@@ -30,5 +32,5 @@
 \examples{\dontrun{
 }}
 
-\author{TBA}
+\author{Henrik Bengtsson}
 

@@ -16,7 +16,9 @@
  Calls the Bowtie2 executable to align input reads.
 }
 
-\usage{\method{bowtie2}{default}(command="bowtie2", bowtieRefIndexPrefix=NULL, reads1=NULL, reads2=NULL, readsU=NULL, samFile=NULL, optionsVec, ..., verbose=FALSE)}
+\usage{
+\method{bowtie2}{default}(command="bowtie2", bowtieRefIndexPrefix=NULL, reads1=NULL, reads2=NULL, readsU=NULL, samFile=NULL, optionsVec, ..., verbose=FALSE)
+}
 
 \arguments{
   \item{command}{Name of executable}
@@ -31,5 +33,5 @@
 \examples{\dontrun{
 }}
 
-\author{TBA}
+\author{Henrik Bengtsson}
 

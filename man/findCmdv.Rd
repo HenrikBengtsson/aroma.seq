@@ -16,7 +16,9 @@
  Locates the executable given by 'command'; tests version if possible on the current system.
 }
 
-\usage{\method{findCmdv}{default}(command=NULL, version=NULL, mustExists=TRUE, ..., verbose=FALSE)}
+\usage{
+\method{findCmdv}{default}(command=NULL, version=NULL, mustExists=TRUE, ..., verbose=FALSE)
+}
 
 \arguments{
   \item{command}{Name of executable to find}
@@ -38,5 +40,5 @@
  }
 }
 
-\author{TBA}
+\author{Henrik Bengtsson}
 

@@ -9,9 +9,7 @@
  \name{process.BwaAlignment}
 \alias{process.BwaAlignment}
 \alias{BwaAlignment.process}
-\alias{process.BwaAlignment}
 \alias{process,BwaAlignment-method}
-
 
  \title{Runs the BWA aligner}
 
@@ -20,7 +18,9 @@
    The generated BAM files are all sorted and indexed.
  }
 
- \usage{\method{process}{BwaAlignment}(this, ..., skip=TRUE, force=FALSE, verbose=FALSE)}
+ \usage{
+\method{process}{BwaAlignment}(this, ..., skip=TRUE, force=FALSE, verbose=FALSE)
+}
 
  \arguments{
   \item{...}{Not used.}
@@ -32,6 +32,6 @@
    Returns a \code{\link{BamDataSet}}.
  }
 
- \author{TBA}
+ \author{Henrik Bengtsson}
 \keyword{internal}
 \keyword{methods}

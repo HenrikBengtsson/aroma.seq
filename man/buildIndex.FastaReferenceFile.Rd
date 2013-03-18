@@ -9,9 +9,7 @@
  \name{buildIndex.FastaReferenceFile}
 \alias{buildIndex.FastaReferenceFile}
 \alias{FastaReferenceFile.buildIndex}
-\alias{buildIndex.FastaReferenceFile}
 \alias{buildIndex,FastaReferenceFile-method}
-
 
  \title{Builds an FAI index file}
 
@@ -19,7 +17,9 @@
    Builds an FAI index file.
  }
 
- \usage{\method{buildIndex}{FastaReferenceFile}(this, ..., skip=TRUE, verbose=FALSE)}
+ \usage{
+\method{buildIndex}{FastaReferenceFile}(this, ..., skip=TRUE, verbose=FALSE)
+}
 
  \arguments{
   \item{...}{Additional arguments passed to \code{\link[Rsamtools]{indexFa}}.}
@@ -31,6 +31,6 @@
    Returns a \code{\link[R.filesets]{GenericDataFileSet}} consisting of the BWA index files.
  }
 
- \author{TBA}
+ \author{Henrik Bengtsson}
 \keyword{internal}
 \keyword{methods}

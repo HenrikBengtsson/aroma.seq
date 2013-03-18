@@ -16,7 +16,9 @@
   Locates the samtools executable on the current system.
  }
 
- \usage{\method{findSamtools}{default}(mustExists=TRUE, ..., verbose=FALSE)}
+ \usage{
+\method{findSamtools}{default}(mustExists=TRUE, ..., verbose=FALSE)
+}
 
  \arguments{
    \item{mustExists}{If \code{\link[base:logical]{TRUE}}, an exception is thrown if the executable
@@ -25,5 +27,5 @@
    \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
  }
 
- \author{TBA}
+ \author{Henrik Bengtsson}
 

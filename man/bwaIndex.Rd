@@ -17,7 +17,9 @@
   Calls the BWA index command.
  }
 
- \usage{\method{bwaIndex}{default}(pathnameFA, indexPrefix="*", method, ..., verbose=FALSE)}
+ \usage{
+\method{bwaIndex}{default}(pathnameFA, indexPrefix="*", method, ..., verbose=FALSE)
+}
 
  \arguments{
    \item{pathnameFA}{The FASTA file to be indexed.}
@@ -33,5 +35,5 @@
    bwaIndex("annotationData/organisms/LambdaPhage/lambda_virus.fa")
  }}
 
- \author{TBA}
+ \author{Henrik Bengtsson}
 

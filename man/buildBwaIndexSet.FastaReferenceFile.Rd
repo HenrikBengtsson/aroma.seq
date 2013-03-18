@@ -9,9 +9,7 @@
  \name{buildBwaIndexSet.FastaReferenceFile}
 \alias{buildBwaIndexSet.FastaReferenceFile}
 \alias{FastaReferenceFile.buildBwaIndexSet}
-\alias{buildBwaIndexSet.FastaReferenceFile}
 \alias{buildBwaIndexSet,FastaReferenceFile-method}
-
 
  \title{Builds a BWA index files set}
 
@@ -19,7 +17,9 @@
    Builds a BWA index files set.
  }
 
- \usage{\method{buildBwaIndexSet}{FastaReferenceFile}(this, method, ..., skip=TRUE, verbose=FALSE)}
+ \usage{
+\method{buildBwaIndexSet}{FastaReferenceFile}(this, method, ..., skip=TRUE, verbose=FALSE)
+}
 
  \arguments{
   \item{method}{A \code{\link[base]{character}} string specifying the algorithm to use.}
@@ -32,6 +32,6 @@
    Returns a \code{\link[R.filesets]{GenericDataFileSet}} consisting of the BWA index files.
  }
 
- \author{TBA}
+ \author{Henrik Bengtsson}
 \keyword{internal}
 \keyword{methods}

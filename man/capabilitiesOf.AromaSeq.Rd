@@ -6,12 +6,11 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{capabilitiesOf.AromaSeq}
+ \name{AromaSeq$capabilitiesOf}
+\alias{AromaSeq$capabilitiesOf}
 \alias{capabilitiesOf.AromaSeq}
 \alias{AromaSeq.capabilitiesOf}
-\alias{capabilitiesOf.AromaSeq}
 \alias{capabilitiesOf,AromaSeq-method}
-
  \alias{AromaSeq.isCapableOf}
 \alias{isCapableOf.AromaSeq}
 \alias{isCapableOf,AromaSeq-method}
@@ -23,8 +22,13 @@
    Checks which tools are supported.
  }
 
- \synopsis{capabilitiesOf.AromaSeq(static, what=NULL, ...)}
-\usage{AromaSeq$capabilitiesOf(what=NULL, ...)}
+ \usage{
+## Static method (use this):
+## AromaSeq$capabilitiesOf(what=NULL, ...)
+
+## Don't use the below:
+\method{capabilitiesOf}{AromaSeq}(static, what=NULL, ...)
+}
 
  \arguments{
   \item{what}{Optional \code{\link[base]{character}} \code{\link[base]{vector}} of which tools to check.}
@@ -43,6 +47,6 @@
    print(isCapableOf(aroma.seq, "bwa"))
  }
 
- \author{TBA}
+ \author{Henrik Bengtsson}
 \keyword{internal}
 \keyword{methods}

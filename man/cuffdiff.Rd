@@ -16,7 +16,9 @@
  Calls cuffdiff on input bam file(s).
 }
 
-\usage{\method{cuffdiff}{default}(commandName="cuffdiff", bams=NULL, cuffdiffOptions, ..., verbose=FALSE)}  - level2
+\usage{
+\method{cuffdiff}{default}(transcriptsGtf, bams=NULL, optionsVec, ..., commandName="cuffdiff", verbose=FALSE)
+}  - level2
 
 \arguments{
 }
@@ -24,5 +26,5 @@
 \examples{\dontrun{
 }}
 
-\author{TBA}
+\author{Henrik Bengtsson}
 

@@ -16,7 +16,9 @@
   Calls the Picard executable.
  }
 
- \usage{\method{systemPicard}{default}(command, ..., verbose=FALSE)}
+ \usage{
+\method{systemPicard}{default}(command, ..., verbose=FALSE)
+}
 
  \arguments{
    \item{command}{A \code{\link[base]{character}} string specifying the Picard command
@@ -40,5 +42,5 @@
  }}
 
 
- \author{TBA}
+ \author{Henrik Bengtsson}
 

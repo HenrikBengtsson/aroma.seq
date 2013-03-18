@@ -17,7 +17,9 @@
   Locates the Picard executable on the current system.
  }
 
- \usage{\method{findPicard}{default}(mustExists=TRUE, ..., verbose=FALSE)}
+ \usage{
+\method{findPicard}{default}(mustExists=TRUE, ..., verbose=FALSE)
+}
 
  \arguments{
    \item{mustExists}{If \code{\link[base:logical]{TRUE}}, an exception is thrown if the executable
@@ -33,5 +35,5 @@
   }
  }
 
- \author{TBA}
+ \author{Henrik Bengtsson}
 

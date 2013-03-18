@@ -16,7 +16,9 @@
   Generates a prefix for a set of index files based on a FASTA pathname.
  }
 
- \usage{\method{createIndexPrefix}{default}(pathnameFA, subdir=NULL, tags="*", asteriskTags=NULL, ...)}
+ \usage{
+\method{createIndexPrefix}{default}(pathnameFA, subdir=NULL, tags="*", asteriskTags=NULL, ...)
+}
 
  \arguments{
    \item{pathnameFA}{The FASTA file.}
@@ -35,5 +37,5 @@
    print(prefix)
  }
 
- \author{TBA}
+ \author{Henrik Bengtsson}
 

@@ -17,7 +17,9 @@
   normalization function.  All signals are normalized.
  }
 
- \usage{\method{normalizeGcContent}{default}(y, gcContent, targetFcn=NULL, subsetToFit=NULL, onMissing=c("ignore", "median"), .isLogged=TRUE, ..., .returnFit=FALSE)}
+ \usage{
+\method{normalizeGcContent}{default}(y, gcContent, targetFcn=NULL, subsetToFit=NULL, onMissing=c("ignore", "median"), .isLogged=TRUE, ..., .returnFit=FALSE)
+}
 
  \arguments{
    \item{y}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of length K of signals to be normalized.}
@@ -43,7 +45,7 @@
    Returns a \code{\link[base]{numeric}} \code{\link[base]{vector}} of the normalized signals.
  }
 
- \author{TBA}
+ \author{Henrik Bengtsson}
 
 
 

@@ -16,7 +16,9 @@
  Wrapper for bowtie2-build.
 }
 
-\usage{\method{systemBowtie2Build}{default}(command="bowtie2-build", ..., system2ArgsList=list(stdout = TRUE, stderr = FALSE), .fake=FALSE, verbose=FALSE)}
+\usage{
+\method{systemBowtie2Build}{default}(command="bowtie2-build", ..., system2ArgsList=list(stdout = TRUE, stderr = FALSE), .fake=FALSE, verbose=FALSE)
+}
 
 \arguments{
   \item{command}{A \code{\link[base]{character}} string specifying the bowtie2 build command.}
@@ -26,5 +28,5 @@
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }
 
-\author{TBA}
+\author{Henrik Bengtsson}
 

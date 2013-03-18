@@ -16,7 +16,9 @@
   Generates a prefix for the index files based on a FASTA pathname.
  }
 
- \usage{\method{bwaIndexPrefix}{default}(pathnameFA, method=c("is", "bwtsw"), subdir="bwa", tags="*", ...)}
+ \usage{
+\method{bwaIndexPrefix}{default}(pathnameFA, method=c("is", "bwtsw"), subdir="bwa", tags="*", ...)
+}
 
  \arguments{
    \item{pathnameFA}{The FASTA file.}
@@ -33,5 +35,5 @@
    print(prefix)
  }
 
- \author{TBA}
+ \author{Henrik Bengtsson}
 

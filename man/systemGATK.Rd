@@ -16,7 +16,9 @@
   Calls the GATK executable.
  }
 
- \usage{\method{systemGATK}{default}(..., verbose=FALSE)}
+ \usage{
+\method{systemGATK}{default}(..., verbose=FALSE)
+}
 
  \arguments{
    \item{...}{Arguments specifying GATK command line switches.}
@@ -29,5 +31,5 @@
  }}
 
 
- \author{TBA}
+ \author{Henrik Bengtsson}
 

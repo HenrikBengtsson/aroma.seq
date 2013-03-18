@@ -16,7 +16,9 @@
   Calls the samtools executable.
  }
 
- \usage{\method{systemSamtools}{default}(command, ..., .fake=FALSE, verbose=FALSE)}
+ \usage{
+\method{systemSamtools}{default}(command, ..., .fake=FALSE, verbose=FALSE)
+}
 
  \arguments{
    \item{command}{A \code{\link[base]{character}} string specifying the samtools command.}
@@ -25,5 +27,5 @@
    \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
  }
 
- \author{TBA}
+ \author{Henrik Bengtsson}
 

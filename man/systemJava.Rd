@@ -16,7 +16,9 @@
   Calls the Java executable.
  }
 
- \usage{\method{systemJava}{default}(..., .fmtArg=c(`( |=)$` = "\%s\%s", `.*` = "\%s \%s"), .fake=FALSE, verbose=FALSE)}
+ \usage{
+\method{systemJava}{default}(..., .fmtArg=c(`( |=)$` = "\%s\%s", `.*` = "\%s \%s"), .fake=FALSE, verbose=FALSE)
+}
 
  \arguments{
    \item{...}{Additional arguments specifying Java command line switches.}
@@ -26,5 +28,5 @@
    \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
  }
 
- \author{TBA}
+ \author{Henrik Bengtsson}
 

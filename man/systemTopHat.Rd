@@ -16,7 +16,9 @@
  Wrapper for tophat.
 }
 
-\usage{\method{systemTopHat}{default}(command="tophat", ..., system2ArgsList=list(stdout = TRUE, stderr = FALSE), .fake=FALSE, verbose=FALSE)}
+\usage{
+\method{systemTopHat}{default}(command="tophat", ..., system2ArgsList=list(stdout = TRUE, stderr = FALSE), .fake=FALSE, verbose=FALSE)
+}
 
 \arguments{
   \item{command}{A \code{\link[base]{character}} string specifying the tophat command.}
@@ -26,5 +28,5 @@
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }
 
-\author{TBA}
+\author{Henrik Bengtsson}
 

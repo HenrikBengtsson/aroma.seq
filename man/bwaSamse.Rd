@@ -16,7 +16,9 @@
   Calls the BWA 'samse' command.
  }
 
- \usage{\method{bwaSamse}{default}(pathnameSAI, pathnameFQ, indexPrefix, pathnameD, ..., verbose=FALSE)}
+ \usage{
+\method{bwaSamse}{default}(pathnameSAI, pathnameFQ, indexPrefix, pathnameD, ..., verbose=FALSE)
+}
 
  \arguments{
    \item{pathnameSAI}{The SAI file to be aligned.}
@@ -38,5 +40,5 @@
    bwaSamse(pathnameSAI=pathnameSAI, pathnameFQ=pathnameFQ, pathnameFA=pathnameFA, pathnameD=pathnameD);
  }}
 
- \author{TBA}
+ \author{Henrik Bengtsson}
 

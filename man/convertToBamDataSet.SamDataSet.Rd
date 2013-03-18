@@ -9,9 +9,7 @@
  \name{convertToBamDataSet.SamDataSet}
 \alias{convertToBamDataSet.SamDataSet}
 \alias{SamDataSet.convertToBamDataSet}
-\alias{convertToBamDataSet.SamDataSet}
 \alias{convertToBamDataSet,SamDataSet-method}
-
 
  \title{Converts the SAM set into a BAM set}
 
@@ -19,7 +17,9 @@
    Converts the SAM set into a BAM set, where each BAM file is sorted and indexed.
  }
 
- \usage{\method{convertToBamDataSet}{SamDataSet}(this, path=getPath(this), ..., verbose=FALSE)}
+ \usage{
+\method{convertToBamDataSet}{SamDataSet}(this, path=getPath(this), ..., verbose=FALSE)
+}
 
  \arguments{
   \item{path}{The destination path.}
@@ -36,6 +36,6 @@
    Internally \code{\link[Rsamtools]{asBam}} is utilized.
  }
 
- \author{TBA}
+ \author{Henrik Bengtsson}
 \keyword{internal}
 \keyword{methods}

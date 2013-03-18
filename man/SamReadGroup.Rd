@@ -34,7 +34,9 @@ extends \link[R.oo]{BasicObject}\cr
   A SamReadGroup object represents a SAM Read Group.
  }
 
- \usage{SamReadGroup(id=NULL, sample=NULL, library=NULL, platform=NULL, platformUnit=NULL, sequencingCenter=NULL, description=NULL, runDate=NULL, flowOrder=NULL, keySequence=NULL, program=NULL, predictedInsertSize=NULL, ...)}
+ \usage{
+SamReadGroup(id=NULL, sample=NULL, library=NULL, platform=NULL, platformUnit=NULL, sequencingCenter=NULL, description=NULL, runDate=NULL, flowOrder=NULL, keySequence=NULL, program=NULL, predictedInsertSize=NULL, ...)
+}
 
  \arguments{
   \item{id}{Specifies the \code{ID} read group field.}
@@ -74,7 +76,7 @@ extends \link[R.oo]{BasicObject}\cr
 
 
  \bold{Methods inherited from BasicObject}:\cr
-as.character, attach, [[<-, [[, $<-, $, detach, equals, extend, getFields, getInstantiationTime, hasField, hashCode, isReferable, objectSize, print, asThis
+$, $<-, [[, [[<-, as.character, attach, detach, equals, extend, getFields, getInstantiationTime, hasField, hashCode, isReferable, objectSize, print, asThis
 
  \bold{Methods inherited from logical}:\cr
 as.data.frame, as.raster, whichVector
@@ -82,7 +84,7 @@ as.data.frame, as.raster, whichVector
 
  }
 
- \author{TBA}
+ \author{Henrik Bengtsson}
 
  \references{
   [1] The SAM Format Specification Working Group,

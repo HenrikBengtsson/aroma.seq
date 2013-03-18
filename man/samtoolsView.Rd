@@ -16,7 +16,9 @@
   Calls the samtools 'view' command.
  }
 
- \usage{\method{samtoolsView}{default}(pathname, pathnameD, ..., verbose=FALSE)}
+ \usage{
+\method{samtoolsView}{default}(pathname, pathnameD, ..., verbose=FALSE)
+}
 
  \arguments{
    \item{pathname}{A SAM/BAM file.}
@@ -26,5 +28,5 @@
    \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
  }
 
- \author{TBA}
+ \author{Henrik Bengtsson}
 

@@ -16,12 +16,14 @@
   Calls the Java jar executable.
  }
 
- \usage{\method{systemJavaJar}{default}(pathname, ...)}
+ \usage{
+\method{systemJavaJar}{default}(pathname, ...)
+}
 
  \arguments{
    \item{pathname}{The JAR file.}
    \item{...}{Additional arguments specifying Java command line switches.}
  }
 
- \author{TBA}
+ \author{Henrik Bengtsson}
 
