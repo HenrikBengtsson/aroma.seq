@@ -20,24 +20,23 @@
 
 ## cuffdiff [options] <transcripts.gtf> <sample1_hits.sam> <sample2_hits.sam> [... sampleN_hits.sam]
 
-setMethodS3("systemCuffdiff", "default", function(commandName="cuffdiff",
-                                                  gtfFile,
-                                                  samFiles,  ## vector with at least two sam files
+setMethodS3("systemCuffdiff", "default", function(cuffdiffStr="",
+                                                  system2ArgsList=list(stdout=FALSE),
+                                                  commandName="cuffdiff",
                                                   ...,
-                                                  system2ArgsList=list(stdout=FALSE),  ## For now, explicitly split off arguments to be passed to system2
-                                                  .fake=FALSE, verbose=FALSE) {
+                                                  .fake=TRUE, verbose=TRUE) {
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  # Arguments '...':
-  dotArgs <- list(...);  ## i.e. dotArgs = list with one item named 'args'; these are the arguments to *cuffdiff*
-
-  # Argument 'samFiles':
-  if (length(samFiles) < 2) {
-    throw("samFiles argument too short; need at least two sam files")
+  # Arguments 'commandName':
+  if (is.null(commandName)) {
+    throw("Argument 'commandName' is null; supply the name of a command to run")
   }
+
+  # Arguments '...':
+  dotArgs <- list(...);  ## [ Not used ]
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -57,26 +56,20 @@ setMethodS3("systemCuffdiff", "default", function(commandName="cuffdiff",
   verbose && cat(verbose, "Arguments passed to system2():");
   verbose && str(verbose, system2ArgsList)
   verbose && cat(verbose, "Arguments passed to Cuffdiff:");
-  verbose && str(verbose, dotArgs);
+  verbose && str(verbose, cuffdiffStr)
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Setup command line switches
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  ## dotArgs <- trim(dotArgs);
-  verbose && cat(verbose, "Command line options:");
-  verbose && print(verbose, dotArgs);
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # System call
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  verbose && cat(verbose, "Command line args:");
+  verbose && print(verbose, cuffdiffStr);
   verbose && cat(verbose, "System call:");
-  cmd <- sprintf("%s %s", bin, paste(dotArgs, collapse=" "));
+  cmd <- sprintf("%s %s", bin, cuffdiffStr)  ## << this is the command line
   verbose && print(verbose, cmd);
-  verbose && str(verbose, system2ArgsList);
 
   verbose && enter(verbose, "system2() call");
-  callArgs <- list(command=bin, args=paste(names(dotArgs$args), dotArgs$args, sep=" "))
+  callArgs <- list(command=bin, args=cuffdiffStr)
   callArgs <- c(callArgs, system2ArgsList)
 
   verbose && str(verbose, callArgs);
@@ -92,7 +85,7 @@ setMethodS3("systemCuffdiff", "default", function(commandName="cuffdiff",
   res;
 }) # systemCuffdiff()
 
-## Usage:   cuffdiff [options] <transcripts.gtf> <sample1_hits.sam> <sample2_hits.sam> [... sampleN_hits.sam]
+## Cmd line usage:   cuffdiff [options] <transcripts.gtf> <sample1_hits.sam> <sample2_hits.sam> [... sampleN_hits.sam]
 
 ############################################################################
 # HISTORY:

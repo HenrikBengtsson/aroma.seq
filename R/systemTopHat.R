@@ -67,6 +67,7 @@ setMethodS3("systemTopHat", "default", function(command="tophat",
 
   verbose && enter(verbose, "system2() call");
   callArgs <- list(command=bin, args=paste(names(dotArgs$args), dotArgs$args, sep=" "))
+  ## BUG:  This has unacceptable dependence on tophat() call using 'args' as the name for dotArgs
   callArgs <- c(callArgs, system2ArgsList)
 
   verbose && str(verbose, callArgs);
