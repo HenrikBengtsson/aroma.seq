@@ -17,7 +17,7 @@
 }
 
 \usage{
-\method{systemCuffdiff}{default}(commandName="cuffdiff", gtfFile, samFiles, ..., system2ArgsList=list(stdout = FALSE), .fake=FALSE, verbose=FALSE)
+\method{systemCuffdiff}{default}(cuffdiffStr="", system2ArgsList=list(stdout = FALSE), commandName="cuffdiff", ..., .fake=TRUE, verbose=TRUE)
 }
 
 \arguments{

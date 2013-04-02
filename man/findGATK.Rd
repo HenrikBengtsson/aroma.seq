@@ -6,34 +6,34 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{findGATK}
+\name{findGATK}
 \alias{findGATK.default}
 \alias{findGATK}
- \alias{GATK_HOME}
+\alias{GATK_HOME}
 
- \title{Locates the GATK executable}
+\title{Locates the GATK executable}
 
- \description{
-  Locates the GATK executable on the current system.
- }
+\description{
+ Locates the GATK executable on the current system.
+}
 
- \usage{
+\usage{
 \method{findGATK}{default}(mustExists=TRUE, ..., verbose=FALSE)
 }
 
- \arguments{
-   \item{mustExists}{If \code{\link[base:logical]{TRUE}}, an exception is thrown if the executable
-      could not be located.}
-   \item{...}{Not used.}
-   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
- }
+\arguments{
+  \item{mustExists}{If \code{\link[base:logical]{TRUE}}, an exception is thrown if the executable
+     could not be located.}
+  \item{...}{Not used.}
+  \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
+}
 
- \details{
-  The GATK tools directory is searched for as follows:
-  \enumerate{
-   \item \code{Sys.getenv("GATK_HOME")}
-  }
+\details{
+ The GATK tools directory is searched for as follows:
+ \enumerate{
+  \item \code{Sys.getenv("GATK_HOME")}
  }
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 

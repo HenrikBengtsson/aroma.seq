@@ -48,7 +48,12 @@ TotalCnBinnedCounting(..., .reqSetClass="BamDataSet")
 
  \section{Fields and Methods}{
   \bold{Methods:}\cr
-\emph{No methods defined}.
+\tabular{rll}{
+ \tab \code{getExpectedOutputFullnames} \tab  -\cr
+ \tab \code{getOutputFileExtension} \tab  -\cr
+ \tab \code{getOutputFileSetClass} \tab  -\cr
+ \tab \code{smoothRawCopyNumbers} \tab  -\cr
+}
 
 
  \bold{Methods inherited from TotalCnSmoothing}:\cr
@@ -63,7 +68,7 @@ getParameters, getParametersAsString, getParameterSets
  \bold{Methods inherited from Object}:\cr
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
-
+ "public"
  }
 
  \author{Henrik Bengtsson}

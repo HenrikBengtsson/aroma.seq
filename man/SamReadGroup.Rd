@@ -58,6 +58,7 @@ SamReadGroup(id=NULL, sample=NULL, library=NULL, platform=NULL, platformUnit=NUL
  \section{Fields and Methods}{
   \bold{Methods:}\cr
 \tabular{rll}{
+ \tab \code{as.character} \tab  -\cr
  \tab \code{asSamList} \tab  -\cr
  \tab \code{asString} \tab  -\cr
  \tab \code{byScanBamHeader} \tab  -\cr
@@ -81,7 +82,7 @@ $, $<-, [[, [[<-, as.character, attach, detach, equals, extend, getFields, getIn
  \bold{Methods inherited from logical}:\cr
 as.data.frame, as.raster, whichVector
 
-
+ "public"
  }
 
  \author{Henrik Bengtsson}

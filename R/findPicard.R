@@ -7,7 +7,7 @@
 # \description{
 #  @get "title" on the current system.
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -45,6 +45,15 @@ setMethodS3("findPicard", "default", function(mustExists=TRUE, ..., verbose=FALS
   command <- "picard";
   verbose && cat(verbose, "Command: ", command);
 
+  # Check for cached results
+  res <- .findCache(name=command);
+  if (!is.null(res)) {
+    path <- res$path;
+    verbose && cat(verbose, "Found cached result.");
+    verbose && exit(verbose);
+    return(path);
+  }
+
   path <- Sys.getenv("PICARD_HOME");
   verbose && printf(verbose, "System variable 'PICARD_HOME': '%s'\n", path);
   if (path == "") path <- NULL;
@@ -58,9 +67,23 @@ setMethodS3("findPicard", "default", function(mustExists=TRUE, ..., verbose=FALS
     if (length(files) == 0L) {
       throw("The located Picard directory contains no *.jar files: ", path);
     }
-  }
- 
-  if (mustExists && (is.null(path) || !isDirectory(path))) {
+
+    # Validate by retrieving 'version' attribute.
+    pathnameT <- file.path(path, "ViewSam.jar");
+    verbose && enter(verbose, "Retrieving version");
+    res <- systemJavaJar(pathnameT, "--version", stdout=TRUE, stderr=TRUE);
+    ver <- res[1L];
+    ver <- gsub("([0-9.-_]+).*", "\\1", ver);
+    # Try to coerce
+    tryCatch({
+      ver <- package_version(ver);
+    }, error = function(ex) {})
+    attr(path, "version") <- ver;
+##    attr(pathname, "raw_version") <- res;
+    verbose && exit(verbose);
+
+    .findCache(name=command, path=path);
+  } else if (mustExists) {
     throw(sprintf("Failed to located Picard tools"));
   }
 
@@ -72,6 +95,8 @@ setMethodS3("findPicard", "default", function(mustExists=TRUE, ..., verbose=FALS
 
 ############################################################################
 # HISTORY:
+# 2013-04-01
+# o Now findPicard() sets attribute 'version', iff possible.
 # 2012-10-01
 # o BUG FIX: findPicard(mustExists=FALSE) would throw an error if Picard
 #   was not found.

@@ -51,11 +51,23 @@ setMethodS3("findCmd", "default", function(command, mustExists=TRUE, ..., verbos
   verbose && enter(verbose, "Locating software");
   verbose && cat(verbose, "Command: ", command);
 
+  # Check for cached results
+  res <- .findCache(name=command);
+  if (!is.null(res)) {
+    pathname <- res$path;
+    verbose && cat(verbose, "Found cached result.");
+    verbose && exit(verbose);
+    return(pathname);
+  }
+
   pathname <- Sys.which(command);
   if (identical(pathname, "")) pathname <- NULL;
   if (!isFile(pathname)) pathname <- NULL;
   verbose && cat(verbose, "Located pathname: ", pathname);
-  if (mustExists && !isFile(pathname)) {
+
+  if (isFile(pathname)) {
+    .findCache(name=command, path=pathname);
+  } else if (mustExists) {
     throw(sprintf("Failed to locate (executable '%s').", command));
   }
 

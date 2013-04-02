@@ -1,7 +1,5 @@
-## Currently this is still dev /debug version
-
 ###########################################################################/**
-# @Rdocdefault cuffdiff
+# @RdocDefault cuffdiff
 #
 # @title "Calls cuffdiff on input bam file(s)"
 #
@@ -9,7 +7,7 @@
 #  @get "title".
 # }
 #
-# @synopsis  - level2
+# @synopsis
 #
 # \arguments{
 # }
@@ -81,6 +79,3 @@ setMethodS3("cuffdiff", "default", function(transcriptsGtf, ## e.g. from TopHat?
   res <- do.call(what=systemCuffdiff, args=ArgsList)
   return(res)
 })
-
-
-

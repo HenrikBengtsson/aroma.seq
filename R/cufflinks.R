@@ -7,7 +7,7 @@
 #  @get "title".
 # }
 #
-# @synopsis  - level2
+# @synopsis
 #
 # \arguments{
 # }

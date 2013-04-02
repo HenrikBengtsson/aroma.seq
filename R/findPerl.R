@@ -6,7 +6,7 @@
 # \description{
 #  @get "title" on the current system.
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -44,6 +44,15 @@ setMethodS3("findPerl", "default", function(mustExists=TRUE, ..., verbose=FALSE)
   command <- "perl";
   verbose && cat(verbose, "Command: ", command);
 
+  # Check for cached results
+  res <- .findCache(name=command);
+  if (!is.null(res)) {
+    pathname <- res$path;
+    verbose && cat(verbose, "Found cached result.");
+    verbose && exit(verbose);
+    return(pathname);
+  }
+
   pathname <- Sys.which(command);
   if (identical(pathname, "")) pathname <- NULL;
   if (!isFile(pathname)) pathname <- NULL;
@@ -51,7 +60,21 @@ setMethodS3("findPerl", "default", function(mustExists=TRUE, ..., verbose=FALSE)
 
   verbose && cat(verbose, "Located pathname: ", pathname);
 
-  if (mustExists && !isFile(pathname)) {
+  # Validate by retrieving 'version' attribute.
+  if (isFile(pathname)) {
+    verbose && enter(verbose, "Retrieving version");
+    res <- system2(pathname, "-version", stdout=TRUE, stderr=TRUE);
+    ver <- grep("This is perl", res, value=TRUE);
+    ver <- gsub(".*[(]v([0-9.]+)[)].*", "\\1", ver);
+    ver <- gsub("[ \"]", "", ver);
+    ver <- gsub("_", "-", ver);
+    ver <- package_version(ver);
+    attr(pathname, "version") <- ver;
+##    attr(pathname, "raw_version") <- res;
+    verbose && exit(verbose);
+
+    .findCache(name=command, path=pathname);
+  } else if (mustExists) {
     throw(sprintf("Failed to located Perl (executable '%s').", command));
   }
 
@@ -63,6 +86,8 @@ setMethodS3("findPerl", "default", function(mustExists=TRUE, ..., verbose=FALSE)
 
 ############################################################################
 # HISTORY:
+# 2013-04-01
+# o Now findPerl() sets attribute 'version', iff possible.
 # 2012-09-28
 # o Created.
 ############################################################################

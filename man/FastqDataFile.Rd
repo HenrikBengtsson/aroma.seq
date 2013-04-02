@@ -47,11 +47,13 @@ FastqDataFile(...)
  \section{Fields and Methods}{
   \bold{Methods:}\cr
 \tabular{rll}{
+ \tab \code{as.character} \tab  -\cr
  \tab \code{getCommonSeqWidth} \tab  -\cr
  \tab \code{getDefaultSamReadGroup} \tab  -\cr
  \tab \code{getGeometry} \tab  -\cr
  \tab \code{getSamReadGroup} \tab  -\cr
  \tab \code{nbrOfSeqs} \tab  -\cr
+ \tab \code{readGeometry} \tab  -\cr
  \tab \code{report} \tab  -\cr
  \tab \code{setSamReadGroup} \tab  -\cr
 }
@@ -66,7 +68,7 @@ appendFullNameTranslator, appendFullNameTranslatorBycharacter, appendFullNameTra
  \bold{Methods inherited from Object}:\cr
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
-
+ "public"
  }
 
  \author{Henrik Bengtsson}

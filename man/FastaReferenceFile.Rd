@@ -47,6 +47,7 @@ FastaReferenceFile(...)
  \section{Fields and Methods}{
   \bold{Methods:}\cr
 \tabular{rll}{
+ \tab \code{as.character} \tab  -\cr
  \tab \code{buildBowtie2IndexSet} \tab  -\cr
  \tab \code{\link[aroma.seq:buildBwaIndexSet.FastaReferenceFile]{buildBwaIndexSet}} \tab Builds a BWA index files set.\cr
  \tab \code{\link[aroma.seq:buildIndex.FastaReferenceFile]{buildIndex}} \tab Builds an FAI index file.\cr
@@ -54,6 +55,7 @@ FastaReferenceFile(...)
  \tab \code{getSeqNames} \tab  -\cr
  \tab \code{getTotalSeqLengths} \tab  -\cr
  \tab \code{nbrOfSeqs} \tab  -\cr
+ \tab \code{readSeqLengths} \tab  -\cr
 }
 
 
@@ -66,7 +68,7 @@ appendFullNameTranslator, appendFullNameTranslatorBycharacter, appendFullNameTra
  \bold{Methods inherited from Object}:\cr
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
-
+ "public"
  }
 
  \author{Henrik Bengtsson}

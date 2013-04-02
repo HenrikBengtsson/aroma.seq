@@ -48,7 +48,17 @@ BinnedGcNormalization(dataSet=NULL, ..., .reqSetClass="AromaUnitTotalCnBinarySet
  \section{Fields and Methods}{
   \bold{Methods:}\cr
 \tabular{rll}{
+ \tab \code{as.character} \tab  -\cr
+ \tab \code{getAsteriskTags} \tab  -\cr
  \tab \code{getGcContentFile} \tab  -\cr
+ \tab \code{getOutputDataSet0} \tab  -\cr
+ \tab \code{getOutputFileClass} \tab  -\cr
+ \tab \code{getOutputFileExtension} \tab  -\cr
+ \tab \code{getOutputFiles} \tab  -\cr
+ \tab \code{getOutputFileSetClass} \tab  -\cr
+ \tab \code{getParameters} \tab  -\cr
+ \tab \code{getPath} \tab  -\cr
+ \tab \code{getRootPath} \tab  -\cr
  \tab \code{process} \tab  -\cr
 }
 
@@ -62,7 +72,7 @@ getParameters, getParametersAsString, getParameterSets
  \bold{Methods inherited from Object}:\cr
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
-
+ "public"
  }
 
  \author{Henrik Bengtsson}

@@ -17,8 +17,8 @@
 }
 
 \usage{
-\method{cuffdiff}{default}(transcriptsGtf, bams=NULL, optionsVec, ..., commandName="cuffdiff", verbose=FALSE)
-}  - level2
+\method{cuffdiff}{default}(transcriptsGtf, bams=NULL, optionsVec=NULL, ..., system2ArgsList=NULL, commandName="cuffdiff", verbose=FALSE)
+}
 
 \arguments{
 }

@@ -7,7 +7,7 @@
 # \description{
 #  @get "title" on the current system.
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -45,6 +45,15 @@ setMethodS3("findGATK", "default", function(mustExists=TRUE, ..., verbose=FALSE)
   command <- "GATK";
   verbose && cat(verbose, "Command: ", command);
 
+  # Check for cached results
+  res <- .findCache(name=command);
+  if (!is.null(res)) {
+    pathname <- res$path;
+    verbose && cat(verbose, "Found cached result.");
+    verbose && exit(verbose);
+    return(pathname);
+  }
+
   path <- Sys.getenv("GATK_HOME");
   verbose && printf(verbose, "System variable 'GATK_HOME': '%s'\n", path);
   if (path == "") path <- NULL;
@@ -58,15 +67,18 @@ setMethodS3("findGATK", "default", function(mustExists=TRUE, ..., verbose=FALSE)
 
   path <- Arguments$getReadablePath(path);
   verbose && cat(verbose, "Located directory: ", path);
- 
+
   # Get main GATK jar file
   filename <- "GenomeAnalysisTK.jar";
   pathname <- Arguments$getReadablePathname(filename, path=path, mustExists=FALSE);
-  if (mustExists && !isFile(pathname)) {
+  verbose && cat(verbose, "Located main jar file: ", pathname);
+
+  if (isFile(pathname)) {
+    ver <- NULL;
+    .findCache(name=command, path=pathname);
+  } else if (mustExists) {
     throw(sprintf("Failed to located GATK tools"));
   }
-
-  verbose && cat(verbose, "Located main jar file: ", pathname);
 
   verbose && exit(verbose);
 

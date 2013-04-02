@@ -52,6 +52,7 @@ IlluminaFastqDataFile(...)
  \tab \code{getBarcodeSequence} \tab  -\cr
  \tab \code{getDefaultSamReadGroup} \tab  -\cr
  \tab \code{getFileVersion} \tab  -\cr
+ \tab \code{getFirstSequenceInfo} \tab  -\cr
  \tab \code{getFlowcellId} \tab  -\cr
  \tab \code{getInstrumentId} \tab  -\cr
  \tab \code{getLane} \tab  -\cr
@@ -74,7 +75,7 @@ appendFullNameTranslator, appendFullNameTranslatorBycharacter, appendFullNameTra
  \bold{Methods inherited from Object}:\cr
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
-
+ "public"
  }
 
  \author{Henrik Bengtsson}

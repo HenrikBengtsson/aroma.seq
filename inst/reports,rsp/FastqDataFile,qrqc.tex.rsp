@@ -1,8 +1,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Authors: Henrik Bengtsson
 %
-% Usage: (compiles *.tex.rsp => tex.rsp.R => *.tex => *.dvi)
-%  R.rsp::rsp("[...].tex.rsp", path="reports,rsp/");
+% Usage: (compiles *.tex.rsp => *.tex => *.dvi)
+%  R.rsp::rfile("[...].tex.rsp", path="reports,rsp/")
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 <%
@@ -238,7 +238,7 @@ Sample size: <%=sprintf("%.3g", 100*hash.prop)%>\% of all available sequences.
 \clearpage
 \section*{Session information}
 <%=toLatex(sessionInfo())%>
-This report was automatically generated using \code{rsp()} of the R.rsp package.
+This report was automatically generated using \code{rfile()} of the R.rsp package.
 \end{document}
 <% } # reportBody() %>
 

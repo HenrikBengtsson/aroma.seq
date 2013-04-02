@@ -48,6 +48,7 @@ AbstractIndexSet(files=NULL, ...)
  \section{Fields and Methods}{
   \bold{Methods:}\cr
 \tabular{rll}{
+ \tab \code{as.character} \tab  -\cr
  \tab \code{byPrefix} \tab  -\cr
  \tab \code{getIndexPrefix} \tab  -\cr
  \tab \code{isComplete} \tab  -\cr
@@ -63,7 +64,7 @@ appendFullNameTranslator, appendFullNameTranslatorBycharacter, appendFullNameTra
  \bold{Methods inherited from Object}:\cr
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
-
+ "public"
  }
 
  \author{Henrik Bengtsson}

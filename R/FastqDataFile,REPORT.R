@@ -41,7 +41,7 @@ setMethodS3("report", "FastqDataFile", function(this, dataSetSet, ..., flavor="q
 
   # Generate PDF report
   rspArgs <- list(this, dataSet=dataSet);
-  pathnameR <- rsp(pathnameT, ..., outPath=outPath, verbose=less(verbose, 5));
+  pathnameR <- rfile(pathnameT, ..., workdir=outPath, verbose=less(verbose, 5));
 
   verbose && cat(verbose, "Generated report: ", pathnameR);
 

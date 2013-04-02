@@ -1,6 +1,14 @@
 Package: aroma.seq
 ==================
 
+Version: 0.2.10 [2013-04-01]
+o SPEEDUP: Now the internal "find" function that locates external 
+  executables caches their results.
+o Bumped up package dependencies.
+
+Version: 0.2.9 [2013-03-15]
+o ...
+
 Version: 0.2.8 [2013-03-14]
 o Standardize args in bowtie/tophat/cuff*: Move 'command' to end, use 'optionsVec'
 
