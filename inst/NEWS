@@ -1,8 +1,8 @@
 Package: aroma.seq
 ==================
 
-Version: 0.2.10 [2013-04-01]
-o SPEEDUP: Now the internal "find" function that locates external 
+Version: 0.2.10 [2013-04-02]
+o SPEEDUP: Now the internal "find" function that locates external
   executables caches their results.
 o Bumped up package dependencies.
 
@@ -37,7 +37,7 @@ o Bumped up package dependencies.
 Version: 0.2.1 [2012-11-26]
 o SPEEDUP: process(..., dropEmpty=TRUE) for GatkAlleleCounting
   is now much faster.
-o ROBUSTNESS: Now convertToBamDataSet() for SamDataSet asserts 
+o ROBUSTNESS: Now convertToBamDataSet() for SamDataSet asserts
   that the output set is complete.
 o BUG FIX: process() for BwaAlignment and Bowtie2Alignment was
   only align the first sample regardless on input data set.
@@ -60,7 +60,7 @@ o DOCUMENTATION: Hiding more internal methods from the help indices.
 Version: 0.1.27 [2012-11-12]
 o CLEANUP: Now seq_along(x) instead of seq(along=x) everywhere.
   Similarly, seq(ds) where 'ds' is GenericDataFileSet is now
-  replaced by seq_along(ds).  Likewise, seq_len(x) replaces 
+  replaced by seq_along(ds).  Likewise, seq_len(x) replaces
   seq(length=x), and length(ds) replaces nbrOfFiles(ds).
 
 
@@ -127,8 +127,8 @@ o Added AromaUnitNucleotideCountsFile and methods for importing
   binned nucleotide counts from a BSgenome object.
 o Added binTabulate() for MaskedDNAString.
 o ROBUSTNESS/BUG FIX: No longer passing '...' to NextMethod(), cf.
-  R-devel thread 'Do *not* pass '...' to NextMethod() - it'll do it 
-  for you; missing documentation, a bug or just me?' on Oct 16, 2012.  
+  R-devel thread 'Do *not* pass '...' to NextMethod() - it'll do it
+  for you; missing documentation, a bug or just me?' on Oct 16, 2012.
 
 
 Version: 0.1.15 [2012-10-11]
@@ -202,7 +202,7 @@ o Add systemBowtie2Build and testSystemBowtie2Build.
 
 
 Version: 0.1.2 [2012-08-20]
-o TYPO: Renamed Bowtie2Aligment to Bowtie2Alignment. 
+o TYPO: Renamed Bowtie2Aligment to Bowtie2Alignment.
 
 
 Version: 0.1.1 [2012-07-11]

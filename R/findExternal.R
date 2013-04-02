@@ -126,22 +126,37 @@ findExternal <- function(mustExist=TRUE, command, version=NULL, versionPattern=N
   if (isFile(pathname)) {
     if (!is.null(versionPattern)) {
       verbose && enter(verbose, "Retrieving version");
+
+      # Request version output from software
       suppressWarnings({
         res <- system2(pathname, args=verOpt, stdout=TRUE, stderr=TRUE);
       });
+
+      # Parse
       ver <- grep(versionPattern, res, value=TRUE);
-      if (length(ver) == 0L) {
-        throw(sprintf("Failed to identify 'version' using regular expression '%s': %s", versionPattern, paste(res, collapse="\\n")));
+      if (length(ver) > 0L) {
+        ver <- ver[1L];
+        verbose && printf(verbose, "Version (output): '%s'\n", ver);
+        ver <- gsub(versionPattern, "\\1", ver);
+        verbose && printf(verbose, "Version (string): '%s'\n", ver);
+        # Try to coerce
+        tryCatch({
+          ver <- gsub("_", "-", ver);
+          ver <- package_version(ver);
+          verbose && printf(verbose, "Version (parsed): '%s'\n", ver);
+        }, error = function(ex) {});
+      } else {
+        msg <- sprintf("Failed to identify 'version' using regular expression '%s': %s", versionPattern, paste(res, collapse="\\n"));
+        if (!is.null(version)) {
+          throw(msg);
+        } else {
+          warning(msg);
+        }
+        ver <- NULL;
       }
-      verbose && printf(verbose, "Version (output): '%s'\n", ver);
-      ver <- gsub(versionPattern, "\\1", ver);
-      verbose && printf(verbose, "Version (string): '%s'\n", ver);
-      tryCatch({
-        ver <- gsub("_", "-", ver);
-        ver <- package_version(ver);
-        verbose && printf(verbose, "Version (parsed): '%s'\n", ver);
-      }, error = function(ex) {});
+
       verbose && exit(verbose);
+
 
       # Record the version
       attr(pathname, "version") <- ver;
@@ -173,6 +188,9 @@ findExternal <- function(mustExist=TRUE, command, version=NULL, versionPattern=N
 
 ############################################################################
 # HISTORY:
+# 2013-04-02
+# o ROBUSTNESS: Now findExternal(..., version=NULL) only gives a warning
+#   if it fails to infer the version from the software's version output.
 # 2013-04-01
 # o Renamed argument 'mustExists' to 'mustExist'.
 # o Created from findTopHat.R.
