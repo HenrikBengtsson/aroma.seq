@@ -5,13 +5,13 @@ findTopHat <- function(..., command="tophat") {
 
 
 findTopHat1 <- function(...) {
-  findTopHat(..., command="tophat", version=1);
+  findTopHat(..., command="tophat", version=c(1,2));
 } # findTopHat1()
 
 
 findTopHat2 <- function(...) {
   res <- tryCatch({
-    findTopHat(..., command="tophat", version="2");
+    findTopHat(..., command="tophat", version=c(2,3));
   }, error = function(ex) { NULL });
   if (is.null(res)) {
     res <- findTopHat(..., command="tophat2", version=2);

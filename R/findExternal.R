@@ -74,7 +74,9 @@ findExternal <- function(mustExist=TRUE, command, version=NULL, versionPattern=N
   # Argument 'version':
   if (!is.null(version)) {
     version <- Arguments$getCharacters(version);
-    version <- rep(version, length.out=2L);
+    if (length(version) == 1L) {
+      version <- rep(version, length.out=2L);
+    }
   }
 
   # Argument 'versionPattern':
@@ -100,7 +102,7 @@ findExternal <- function(mustExist=TRUE, command, version=NULL, versionPattern=N
   verOpt <- names(versionPattern);
   verbose && cat(verbose, "Command: ", command);
   if (!is.null(version)) {
-    verbose && printf(verbose, "Requested version range: [%s,%s]\n", version[1L], version[2L]);
+    verbose && printf(verbose, "Requested version range: [%s,%s)\n", version[1L], version[2L]);
     verbose && cat(verbose, "Version option: ", verOpt);
     verbose && cat(verbose, "Version pattern: ", versionPattern);
   }
@@ -147,9 +149,9 @@ findExternal <- function(mustExist=TRUE, command, version=NULL, versionPattern=N
       if (!is.null(version)) {
         verbose && enter(verbose, "Validated version");
         verbose && cat(verbose, "Available version: ", ver);
-        verbose && printf(verbose, "Requested version range: [%s,%s]\n", version[1L], version[2L]);
-        if (ver < version[1L] || ver > version[2L]) {
-          throw(sprintf("Failed to located '%s' with version in [%s,%s]: %s", command, version[1L], version[2L], ver));
+        verbose && printf(verbose, "Requested version range: [%s,%s)\n", version[1L], version[2L]);
+        if (ver < version[1L] || ver >= version[2L]) {
+          throw(sprintf("Failed to located '%s' with version in [%s,%s): %s", command, version[1L], version[2L], ver));
         }
         verbose && exit(verbose);
       }
