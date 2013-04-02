@@ -3,10 +3,10 @@
 # @alias findTopHat1
 # @alias findTopHat2
 #
-# @title "Locates the TopHat executable of a certain version"
+# @title "Locates an external executable"
 #
 # \description{
-#  @get "title" on the current system.
+#  @get "title".
 # }
 #
 # @synopsis
@@ -14,16 +14,24 @@
 # \arguments{
 #   \item{mustExists}{If @TRUE, an exception is thrown if the executable
 #      could not be located.}
-#   \item{command}{A @character string specifying the name of the executable.}
-#   \item{version}{If non-@NULL, specifies which version of TopHat.}
+#   \item{command}{A @character string specifying the name of the
+#      executable to locate.}
+#   \item{version}{(optional) If non-@NULL, specifies which version of the
+#      executable to trieve.}
 #   \item{...}{Not used.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
+# }
+#
+# \value{
+#   Returns the pathname (or the path) of the external executable.
+#   If not found, @NULL is returned, unless if \code{mustExists=TRUE}
+#   in case an error is thrown.
 # }
 #
 # \details{
 #  The TopHat executable is searched for as follows:
 #  \enumerate{
-#   \item \code{Sys.which("tophat")}
+#   \item \code{Sys.which(command)}
 #  }
 # }
 #
@@ -87,9 +95,11 @@ findTopHat <- function(mustExists=TRUE, command="tophat", version, ..., verbose=
   pathname;
 } # findTopHat()
 
+
 findTopHat1 <- function(...) {
   findTopHat(..., command="tophat", version="1");
 } # findTopHat1()
+
 
 findTopHat2 <- function(...) {
   res <- tryCatch({
