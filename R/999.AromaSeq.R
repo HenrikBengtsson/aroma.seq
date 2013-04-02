@@ -69,8 +69,8 @@ setMethodS3("capabilitiesOf", "AromaSeq", function(static, what=NULL, ...) {
   res$gatk <- !is.null(findGATK(mustExist=FALSE));
   res$picard <- !is.null(findPicard(mustExist=FALSE));
   res$samtools <- !is.null(findSamtools(mustExist=FALSE));
-  res$tophat1 <- !is.null(findTopHat(version=1, mustExist=FALSE));
-  res$tophat2 <- !is.null(findTopHat(version=2, mustExist=FALSE));
+  res$tophat1 <- !is.null(findTopHat1(mustExist=FALSE));
+  res$tophat2 <- !is.null(findTopHat2(mustExist=FALSE));
 
   # Order lexicographically
   o <- order(names(res));
