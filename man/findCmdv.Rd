@@ -17,12 +17,12 @@
 }
 
 \usage{
-\method{findCmdv}{default}(command=NULL, version=NULL, mustExists=TRUE, ..., verbose=FALSE)
+\method{findCmdv}{default}(command=NULL, version=NULL, mustExist=TRUE, ..., verbose=FALSE)
 }
 
 \arguments{
   \item{command}{Name of executable to find}
-  \item{mustExists}{If \code{\link[base:logical]{TRUE}}, an exception is thrown if the executable
+  \item{mustExist}{If \code{\link[base:logical]{TRUE}}, an exception is thrown if the executable
      could not be located.}
   \item{version}{}
   \item{...}{Not used.}

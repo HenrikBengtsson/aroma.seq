@@ -11,7 +11,7 @@
 #
 # \arguments{
 #   \item{command}{Name of executable to find}
-#   \item{mustExists}{If @TRUE, an exception is thrown if the executable
+#   \item{mustExist}{If @TRUE, an exception is thrown if the executable
 #      could not be located.}
 #   \item{...}{Not used.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
@@ -29,7 +29,7 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("findCmd", "default", function(command, mustExists=TRUE, ..., verbose=FALSE) {
+setMethodS3("findCmd", "default", function(command, mustExist=TRUE, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -39,8 +39,8 @@ setMethodS3("findCmd", "default", function(command, mustExists=TRUE, ..., verbos
     throw(sprintf("Failed to locate executable:  command argument is NULL."));
   }
 
-  # Argument 'mustExists':
-  mustExists <- Arguments$getLogical(mustExists);
+  # Argument 'mustExist':
+  mustExist <- Arguments$getLogical(mustExist);
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -68,7 +68,7 @@ setMethodS3("findCmd", "default", function(command, mustExists=TRUE, ..., verbos
 
   if (isFile(pathname)) {
     .findCache(name=command, path=pathname);
-  } else if (mustExists) {
+  } else if (mustExist) {
     throw(sprintf("Failed to locate (executable '%s').", command));
   }
 

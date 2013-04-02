@@ -11,7 +11,7 @@
 #
 # \arguments{
 #   \item{command}{Name of executable to find}
-#   \item{mustExists}{If @TRUE, an exception is thrown if the executable
+#   \item{mustExist}{If @TRUE, an exception is thrown if the executable
 #      could not be located.}
 #   \item{version}{}
 #   \item{...}{Not used.}
@@ -35,7 +35,7 @@
 #*/###########################################################################
 setMethodS3("findCmdv", "default", function(command=NULL,
                                             version=NULL,
-                                            mustExists=TRUE, ..., verbose=FALSE) {
+                                            mustExist=TRUE, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -45,8 +45,8 @@ setMethodS3("findCmdv", "default", function(command=NULL,
     throw(sprintf("Failed to locate executable:  command argument is NULL."));
   }
 
-  # Argument 'mustExists':
-  mustExists <- Arguments$getLogical(mustExists);
+  # Argument 'mustExist':
+  mustExist <- Arguments$getLogical(mustExist);
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -67,7 +67,7 @@ setMethodS3("findCmdv", "default", function(command=NULL,
   if (identical(pathname, "")) pathname <- NULL;
   if (!isFile(pathname)) pathname <- NULL;
   verbose && cat(verbose, "Located pathname: ", pathname);
-  if (mustExists && !isFile(pathname)) {
+  if (mustExist && !isFile(pathname)) {
     throw(sprintf("Failed to locate (executable '%s').", command));
   }
 

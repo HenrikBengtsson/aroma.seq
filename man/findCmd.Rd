@@ -17,12 +17,12 @@
 }
 
 \usage{
-\method{findCmd}{default}(command, mustExists=TRUE, ..., verbose=FALSE)
+\method{findCmd}{default}(command, mustExist=TRUE, ..., verbose=FALSE)
 }
 
 \arguments{
   \item{command}{Name of executable to find}
-  \item{mustExists}{If \code{\link[base:logical]{TRUE}}, an exception is thrown if the executable
+  \item{mustExist}{If \code{\link[base:logical]{TRUE}}, an exception is thrown if the executable
      could not be located.}
   \item{...}{Not used.}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
