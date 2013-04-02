@@ -25,9 +25,10 @@
 #  NB: This method does NOT do any version checking!
 # }
 #
-# @author
+# @author "TT"
+#
+# @keyword internal
 #*/###########################################################################
-
 setMethodS3("findCmd", "default", function(command, mustExists=TRUE, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments

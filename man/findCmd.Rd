@@ -36,5 +36,7 @@
  NB: This method does NOT do any version checking!
 }
 
-\author{Henrik Bengtsson}
+\author{Taku Tokuyasu}
 
+
+\keyword{internal}

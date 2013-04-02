@@ -11,7 +11,7 @@
 # @synopsis
 #
 # \arguments{
-#   \item{mustExists}{If @TRUE, an exception is thrown if the executable
+#   \item{mustExist}{If @TRUE, an exception is thrown if the executable
 #      could not be located.}
 #   \item{...}{Not used.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
@@ -24,14 +24,16 @@
 #  }
 # }
 #
-# @author
+# @author "HB"
+#
+# @keyword internal
 #*/###########################################################################
-findPicard <- function(mustExists=TRUE, ..., verbose=FALSE) {
+findPicard <- function(mustExist=TRUE, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Argument 'mustExists':
-  mustExists <- Arguments$getLogical(mustExists);
+  # Argument 'mustExist':
+  mustExist <- Arguments$getLogical(mustExist);
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -83,7 +85,7 @@ findPicard <- function(mustExists=TRUE, ..., verbose=FALSE) {
     verbose && exit(verbose);
 
     .findCache(name=command, path=path);
-  } else if (mustExists) {
+  } else if (mustExist) {
     throw(sprintf("Failed to located Picard tools"));
   }
 

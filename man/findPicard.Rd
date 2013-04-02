@@ -18,11 +18,11 @@
 }
 
 \usage{
-findPicard(mustExists=TRUE, ..., verbose=FALSE)
+findPicard(mustExist=TRUE, ..., verbose=FALSE)
 }
 
 \arguments{
-  \item{mustExists}{If \code{\link[base:logical]{TRUE}}, an exception is thrown if the executable
+  \item{mustExist}{If \code{\link[base:logical]{TRUE}}, an exception is thrown if the executable
      could not be located.}
   \item{...}{Not used.}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
@@ -37,3 +37,5 @@ findPicard(mustExists=TRUE, ..., verbose=FALSE)
 
 \author{Henrik Bengtsson}
 
+
+\keyword{internal}

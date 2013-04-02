@@ -11,7 +11,7 @@
 # @synopsis
 #
 # \arguments{
-#   \item{mustExists}{If @TRUE, an exception is thrown if the executable
+#   \item{mustExist}{If @TRUE, an exception is thrown if the executable
 #      could not be located.}
 #   \item{...}{Not used.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
@@ -24,14 +24,16 @@
 #  }
 # }
 #
-# @author
+# @author "HB"
+#
+# @keyword internal
 #*/###########################################################################
-findGATK <- function(mustExists=TRUE, ..., verbose=FALSE) {
+findGATK <- function(mustExist=TRUE, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Argument 'mustExists':
-  mustExists <- Arguments$getLogical(mustExists);
+  # Argument 'mustExist':
+  mustExist <- Arguments$getLogical(mustExist);
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -59,7 +61,7 @@ findGATK <- function(mustExists=TRUE, ..., verbose=FALSE) {
   if (path == "") path <- NULL;
 
   if (is.null(path) || !isDirectory(path)) {
-    if (mustExists) {
+    if (mustExist) {
       throw(sprintf("Failed to located GATK home directory"));
     }
     return(FALSE);
@@ -70,13 +72,13 @@ findGATK <- function(mustExists=TRUE, ..., verbose=FALSE) {
 
   # Get main GATK jar file
   filename <- "GenomeAnalysisTK.jar";
-  pathname <- Arguments$getReadablePathname(filename, path=path, mustExists=FALSE);
+  pathname <- Arguments$getReadablePathname(filename, path=path, mustExist=FALSE);
   verbose && cat(verbose, "Located main jar file: ", pathname);
 
   if (isFile(pathname)) {
     ver <- NULL;
     .findCache(name=command, path=pathname);
-  } else if (mustExists) {
+  } else if (mustExist) {
     throw(sprintf("Failed to located GATK tools"));
   }
 

@@ -1,5 +1,13 @@
 ###########################################################################/**
 # @RdocFunction findExternal
+# @alias findJava
+# @alias findPerl
+# @alias findBowtie2
+# @alias findBWA
+# @alias findSamtools
+# @alias findTopHat
+# @alias findTopHat1
+# @alias findTopHat2
 #
 # @title "Locates an external executable"
 #
@@ -7,7 +15,16 @@
 #  @get "title".
 # }
 #
-# @synopsis
+# \usage{
+#   findJava(@eval "t<-formals(findJava);paste(gsub('=$','',paste(names(t),t,sep='=')),collapse=', ')")
+#   findPerl(@eval "t<-formals(findPerl);paste(gsub('=$','',paste(names(t),t,sep='=')),collapse=', ')")
+#   findBowtie2(@eval "t<-formals(findBowtie2);paste(gsub('=$','',paste(names(t),t,sep='=')),collapse=', ')")
+#   findBWA(@eval "t<-formals(findBWA);paste(gsub('=$','',paste(names(t),t,sep='=')),collapse=', ')")
+#   findSamtools(@eval "t<-formals(findSamtools);paste(gsub('=$','',paste(names(t),t,sep='=')),collapse=', ')")
+#   findTopHat(@eval "t<-formals(findTopHat);paste(gsub('=$','',paste(names(t),t,sep='=')),collapse=', ')")
+#   findTopHat1(@eval "t<-formals(findTopHat1);paste(gsub('=$','',paste(names(t),t,sep='=')),collapse=', ')")
+#   findTopHat2(@eval "t<-formals(findTopHat2);paste(gsub('=$','',paste(names(t),t,sep='=')),collapse=', ')")
+# }
 #
 # \arguments{
 #   \item{mustExist}{If @TRUE, an exception is thrown if the executable
@@ -40,7 +57,9 @@
 #  }
 # }
 #
-# @author
+# @author "HB"
+#
+# @keyword internal
 #*/###########################################################################
 findExternal <- function(mustExist=TRUE, command, version=NULL, versionPattern=NULL, force=FALSE, verbose=FALSE, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

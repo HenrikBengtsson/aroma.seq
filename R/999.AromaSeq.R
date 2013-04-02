@@ -60,17 +60,17 @@ setMethodS3("capabilitiesOf", "AromaSeq", function(static, what=NULL, ...) {
   res <- list();
 
   # General software frameworks
-  res$java <- !is.null(findJava(mustExists=FALSE));
-  res$perl <- !is.null(findPerl(mustExists=FALSE));
+  res$java <- !is.null(findJava(mustExist=FALSE));
+  res$perl <- !is.null(findPerl(mustExist=FALSE));
 
   # Sequencing tools
-  res$bowtie2 <- !is.null(findBowtie2(mustExists=FALSE));
-  res$bwa <- !is.null(findBWA(mustExists=FALSE));
-  res$gatk <- !is.null(findGATK(mustExists=FALSE));
-  res$picard <- !is.null(findPicard(mustExists=FALSE));
-  res$samtools <- !is.null(findSamtools(mustExists=FALSE));
-  res$tophat1 <- !is.null(findTopHat(version=1, mustExists=FALSE));
-  res$tophat2 <- !is.null(findTopHat(version=2, mustExists=FALSE));
+  res$bowtie2 <- !is.null(findBowtie2(mustExist=FALSE));
+  res$bwa <- !is.null(findBWA(mustExist=FALSE));
+  res$gatk <- !is.null(findGATK(mustExist=FALSE));
+  res$picard <- !is.null(findPicard(mustExist=FALSE));
+  res$samtools <- !is.null(findSamtools(mustExist=FALSE));
+  res$tophat1 <- !is.null(findTopHat(version=1, mustExist=FALSE));
+  res$tophat2 <- !is.null(findTopHat(version=2, mustExist=FALSE));
 
   # Order lexicographically
   o <- order(names(res));

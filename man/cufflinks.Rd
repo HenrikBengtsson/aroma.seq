@@ -18,7 +18,7 @@
 
 \usage{
 \method{cufflinks}{default}(bams=NULL, optionsVec, ..., commandName="cufflinks", verbose=FALSE)
-}  - level2
+}
 
 \arguments{
 }

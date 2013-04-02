@@ -1,56 +1,12 @@
-###########################################################################/**
-# @RdocFunction findBowtie2
-#
-# @title "Locates one of the bowtie2 executable"
-#
-# \description{
-#  @get "title" on the current system.
-# }
-#
-# @synopsis
-#
-# \arguments{
-#   \item{mustExists}{If @TRUE, an exception is thrown if the executable
-#      could not be located.}
-#   \item{...}{Not used.}
-#   \item{command}{A @character string specifying the executable to locate.}
-#   \item{verbose}{See @see "R.utils::Verbose".}
-# }
-#
-# \details{
-#  The Bowtie2 executable is searched for as follows:
-#  \enumerate{
-#   \item \code{Sys.which(command)}
-#  }
-# }
-#
-# @author
-#*/###########################################################################
-findBowtie2 <- function(mustExists=TRUE, ..., command=c("bowtie2", "bowtie2-align", "bowtie2-build", "bowtie2-inspect"), verbose=FALSE) {
+findBowtie2 <- function(..., command=c("bowtie2", "bowtie2-align", "bowtie2-build", "bowtie2-inspect")) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Argument 'mustExists':
-  mustExists <- Arguments$getLogical(mustExists);
-
   # Argument 'command':
   command <- match.arg(command);
 
-  # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
-  if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
-  }
-
-  verbose && enter(verbose, "Locating Bowtie2 software");
-
   versionPattern <- c("-version"=".*version ([0-9.]+).*");
-  pathname <- findExternal(mustExist=mustExists, command=command, ..., versionPattern=versionPattern, verbose=verbose);
-
-  verbose && exit(verbose);
-
-  pathname;
+  findExternal(command=command, versionPattern=versionPattern, ...);
 } # findBowtie2()
 
 ############################################################################

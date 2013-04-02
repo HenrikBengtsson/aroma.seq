@@ -6,15 +6,15 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{AromaSeq}
+\name{AromaSeq}
 \docType{class}
 \alias{AromaSeq}
 
 
- \title{The AromaSeq Package class}
+\title{The AromaSeq Package class}
 
- \description{
-  Package:  aroma.seq \cr
+\description{
+ Package:  aroma.seq \cr
 \bold{Class AromaSeq}\cr
 
 \code{\link[R.oo]{Object}}\cr
@@ -32,18 +32,18 @@ public static class \bold{AromaSeq}\cr
 extends \link[aroma.core]{AromaPackage}\cr
 
 
- }
+}
 
- \usage{
+\usage{
 AromaSeq(...)
 }
 
- \arguments{
-   \item{...}{Not used.}
- }
+\arguments{
+  \item{...}{Not used.}
+}
 
- \section{Fields and Methods}{
-  \bold{Methods:}\cr
+\section{Fields and Methods}{
+ \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{\link[aroma.seq:capabilitiesOf.AromaSeq]{capabilitiesOf}} \tab Checks which tools are supported.\cr
  \tab \code{isCapableOf} \tab  -\cr
@@ -61,7 +61,7 @@ as.character, getAuthor, getBundle, getBundlePackages, getChangeLog, getClasses,
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
  "public"
- }
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 \keyword{classes}

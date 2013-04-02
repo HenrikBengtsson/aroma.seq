@@ -29,9 +29,10 @@
 #  }
 # }
 #
-# @author
+# @author "TT"
+#
+# @keyword internal
 #*/###########################################################################
-
 setMethodS3("findCmdv", "default", function(command=NULL,
                                             version=NULL,
                                             mustExists=TRUE, ..., verbose=FALSE) {
