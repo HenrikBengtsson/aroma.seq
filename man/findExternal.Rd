@@ -31,8 +31,8 @@
   findBWA(...)
   findSamtools(...)
   findTopHat(..., command=tophat)
-  findTopHat1(...)
-  findTopHat2(...)
+  findTopHat1(..., command=tophat, version=c(1, 2))
+  findTopHat2(..., command=tophat2, version=c(2, 3))
 }
 
 \arguments{

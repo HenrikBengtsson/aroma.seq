@@ -9,7 +9,7 @@ findTopHat1 <- function(..., command="tophat", version=c(1,2)) {
 } # findTopHat1()
 
 
-findTopHat2 <- function(..., command="tophat2", version=version) {
+findTopHat2 <- function(..., command="tophat2", version=c(2,3)) {
   res <- tryCatch({
     findTopHat(..., command=command, version=version);
   }, error = function(ex) { NULL });
