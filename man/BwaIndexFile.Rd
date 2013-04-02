@@ -6,15 +6,15 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{BwaIndexFile}
+\name{BwaIndexFile}
 \docType{class}
 \alias{BwaIndexFile}
 
 
- \title{The abstract BwaIndexFile class}
+\title{The abstract BwaIndexFile class}
 
- \description{
-  Package:  aroma.seq \cr
+\description{
+ Package:  aroma.seq \cr
 \bold{Class BwaIndexFile}\cr
 
 \code{\link[R.oo]{Object}}\cr
@@ -35,19 +35,19 @@ extends \emph{\link[aroma.seq]{AbstractIndexFile}}\cr
 
 
 
-  A BwaIndexFile object represents a Bwa index file.
- }
+ A BwaIndexFile object represents a Bwa index file.
+}
 
- \usage{
+\usage{
 BwaIndexFile(...)
 }
 
- \arguments{
-   \item{...}{Arguments passed to \code{\link{AbstractIndexFile}}.}
- }
+\arguments{
+  \item{...}{Arguments passed to \code{\link{AbstractIndexFile}}.}
+}
 
- \section{Fields and Methods}{
-  \bold{Methods:}\cr
+\section{Fields and Methods}{
+ \bold{Methods:}\cr
 \emph{No methods defined}.
 
 
@@ -64,16 +64,19 @@ appendFullNameTranslator, appendFullNameTranslatorBycharacter, appendFullNameTra
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
  "public"
- }
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 
- \references{
-    ...
- }
+\references{
+   ...
+}
 
- \seealso{
-   An object of this class is typically part of an
-   \code{\link{BwaIndexSet}}.
- }
+\seealso{
+  An object of this class is typically part of an
+  \code{\link{BwaIndexSet}}.
+}
+
+
 \keyword{classes}
+\keyword{internal}

@@ -6,10 +6,10 @@
 # \description{
 #  @classhierarchy
 #
-#  An IlluminaFastqDataSet object represents a set of 
+#  An IlluminaFastqDataSet object represents a set of
 #  @see "IlluminaFastqDataFile":s.
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -19,8 +19,8 @@
 # \section{Fields and Methods}{
 #  @allmethods "public"
 # }
-# 
-# @author
+#
+# @author "HB"
 #*/###########################################################################
 setConstructorS3("IlluminaFastqDataSet", function(...) {
   extend(FastqDataSet(...), "IlluminaFastqDataSet");

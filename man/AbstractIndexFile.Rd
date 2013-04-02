@@ -6,15 +6,15 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{AbstractIndexFile}
+\name{AbstractIndexFile}
 \docType{class}
 \alias{AbstractIndexFile}
 
 
- \title{The abstract AbstractIndexFile class}
+\title{The abstract AbstractIndexFile class}
 
- \description{
-  Package:  aroma.seq \cr
+\description{
+ Package:  aroma.seq \cr
 \bold{Class AbstractIndexFile}\cr
 
 \code{\link[R.oo]{Object}}\cr
@@ -33,19 +33,19 @@ extends \emph{\link[R.filesets]{GenericDataFile}}\cr
 
 
 
-  An AbstractIndexFile object represents a index file.
- }
+ An AbstractIndexFile object represents a index file.
+}
 
- \usage{
+\usage{
 AbstractIndexFile(...)
 }
 
- \arguments{
-   \item{...}{Arguments passed to \code{\link[R.filesets]{GenericDataFile}}.}
- }
+\arguments{
+  \item{...}{Arguments passed to \code{\link[R.filesets]{GenericDataFile}}.}
+}
 
- \section{Fields and Methods}{
-  \bold{Methods:}\cr
+\section{Fields and Methods}{
+ \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{as.character} \tab  -\cr
  \tab \code{getIndexPrefix} \tab  -\cr
@@ -62,16 +62,19 @@ appendFullNameTranslator, appendFullNameTranslatorBycharacter, appendFullNameTra
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
  "public"
- }
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 
- \references{
-    ...
- }
+\references{
+   ...
+}
 
- \seealso{
-   An object of this class is typically part of an
-   \code{\link{AbstractIndexSet}}.
- }
+\seealso{
+  An object of this class is typically part of an
+  \code{\link{AbstractIndexSet}}.
+}
+
+
 \keyword{classes}
+\keyword{internal}

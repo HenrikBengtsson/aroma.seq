@@ -8,7 +8,7 @@
 #
 #  A BamDataFile object represents a BAM file.
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -18,8 +18,8 @@
 # \section{Fields and Methods}{
 #  @allmethods "public"
 # }
-# 
-# @author
+#
+# @author "HB"
 #
 # \references{
 #  [1] The SAM Format Specification Working Group,
@@ -27,7 +27,7 @@
 # }
 #
 # \seealso{
-#   An object of this class is typically part of an 
+#   An object of this class is typically part of an
 #   @see "BamDataSet".
 # }
 #*/###########################################################################
@@ -155,7 +155,7 @@ setMethodS3("nbrOfUnmappedReads", "BamDataFile", function(this, ...) {
 
 # \details{
 #   BAM headers typically contain an \code{"@HD VN:1.0 SO:<value>"} entry,
-#   where \code{<value>} indicates whether the aligned reads are sorted 
+#   where \code{<value>} indicates whether the aligned reads are sorted
 #   or not.  Unfortunately, this entry is neither enforced nor has it to
 #   be correct [1,2].
 #
@@ -196,7 +196,7 @@ setMethodS3("nbrOfSeqs", "BamDataFile", function(this, ...) {
 setMethodS3("getTargets", "BamDataFile", function(this, ...) {
   hdr <- getHeader(this);
   targets <- hdr$targets;
-  targets;  
+  targets;
 })
 
 setMethodS3("nbrOfTargets", "BamDataFile", function(this, ...) {
@@ -241,7 +241,7 @@ setMethodS3("readHeader", "BamDataFile", function(this, ...) {
 #   LB=library (DNA library prep identifier).
 #   ID: Each RG must have a unique ID.
 #   SM: Sample. Use pool name where a pool is being sequenced.
-#   PM: Platform/technology used to produce the reads. Valid values: 
+#   PM: Platform/technology used to produce the reads. Valid values:
 #       CAPILLARY, HELICOS, ILLUMINA, IONTORRENT, LS454, PACBIO, and SOLID.
 #   LB: Library.
 #
@@ -304,7 +304,7 @@ setMethodS3("replaceAllReadGroups", "BamDataFile", function(this, rg="*", ..., v
   }
 
   verbose && enter(verbose, "Updating Read Groups");
- 
+
 
   pathname <- getPathname(this);
 
@@ -355,7 +355,7 @@ setMethodS3("replaceAllReadGroups", "BamDataFile", function(this, rg="*", ..., v
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Assert mandatory fields 
+  # Assert mandatory fields
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   rgList <- asSamList(rg);
   mandatory <- c("SM", "LB", "PL", "PU");
@@ -392,7 +392,7 @@ setMethodS3("extractReadStartPositions", "BamDataFile", function(this, param=Sca
   require("Rsamtools") || throw("Package not loaded: Rsamtools");
 
   pathname <- getPathname(this);
-  
+
   data <- scanBam(pathname, flag=flag, param=param, ...);
   data <- data[[1L]];
   data <- as.data.frame(data);
@@ -430,7 +430,7 @@ setMethodS3("readDataFrame", "BamDataFile", function(this, fields=NULL, flag=sca
   param <- ScanBamParam(what=fields, which=which);
   verbose && cat(verbose, "scanBam() parameters:");
   verbose && print(verbose, param);
-  
+
   data <- scanBam(pathname, param=param, ...);
 
   # Sanity check

@@ -8,14 +8,14 @@
 #
 #  ...
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
 #  \item{dataSet}{An @see "FastqDataSet".}
 #  \item{indexSet}{An @see "AbstractIndexSet".}
 #  \item{tags}{Additional tags for the output data sets.}
-#  \item{rgSet}{(optional) An @see "SamReadGroup" for added 
+#  \item{rgSet}{(optional) An @see "SamReadGroup" for added
 #    SAM read group to the results.}
 #  \item{...}{Additional alignment arguments.}
 # }
@@ -24,8 +24,8 @@
 #  @allmethods "public"
 # }
 #
-# \author{Henrik Bengtsson}
-#*/########################################################################### 
+# @author "HB"
+#*/###########################################################################
 setConstructorS3("AbstractAlignment", function(dataSet=NULL, indexSet=NULL, tags="*", rgSet=NULL, ...) {
   # Validate arguments
   if (!is.null(dataSet)) {
@@ -77,7 +77,7 @@ setMethodS3("as.character", "AbstractAlignment", function(x, ...) {
 
   # Algorithm parameters
   s <- c(s, sprintf("Parameters: %s", getParametersAsString(this)));
-  
+
   class(s) <- "GenericSummary";
   s;
 }, protected=TRUE)
@@ -161,11 +161,11 @@ setMethodS3("setTags", "AbstractAlignment", function(this, tags="*", ...) {
     tags <- trim(unlist(strsplit(tags, split=",")));
     tags <- tags[nchar(tags) > 0];
   }
-  
+
   this$.tags <- tags;
 })
 
- 
+
 setMethodS3("getFullName", "AbstractAlignment", function(this, ...) {
   name <- getName(this);
   tags <- getTags(this);
@@ -191,7 +191,7 @@ setMethodS3("getPath", "AbstractAlignment", function(this, create=TRUE, ...) {
   # Full name
   fullname <- getFullName(this);
 
-  # Platform    
+  # Platform
   ds <- getInputDataSet(this);
   platform <- "Generic";
 
@@ -228,7 +228,7 @@ setMethodS3("getOutputDataSet", "AbstractAlignment", function(this, ...) {
   ## Keep only those samples that exists in the input data set
   ds <- getInputDataSet(this);
   res <- extract(res, getFullNames(ds), onMissing="drop");
-  
+
   ## TODO: Assert completeness
   res;
 })
@@ -240,8 +240,8 @@ setMethodS3("process", "AbstractAlignment", abstract=TRUE);
 ############################################################################
 # HISTORY:
 # 2012-11-26
-# o BUG FIX: getOutputDataSet() would return a data set with "missing" 
+# o BUG FIX: getOutputDataSet() would return a data set with "missing"
 #   files, if not complete.  Now it only returns the existing files.
 # 2012-10-01
 # o Created; extracted from BwaAlignment.R.
-############################################################################ 
+############################################################################

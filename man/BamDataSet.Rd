@@ -6,15 +6,15 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{BamDataSet}
+\name{BamDataSet}
 \docType{class}
 \alias{BamDataSet}
 
 
- \title{The BamDataSet class}
+\title{The BamDataSet class}
 
- \description{
-  Package:  aroma.seq \cr
+\description{
+ Package:  aroma.seq \cr
 \bold{Class BamDataSet}\cr
 
 \code{\link[R.oo]{Object}}\cr
@@ -33,20 +33,20 @@ extends \link[R.filesets]{GenericDataFileSet}\cr
 
 
 
-  An BamDataSet object represents a set of \code{\link{BamDataFile}}:s.
- }
+ An BamDataSet object represents a set of \code{\link{BamDataFile}}:s.
+}
 
- \usage{
+\usage{
 BamDataSet(files=NULL, ...)
 }
 
- \arguments{
-   \item{files}{A \code{\link[base]{list}} of \code{\link{BamDataFile}}:s.}
-   \item{...}{Arguments passed to \code{\link[R.filesets]{GenericDataFileSet}}.}
- }
+\arguments{
+  \item{files}{A \code{\link[base]{list}} of \code{\link{BamDataFile}}:s.}
+  \item{...}{Arguments passed to \code{\link[R.filesets]{GenericDataFileSet}}.}
+}
 
- \section{Fields and Methods}{
-  \bold{Methods:}\cr
+\section{Fields and Methods}{
+ \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{byPath} \tab  -\cr
  \tab \code{getChipType} \tab  -\cr
@@ -66,7 +66,7 @@ appendFullNameTranslator, appendFullNameTranslatorBycharacter, appendFullNameTra
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
  "public"
- }
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 \keyword{classes}

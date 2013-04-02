@@ -6,15 +6,15 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{BwaIndexSet}
+\name{BwaIndexSet}
 \docType{class}
 \alias{BwaIndexSet}
 
 
- \title{The BwaIndexSet class}
+\title{The BwaIndexSet class}
 
- \description{
-  Package:  aroma.seq \cr
+\description{
+ Package:  aroma.seq \cr
 \bold{Class BwaIndexSet}\cr
 
 \code{\link[R.oo]{Object}}\cr
@@ -35,19 +35,19 @@ extends \emph{\link[aroma.seq]{AbstractIndexSet}}\cr
 
 
 
-  An BwaIndexSet object represents a set of \code{\link{BwaIndexFile}}:s.
- }
+ An BwaIndexSet object represents a set of \code{\link{BwaIndexFile}}:s.
+}
 
- \usage{
+\usage{
 BwaIndexSet(...)
 }
 
- \arguments{
-   \item{...}{Arguments passed to \code{\link{AbstractIndexSet}}.}
- }
+\arguments{
+  \item{...}{Arguments passed to \code{\link{AbstractIndexSet}}.}
+}
 
- \section{Fields and Methods}{
-  \bold{Methods:}\cr
+\section{Fields and Methods}{
+ \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{isComplete} \tab  -\cr
 }
@@ -66,7 +66,10 @@ appendFullNameTranslator, appendFullNameTranslatorBycharacter, appendFullNameTra
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
  "public"
- }
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
+
+
 \keyword{classes}
+\keyword{internal}

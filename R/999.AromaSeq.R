@@ -17,7 +17,9 @@
 #  @allmethods "public"
 # }
 #
-# @author
+# @author "HB"
+#
+# @keyword internal
 #*/###########################################################################
 setConstructorS3("AromaSeq", function(...) {
   extend(AromaPackage("aroma.seq", ...), "AromaSeq");
@@ -54,7 +56,8 @@ setConstructorS3("AromaSeq", function(...) {
 #   print(isCapableOf(aroma.seq, "bwa"))
 # }
 #
-# @author
+# @author "HB"
+#
 #*/###########################################################################
 setMethodS3("capabilitiesOf", "AromaSeq", function(static, what=NULL, ...) {
   res <- list();

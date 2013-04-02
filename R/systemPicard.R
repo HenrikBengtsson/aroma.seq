@@ -6,7 +6,7 @@
 # \description{
 #  @get "title".
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -31,7 +31,9 @@
 # }}
 #
 #
-# @author
+# @author "HB"
+#
+# @keyword internal
 #*/###########################################################################
 setMethodS3("systemPicard", "default", function(command, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -71,7 +73,7 @@ setMethodS3("systemPicard", "default", function(command, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   .fmtArg <- c(".*"="%s=%s");
   res <- systemJavaJar(pathname, ..., .fmtArg=.fmtArg, verbose=less(verbose, 5));
- 
+
   verbose && exit(verbose);
 
   res;

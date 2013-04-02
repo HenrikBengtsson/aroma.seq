@@ -6,15 +6,15 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{Bowtie2IndexSet}
+\name{Bowtie2IndexSet}
 \docType{class}
 \alias{Bowtie2IndexSet}
 
 
- \title{The Bowtie2IndexSet class}
+\title{The Bowtie2IndexSet class}
 
- \description{
-  Package:  aroma.seq \cr
+\description{
+ Package:  aroma.seq \cr
 \bold{Class Bowtie2IndexSet}\cr
 
 \code{\link[R.oo]{Object}}\cr
@@ -35,19 +35,19 @@ extends \emph{\link[aroma.seq]{AbstractIndexSet}}\cr
 
 
 
-  An Bowtie2IndexSet object represents a set of \code{\link{Bowtie2IndexFile}}:s.
- }
+ An Bowtie2IndexSet object represents a set of \code{\link{Bowtie2IndexFile}}:s.
+}
 
- \usage{
+\usage{
 Bowtie2IndexSet(...)
 }
 
- \arguments{
-   \item{...}{Arguments passed to \code{\link{AbstractIndexSet}}.}
- }
+\arguments{
+  \item{...}{Arguments passed to \code{\link{AbstractIndexSet}}.}
+}
 
- \section{Fields and Methods}{
-  \bold{Methods:}\cr
+\section{Fields and Methods}{
+ \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{getSequenceNames} \tab  -\cr
  \tab \code{getSummary} \tab  -\cr
@@ -68,7 +68,10 @@ appendFullNameTranslator, appendFullNameTranslatorBycharacter, appendFullNameTra
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
  "public"
- }
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
+
+
 \keyword{classes}
+\keyword{internal}

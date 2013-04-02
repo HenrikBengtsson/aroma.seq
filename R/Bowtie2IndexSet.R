@@ -8,7 +8,7 @@
 #
 #  An Bowtie2IndexSet object represents a set of @see "Bowtie2IndexFile":s.
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -18,8 +18,10 @@
 # \section{Fields and Methods}{
 #  @allmethods "public"
 # }
-# 
-# @author
+#
+# @author "HB"
+#
+# @keyword internal
 #*/###########################################################################
 setConstructorS3("Bowtie2IndexSet", function(...) {
   extend(AbstractIndexSet(...), "Bowtie2IndexSet");

@@ -6,7 +6,7 @@
 # \description{
 #  @get "title".
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -17,7 +17,7 @@
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
-# @author
+# @author "HB"
 #*/###########################################################################
 setMethodS3("samtoolsView", "default", function(pathname, pathnameD, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -40,7 +40,7 @@ setMethodS3("samtoolsView", "default", function(pathname, pathnameD, ..., verbos
 
   # Assert that input files are not overwritten
   stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathname));
- 
+
   res <- systemSamtools("view", "o"=pathnameD, pathname, ..., verbose=less(verbose, 10));
 
   verbose && exit(verbose);

@@ -8,7 +8,7 @@
 #
 #  An AbstractIndexFile object represents a index file.
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -18,17 +18,19 @@
 # \section{Fields and Methods}{
 #  @allmethods "public"
 # }
-# 
-# @author
+#
+# @author "HB"
 #
 # \references{
 #    ...
 # }
 #
 # \seealso{
-#   An object of this class is typically part of an 
+#   An object of this class is typically part of an
 #   @see "AbstractIndexSet".
 # }
+#
+# @keyword internal
 #*/###########################################################################
 setConstructorS3("AbstractIndexFile", function(...) {
   extend(GenericDataFile(...), "AbstractIndexFile");

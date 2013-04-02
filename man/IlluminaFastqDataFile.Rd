@@ -6,15 +6,15 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{IlluminaFastqDataFile}
+\name{IlluminaFastqDataFile}
 \docType{class}
 \alias{IlluminaFastqDataFile}
 
 
- \title{The abstract IlluminaFastqDataFile class}
+\title{The abstract IlluminaFastqDataFile class}
 
- \description{
-  Package:  aroma.seq \cr
+\description{
+ Package:  aroma.seq \cr
 \bold{Class IlluminaFastqDataFile}\cr
 
 \code{\link[R.oo]{Object}}\cr
@@ -35,19 +35,19 @@ extends \emph{\link[aroma.seq]{FastqDataFile}}\cr
 
 
 
-  A IlluminaFastqDataFile object represents a FASTQ data file.
- }
+ A IlluminaFastqDataFile object represents a FASTQ data file.
+}
 
- \usage{
+\usage{
 IlluminaFastqDataFile(...)
 }
 
- \arguments{
-   \item{...}{Arguments passed to \code{\link{FastqDataFile}}.}
- }
+\arguments{
+  \item{...}{Arguments passed to \code{\link{FastqDataFile}}.}
+}
 
- \section{Fields and Methods}{
-  \bold{Methods:}\cr
+\section{Fields and Methods}{
+ \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{getBarcodeSequence} \tab  -\cr
  \tab \code{getDefaultSamReadGroup} \tab  -\cr
@@ -76,12 +76,12 @@ appendFullNameTranslator, appendFullNameTranslatorBycharacter, appendFullNameTra
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
  "public"
- }
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 
- \seealso{
-   An object of this class is typically part of an
-   \code{\link{FastqDataSet}}.
- }
+\seealso{
+  An object of this class is typically part of an
+  \code{\link{FastqDataSet}}.
+}
 \keyword{classes}

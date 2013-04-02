@@ -6,30 +6,32 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{systemGATK}
+\name{systemGATK}
 \alias{systemGATK.default}
 \alias{systemGATK}
 
- \title{Calls the GATK executable}
+\title{Calls the GATK executable}
 
- \description{
-  Calls the GATK executable.
- }
+\description{
+ Calls the GATK executable.
+}
 
- \usage{
+\usage{
 \method{systemGATK}{default}(..., verbose=FALSE)
 }
 
- \arguments{
-   \item{...}{Arguments specifying GATK command line switches.}
-   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
- }
+\arguments{
+  \item{...}{Arguments specifying GATK command line switches.}
+  \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
+}
 
- \examples{\dontrun{
-   pathnameBAM <- "bwaData/LambdaVirusExample,bwa,is/Generic/reads_1.bam"
-   res <- systemGATK(T="CountReads", ..., stderr=FALSE)
- }}
+\examples{\dontrun{
+  pathnameBAM <- "bwaData/LambdaVirusExample,bwa,is/Generic/reads_1.bam"
+  res <- systemGATK(T="CountReads", ..., stderr=FALSE)
+}}
 
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 
+
+\keyword{internal}

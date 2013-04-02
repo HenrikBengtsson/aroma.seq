@@ -6,15 +6,15 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{SamReadGroup}
+\name{SamReadGroup}
 \docType{class}
 \alias{SamReadGroup}
 
 
- \title{The SamReadGroup class}
+\title{The SamReadGroup class}
 
- \description{
-  Package:  aroma.seq \cr
+\description{
+ Package:  aroma.seq \cr
 \bold{Class SamReadGroup}\cr
 
 \code{logical}\cr
@@ -31,32 +31,32 @@ extends \link[R.oo]{BasicObject}\cr
 
 
 
-  A SamReadGroup object represents a SAM Read Group.
- }
+ A SamReadGroup object represents a SAM Read Group.
+}
 
- \usage{
+\usage{
 SamReadGroup(id=NULL, sample=NULL, library=NULL, platform=NULL, platformUnit=NULL, sequencingCenter=NULL, description=NULL, runDate=NULL, flowOrder=NULL, keySequence=NULL, program=NULL, predictedInsertSize=NULL, ...)
 }
 
- \arguments{
-  \item{id}{Specifies the \code{ID} read group field.}
-  \item{sample}{Specifies the \code{SM} read group field.}
-  \item{library}{Specifies the \code{LB} read group field.}
-  \item{platform}{Specifies the \code{PL} read group field.}
-  \item{platformUnit}{Specifies the \code{PU} read group field.}
-  \item{sequencingCenter}{Specifies the \code{CN} read group field.}
-  \item{description}{Specifies the \code{DS} read group field.}
-  \item{runDate}{Specifies the \code{DT} read group field.}
-  \item{flowOrder}{Specifies the \code{FO} read group field.}
-  \item{keySequence}{Specifies the \code{KS} read group field.}
-  \item{program}{Specifies the \code{PG} read group field.}
-  \item{predictedInsertSize}{Specifies the \code{PI} read group field.}
-  \item{...}{Additional named arguments, including two-letter read
-    group keys for the above, e.g. 'SM'.}
- }
+\arguments{
+ \item{id}{Specifies the \code{ID} read group field.}
+ \item{sample}{Specifies the \code{SM} read group field.}
+ \item{library}{Specifies the \code{LB} read group field.}
+ \item{platform}{Specifies the \code{PL} read group field.}
+ \item{platformUnit}{Specifies the \code{PU} read group field.}
+ \item{sequencingCenter}{Specifies the \code{CN} read group field.}
+ \item{description}{Specifies the \code{DS} read group field.}
+ \item{runDate}{Specifies the \code{DT} read group field.}
+ \item{flowOrder}{Specifies the \code{FO} read group field.}
+ \item{keySequence}{Specifies the \code{KS} read group field.}
+ \item{program}{Specifies the \code{PG} read group field.}
+ \item{predictedInsertSize}{Specifies the \code{PI} read group field.}
+ \item{...}{Additional named arguments, including two-letter read
+   group keys for the above, e.g. 'SM'.}
+}
 
- \section{Fields and Methods}{
-  \bold{Methods:}\cr
+\section{Fields and Methods}{
+ \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{as.character} \tab  -\cr
  \tab \code{asSamList} \tab  -\cr
@@ -83,12 +83,12 @@ $, $<-, [[, [[<-, as.character, attach, detach, equals, extend, getFields, getIn
 as.data.frame, as.raster, whichVector
 
  "public"
- }
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 
- \references{
-  [1] The SAM Format Specification Working Group,
-      \emph{The SAM Format Specification}, Sept 7, 2011.\cr
- }
+\references{
+ [1] The SAM Format Specification Working Group,
+     \emph{The SAM Format Specification}, Sept 7, 2011.\cr
+}
 \keyword{classes}

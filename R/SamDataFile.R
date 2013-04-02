@@ -8,7 +8,7 @@
 #
 #  A SamDataFile object represents a Sequence Alignment/Map (SAM) file [1].
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -18,8 +18,8 @@
 # \section{Fields and Methods}{
 #  @allmethods "public"
 # }
-# 
-# @author
+#
+# @author "HB"
 #
 # \references{
 #  [1] The SAM Format Specification Working Group,
@@ -27,7 +27,7 @@
 # }
 #
 # \seealso{
-#   An object of this class is typically part of an 
+#   An object of this class is typically part of an
 #   @see "SamDataSet".
 # }
 #*/###########################################################################
@@ -66,11 +66,11 @@ setMethodS3("convertToBamDataFile", "SamDataFile", function(this, path=getPath(t
   if (verbose) {
     pushState(verbose);
     on.exit(popState(verbose));
-  } 
- 
+  }
+
 
   verbose && enter(verbose, "Converting SAM file to a BAM file");
- 
+
   pathname <- getPathname(this);
   verbose && cat(verbose, "SAM pathname: ", pathname);
 

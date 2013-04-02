@@ -6,7 +6,7 @@
 # \description{
 #  @get "title".
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -16,7 +16,9 @@
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
-# @author
+# @author "HB"
+#
+# @keyword internal
 #*/###########################################################################
 setMethodS3("systemBWA", "default", function(command, ..., .fake=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -99,7 +101,7 @@ setMethodS3("systemBWA", "default", function(command, ..., .fake=FALSE, verbose=
   if (!.fake) {
     res <- do.call(base::system2, callArgs);
   } else {
-    res <- "<fake run>"; 
+    res <- "<fake run>";
   }
   verbose && exit(verbose);
 

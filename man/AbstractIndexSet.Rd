@@ -6,15 +6,15 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{AbstractIndexSet}
+\name{AbstractIndexSet}
 \docType{class}
 \alias{AbstractIndexSet}
 
 
- \title{The AbstractIndexSet class}
+\title{The AbstractIndexSet class}
 
- \description{
-  Package:  aroma.seq \cr
+\description{
+ Package:  aroma.seq \cr
 \bold{Class AbstractIndexSet}\cr
 
 \code{\link[R.oo]{Object}}\cr
@@ -33,20 +33,20 @@ extends \link[R.filesets]{GenericDataFileSet}\cr
 
 
 
-  An AbstractIndexSet object represents a set of \code{\link{AbstractIndexFile}}:s.
- }
+ An AbstractIndexSet object represents a set of \code{\link{AbstractIndexFile}}:s.
+}
 
- \usage{
+\usage{
 AbstractIndexSet(files=NULL, ...)
 }
 
- \arguments{
-   \item{files}{A \code{\link[base]{list}} of \code{\link{AbstractIndexFile}}:s.}
-   \item{...}{Arguments passed to \code{\link[R.filesets]{GenericDataFileSet}}.}
- }
+\arguments{
+  \item{files}{A \code{\link[base]{list}} of \code{\link{AbstractIndexFile}}:s.}
+  \item{...}{Arguments passed to \code{\link[R.filesets]{GenericDataFileSet}}.}
+}
 
- \section{Fields and Methods}{
-  \bold{Methods:}\cr
+\section{Fields and Methods}{
+ \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{as.character} \tab  -\cr
  \tab \code{byPrefix} \tab  -\cr
@@ -65,7 +65,10 @@ appendFullNameTranslator, appendFullNameTranslatorBycharacter, appendFullNameTra
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
  "public"
- }
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
+
+
 \keyword{classes}
+\keyword{internal}

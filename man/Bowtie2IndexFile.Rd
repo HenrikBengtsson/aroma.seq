@@ -6,15 +6,15 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{Bowtie2IndexFile}
+\name{Bowtie2IndexFile}
 \docType{class}
 \alias{Bowtie2IndexFile}
 
 
- \title{The abstract Bowtie2IndexFile class}
+\title{The abstract Bowtie2IndexFile class}
 
- \description{
-  Package:  aroma.seq \cr
+\description{
+ Package:  aroma.seq \cr
 \bold{Class Bowtie2IndexFile}\cr
 
 \code{\link[R.oo]{Object}}\cr
@@ -35,19 +35,19 @@ extends \emph{\link[aroma.seq]{AbstractIndexFile}}\cr
 
 
 
-  A Bowtie2IndexFile object represents a Bowtie2 index file.
- }
+ A Bowtie2IndexFile object represents a Bowtie2 index file.
+}
 
- \usage{
+\usage{
 Bowtie2IndexFile(...)
 }
 
- \arguments{
-   \item{...}{Arguments passed to \code{\link{AbstractIndexFile}}.}
- }
+\arguments{
+  \item{...}{Arguments passed to \code{\link{AbstractIndexFile}}.}
+}
 
- \section{Fields and Methods}{
-  \bold{Methods:}\cr
+\section{Fields and Methods}{
+ \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{getIndexPrefix} \tab  -\cr
 }
@@ -66,16 +66,19 @@ appendFullNameTranslator, appendFullNameTranslatorBycharacter, appendFullNameTra
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
  "public"
- }
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 
- \references{
-    ...
- }
+\references{
+   ...
+}
 
- \seealso{
-   An object of this class is typically part of an
-   \code{\link{Bowtie2IndexSet}}.
- }
+\seealso{
+  An object of this class is typically part of an
+  \code{\link{Bowtie2IndexSet}}.
+}
+
+
 \keyword{classes}
+\keyword{internal}

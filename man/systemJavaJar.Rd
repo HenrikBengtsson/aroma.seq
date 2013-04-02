@@ -6,24 +6,26 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{systemJavaJar}
+\name{systemJavaJar}
 \alias{systemJavaJar.default}
 \alias{systemJavaJar}
 
- \title{Calls the Java jar executable}
+\title{Calls the Java jar executable}
 
- \description{
-  Calls the Java jar executable.
- }
+\description{
+ Calls the Java jar executable.
+}
 
- \usage{
+\usage{
 \method{systemJavaJar}{default}(pathname, ...)
 }
 
- \arguments{
-   \item{pathname}{The JAR file.}
-   \item{...}{Additional arguments specifying Java command line switches.}
- }
+\arguments{
+  \item{pathname}{The JAR file.}
+  \item{...}{Additional arguments specifying Java command line switches.}
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 
+
+\keyword{internal}

@@ -24,16 +24,16 @@
 #  \item{keySequence}{Specifies the \code{KS} read group field.}
 #  \item{program}{Specifies the \code{PG} read group field.}
 #  \item{predictedInsertSize}{Specifies the \code{PI} read group field.}
-#  \item{...}{Additional named arguments, including two-letter read 
+#  \item{...}{Additional named arguments, including two-letter read
 #    group keys for the above, e.g. 'SM'.}
 # }
 #
 # \section{Fields and Methods}{
 #  @allmethods "public"
 # }
-# 
-# @author
-# 
+#
+# @author "HB"
+#
 # \references{
 #  [1] The SAM Format Specification Working Group,
 #      \emph{The SAM Format Specification}, Sept 7, 2011.\cr
@@ -238,7 +238,7 @@ setMethodS3("validate", "SamReadGroup", function(this, ...) {
     if (toupper(platform) == "ILLUMINA") {
       platformUnit <- rgList[["PL"]];
       if (!is.null(platformUnit)) {
-        # convention: Illumina flowcell barcode suffixed with a period and 
+        # convention: Illumina flowcell barcode suffixed with a period and
         # the lane number (and further suffixed with period followed by
         # sample member name for pooled runs) [From NHI/SRA below]
         # TODO ...
@@ -279,7 +279,7 @@ setMethodS3("validate", "SamReadGroup", function(this, ...) {
 # http://www.ncbi.nlm.nih.gov/books/NBK49167/#SRA_Analysis_BK.4_BAM_File_Format:
 # 4.4 BAM Header
 #   The text header block described in the SAM specification is optional
-#   for BAM files, but is required for submission. The header should 
+#   for BAM files, but is required for submission. The header should
 #   consist of:
 #
 #  3. One record per sequencing production unit starting with @RG, to
@@ -291,7 +291,7 @@ setMethodS3("validate", "SamReadGroup", function(this, ...) {
 #
 #    PU: the "platform unit" - a unique identifier which tells you what
 #        run/experiment created the data.  For Illumina, please follow this
-#        convention: Illumina flowcell barcode suffixed with a period and 
+#        convention: Illumina flowcell barcode suffixed with a period and
 #        the lane number (and further suffixed with period followed by
 #        sample member name for pooled runs). If referencing an existing
 #        already archived run, then please use the run alias in the SRA.
@@ -303,7 +303,7 @@ setMethodS3("validate", "SamReadGroup", function(this, ...) {
 #    DT: the run start date of the instrument run. Please use ISO-8601
 #        format.
 #
-#    SM: the sample identifier. This should be the sample alias loaded in 
+#    SM: the sample identifier. This should be the sample alias loaded in
 #        the SRA or in the metadata being submitted to the SRA.
 #
 #    CN: the sequencing center that produced the data (This should be the

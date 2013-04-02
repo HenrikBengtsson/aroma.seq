@@ -4,11 +4,11 @@
 # @title "Normalizes signals for GC-content effects"
 #
 # \description{
-#  @get "title". Some or all signals are used to estimated the 
+#  @get "title". Some or all signals are used to estimated the
 #  normalization function.  All signals are normalized.
 # }
-# 
-# @synopsis 
+#
+# @synopsis
 #
 # \arguments{
 #   \item{y}{A @numeric @vector of length K of signals to be normalized.}
@@ -16,11 +16,11 @@
 #   \item{targetFcn}{An optional @function.
 #     If @NULL, the data is normalized to have constant GC content effects
 #     (all equal to zero on the log-scale).}
-##   \item{subsetToFit}{The subset of data points used to fit the 
+##   \item{subsetToFit}{The subset of data points used to fit the
 #      normalization function.
 #      If @NULL, all data points are considered.}
 #   \item{onMissing}{Specifies how data points for which there is no
-#      fragment length is normalized. 
+#      fragment length is normalized.
 #      If \code{"ignore"}, the values are not modified.
 #      If \code{"median"}, the values are updated to have the same
 #      robust average as the other data points.
@@ -34,10 +34,11 @@
 #   Returns a @numeric @vector of the normalized signals.
 # }
 #
-# @author
+# @author "HB"
 #
 # @keyword "nonparametric"
-# @keyword "robust" 
+# @keyword "robust"
+# @keyword internal
 #*/###########################################################################
 setMethodS3("normalizeGcContent", "default", function(y, gcContent, targetFcn=NULL, subsetToFit=NULL, onMissing=c("ignore", "median"), .isLogged=TRUE, ..., .returnFit=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -72,7 +73,7 @@ setMethodS3("normalizeGcContent", "default", function(y, gcContent, targetFcn=NU
       throw("Argument 'targetFcn' is not a function: ", class(targetFcn)[1]);
     }
   }
-  
+
   # Argument 'subsetToFit':
   if (!is.null(subsetToFit)) {
     subsetToFit <- as.integer(subsetToFit);
@@ -202,7 +203,7 @@ setMethodS3("normalizeGcContent", "default", function(y, gcContent, targetFcn=NU
   ok <- is.finite(dy) & okY;
   rm(okY);
   y[ok] <- y[ok] - dy[ok];
-  
+
   if (.returnFit) {
     fit <- list(fit=fit, mu=mu, targetFcn=targetFcn);
     if (!is.null(targetFcn)) fit$muT <- muT;

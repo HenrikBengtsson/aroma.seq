@@ -8,7 +8,7 @@
 #
 #  An FastqDataSet object represents a set of @see "FastqDataFile":s.
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -19,8 +19,8 @@
 # \section{Fields and Methods}{
 #  @allmethods "public"
 # }
-# 
-# @author
+#
+# @author "HB"
 #*/###########################################################################
 setConstructorS3("FastqDataSet", function(files=NULL, ...) {
   extend(GenericDataFileSet(files=files, ...), "FastqDataSet");

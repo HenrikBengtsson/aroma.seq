@@ -6,15 +6,15 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{FastqDataFile}
+\name{FastqDataFile}
 \docType{class}
 \alias{FastqDataFile}
 
 
- \title{The abstract FastqDataFile class}
+\title{The abstract FastqDataFile class}
 
- \description{
-  Package:  aroma.seq \cr
+\description{
+ Package:  aroma.seq \cr
 \bold{Class FastqDataFile}\cr
 
 \code{\link[R.oo]{Object}}\cr
@@ -33,19 +33,19 @@ extends \emph{\link[R.filesets]{GenericDataFile}}\cr
 
 
 
-  A FastqDataFile object represents a FASTQ data file.
- }
+ A FastqDataFile object represents a FASTQ data file.
+}
 
- \usage{
+\usage{
 FastqDataFile(...)
 }
 
- \arguments{
-   \item{...}{Arguments passed to \code{\link[R.filesets]{GenericDataFile}}.}
- }
+\arguments{
+  \item{...}{Arguments passed to \code{\link[R.filesets]{GenericDataFile}}.}
+}
 
- \section{Fields and Methods}{
-  \bold{Methods:}\cr
+\section{Fields and Methods}{
+ \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{as.character} \tab  -\cr
  \tab \code{getCommonSeqWidth} \tab  -\cr
@@ -69,17 +69,17 @@ appendFullNameTranslator, appendFullNameTranslatorBycharacter, appendFullNameTra
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
  "public"
- }
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 
- \references{
-   Wikipedia, FASTQ format,
-   \url{http://en.wikipedia.org/wiki/FASTQ_format}.\cr
- }
+\references{
+  Wikipedia, FASTQ format,
+  \url{http://en.wikipedia.org/wiki/FASTQ_format}.\cr
+}
 
- \seealso{
-   An object of this class is typically part of an
-   \code{\link{FastqDataSet}}.
- }
+\seealso{
+  An object of this class is typically part of an
+  \code{\link{FastqDataSet}}.
+}
 \keyword{classes}

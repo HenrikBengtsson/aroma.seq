@@ -6,36 +6,38 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{createIndexPrefix}
+\name{createIndexPrefix}
 \alias{createIndexPrefix.default}
 \alias{createIndexPrefix}
 
- \title{Generates a prefix for a set of index files}
+\title{Generates a prefix for a set of index files}
 
- \description{
-  Generates a prefix for a set of index files based on a FASTA pathname.
- }
+\description{
+ Generates a prefix for a set of index files based on a FASTA pathname.
+}
 
- \usage{
+\usage{
 \method{createIndexPrefix}{default}(pathnameFA, subdir=NULL, tags="*", asteriskTags=NULL, ...)
 }
 
- \arguments{
-   \item{pathnameFA}{The FASTA file.}
-   \item{subdir}{The subdirectory relative to the FASTA file where to put
-     the index files.}
-   \item{tags}{Tags added to the directory of the index set.}
-   \item{asteriskTags}{Tags to replace \code{"*"} in argument \code{tags}.}
-   \item{...}{Not used.}
- }
+\arguments{
+  \item{pathnameFA}{The FASTA file.}
+  \item{subdir}{The subdirectory relative to the FASTA file where to put
+    the index files.}
+  \item{tags}{Tags added to the directory of the index set.}
+  \item{asteriskTags}{Tags to replace \code{"*"} in argument \code{tags}.}
+  \item{...}{Not used.}
+}
 
- \examples{
-   pathnameFA <- "annotationData/organisms/LambdaPhage/lambda_virus.fa"
-   prefix <- createIndexPrefix(pathnameFA)
-   print(prefix)
-   prefix <- createIndexPrefix(pathnameFA, tags="*,foo", asteriskTags="is")
-   print(prefix)
- }
+\examples{
+  pathnameFA <- "annotationData/organisms/LambdaPhage/lambda_virus.fa"
+  prefix <- createIndexPrefix(pathnameFA)
+  print(prefix)
+  prefix <- createIndexPrefix(pathnameFA, tags="*,foo", asteriskTags="is")
+  print(prefix)
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 
+
+\keyword{internal}

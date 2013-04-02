@@ -8,7 +8,7 @@
 #
 #  An BamDataSet object represents a set of @see "BamDataFile":s.
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -19,8 +19,8 @@
 # \section{Fields and Methods}{
 #  @allmethods "public"
 # }
-# 
-# @author
+#
+# @author "HB"
 #*/###########################################################################
 setConstructorS3("BamDataSet", function(files=NULL, ...) {
   extend(GenericDataFileSet(files=files, ...), "BamDataSet");

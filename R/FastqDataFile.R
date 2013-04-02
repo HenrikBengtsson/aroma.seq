@@ -8,7 +8,7 @@
 #
 #  A FastqDataFile object represents a FASTQ data file.
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -18,8 +18,8 @@
 # \section{Fields and Methods}{
 #  @allmethods "public"
 # }
-# 
-# @author
+#
+# @author "HB"
 #
 # \references{
 #   Wikipedia, FASTQ format,
@@ -27,7 +27,7 @@
 # }
 #
 # \seealso{
-#   An object of this class is typically part of an 
+#   An object of this class is typically part of an
 #   @see "FastqDataSet".
 # }
 #*/###########################################################################

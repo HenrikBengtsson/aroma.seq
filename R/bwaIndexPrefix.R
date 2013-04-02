@@ -6,7 +6,7 @@
 # \description{
 #  @get "title" based on a FASTA pathname.
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -24,7 +24,9 @@
 #   print(prefix)
 # }
 #
-# @author
+# @author "HB"
+#
+# @keyword internal
 #*/###########################################################################
 setMethodS3("bwaIndexPrefix", "default", function(pathnameFA, method=c("is", "bwtsw"), subdir="bwa", tags="*", ...) {
   createIndexPrefix(pathnameFA, subdir=subdir, tags=tags, asteriskTags=method, ...);

@@ -6,15 +6,15 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{FastaReferenceFile}
+\name{FastaReferenceFile}
 \docType{class}
 \alias{FastaReferenceFile}
 
 
- \title{The FastaReferenceFile class}
+\title{The FastaReferenceFile class}
 
- \description{
-  Package:  aroma.seq \cr
+\description{
+ Package:  aroma.seq \cr
 \bold{Class FastaReferenceFile}\cr
 
 \code{\link[R.oo]{Object}}\cr
@@ -33,19 +33,19 @@ extends \emph{\link[R.filesets]{GenericDataFile}}\cr
 
 
 
-  A FastaReferenceFile object represents a FASTA reference file.
- }
+ A FastaReferenceFile object represents a FASTA reference file.
+}
 
- \usage{
+\usage{
 FastaReferenceFile(...)
 }
 
- \arguments{
-   \item{...}{Arguments passed to \code{\link[R.filesets]{GenericDataFile}}.}
- }
+\arguments{
+  \item{...}{Arguments passed to \code{\link[R.filesets]{GenericDataFile}}.}
+}
 
- \section{Fields and Methods}{
-  \bold{Methods:}\cr
+\section{Fields and Methods}{
+ \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{as.character} \tab  -\cr
  \tab \code{buildBowtie2IndexSet} \tab  -\cr
@@ -69,11 +69,11 @@ appendFullNameTranslator, appendFullNameTranslatorBycharacter, appendFullNameTra
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
  "public"
- }
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 
- \seealso{
-   ...
- }
+\seealso{
+  ...
+}
 \keyword{classes}

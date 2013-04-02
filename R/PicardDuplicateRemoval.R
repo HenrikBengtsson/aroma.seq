@@ -8,7 +8,7 @@
 #
 #  ...
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -22,8 +22,8 @@
 #  @allmethods "public"
 # }
 #
-# \author{Henrik Bengtsson}
-#*/########################################################################### 
+# @author "HB"
+#*/###########################################################################
 setConstructorS3("PicardDuplicateRemoval", function(dataSet=NULL, tags="*", ASSUME_SORTED=TRUE, VALIDATION_STRINGENCY="SILENT", ...) {
   # Validate arguments
   if (!is.null(dataSet)) {
@@ -34,7 +34,7 @@ setConstructorS3("PicardDuplicateRemoval", function(dataSet=NULL, tags="*", ASSU
   # Arguments '...':
   args <- list(
     ASSUME_SORTED=ASSUME_SORTED,
-    VALIDATION_STRINGENCY=VALIDATION_STRINGENCY, 
+    VALIDATION_STRINGENCY=VALIDATION_STRINGENCY,
     ...
   );
 
@@ -63,7 +63,7 @@ setMethodS3("as.character", "PicardDuplicateRemoval", function(x, ...) {
 
   # Additional arguments
   s <- c(s, sprintf("Picard arguments: %s", getParametersAsString(this)));
-  
+
   class(s) <- "GenericSummary";
   s;
 }, protected=TRUE)
@@ -140,11 +140,11 @@ setMethodS3("setTags", "PicardDuplicateRemoval", function(this, tags="*", ...) {
     tags <- trim(unlist(strsplit(tags, split=",")));
     tags <- tags[nchar(tags) > 0];
   }
-  
+
   this$.tags <- tags;
 }, protected=TRUE)
 
- 
+
 setMethodS3("getFullName", "PicardDuplicateRemoval", function(this, ...) {
   name <- getName(this);
   tags <- getTags(this);
@@ -174,7 +174,7 @@ setMethodS3("getPath", "PicardDuplicateRemoval", function(this, create=TRUE, ...
   # Full name
   fullname <- getFullName(this);
 
-  # Platform    
+  # Platform
   ds <- getInputDataSet(this);
   platform <- "Generic";
 
@@ -211,14 +211,14 @@ setMethodS3("getOutputDataSet", "PicardDuplicateRemoval", function(this, ...) {
   ## Keep only those samples that exists in the input data set
   ds <- getInputDataSet(this);
   res <- extract(res, getFullNames(ds), onMissing="drop");
-  
+
   ## TODO: Assert completeness
   res;
 })
 
 
 
-setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, force=FALSE, verbose=FALSE) { 
+setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, force=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -227,8 +227,8 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
   if (verbose) {
     pushState(verbose);
     on.exit(popState(verbose));
-  } 
- 
+  }
+
   verbose && enter(verbose, "Picard removal of duplicated reads");
 
   ds <- getInputDataSet(this);
@@ -246,7 +246,7 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
   for (kk in seq_len(nbrOfFiles)) {
     df <- getFile(ds, kk);
     name <- getName(df);
-    verbose && enter(verbose, sprintf("Sample #%d ('%s') of %d", 
+    verbose && enter(verbose, sprintf("Sample #%d ('%s') of %d",
                                                     kk, name, nbrOfFiles));
 
     pathname <- getPathname(df);
@@ -285,11 +285,11 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
       );
       verbose && cat(verbose, "Arguments:");
       verbose && str(verbose, df);
-  
+
       # Assert no overwrite
       stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathname));
       stopifnot(getAbsolutePath(pathnameM) != getAbsolutePath(pathnameD));
-  
+
       args$verbose <- less(verbose, 20);
       res <- do.call(systemPicard, args);
       verbose && cat(verbose, "System call results:");
@@ -308,13 +308,13 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
     } # if (!isFile(pathnameDI))
 
     verbose && exit(verbose);
-  } # for (kk ...) 
+  } # for (kk ...)
 
   res <- getOutputDataSet(this);
 
   verbose && exit(verbose);
 
-  res; 
+  res;
 })
 
 
@@ -322,8 +322,8 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
 ############################################################################
 # HISTORY:
 # 2012-11-26
-# o BUG FIX: getOutputDataSet() would return a data set with "missing" 
+# o BUG FIX: getOutputDataSet() would return a data set with "missing"
 #   files, if not complete.  Now it only returns the existing files.
 # 2012-10-02
 # o Created.
-############################################################################ 
+############################################################################

@@ -7,7 +7,7 @@
 #  @classhierarchy
 #
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -19,8 +19,8 @@
 #  @allmethods "public"
 # }
 #
-# @author
-#*/########################################################################### 
+# @author "HB"
+#*/###########################################################################
 setConstructorS3("TotalCnBinnedCounting", function(..., .reqSetClass="BamDataSet") {
   require("aroma.cn") || throw("Package not loaded: aroma.cn");
 
@@ -47,7 +47,7 @@ setMethodS3("getOutputFileExtension", "TotalCnBinnedCounting", function(this, ..
 setMethodS3("smoothRawCopyNumbers", "TotalCnBinnedCounting", function(this, rawCNs, target, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
   if (verbose) {
@@ -87,7 +87,7 @@ setMethodS3("smoothRawCopyNumbers", "TotalCnBinnedCounting", function(this, rawC
   knownArguments <- names(formals(binCounts.default));
   keep <- is.element(names(args), knownArguments);
   args <- args[keep];
-  
+
   verbose && cat(verbose, "Calling binCounts() with arguments:");
   verbose && str(verbose, args);
   args$verbose <- less(verbose, 20);
@@ -108,7 +108,7 @@ setMethodS3("extractRawCopyNumbers", "BamDataFile", function(this, chromosome, .
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'chromosome':
   chromosome <- Arguments$getIndex(chromosome);
 

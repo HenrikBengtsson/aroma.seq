@@ -8,7 +8,7 @@
 #
 #  A IlluminaFastqDataFile object represents a FASTQ data file.
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -18,11 +18,11 @@
 # \section{Fields and Methods}{
 #  @allmethods "public"
 # }
-# 
-# @author
+#
+# @author "HB"
 #
 # \seealso{
-#   An object of this class is typically part of an 
+#   An object of this class is typically part of an
 #   @see "FastqDataSet".
 # }
 #*/###########################################################################
@@ -95,7 +95,7 @@ setMethodS3("getReadDirection", "IlluminaFastqDataFile", function(this, ...) {
 setMethodS3("getPlatformUnit", "IlluminaFastqDataFile", function(this, ...) {
 #    PU: the "platform unit" - a unique identifier which tells you what
 #        run/experiment created the data.  For Illumina, please follow this
-#        convention: Illumina flowcell barcode suffixed with a period and 
+#        convention: Illumina flowcell barcode suffixed with a period and
 #        the lane number (and further suffixed with period followed by
 #        sample member name for pooled runs). If referencing an existing
 #        already archived run, then please use the run alias in the SRA.
@@ -116,15 +116,15 @@ setMethodS3("getFirstSequenceInfo", "IlluminaFastqDataFile", function(this, forc
 
     id <- id(rfq)[1L];
     info <- as.character(id);
- 
+
     patternA <- "^([^:]+):([0-9]+):([^:]+):([0-9]+):([0-9]+):([0-9]+):([0-9]+)";
     patternB <- " ([^:]+):([^:]+):([0-9]+):([^:]+)$";
     pattern <- sprintf("%s%s", patternA, patternB);
     stopifnot(regexpr(pattern, info) != -1);
-  
+
     infoA <- gsub(patternB, "", info);
     infoB <- gsub(patternA, "", info);
-  
+
     info <- list(
       instrumentId=gsub(patternA, "\\1", infoA),
       runIdx=as.integer(gsub(patternA, "\\2", infoA)),

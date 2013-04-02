@@ -6,7 +6,7 @@
 # \description{
 #  @get "title" based on a FASTA pathname.
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -26,7 +26,9 @@
 #   print(prefix)
 # }
 #
-# @author
+# @author "HB"
+#
+# @keyword internal
 #*/###########################################################################
 setMethodS3("createIndexPrefix", "default", function(pathnameFA, subdir=NULL, tags="*", asteriskTags=NULL, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -56,7 +58,7 @@ setMethodS3("createIndexPrefix", "default", function(pathnameFA, subdir=NULL, ta
         tags[keep] <- NA;
       }
     }
-    
+
     # Drop NA tags
     tags <- tags[!is.na(tags)];
   }

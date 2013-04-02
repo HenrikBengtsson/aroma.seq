@@ -6,15 +6,15 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{IlluminaFastqDataSet}
+\name{IlluminaFastqDataSet}
 \docType{class}
 \alias{IlluminaFastqDataSet}
 
 
- \title{The IlluminaFastqDataSet class}
+\title{The IlluminaFastqDataSet class}
 
- \description{
-  Package:  aroma.seq \cr
+\description{
+ Package:  aroma.seq \cr
 \bold{Class IlluminaFastqDataSet}\cr
 
 \code{\link[R.oo]{Object}}\cr
@@ -35,20 +35,20 @@ extends \link[aroma.seq]{FastqDataSet}\cr
 
 
 
-  An IlluminaFastqDataSet object represents a set of
-  \code{\link{IlluminaFastqDataFile}}:s.
- }
+ An IlluminaFastqDataSet object represents a set of
+ \code{\link{IlluminaFastqDataFile}}:s.
+}
 
- \usage{
+\usage{
 IlluminaFastqDataSet(...)
 }
 
- \arguments{
-   \item{...}{Arguments passed to \code{\link{FastqDataSet}}.}
- }
+\arguments{
+  \item{...}{Arguments passed to \code{\link{FastqDataSet}}.}
+}
 
- \section{Fields and Methods}{
-  \bold{Methods:}\cr
+\section{Fields and Methods}{
+ \bold{Methods:}\cr
 \emph{No methods defined}.
 
 
@@ -65,7 +65,7 @@ appendFullNameTranslator, appendFullNameTranslatorBycharacter, appendFullNameTra
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
  "public"
- }
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 \keyword{classes}

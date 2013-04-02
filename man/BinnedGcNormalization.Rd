@@ -6,15 +6,15 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{BinnedGcNormalization}
+\name{BinnedGcNormalization}
 \docType{class}
 \alias{BinnedGcNormalization}
 
 
- \title{The abstract BinnedGcNormalization class}
+\title{The abstract BinnedGcNormalization class}
 
- \description{
-  Package:  aroma.seq \cr
+\description{
+ Package:  aroma.seq \cr
 \bold{Class BinnedGcNormalization}\cr
 
 \code{\link[R.oo]{Object}}\cr
@@ -33,20 +33,20 @@ extends \emph{\link[aroma.core]{AromaTransform}}\cr
 
 
 
- }
+}
 
- \usage{
+\usage{
 BinnedGcNormalization(dataSet=NULL, ..., .reqSetClass="AromaUnitTotalCnBinarySet")
 }
 
- \arguments{
-  \item{dataSet}{An \code{\link[aroma.core]{AromaUnitTotalCnBinarySet}}.}
-  \item{...}{Arguments passed to \code{\link[aroma.core]{AromaTransform}}.}
-  \item{.reqSetClass}{(internal only)}
- }
+\arguments{
+ \item{dataSet}{An \code{\link[aroma.core]{AromaUnitTotalCnBinarySet}}.}
+ \item{...}{Arguments passed to \code{\link[aroma.core]{AromaTransform}}.}
+ \item{.reqSetClass}{(internal only)}
+}
 
- \section{Fields and Methods}{
-  \bold{Methods:}\cr
+\section{Fields and Methods}{
+ \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{as.character} \tab  -\cr
  \tab \code{getAsteriskTags} \tab  -\cr
@@ -73,7 +73,7 @@ getParameters, getParametersAsString, getParameterSets
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
  "public"
- }
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 \keyword{classes}

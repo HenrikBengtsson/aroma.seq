@@ -6,15 +6,15 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{BamIndexDataFile}
+\name{BamIndexDataFile}
 \docType{class}
 \alias{BamIndexDataFile}
 
 
- \title{The abstract BamIndexDataFile class}
+\title{The abstract BamIndexDataFile class}
 
- \description{
-  Package:  aroma.seq \cr
+\description{
+ Package:  aroma.seq \cr
 \bold{Class BamIndexDataFile}\cr
 
 \code{\link[R.oo]{Object}}\cr
@@ -33,19 +33,19 @@ extends \emph{\link[R.filesets]{GenericDataFile}}\cr
 
 
 
-  A BamIndexDataFile object represents a BAM index file.
- }
+ A BamIndexDataFile object represents a BAM index file.
+}
 
- \usage{
+\usage{
 BamIndexDataFile(...)
 }
 
- \arguments{
-   \item{...}{Arguments passed to \code{\link[R.filesets]{GenericDataFile}}.}
- }
+\arguments{
+  \item{...}{Arguments passed to \code{\link[R.filesets]{GenericDataFile}}.}
+}
 
- \section{Fields and Methods}{
-  \bold{Methods:}\cr
+\section{Fields and Methods}{
+ \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{as.character} \tab  -\cr
 }
@@ -61,7 +61,10 @@ appendFullNameTranslator, appendFullNameTranslatorBycharacter, appendFullNameTra
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
  "public"
- }
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
+
+
 \keyword{classes}
+\keyword{internal}

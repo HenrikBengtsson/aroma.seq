@@ -6,15 +6,15 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{SamDataFile}
+\name{SamDataFile}
 \docType{class}
 \alias{SamDataFile}
 
 
- \title{The abstract SamDataFile class}
+\title{The abstract SamDataFile class}
 
- \description{
-  Package:  aroma.seq \cr
+\description{
+ Package:  aroma.seq \cr
 \bold{Class SamDataFile}\cr
 
 \code{\link[R.oo]{Object}}\cr
@@ -33,19 +33,19 @@ extends \emph{\link[R.filesets]{GenericDataFile}}\cr
 
 
 
-  A SamDataFile object represents a Sequence Alignment/Map (SAM) file [1].
- }
+ A SamDataFile object represents a Sequence Alignment/Map (SAM) file [1].
+}
 
- \usage{
+\usage{
 SamDataFile(...)
 }
 
- \arguments{
-   \item{...}{Arguments passed to \code{\link[R.filesets]{GenericDataFile}}.}
- }
+\arguments{
+  \item{...}{Arguments passed to \code{\link[R.filesets]{GenericDataFile}}.}
+}
 
- \section{Fields and Methods}{
-  \bold{Methods:}\cr
+\section{Fields and Methods}{
+ \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{as.character} \tab  -\cr
  \tab \code{convertToBamDataFile} \tab  -\cr
@@ -62,17 +62,17 @@ appendFullNameTranslator, appendFullNameTranslatorBycharacter, appendFullNameTra
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
  "public"
- }
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 
- \references{
-  [1] The SAM Format Specification Working Group,
-      \emph{The SAM Format Specification}, Sept 7, 2011.\cr
- }
+\references{
+ [1] The SAM Format Specification Working Group,
+     \emph{The SAM Format Specification}, Sept 7, 2011.\cr
+}
 
- \seealso{
-   An object of this class is typically part of an
-   \code{\link{SamDataSet}}.
- }
+\seealso{
+  An object of this class is typically part of an
+  \code{\link{SamDataSet}}.
+}
 \keyword{classes}

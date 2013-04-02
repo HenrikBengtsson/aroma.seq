@@ -8,7 +8,7 @@
 #
 #  An SamDataSet object represents a set of @see "SamDataFile":s.
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -19,8 +19,8 @@
 # \section{Fields and Methods}{
 #  @allmethods "public"
 # }
-# 
-# @author
+#
+# @author "HB"
 #*/###########################################################################
 setConstructorS3("SamDataSet", function(files=NULL, ...) {
   extend(GenericDataFileSet(files=files, ...), "SamDataSet");
@@ -43,7 +43,7 @@ setMethodS3("byPath", "SamDataSet", function(static, ..., pattern="[.](sam|SAM)$
 
 
 
-###########################################################################/** 
+###########################################################################/**
 # @RdocMethod convertToBamDataSet
 #
 # @title "Converts the SAM set into a BAM set"
@@ -56,7 +56,7 @@ setMethodS3("byPath", "SamDataSet", function(static, ..., pattern="[.](sam|SAM)$
 #
 # \arguments{
 #  \item{path}{The destination path.}
-#  \item{...}{Additional arguments passed to \code{convertToBamDataFile()} 
+#  \item{...}{Additional arguments passed to \code{convertToBamDataFile()}
 #   for each @see "SamDataFile".}
 #  \item{verbose}{See @see "R.utils::Verbose".}
 # }
@@ -70,7 +70,7 @@ setMethodS3("byPath", "SamDataSet", function(static, ..., pattern="[.](sam|SAM)$
 # }
 #
 # @author
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("convertToBamDataSet", "SamDataSet", function(this, path=getPath(this), ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -83,11 +83,11 @@ setMethodS3("convertToBamDataSet", "SamDataSet", function(this, path=getPath(thi
   if (verbose) {
     pushState(verbose);
     on.exit(popState(verbose));
-  } 
- 
+  }
+
 
   verbose && enter(verbose, "Converting SAM set to a BAM set");
- 
+
   verbose && cat(verbose, "SAM data set:");
   verbose && print(verbose, this);
   verbose && cat(verbose, "BAM path: ", path);

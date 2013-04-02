@@ -8,7 +8,7 @@
 #
 #  An BwaIndexSet object represents a set of @see "BwaIndexFile":s.
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -18,8 +18,10 @@
 # \section{Fields and Methods}{
 #  @allmethods "public"
 # }
-# 
-# @author
+#
+# @author "HB"
+#
+# @keyword internal
 #*/###########################################################################
 setConstructorS3("BwaIndexSet", function(...) {
   extend(AbstractIndexSet(...), "BwaIndexSet");

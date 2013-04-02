@@ -6,32 +6,32 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{buildBwaIndexSet.FastaReferenceFile}
+\name{buildBwaIndexSet.FastaReferenceFile}
 \alias{buildBwaIndexSet.FastaReferenceFile}
 \alias{FastaReferenceFile.buildBwaIndexSet}
 \alias{buildBwaIndexSet,FastaReferenceFile-method}
 
- \title{Builds a BWA index files set}
+\title{Builds a BWA index files set}
 
- \description{
-   Builds a BWA index files set.
- }
+\description{
+  Builds a BWA index files set.
+}
 
- \usage{
+\usage{
 \method{buildBwaIndexSet}{FastaReferenceFile}(this, method, ..., skip=TRUE, verbose=FALSE)
 }
 
- \arguments{
-  \item{method}{A \code{\link[base]{character}} string specifying the algorithm to use.}
-  \item{...}{Additional arguments passed to \code{\link{bwaIndex}}().}
-  \item{skip}{If \code{\link[base:logical]{TRUE}}, the index files are not rebuilt if already available.}
-  \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
- }
+\arguments{
+ \item{method}{A \code{\link[base]{character}} string specifying the algorithm to use.}
+ \item{...}{Additional arguments passed to \code{\link{bwaIndex}}().}
+ \item{skip}{If \code{\link[base:logical]{TRUE}}, the index files are not rebuilt if already available.}
+ \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
+}
 
- \value{
-   Returns a \code{\link[R.filesets]{GenericDataFileSet}} consisting of the BWA index files.
- }
+\value{
+  Returns a \code{\link[R.filesets]{GenericDataFileSet}} consisting of the BWA index files.
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 \keyword{internal}
 \keyword{methods}

@@ -7,7 +7,7 @@
 #  @classhierarchy
 #
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -20,8 +20,8 @@
 #  @allmethods "public"
 # }
 #
-# @author
-#*/########################################################################### 
+# @author "HB"
+#*/###########################################################################
 setConstructorS3("BinnedGcNormalization", function(dataSet=NULL, ..., .reqSetClass="AromaUnitTotalCnBinarySet") {
   if (!is.null(dataSet)) {
   }
@@ -60,10 +60,10 @@ setMethodS3("getAsteriskTags", "BinnedGcNormalization", function(this, collapse=
   # Collapsed or split?
   if (!is.null(collapse)) {
     tags <- paste(tags, collapse=collapse);
-  } 
+  }
 
   tags;
-}, protected=TRUE) 
+}, protected=TRUE)
 
 
 
@@ -190,7 +190,7 @@ setMethodS3("getOutputDataSet0", "BinnedGcNormalization", function(this, pattern
 setMethodS3("process", "BinnedGcNormalization", function(this, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
   if (verbose) {
@@ -238,7 +238,7 @@ setMethodS3("process", "BinnedGcNormalization", function(this, ..., verbose=FALS
     path <- getPath(this);
     fullname <- getFullName(df);
     filename <- sprintf("%s%s", fullname, ext);
-    pathname <- Arguments$getReadablePathname(filename, path=path, 
+    pathname <- Arguments$getReadablePathname(filename, path=path,
                                                          mustExist=FALSE);
     verbose && cat(verbose, "Output pathname: ", pathname);
 
@@ -279,9 +279,9 @@ setMethodS3("process", "BinnedGcNormalization", function(this, ..., verbose=FALS
     paramsT <- params;
     footer <- list(
       sourceDataFile=list(
-        fullname=getFullName(df), 
-        platform=getPlatform(df), 
-        chipType=getChipType(df), 
+        fullname=getFullName(df),
+        platform=getPlatform(df),
+        chipType=getChipType(df),
         checksum=getChecksum(df)
       ), parameters=list(
         annotation=list(
@@ -297,8 +297,8 @@ setMethodS3("process", "BinnedGcNormalization", function(this, ..., verbose=FALS
     platform <- getPlatform(df);
     chipType <- getChipType(df);
 
-    dfOut <- clazz$allocate(filename=pathnameT, nbrOfRows=nbrOfUnits, 
-                            platform=platform, chipType=chipType, 
+    dfOut <- clazz$allocate(filename=pathnameT, nbrOfRows=nbrOfUnits,
+                            platform=platform, chipType=chipType,
                             footer=footer, verbose=less(verbose, 50));
 
     dfOut[,1] <- yN;
@@ -322,7 +322,7 @@ setMethodS3("process", "BinnedGcNormalization", function(this, ..., verbose=FALS
 
 setMethodS3("getOutputFiles", "BinnedGcNormalization", function(this, ...) {
   NextMethod("getOutputFiles", pattern=".*[.]asb$");
-}, protected=TRUE) 
+}, protected=TRUE)
 
 
 

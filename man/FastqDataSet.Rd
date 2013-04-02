@@ -6,15 +6,15 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{FastqDataSet}
+\name{FastqDataSet}
 \docType{class}
 \alias{FastqDataSet}
 
 
- \title{The FastqDataSet class}
+\title{The FastqDataSet class}
 
- \description{
-  Package:  aroma.seq \cr
+\description{
+ Package:  aroma.seq \cr
 \bold{Class FastqDataSet}\cr
 
 \code{\link[R.oo]{Object}}\cr
@@ -33,20 +33,20 @@ extends \link[R.filesets]{GenericDataFileSet}\cr
 
 
 
-  An FastqDataSet object represents a set of \code{\link{FastqDataFile}}:s.
- }
+ An FastqDataSet object represents a set of \code{\link{FastqDataFile}}:s.
+}
 
- \usage{
+\usage{
 FastqDataSet(files=NULL, ...)
 }
 
- \arguments{
-   \item{files}{A \code{\link[base]{list}} of \code{\link{FastqDataFile}}:s.}
-   \item{...}{Arguments passed to \code{\link[R.filesets]{GenericDataFileSet}}.}
- }
+\arguments{
+  \item{files}{A \code{\link[base]{list}} of \code{\link{FastqDataFile}}:s.}
+  \item{...}{Arguments passed to \code{\link[R.filesets]{GenericDataFileSet}}.}
+}
 
- \section{Fields and Methods}{
-  \bold{Methods:}\cr
+\section{Fields and Methods}{
+ \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{getDefaultSamReadGroup} \tab  -\cr
  \tab \code{getDepth} \tab  -\cr
@@ -67,7 +67,7 @@ appendFullNameTranslator, appendFullNameTranslatorBycharacter, appendFullNameTra
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
  "public"
- }
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 \keyword{classes}

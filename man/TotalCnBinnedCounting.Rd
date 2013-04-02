@@ -6,15 +6,15 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{TotalCnBinnedCounting}
+\name{TotalCnBinnedCounting}
 \docType{class}
 \alias{TotalCnBinnedCounting}
 
 
- \title{The TotalCnBinnedCounting class}
+\title{The TotalCnBinnedCounting class}
 
- \description{
-  Package:  aroma.seq \cr
+\description{
+ Package:  aroma.seq \cr
 \bold{Class TotalCnBinnedCounting}\cr
 
 \code{\link[R.oo]{Object}}\cr
@@ -35,19 +35,19 @@ extends \emph{\link[aroma.cn]{TotalCnSmoothing}}\cr
 
 
 
- }
+}
 
- \usage{
+\usage{
 TotalCnBinnedCounting(..., .reqSetClass="BamDataSet")
 }
 
- \arguments{
-  \item{...}{Arguments passed to \code{\link[aroma.cn]{TotalCnSmoothing}}.}
-  \item{.reqSetClass}{(internal) ...}
- }
+\arguments{
+ \item{...}{Arguments passed to \code{\link[aroma.cn]{TotalCnSmoothing}}.}
+ \item{.reqSetClass}{(internal) ...}
+}
 
- \section{Fields and Methods}{
-  \bold{Methods:}\cr
+\section{Fields and Methods}{
+ \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{getExpectedOutputFullnames} \tab  -\cr
  \tab \code{getOutputFileExtension} \tab  -\cr
@@ -69,7 +69,7 @@ getParameters, getParametersAsString, getParameterSets
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
  "public"
- }
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 \keyword{classes}

@@ -8,7 +8,7 @@
 #
 #  A BamIndexDataFile object represents a BAM index file.
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -18,8 +18,10 @@
 # \section{Fields and Methods}{
 #  @allmethods "public"
 # }
-# 
-# @author
+#
+# @author "HB"
+#
+# @keyword internal
 #*/###########################################################################
 setConstructorS3("BamIndexDataFile", function(...) {
   extend(GenericDataFile(...), "BamIndexDataFile");

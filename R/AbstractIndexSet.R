@@ -8,7 +8,7 @@
 #
 #  An AbstractIndexSet object represents a set of @see "AbstractIndexFile":s.
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -19,8 +19,10 @@
 # \section{Fields and Methods}{
 #  @allmethods "public"
 # }
-# 
-# @author
+#
+# @author "HB"
+#
+# @keyword internal
 #*/###########################################################################
 setConstructorS3("AbstractIndexSet", function(files=NULL, ...) {
   extend(GenericDataFileSet(files=files, ...), "AbstractIndexSet");

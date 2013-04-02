@@ -8,7 +8,7 @@
 #
 #  A FastaReferenceFile object represents a FASTA reference file.
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -18,8 +18,8 @@
 # \section{Fields and Methods}{
 #  @allmethods "public"
 # }
-# 
-# @author
+#
+# @author "HB"
 #
 # \seealso{
 #   ...
@@ -92,7 +92,7 @@ setMethodS3("readSeqLengths", "FastaReferenceFile", function(this, ...) {
 }, private=TRUE)
 
 
-###########################################################################/** 
+###########################################################################/**
 # @RdocMethod buildIndex
 #
 # @title "Builds an FAI index file"
@@ -114,7 +114,7 @@ setMethodS3("readSeqLengths", "FastaReferenceFile", function(this, ...) {
 # }
 #
 # @author
-#*/########################################################################### 
+#*/###########################################################################
 setMethodS3("buildIndex", "FastaReferenceFile", function(this, ..., skip=TRUE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -127,7 +127,7 @@ setMethodS3("buildIndex", "FastaReferenceFile", function(this, ..., skip=TRUE, v
   if (verbose) {
     pushState(verbose);
     on.exit(popState(verbose));
-  } 
+  }
 
 
   verbose && enter(verbose, "Building FASTA FAI index");
@@ -153,7 +153,7 @@ setMethodS3("buildIndex", "FastaReferenceFile", function(this, ..., skip=TRUE, v
 }) # buildIndex()
 
 
-###########################################################################/** 
+###########################################################################/**
 # @RdocMethod buildBwaIndexSet
 #
 # @title "Builds a BWA index files set"
@@ -176,7 +176,7 @@ setMethodS3("buildIndex", "FastaReferenceFile", function(this, ..., skip=TRUE, v
 # }
 #
 # @author
-#*/########################################################################### 
+#*/###########################################################################
 setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method, ..., skip=TRUE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Local functions
@@ -211,8 +211,8 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method, ...
   if (verbose) {
     pushState(verbose);
     on.exit(popState(verbose));
-  } 
- 
+  }
+
 
   verbose && enter(verbose, "Building BWA index files");
   stopifnot(isCapableOf(aroma.seq, "bwa"));
@@ -283,8 +283,8 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
   if (verbose) {
     pushState(verbose);
     on.exit(popState(verbose));
-  } 
- 
+  }
+
 
   verbose && enter(verbose, "Building Bowtie2 index file");
   stopifnot(isCapableOf(aroma.seq, "bowtie2"));

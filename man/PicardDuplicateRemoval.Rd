@@ -6,15 +6,15 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{PicardDuplicateRemoval}
+\name{PicardDuplicateRemoval}
 \docType{class}
 \alias{PicardDuplicateRemoval}
 
 
- \title{The PicardDuplicateRemoval class}
+\title{The PicardDuplicateRemoval class}
 
- \description{
-  Package:  aroma.seq \cr
+\description{
+ Package:  aroma.seq \cr
 \bold{Class PicardDuplicateRemoval}\cr
 
 \code{\link[R.oo]{Object}}\cr
@@ -31,22 +31,22 @@ extends \link[aroma.core]{ParametersInterface}\cr
 
 
 
-  ...
- }
+ ...
+}
 
- \usage{
+\usage{
 PicardDuplicateRemoval(dataSet=NULL, tags="*", ASSUME_SORTED=TRUE, VALIDATION_STRINGENCY="SILENT", ...)
 }
 
- \arguments{
-  \item{dataSet}{An \code{\link{BamDataSet}}.}
-  \item{tags}{Additional tags for the output data sets.}
-  \item{ASSUME_SORTED, VALIDATION_STRINGENCY, ...}{
-    Additional Picard MarkDuplicates arguments.}
- }
+\arguments{
+ \item{dataSet}{An \code{\link{BamDataSet}}.}
+ \item{tags}{Additional tags for the output data sets.}
+ \item{ASSUME_SORTED, VALIDATION_STRINGENCY, ...}{
+   Additional Picard MarkDuplicates arguments.}
+}
 
- \section{Fields and Methods}{
-  \bold{Methods:}\cr
+\section{Fields and Methods}{
+ \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{as.character} \tab  -\cr
  \tab \code{getAsteriskTags} \tab  -\cr
@@ -73,7 +73,7 @@ getParameters, getParametersAsString, getParameterSets
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
  "public"
- }
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 \keyword{classes}
