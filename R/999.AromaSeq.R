@@ -6,7 +6,7 @@
 # \description{
 #  @classhierarchy
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -18,14 +18,14 @@
 # }
 #
 # @author
-#*/########################################################################### 
+#*/###########################################################################
 setConstructorS3("AromaSeq", function(...) {
   extend(AromaPackage("aroma.seq", ...), "AromaSeq");
 })
 
 
 
-###########################################################################/** 
+###########################################################################/**
 # @RdocMethod capabilitiesOf
 # @aliasmethod isCapableOf
 #
@@ -69,6 +69,8 @@ setMethodS3("capabilitiesOf", "AromaSeq", function(static, what=NULL, ...) {
   res$gatk <- !is.null(findGATK(mustExists=FALSE));
   res$picard <- !is.null(findPicard(mustExists=FALSE));
   res$samtools <- !is.null(findSamtools(mustExists=FALSE));
+  res$tophat1 <- !is.null(findTopHat(version=1, mustExists=FALSE));
+  res$tophat2 <- !is.null(findTopHat(version=2, mustExists=FALSE));
 
   # Order lexicographically
   o <- order(names(res));
@@ -112,6 +114,8 @@ setMethodS3("setupTests", "AromaSeq", function(static, path="redundancyTests/", 
 
 ############################################################################
 # HISTORY:
+# 2013-04-01
+# o Added 'tophat1' and 'tophat2' to capabilitiesOf().
 # 2012-09-27
 # o Added setupTests() for AromaSeq.
 # 2012-09-25

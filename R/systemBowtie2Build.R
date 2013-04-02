@@ -26,7 +26,6 @@ setMethodS3("systemBowtie2Build", "default", function(command="bowtie2-build",
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
   # Arguments '...':
   dotArgs <- list(...);  ## list with one item named 'args'; these are the arguments to *bowtie2-build*
 
@@ -37,12 +36,14 @@ setMethodS3("systemBowtie2Build", "default", function(command="bowtie2-build",
     on.exit(popState(verbose));
   }
 
+
   verbose && enter(verbose, "Calling bowtie2-build executable");
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Locate executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  bin <- findCmd(command, verbose=less(verbose, 50));
+  # Locates the bowtie2 executable
+  bin <- findBowtie2(command="bowtie2-build", verbose=less(verbose, 50));
   verbose && cat(verbose, "Executable: ", bin);
 
   verbose && cat(verbose, "Arguments passed to system2():");
@@ -53,7 +54,6 @@ setMethodS3("systemBowtie2Build", "default", function(command="bowtie2-build",
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup command line switches
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
   verbose && cat(verbose, "Command line options:");
   verbose && print(verbose, dotArgs);
 
@@ -85,6 +85,8 @@ setMethodS3("systemBowtie2Build", "default", function(command="bowtie2-build",
 
 ############################################################################
 # HISTORY:
+# 2013-04-01 [HB]
+# o Now using findBowtie2() to located executable.
 # 2013-03-07
 # o TT:  Rewritten to conform to systemTopHat.R template.
 # 2012-08-22

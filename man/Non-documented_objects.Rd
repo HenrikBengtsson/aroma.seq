@@ -60,12 +60,8 @@
 \alias{readHeader.BamDataFile}
 \alias{sort.BamDataFile}
 \alias{validate.BamDataSet}
-\alias{bowtie2}
-\alias{bowtie2.default}
 \alias{as.character.Bowtie2Alignment}
 \alias{bDebugSystemBowtie2Build}
-\alias{bowtie2Build}
-\alias{bowtie2Build.default}
 \alias{getAsteriskTags.Bowtie2Alignment}
 \alias{getFlavor.Bowtie2Alignment}
 \alias{getFullName.Bowtie2Alignment}
@@ -79,10 +75,6 @@
 \alias{nbrOfFiles.Bowtie2Alignment}
 \alias{processOne.Bowtie2Alignment}
 \alias{setTags.Bowtie2Alignment}
-\alias{systemBowtie2}
-\alias{systemBowtie2.default}
-\alias{systemBowtie2Build}
-\alias{systemBowtie2Build.default}
 \alias{testSystemBowtie2Build}
 \alias{isCapableOf}
 \alias{buildBwaIndexSet}
@@ -338,6 +330,8 @@
 \alias{report}
 \alias{report.FastqDataFile}
 \alias{report.FastqDataSet}
+\alias{systemBowtie2}
+\alias{systemBowtie2.default}
 
 \description{
   This page contains aliases for all "non-documented" objects that

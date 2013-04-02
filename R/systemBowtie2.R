@@ -120,11 +120,23 @@ setMethodS3("systemBowtie2", "default", function(
                                           ## --seed <int>       ## seed for random number generator (0)
                                           ## --version          ## print version information and quit
                                           ## -h/--help          ## print this usage message
-                                          bin="bowtie2",      ## full pathname to bowtie2 executable
                                           ...
                                           ) {
 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
+
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  # Locates the bowtie2 executable
+  bin <- findBowtie2(verbose=less(verbose, 50));
 
   ## Create string of supported options, and unsupported options; paste together
 
@@ -141,12 +153,6 @@ setMethodS3("systemBowtie2", "default", function(
 
   ## cmd <- sprintf("%s", binWithArgs)  ## In emacs/ess, shQuote() version with single quotes added does not run
   cmd <- binWithArgs
-
-  verbose <- Arguments$getVerbose(verbose);
-  if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
-  }
 
   verbose && enter(verbose, "Running bowtie2");
   verbose && cat(verbose, "System call: ", cmd)
@@ -168,6 +174,8 @@ setMethodS3("systemBowtie2", "default", function(
 
 ############################################################################
 # HISTORY:
+# 2013-04-01 [HB]
+# o Now using findBowtie2() to located executable.
 # 2012-08-22
 # o TT:  Created systemBowtie2 stub
 ############################################################################

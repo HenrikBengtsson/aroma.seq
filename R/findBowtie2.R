@@ -1,7 +1,7 @@
 ###########################################################################/**
 # @RdocDefault findBowtie2
 #
-# @title "Locates the Bowtie2 executable"
+# @title "Locates one of the bowtie2 executable"
 #
 # \description{
 #  @get "title" on the current system.
@@ -13,24 +13,28 @@
 #   \item{mustExists}{If @TRUE, an exception is thrown if the executable
 #      could not be located.}
 #   \item{...}{Not used.}
+#   \item{command}{A @character string specifying the executable to locate.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
 # \details{
 #  The Bowtie2 executable is searched for as follows:
 #  \enumerate{
-#   \item \code{Sys.which("bowtie2-align")}
+#   \item \code{Sys.which(command)}
 #  }
 # }
 #
 # @author
 #*/###########################################################################
-setMethodS3("findBowtie2", "default", function(mustExists=TRUE, ..., verbose=FALSE) {
+setMethodS3("findBowtie2", "default", function(mustExists=TRUE, ..., command=c("bowtie2", "bowtie2-align", "bowtie2-build", "bowtie2-inspect"), verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'mustExists':
   mustExists <- Arguments$getLogical(mustExists);
+
+  # Argument 'command':
+  command <- match.arg(command);
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -39,10 +43,7 @@ setMethodS3("findBowtie2", "default", function(mustExists=TRUE, ..., verbose=FAL
     on.exit(popState(verbose));
   }
 
-  verbose && enter(verbose, "Locating BWA software");
-
-  # The bowtie2 itself is actually a perl script
-  command <- "bowtie2-align";
+  verbose && enter(verbose, "Locating Bowtie2 software");
   verbose && cat(verbose, "Command: ", command);
 
   # Check for cached results
@@ -88,6 +89,7 @@ setMethodS3("findBowtie2", "default", function(mustExists=TRUE, ..., verbose=FAL
 ############################################################################
 # HISTORY:
 # 2013-04-01
+# o BUG FIX: findBowtie2() was incorrectly hardwired to 'bowtie2-align'.
 # o Now findBowtie2() sets attribute 'version', iff possible.
 # 2012-09-27
 # o Now looking for bowtie2-align instead of bowtie2, because the latter
