@@ -7,8 +7,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \name{findJava}
-\alias{findJava.default}
 \alias{findJava}
+
 
 \title{Locates the Java executable}
 
@@ -17,7 +17,7 @@
 }
 
 \usage{
-\method{findJava}{default}(mustExists=TRUE, ..., verbose=FALSE)
+findJava(mustExists=TRUE, ..., verbose=FALSE)
 }
 
 \arguments{

@@ -7,8 +7,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \name{findSamtools}
-\alias{findSamtools.default}
 \alias{findSamtools}
+
 
 \title{Locates the samtools executable}
 
@@ -17,7 +17,7 @@
 }
 
 \usage{
-\method{findSamtools}{default}(mustExists=TRUE, ..., verbose=FALSE)
+findSamtools(mustExists=TRUE, ..., verbose=FALSE)
 }
 
 \arguments{

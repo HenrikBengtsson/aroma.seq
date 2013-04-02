@@ -7,8 +7,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \name{findBWA}
-\alias{findBWA.default}
 \alias{findBWA}
+
 
 \title{Locates the BWA executable}
 
@@ -17,7 +17,7 @@
 }
 
 \usage{
-\method{findBWA}{default}(mustExists=TRUE, ..., verbose=FALSE)
+findBWA(mustExists=TRUE, ..., verbose=FALSE)
 }
 
 \arguments{

@@ -7,8 +7,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \name{findBowtie2}
-\alias{findBowtie2.default}
 \alias{findBowtie2}
+
 
 \title{Locates one of the bowtie2 executable}
 
@@ -17,7 +17,7 @@
 }
 
 \usage{
-\method{findBowtie2}{default}(mustExists=TRUE, ..., command=c("bowtie2", "bowtie2-align", "bowtie2-build", "bowtie2-inspect"), verbose=FALSE)
+findBowtie2(mustExists=TRUE, ..., command=c("bowtie2", "bowtie2-align", "bowtie2-build", "bowtie2-inspect"), verbose=FALSE)
 }
 
 \arguments{

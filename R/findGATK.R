@@ -1,5 +1,5 @@
 ###########################################################################/**
-# @RdocDefault findGATK
+# @RdocFunction findGATK
 # \alias{GATK_HOME}
 #
 # @title "Locates the GATK executable"
@@ -26,7 +26,7 @@
 #
 # @author
 #*/###########################################################################
-setMethodS3("findGATK", "default", function(mustExists=TRUE, ..., verbose=FALSE) {
+findGATK <- function(mustExists=TRUE, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -83,7 +83,7 @@ setMethodS3("findGATK", "default", function(mustExists=TRUE, ..., verbose=FALSE)
   verbose && exit(verbose);
 
   pathname;
-}) # findGATK()
+} # findGATK()
 
 
 ############################################################################

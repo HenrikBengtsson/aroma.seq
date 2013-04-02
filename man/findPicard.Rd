@@ -7,8 +7,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \name{findPicard}
-\alias{findPicard.default}
 \alias{findPicard}
+
 \alias{PICARD_HOME}
 
 \title{Locates the Picard executable}
@@ -18,7 +18,7 @@
 }
 
 \usage{
-\method{findPicard}{default}(mustExists=TRUE, ..., verbose=FALSE)
+findPicard(mustExists=TRUE, ..., verbose=FALSE)
 }
 
 \arguments{

@@ -7,8 +7,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \name{findPerl}
-\alias{findPerl.default}
 \alias{findPerl}
+
 
 \title{Locates the Perl executable}
 
@@ -17,7 +17,7 @@
 }
 
 \usage{
-\method{findPerl}{default}(mustExists=TRUE, ..., verbose=FALSE)
+findPerl(mustExists=TRUE, ..., verbose=FALSE)
 }
 
 \arguments{

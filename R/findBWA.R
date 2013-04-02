@@ -1,5 +1,5 @@
 ###########################################################################/**
-# @RdocDefault findBWA
+# @RdocFunction findBWA
 #
 # @title "Locates the BWA executable"
 #
@@ -25,7 +25,7 @@
 #
 # @author
 #*/###########################################################################
-setMethodS3("findBWA", "default", function(mustExists=TRUE, ..., verbose=FALSE) {
+findBWA <- function(mustExists=TRUE, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -80,7 +80,7 @@ setMethodS3("findBWA", "default", function(mustExists=TRUE, ..., verbose=FALSE) 
   verbose && exit(verbose);
 
   pathname;
-}) # findBWA()
+}
 
 
 ############################################################################

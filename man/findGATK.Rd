@@ -7,8 +7,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \name{findGATK}
-\alias{findGATK.default}
 \alias{findGATK}
+
 \alias{GATK_HOME}
 
 \title{Locates the GATK executable}
@@ -18,7 +18,7 @@
 }
 
 \usage{
-\method{findGATK}{default}(mustExists=TRUE, ..., verbose=FALSE)
+findGATK(mustExists=TRUE, ..., verbose=FALSE)
 }
 
 \arguments{

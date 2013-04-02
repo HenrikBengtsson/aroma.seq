@@ -1,5 +1,5 @@
 ###########################################################################/**
-# @RdocDefault findPerl
+# @RdocFunction findPerl
 #
 # @title "Locates the Perl executable"
 #
@@ -25,7 +25,7 @@
 #
 # @author
 #*/###########################################################################
-setMethodS3("findPerl", "default", function(mustExists=TRUE, ..., verbose=FALSE) {
+findPerl <- function(mustExists=TRUE, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -81,7 +81,7 @@ setMethodS3("findPerl", "default", function(mustExists=TRUE, ..., verbose=FALSE)
   verbose && exit(verbose);
 
   pathname;
-}) # findPerl()
+} # findPerl()
 
 
 ############################################################################

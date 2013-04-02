@@ -1,5 +1,5 @@
 ###########################################################################/**
-# @RdocDefault findJava
+# @RdocFunction findJava
 #
 # @title "Locates the Java executable"
 #
@@ -25,7 +25,7 @@
 #
 # @author
 #*/###########################################################################
-setMethodS3("findJava", "default", function(mustExists=TRUE, ..., verbose=FALSE) {
+findJava <- function(mustExists=TRUE, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -80,7 +80,7 @@ setMethodS3("findJava", "default", function(mustExists=TRUE, ..., verbose=FALSE)
   verbose && exit(verbose);
 
   pathname;
-}) # findJava()
+} # findJava()
 
 
 ############################################################################

@@ -1,5 +1,5 @@
 ###########################################################################/**
-# @RdocDefault findPicard
+# @RdocFunction findPicard
 # \alias{PICARD_HOME}
 #
 # @title "Locates the Picard executable"
@@ -26,7 +26,7 @@
 #
 # @author
 #*/###########################################################################
-setMethodS3("findPicard", "default", function(mustExists=TRUE, ..., verbose=FALSE) {
+findPicard <- function(mustExists=TRUE, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -90,7 +90,7 @@ setMethodS3("findPicard", "default", function(mustExists=TRUE, ..., verbose=FALS
   verbose && exit(verbose);
 
   path;
-}) # findPicard()
+} # findPicard()
 
 
 ############################################################################

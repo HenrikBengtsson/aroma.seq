@@ -1,9 +1,7 @@
 ###########################################################################/**
-# @RdocDefault findTopHat
+# @RdocFunction findTopHat
 # @alias findTopHat1
-# @alias findTopHat1.default
 # @alias findTopHat2
-# @alias findTopHat2.default
 #
 # @title "Locates the TopHat executable of a certain version"
 #
@@ -31,7 +29,7 @@
 #
 # @author
 #*/###########################################################################
-setMethodS3("findTopHat", "default", function(mustExists=TRUE, command="tophat", version, ..., verbose=FALSE) {
+findTopHat <- function(mustExists=TRUE, command="tophat", version, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -87,13 +85,13 @@ setMethodS3("findTopHat", "default", function(mustExists=TRUE, command="tophat",
   verbose && exit(verbose);
 
   pathname;
-}) # findTopHat()
+} # findTopHat()
 
-setMethodS3("findTopHat1", "default", function(...) {
+findTopHat1 <- function(...) {
   findTopHat(..., command="tophat", version="1");
-}) # findTopHat1()
+} # findTopHat1()
 
-setMethodS3("findTopHat2", "default", function(...) {
+findTopHat2 <- function(...) {
   res <- tryCatch({
     findTopHat(..., command="tophat", version="2");
   }, error = function(ex) { NULL });
@@ -101,7 +99,7 @@ setMethodS3("findTopHat2", "default", function(...) {
     res <- findTopHat(..., command="tophat2", version="2");
   }
   res;
-}) # findTopHat2()
+} # findTopHat2()
 
 
 ############################################################################

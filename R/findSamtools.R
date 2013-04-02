@@ -1,5 +1,5 @@
 ###########################################################################/**
-# @RdocDefault findSamtools
+# @RdocFunction findSamtools
 #
 # @title "Locates the samtools executable"
 #
@@ -18,7 +18,7 @@
 #
 # @author
 #*/###########################################################################
-setMethodS3("findSamtools", "default", function(mustExists=TRUE, ..., verbose=FALSE) {
+findSamtools <- function(mustExists=TRUE, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -72,7 +72,7 @@ setMethodS3("findSamtools", "default", function(mustExists=TRUE, ..., verbose=FA
   verbose && exit(verbose);
 
   pathname;
-}) # findSamtools()
+} # findSamtools()
 
 
 ############################################################################

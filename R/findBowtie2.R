@@ -1,5 +1,5 @@
 ###########################################################################/**
-# @RdocDefault findBowtie2
+# @RdocFunction findBowtie2
 #
 # @title "Locates one of the bowtie2 executable"
 #
@@ -26,7 +26,7 @@
 #
 # @author
 #*/###########################################################################
-setMethodS3("findBowtie2", "default", function(mustExists=TRUE, ..., command=c("bowtie2", "bowtie2-align", "bowtie2-build", "bowtie2-inspect"), verbose=FALSE) {
+findBowtie2 <- function(mustExists=TRUE, ..., command=c("bowtie2", "bowtie2-align", "bowtie2-build", "bowtie2-inspect"), verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -83,8 +83,7 @@ setMethodS3("findBowtie2", "default", function(mustExists=TRUE, ..., command=c("
   verbose && exit(verbose);
 
   pathname;
-}) # findBowtie2()
-
+} # findBowtie2()
 
 ############################################################################
 # HISTORY:

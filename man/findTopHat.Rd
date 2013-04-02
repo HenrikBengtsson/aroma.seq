@@ -7,12 +7,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \name{findTopHat}
-\alias{findTopHat.default}
 \alias{findTopHat}
+
 \alias{findTopHat1}
-\alias{findTopHat1.default}
 \alias{findTopHat2}
-\alias{findTopHat2.default}
 
 \title{Locates the TopHat executable of a certain version}
 
@@ -21,7 +19,7 @@
 }
 
 \usage{
-\method{findTopHat}{default}(mustExists=TRUE, command="tophat", version, ..., verbose=FALSE)
+findTopHat(mustExists=TRUE, command="tophat", version, ..., verbose=FALSE)
 }
 
 \arguments{
