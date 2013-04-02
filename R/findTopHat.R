@@ -4,17 +4,17 @@ findTopHat <- function(..., command="tophat") {
 } # findTopHat()
 
 
-findTopHat1 <- function(...) {
-  findTopHat(..., command="tophat", version=c(1,2));
+findTopHat1 <- function(..., command="tophat", version=c(1,2)) {
+  findTopHat(..., command=command, version=version);
 } # findTopHat1()
 
 
-findTopHat2 <- function(...) {
+findTopHat2 <- function(..., command="tophat2", version=version) {
   res <- tryCatch({
-    findTopHat(..., command="tophat", version=c(2,3));
+    findTopHat(..., command=command, version=version);
   }, error = function(ex) { NULL });
   if (is.null(res)) {
-    res <- findTopHat(..., command="tophat2", version=2);
+    res <- findTopHat(..., command="tophat", version=version);
   }
   res;
 } # findTopHat2()

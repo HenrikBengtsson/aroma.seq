@@ -151,15 +151,19 @@ findExternal <- function(mustExist=TRUE, command, version=NULL, versionPattern=N
         verbose && cat(verbose, "Available version: ", ver);
         verbose && printf(verbose, "Requested version range: [%s,%s)\n", version[1L], version[2L]);
         if (ver < version[1L] || ver >= version[2L]) {
-          throw(sprintf("Failed to located '%s' with version in [%s,%s): %s", command, version[1L], version[2L], ver));
+          pathname <- NULL;
+          if (mustExist) {
+            throw(sprintf("Failed to located '%s' with version in [%s,%s): %s", command, version[1L], version[2L], ver));
+          }
         }
         verbose && exit(verbose);
       }
     }
-    .findCache(name=command, version=version, path=pathname);
   } else if (mustExist) {
     throw(sprintf("Failed to located external executable '%s'", command));
   }
+
+  .findCache(name=command, version=version, path=pathname);
 
   verbose && exit(verbose);
 
