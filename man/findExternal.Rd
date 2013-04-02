@@ -41,7 +41,7 @@
   \item{command}{A \code{\link[base]{character}} string specifying the name of the
      executable to locate.}
   \item{version}{If non-\code{\link[base]{NULL}}, specifies which version of the
-     executable to trieve.}
+     executable to retrieve.}
   \item{versionPattern}{(A named \code{\link[base]{character}} string specifying the
      \code{\link[base]{gsub}}() regular expression to extraction the version
      where there name is the command-line option specifying how

@@ -32,7 +32,7 @@
 #   \item{command}{A @character string specifying the name of the
 #      executable to locate.}
 #   \item{version}{If non-@NULL, specifies which version of the
-#      executable to trieve.}
+#      executable to retrieve.}
 #   \item{versionPattern}{(A named @character string specifying the
 #      @see "base::gsub" regular expression to extraction the version
 #      where there name is the command-line option specifying how
