@@ -59,7 +59,7 @@ debug:
 # Build Rd help files from Rdoc comments
 $(FILES_MAN): $(FILES_R)
 	$(CD) ..;\
-	$(R_SCRIPT) -e "R.oo::compileRdoc()"
+	$(R_SCRIPT) -e "R.oo::compileRdoc('$(PKG_NAME)')"
 
 Rd: $(FILES_MAN)
 

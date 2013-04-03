@@ -29,11 +29,7 @@
 # }
 # 
 # \section{How to cite this package}{
-#   TBA.
-# }
-#
-# \author{
-#   Henrik Bengtsson et al.
+#  @eval "paste(capture.output(print(citation('aroma.seq'), style='latex')), collapse='\n')"
 # }
 #
 # \section{License}{
@@ -50,4 +46,6 @@
 #   [1] \emph{BOW - Bioinformatics On Windows}, 
 #       \url{http://bow.codeplex.com/}.\cr
 # }
+#
+# @author
 #*/#########################################################################

@@ -42,11 +42,9 @@
  }
 
  \section{How to cite this package}{
-   TBA.
- }
-
- \author{
-   Henrik Bengtsson et al.
+  Bengtsson H, Olshen A and Tokuyasu T (2013).
+\emph{aroma.seq: Sequence analysis in the Aroma Framework}.
+R package version 0.2.10.
  }
 
  \section{License}{
@@ -63,4 +61,6 @@
    [1] \emph{BOW - Bioinformatics On Windows},
        \url{http://bow.codeplex.com/}.\cr
  }
+
+ \author{Henrik Bengtsson}
 \keyword{package}
