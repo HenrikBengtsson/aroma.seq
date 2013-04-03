@@ -38,22 +38,22 @@ all: build install check
 
 # Displays macros
 debug: 
-	@echo CURDIR=$(CURDIR)
-	@echo R_HOME=$(R_HOME)
+	@echo CURDIR=\'$(CURDIR)\'
+	@echo R_HOME=\'$(R_HOME)\'
 	@echo
-	@echo PKG_DIR=$(PKG_DIR)
-	@echo PKG_NAME=$(PKG_NAME)
-	@echo PKG_VERSION=$(PKG_VERSION)
-	@echo PKG_TARBALL=$(PKG_TARBALL)
+	@echo PKG_DIR=\'$(PKG_DIR)\'
+	@echo PKG_NAME=\'$(PKG_NAME)\'
+	@echo PKG_VERSION=\'$(PKG_VERSION)\'
+	@echo PKG_TARBALL=\'$(PKG_TARBALL)\'
 	@echo
-	@echo R=$(R)
-	@echo R_CMD=$(R_CMD)
-	@echo R_SCRIPT=$(R_SCRIPT)
-	@echo R_VERSION=$(R_VERSION)
-	@echo R_LIBS_USER_X=$(R_LIBS_USER_X)
-	@echo R_OUTDIR=$(R_OUTDIR)
-	@echo R_CHECK_OUTDIR=$(R_CHECK_OUTDIR)
-	@echo R_CHECK_OPTS=$(R_CHECK_OPTS)
+	@echo R=\'$(R)\'
+	@echo R_CMD=\'$(R_CMD)\'
+	@echo R_SCRIPT=\'$(R_SCRIPT)\'
+	@echo R_VERSION=\'$(R_VERSION)\'
+	@echo R_LIBS_USER_X=\'$(R_LIBS_USER_X)\'
+	@echo R_OUTDIR=\'$(R_OUTDIR)\'
+	@echo R_CHECK_OUTDIR=\'$(R_CHECK_OUTDIR)\'
+	@echo R_CHECK_OPTS=\'$(R_CHECK_OPTS)\'
 
 
 # Build Rd help files from Rdoc comments

@@ -77,7 +77,7 @@ SamReadGroup(id=NULL, sample=NULL, library=NULL, platform=NULL, platformUnit=NUL
 
 
  \bold{Methods inherited from BasicObject}:\cr
-$, $<-, [[, [[<-, as.character, attach, detach, equals, extend, getFields, getInstantiationTime, hasField, hashCode, isReferable, objectSize, print, asThis
+[[, [[<-, $, $<-, as.character, attach, detach, equals, extend, getFields, getInstantiationTime, hasField, hashCode, isReferable, objectSize, print, asThis
 
  \bold{Methods inherited from logical}:\cr
 as.data.frame, as.raster, whichVector
