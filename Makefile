@@ -8,7 +8,7 @@ MKDIR=mkdir -p
 # PACKAGE MACROS
 PKG_VERSION := $(shell grep -i ^version DESCRIPTION | cut -d : -d \  -f 2)
 PKG_NAME    := $(shell grep -i ^package DESCRIPTION | cut -d : -d \  -f 2)
-PKG_DIR     := $(shell basename $(CURDIR))
+PKG_DIR     := $(shell basename "$(CURDIR)")
 PKG_TARBALL := $(PKG_NAME)_$(PKG_VERSION).tar.gz
 
 # FILE MACROS
@@ -56,14 +56,6 @@ debug:
 	@echo R_CHECK_OPTS=\'$(R_CHECK_OPTS)\'
 
 
-# Build Rd help files from Rdoc comments
-$(FILES_MAN): $(FILES_R)
-	$(CD) ..;\
-	$(R_SCRIPT) -e "R.oo::compileRdoc('$(PKG_NAME)')"
-
-Rd: $(FILES_MAN)
-
-
 # Build source tarball
 ../$(R_OUTDIR)/$(PKG_TARBALL): $(PKG_FILES)
 	$(MKDIR) ../$(R_OUTDIR)
@@ -93,6 +85,13 @@ check: ../$(R_CHECK_OUTDIR)/00check.log
 binary: ../$(R_OUTDIR)/$(PKG_TARBALL)
 	$(CD) ..;\
 	$(R_CMD) INSTALL --build --merge-multiarch $(PKG_TARBALL)
+
+
+# Build Rd help files from Rdoc comments
+## $(FILES_MAN): $(FILES_R)
+Rd:
+	$(R_SCRIPT) -e "setwd('..'); R.oo::compileRdoc('$(PKG_NAME)')"
+##	$(R_SCRIPT) -e "setwd('..'); R.oo::compileRdoc('$(PKG_NAME)', filename=basename(strsplit('$?', ' ')[[1]]))"
 
 
 # Build package vignettes
