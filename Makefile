@@ -74,7 +74,7 @@ build: ../$(R_OUTDIR)/$(PKG_TARBALL)
 
 
 # Install on current system
-"$(R_LIBS_USER_X)/$(PKG_NAME)/DESCRIPTION":
+$(R_LIBS_USER_X)/$(PKG_NAME)/DESCRIPTION:
 	$(CD) ../$(R_OUTDIR);\
 	$(R_CMD) INSTALL $(PKG_TARBALL)
 
