@@ -88,10 +88,8 @@ binary: ../$(R_OUTDIR)/$(PKG_TARBALL)
 
 
 # Build Rd help files from Rdoc comments
-## $(FILES_MAN): $(FILES_R)
 Rd:
-	$(R_SCRIPT) -e "setwd('..'); R.oo::compileRdoc('$(PKG_NAME)')"
-##	$(R_SCRIPT) -e "setwd('..'); R.oo::compileRdoc('$(PKG_NAME)', filename=basename(strsplit('$?', ' ')[[1]]))"
+	$(R_SCRIPT) -e "setwd('..'); Sys.setlocale(locale='C'); R.oo::compileRdoc('$(PKG_NAME)')"
 
 
 # Build package vignettes
