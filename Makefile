@@ -88,7 +88,7 @@ binary: ../$(R_OUTDIR)/$(PKG_TARBALL)
 
 
 # Build Rd help files from Rdoc comments
-Rd:
+Rd: install
 	$(R_SCRIPT) -e "setwd('..'); Sys.setlocale(locale='C'); R.oo::compileRdoc('$(PKG_NAME)')"
 
 
