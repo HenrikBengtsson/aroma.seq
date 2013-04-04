@@ -12,7 +12,7 @@
 # \arguments{
 #   \item{command}{A @character string specifying the bowtie2 build command.}
 #   \item{...}{Additional arguments specifying bowtie2-build command line switches.}
-#   \item{system2ArgsList}{Arguments passed to system2.}
+#   \item{system2ArgsList}{Named list of arguments to pass to internal system2 call.}
 #   \item{.fake}{If @TRUE, the executable is not called.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }

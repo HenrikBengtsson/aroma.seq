@@ -10,10 +10,18 @@
 # @synopsis
 #
 # \arguments{
-# }
+#   \item{transcriptsGtf}{Gtf file of transcripts ('gene model', e.g. from TopHat)}
+#   \item{bams}{Vector of pathnames (.sam or .bam)}
+#   \item{optionsVec}{Vector of named options}
+#   \item{system2ArgsList}{Named list of arguments to pass to internal system2 call.}
+#   \item{...}{...}
+#   \item{verbose}{See @see "R.utils::Verbose".}
+#   \item{commandName}{Name of executable}
+
+
+  # }
+
 #
-# \examples{\dontrun{
-# }}
 #
 # @author
 #*/###########################################################################

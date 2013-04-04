@@ -10,31 +10,23 @@
 # @synopsis
 #
 # \arguments{
-#   \item{command}{Name of executable}
 #   \item{refReads}{Vector of (fasta) files with reference sequence}
-#   \item{bowtieRefIndexPrefix}{bowtie2 reference index to be built (partial pathname, i.e. minus the .x.bt2 suffix)}
+#   \item{bowtieRefIndexPrefix}{bowtie2 reference index to be built (partial pathname, minus the .*.bt2 suffix)}
 #   \item{optionsVec}{Vector of named options}
-#   \item{overwrite}{(logical; not used)}
 #   \item{...}{...}
-
+#   \item{commandName}{Name of executable}
+#   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
-# \examples{\dontrun{
-# }}
 #
 # @author
 #*/###########################################################################
 setMethodS3("bowtie2Build", "default", function(refReads=NULL,  ## vector of pathnames
                                                 bowtieRefIndexPrefix=NULL, ## Index filename prefix (i.e. minus trailing .X.bt2)
-                                                ## bowtieRefIndexPrefix=file.path("refIdx", "refGenome"), ## (20130308 THIS IS CAUSING PROBLEMS)
                                                 optionsVec=NULL, ## vector of named options
-                                                overwrite=FALSE,  ##
                                                 ...,
-                                                command='bowtie2-build',
+                                                commandName='bowtie2-build',
                                                 verbose=FALSE) {
-
-  ## System usage: bowtie2-build [options]* <reference_in> <bt2_index_base>
-
   # Argument 'refReads'
   if (!is.null(refReads))
     {
@@ -42,7 +34,6 @@ setMethodS3("bowtie2Build", "default", function(refReads=NULL,  ## vector of pat
     } else {
       throw("Argument 'refReads' is empty; supply at least one input read file")
     }
-
 
   # Argument 'bowtieRefIndexPrefix'
   # - check for bowtie2 reference index  ## TODO: ADD SUPPORT FOR BOWTIE1 INDICES
@@ -53,8 +44,6 @@ setMethodS3("bowtie2Build", "default", function(refReads=NULL,  ## vector of pat
   }
 
   ## Combine the above into "bowtie2 arguments"
-  ## bowtie2Args <- c(bowtieRefIndexPrefix, unname(refReads))
-  ## bowtie2Args <- c(unname(refReads), bowtieRefIndexPrefix)   ## reference reads first, index base second
   bowtie2Args <- c(paste(unname(refReads), collapse=","), bowtieRefIndexPrefix)   ## reference reads first, index base second
 
   ## Add dashes as appropriate to names of "bowtie2 options"
@@ -65,10 +54,10 @@ setMethodS3("bowtie2Build", "default", function(refReads=NULL,  ## vector of pat
     names(bowtie2Options) <- paste(ifelse(nchar(nms) == 1, "-", "--"), nms, sep="")
   }
 
-  res <- do.call(what=systemBowtie2Build, args=list(command=command, args=c(bowtie2Options, bowtie2Args)))
+  res <- do.call(what=systemBowtie2Build, args=list(command=commandName, args=c(bowtie2Options, bowtie2Args)))
 
   ## DEV
-  ## res <- do.call(what=systemBowtie2Build, args=list(command=command, args=c(bowtie2Options, bowtie2Args), verbose=TRUE, system2ArgsList=list(stderr=TRUE)))
+  ## res <- do.call(what=systemBowtie2Build, args=list(command=commandName, args=c(bowtie2Options, bowtie2Args), verbose=TRUE, system2ArgsList=list(stderr=TRUE)))
 
   return(res)
 })

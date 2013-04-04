@@ -10,31 +10,32 @@
 # @synopsis
 #
 # \arguments{
-#   \item{command}{Name of executable}
-#   \item{bowtieRefIndexPrefix}{bowtie2 reference index (partial pathname, i.e. minus the .x.bt2 suffix)}
+#   \item{bowtieRefIndexPrefix}{bowtie2 reference index (partial pathname, minus the .1.bt2 suffix)}
 #   \item{reads1}{Vector of fastq files to align, paired with reads2}
 #   \item{reads2}{Vector of fastq files to align, paired with reads1}
 #   \item{readsU}{Vector of fastq files to align (at least one of reads1 or readsU must be non-null}
+#   \item{samFile}{Output file name}
 #   \item{optionsVec}{Vector of named options (do not include names x, 1, 2, U, or S)}
 #   \item{...}{...}
+#   \item{commandName}{Name of executable}
+#   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
-# \examples{\dontrun{
-# }}
 #
 # @author
 #*/###########################################################################
 
 ## TODO:  This function has not been tested; the logic may not be complete; etc.
 
-setMethodS3("bowtie2", "default", function(command='bowtie2',
-                                           bowtieRefIndexPrefix=NULL, ##  ## Index filename prefix (i.e. minus trailing .X.bt2)
+setMethodS3("bowtie2", "default", function(bowtieRefIndexPrefix=NULL, ##  ## Index filename prefix (i.e. minus trailing .X.bt2)
                                            reads1=NULL,  ## vector of pathnames, #1 mates
                                            reads2=NULL,  ## vector of pathnames, #2 mates
                                            readsU=NULL,  ## vector of pathnames, unpaired reads
                                            samFile=NULL,  ## SAM file for output
                                            optionsVec,
-                                          ..., verbose=FALSE) {
+                                           ...,
+                                           commandName='bowtie2',
+                                           verbose=FALSE) {
 
   ## System call usage:  "bowtie2 [options]* -x <bt2-idx> {-1 <m1> -2 <m2> | -U <r>} [-S <sam>]"
 
@@ -95,7 +96,7 @@ setMethodS3("bowtie2", "default", function(command='bowtie2',
   nms <- names(bowtie2Options)
   names(bowtie2Options) <- paste(ifelse(nchar(nms) == 1, "-", "--"), nms, sep="")
 
-  res <- do.call(what=systemBowtie2, args=list(command=command, args=c(bowtie2Options, bowtie2Args)))
+  res <- do.call(what=systemBowtie2, args=list(command=commandName, args=c(bowtie2Options, bowtie2Args)))
 
   return(res)
 })
