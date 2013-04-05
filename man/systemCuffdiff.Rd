@@ -17,14 +17,19 @@
 }
 
 \usage{
-\method{systemCuffdiff}{default}(cuffdiffStr="", system2ArgsList=list(stdout = FALSE), commandName="cuffdiff", ..., .fake=TRUE, verbose=TRUE)
+\method{systemCuffdiff}{default}(cuffdiffStr="", system2ArgsList=list(stdout = FALSE), ..., commandName="cuffdiff", .fake=TRUE, verbose=TRUE)
 }
 
 \arguments{
-  \item{...}{Additional arguments specifying Cuffdiff command line switches.}
+  \item{cuffdiffStr}{A \code{\link[base]{character}} string of arguments to the cuffdiff command}
+  \item{system2ArgsList}{Named list of arguments to pass to internal system2 call.}
+  \item{...}{...}
+  \item{commandName}{Name of executable}
   \item{.fake}{If \code{\link[base:logical]{TRUE}}, the executable is not called.}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }
 
-\author{Henrik Bengtsson}
+\author{Taku Tokuyasu}
 
+
+\keyword{internal}

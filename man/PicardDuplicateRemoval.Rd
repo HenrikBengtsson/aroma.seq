@@ -48,21 +48,11 @@ PicardDuplicateRemoval(dataSet=NULL, tags="*", ASSUME_SORTED=TRUE, VALIDATION_ST
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{as.character} \tab  -\cr
- \tab \code{getAsteriskTags} \tab  -\cr
- \tab \code{getFlavor} \tab  -\cr
  \tab \code{getFullName} \tab  -\cr
  \tab \code{getInputDataSet} \tab  -\cr
- \tab \code{getName} \tab  -\cr
- \tab \code{getOptionalArguments} \tab  -\cr
  \tab \code{getOutputDataSet} \tab  -\cr
- \tab \code{getParameters} \tab  -\cr
- \tab \code{getPath} \tab  -\cr
- \tab \code{getRootPath} \tab  -\cr
- \tab \code{getTags} \tab  -\cr
  \tab \code{nbrOfFiles} \tab  -\cr
  \tab \code{process} \tab  -\cr
- \tab \code{setTags} \tab  -\cr
 }
 
 
@@ -72,7 +62,7 @@ getParameterSets, getParameters, getParametersAsString
  \bold{Methods inherited from Object}:\cr
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
- "public"
+
 }
 
 \author{Henrik Bengtsson}

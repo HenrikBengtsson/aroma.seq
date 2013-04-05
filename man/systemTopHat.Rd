@@ -17,16 +17,18 @@
 }
 
 \usage{
-\method{systemTopHat}{default}(command="tophat", ..., system2ArgsList=list(stdout = TRUE, stderr = FALSE), .fake=FALSE, verbose=FALSE)
+\method{systemTopHat}{default}(commandName="tophat", ..., system2ArgsList=list(stdout = TRUE, stderr = FALSE), .fake=FALSE, verbose=FALSE)
 }
 
 \arguments{
-  \item{command}{A \code{\link[base]{character}} string specifying the tophat command.}
+  \item{commandName}{A \code{\link[base]{character}} string specifying the tophat command.}
   \item{...}{Additional arguments specifying TopHat command line switches.}
-  \item{system2ArgsList}{Arguments passed to system2.}
+  \item{system2ArgsList}{Named list of arguments to pass to internal system2 call.}
   \item{.fake}{If \code{\link[base:logical]{TRUE}}, the executable is not called.}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }
 
-\author{Henrik Bengtsson}
+\author{Taku Tokuyasu}
 
+
+\keyword{internal}

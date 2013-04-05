@@ -65,7 +65,7 @@ appendFullNameTranslator, appendFullNameTranslatorByNULL, appendFullNameTranslat
  \bold{Methods inherited from Object}:\cr
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
- "public"
+
 }
 
 \author{Henrik Bengtsson}

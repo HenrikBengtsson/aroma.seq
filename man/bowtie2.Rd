@@ -17,21 +17,21 @@
 }
 
 \usage{
-\method{bowtie2}{default}(command="bowtie2", bowtieRefIndexPrefix=NULL, reads1=NULL, reads2=NULL, readsU=NULL, samFile=NULL, optionsVec, ..., verbose=FALSE)
+\method{bowtie2}{default}(bowtieRefIndexPrefix=NULL, reads1=NULL, reads2=NULL, readsU=NULL, samFile=NULL, optionsVec, ..., commandName="bowtie2", verbose=FALSE)
 }
 
 \arguments{
-  \item{command}{Name of executable}
-  \item{bowtieRefIndexPrefix}{bowtie2 reference index (partial pathname, i.e. minus the .x.bt2 suffix)}
+  \item{bowtieRefIndexPrefix}{bowtie2 reference index (partial pathname, minus the .1.bt2 suffix)}
   \item{reads1}{Vector of fastq files to align, paired with reads2}
   \item{reads2}{Vector of fastq files to align, paired with reads1}
   \item{readsU}{Vector of fastq files to align (at least one of reads1 or readsU must be non-null}
+  \item{samFile}{Output file name}
   \item{optionsVec}{Vector of named options (do not include names x, 1, 2, U, or S)}
   \item{...}{...}
+  \item{commandName}{Name of executable}
+  \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }
 
-\examples{\dontrun{
-}}
 
 \author{Henrik Bengtsson}
 

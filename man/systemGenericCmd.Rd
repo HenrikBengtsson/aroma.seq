@@ -17,12 +17,13 @@
 }
 
 \usage{
-\method{systemGenericCmd}{default}(command=NULL, ..., system2ArgsList=list(), .fake=FALSE, verbose=FALSE)
+\method{systemGenericCmd}{default}(commandName=NULL, ..., system2ArgsList=list(), .fake=FALSE, verbose=FALSE)
 }
 
 \arguments{
-  \item{command}{Name of command to run}
-  \item{...}{Additional arguments specifying TopHat command line switches.}
+  \item{commandName}{Name of command to run}
+  \item{...}{Arguments that specify the command line string.}
+  \item{system2ArgsList}{Named list of arguments to pass to internal system2 call.}
   \item{.fake}{If \code{\link[base:logical]{TRUE}}, the executable is not called.}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }

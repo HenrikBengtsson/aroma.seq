@@ -21,10 +21,12 @@
 }
 
 \arguments{
+  \item{bams}{Vector of pathnames (.sam or .bam)}
+  \item{optionsVec}{Vector of named options}
+  \item{...}{...}
+  \item{commandName}{Name of executable}
+  \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }
 
-\examples{\dontrun{
-}}
-
-\author{Henrik Bengtsson}
+\author{Taku Tokuyasu}
 

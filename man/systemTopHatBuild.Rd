@@ -21,8 +21,9 @@
 }
 
 \arguments{
-  \item{...}{Additional arguments specifying TopHat command line switches.}
+  \item{...}{Arguments specifying TopHat command line switches.}
   \item{.fake}{If \code{\link[base:logical]{TRUE}}, the executable is not called.}
+  \item{system2Args}{Arguments to be passed to system2}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }
 

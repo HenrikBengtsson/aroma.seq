@@ -50,9 +50,7 @@ BamDataSet(files=NULL, ...)
 \tabular{rll}{
  \tab \code{byPath} \tab  -\cr
  \tab \code{getChipType} \tab  -\cr
- \tab \code{getDepth} \tab  -\cr
  \tab \code{getPlatform} \tab  -\cr
- \tab \code{validate} \tab  -\cr
 }
 
 
@@ -65,7 +63,7 @@ appendFullNameTranslator, appendFullNameTranslatorByNULL, appendFullNameTranslat
  \bold{Methods inherited from Object}:\cr
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
- "public"
+
 }
 
 \author{Henrik Bengtsson}

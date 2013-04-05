@@ -47,12 +47,9 @@ BamDataFile(...)
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{as.character} \tab  -\cr
  \tab \code{buildIndex} \tab  -\cr
- \tab \code{extractRawCopyNumbers} \tab  -\cr
  \tab \code{extractReadStartPositions} \tab  -\cr
  \tab \code{getChipType} \tab  -\cr
- \tab \code{getFilenameExtension} \tab  -\cr
  \tab \code{getHeader} \tab  -\cr
  \tab \code{getIndexFile} \tab  -\cr
  \tab \code{getIndexStats} \tab  -\cr
@@ -72,11 +69,9 @@ BamDataFile(...)
  \tab \code{nbrOfTargets} \tab  -\cr
  \tab \code{nbrOfUnmappedReads} \tab  -\cr
  \tab \code{readDataFrame} \tab  -\cr
- \tab \code{readHeader} \tab  -\cr
  \tab \code{readReadPositions} \tab  -\cr
  \tab \code{replaceAllReadGroups} \tab  -\cr
  \tab \code{sort} \tab  -\cr
- \tab \code{validate} \tab  -\cr
 }
 
 
@@ -89,7 +84,7 @@ appendFullNameTranslator, appendFullNameTranslatorByNULL, appendFullNameTranslat
  \bold{Methods inherited from Object}:\cr
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
- "public"
+
 }
 
 \author{Henrik Bengtsson}

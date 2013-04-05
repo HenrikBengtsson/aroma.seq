@@ -48,7 +48,6 @@ BwaAlignment(..., indexSet=NULL)
  \section{Fields and Methods}{
   \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{getParameterSets} \tab  -\cr
  \tab \code{\link[aroma.seq:process.BwaAlignment]{process}} \tab Runs the BWA aligner.\cr
 }
 
@@ -62,7 +61,7 @@ getParameterSets, getParameters, getParametersAsString
  \bold{Methods inherited from Object}:\cr
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
- "public"
+
  }
 
  \references{

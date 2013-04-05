@@ -30,8 +30,5 @@
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }
 
-\examples{\dontrun{
-}}
-
-\author{Henrik Bengtsson}
+\author{Taku Tokuyasu}
 
