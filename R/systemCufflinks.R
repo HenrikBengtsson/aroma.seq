@@ -10,7 +10,9 @@
 # @synopsis
 #
 # \arguments{
-#   \item{...}{Additional arguments specifying Cufflinks command line switches.}
+#   \item{commandName}{A @character string specifying the Cufflinks command.}
+#   \item{...}{Arguments specifying the Cufflinks command line.}
+#   \item{system2ArgsList}{Named list of arguments to pass to internal system2 call.}
 #   \item{.fake}{If @TRUE, the executable is not called.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
@@ -22,7 +24,7 @@
 
 setMethodS3("systemCufflinks", "default", function(commandName="cufflinks",
                                                    ...,
-                                                   system2ArgsList=list(stdout=FALSE),  ## For now, explicitly split off arguments to be passed to system2
+                                                   system2ArgsList=list(stdout=FALSE),
                                                    .fake=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments

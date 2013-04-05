@@ -48,11 +48,14 @@ setMethodS3("cuffdiff", "default", function(transcriptsGtf, ## e.g. from TopHat?
   ## - This will include arguments to systemCuffdiff itself, e.g .fake
 
 
+  ## Build cuffdiff argument string
+  ## - Cf. usage:   cuffdiff [options] <transcripts.gtf> <sample1_hits.sam> <sample2_hits.sam> [... sampleN_hits.sam]
+
   ## Construct cuffdiff 'arguments' (as opposed to 'options')
   cuffdiffArgs <- c(transcriptsGtf, as.vector(bams))
 
-  ## Add dashes as appropriate for cuffdiff options
-  if (FALSE) {
+  if (FALSE) {  ## TAT: Superseded by more complex version below; do we need the extra checks?
+    ## Add dashes as appropriate for cuffdiff options
     cuffdiffOptions <- optionsVec
     nms <- names(cuffdiffOptions)
     names(cuffdiffOptions) <- paste(ifelse(nchar(nms) == 1, "-", "--"), nms, sep="")
@@ -66,7 +69,7 @@ setMethodS3("cuffdiff", "default", function(transcriptsGtf, ## e.g. from TopHat?
     if (length(missing) > 0L) {
       invalid <- (nchar(cuffdiffOptions[missing]) < 1);
       if (any(invalid)) {
-        throw("Detected non-valid command line switched: ", hpaste(cuffdiffOptions[missing][invalid]));
+        throw("Detected non-valid command line switch(es): ", hpaste(cuffdiffOptions[missing][invalid]));
       }
       ## nms[missing] <- sprintf("-%s", nms[missing]);
       nmsMissing <- nms[missing]

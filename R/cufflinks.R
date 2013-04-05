@@ -10,10 +10,15 @@
 # @synopsis
 #
 # \arguments{
+#   \item{bams}{Vector of pathnames (.sam or .bam)}
+#   \item{optionsVec}{Vector of named options}
+#   \item{...}{...}
+#   \item{commandName}{Name of executable}
+#   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
+# @author "TT"
 #
-# @author
 #*/###########################################################################
 setMethodS3("cufflinks", "default", function(bams=NULL,  ## vector of pathnames
                                              optionsVec, ## vector of named options

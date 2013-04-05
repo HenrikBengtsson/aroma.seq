@@ -36,9 +36,9 @@ setMethodS3("bowtie2", "default", function(bowtieRefIndexPrefix=NULL, ##  ## Ind
                                            ...,
                                            commandName='bowtie2',
                                            verbose=FALSE) {
-
-  ## System call usage:  "bowtie2 [options]* -x <bt2-idx> {-1 <m1> -2 <m2> | -U <r>} [-S <sam>]"
-
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'bowtieRefIndexPrefix'
   # - check for bowtie2 reference index  ## TODO: ADD SUPPORT FOR BOWTIE1 INDICES
   if (!is.null(bowtieRefIndexPrefix)) {
@@ -48,23 +48,20 @@ setMethodS3("bowtie2", "default", function(bowtieRefIndexPrefix=NULL, ##  ## Ind
     throw("Argument bowtieRefIndexPrefix is empty; supply (prefix of) bowtie reference index")
   }
 
+  # Argument 'reads1', 'reads2', 'readsU'
   if ((is.null(reads1) && is.null(reads2)) &&
       is.null(readsU)) {
     throw("Arguments ('reads1' and 'reads2') and 'readsU' cannot all be empty; specify paired and/or unpaired reads")
   }
-
-  # Argument 'reads1'
+  # Argument 'reads1' and 'reads2'
   if (!is.null(reads1)) {
     reads1 <- sapply(reads1, FUN=Arguments$getReadablePathname)
-
-    # Argument 'reads2'
     if (!is.null(reads2)) {
       reads2 <- sapply(reads2, FUN=Arguments$getReadablePathname)
     } else {
       throw("Argument 'reads2' is empty; supply reads2 when using reads1 (or just supply readsU)")
     }
   }
-
   # Argument 'readsU'
   if (!is.null(readsU)) {
     readsU <- sapply(readsU, FUN=Arguments$getReadablePathname)
@@ -78,6 +75,7 @@ setMethodS3("bowtie2", "default", function(bowtieRefIndexPrefix=NULL, ##  ## Ind
   }
 
   ## Combine the above into "bowtie2 arguments"
+  ## - Cf. usage:  "bowtie2 [options]* -x <bt2-idx> {-1 <m1> -2 <m2> | -U <r>} [-S <sam>]"
   bowtie2Args <- NULL  ## bowtie2 does not use 'arguments', just 'options'
   bowtie2Options <- c(x=bowtieRefIndexPrefix)
   if (!is.null(reads1)) {

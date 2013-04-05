@@ -19,10 +19,8 @@
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
-# \examples{\dontrun{
-# }}
+# @author "TT"
 #
-# @author
 #*/###########################################################################
 setMethodS3("tophat", "default", function(bowtieRefIndexPrefix=NULL,  ##
                                           reads1=NULL,

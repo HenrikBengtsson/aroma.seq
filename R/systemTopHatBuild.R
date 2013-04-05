@@ -1,11 +1,3 @@
-## source("systemTopHatBuild.R")
-## - 20130215 This code will likely be superseded by systemTopHat.R; call that from a 'tophatBuild.R' (to be written)
-
-if (FALSE) {  ## (for standalone testing)
-  library(R.filesets)
-  source("findTopHat.R")
-}
-
 ###########################################################################/**
 # @RdocDefault systemTopHatBuild
 #
@@ -18,13 +10,17 @@ if (FALSE) {  ## (for standalone testing)
 # @synopsis
 #
 # \arguments{
-#   \item{...}{Additional arguments specifying TopHat command line switches.}
+#   \item{...}{Arguments specifying TopHat command line switches.}
 #   \item{.fake}{If @TRUE, the executable is not called.}
+#   \item{system2Args}{Arguments to be passed to system2}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
 # @author
 #*/###########################################################################
+##
+## - 20130215 This code will likely be superseded by systemTopHat.R; call that from a 'tophatBuild.R' (to be written)
+##
 setMethodS3("systemTopHatBuild", "default", function( ## ( No 'command' arg in this case )
                                                      ...,
                                                      system2Args,  ## explicitly split off arguments to be passed to system2

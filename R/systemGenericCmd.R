@@ -10,24 +10,25 @@
 # @synopsis
 #
 # \arguments{
-#   \item{command}{Name of command to run}
-#   \item{...}{Additional arguments specifying TopHat command line switches.}
+#   \item{commandName}{Name of command to run}
+#   \item{...}{Arguments that specify the command line string.}
+#   \item{system2ArgsList}{Named list of arguments to pass to internal system2 call.}
 #   \item{.fake}{If @TRUE, the executable is not called.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
 # @author
 #*/###########################################################################
-setMethodS3("systemGenericCmd", "default", function(command=NULL,
+setMethodS3("systemGenericCmd", "default", function(commandName=NULL,
                                                     ...,
-                                                    system2ArgsList=list(),  ## For now, explicitly split off arguments to be passed to system2
+                                                    system2ArgsList=list(),
                                                     .fake=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   # Arguments '...':
-  if (is.null(command)) {
+  if (is.null(commandName)) {
     throw("Argument 'command' is null; supply the name of a command to run")
   }
 
@@ -40,17 +41,17 @@ setMethodS3("systemGenericCmd", "default", function(command=NULL,
     on.exit(popState(verbose));
   }
 
-  verbose && enter(verbose, paste("Calling", command, "executable"));
+  verbose && enter(verbose, paste("Calling", commandName, "executable"));
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Locate executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  bin <- findCmd(command, verbose=less(verbose, 50));
+  bin <- findCmd(commandName, verbose=less(verbose, 50));
   verbose && cat(verbose, "Executable: ", bin);
 
   verbose && cat(verbose, "Arguments passed to system2():");
   verbose && str(verbose, system2ArgsList)
-  verbose && cat(verbose, paste("Arguments passed to", command));
+  verbose && cat(verbose, paste("Arguments passed to", commandName));
   verbose && str(verbose, dotArgs);
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

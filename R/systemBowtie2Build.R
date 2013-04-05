@@ -10,18 +10,20 @@
 # @synopsis
 #
 # \arguments{
-#   \item{command}{A @character string specifying the bowtie2 build command.}
+#   \item{commandName}{A @character string specifying the bowtie2 build command.}
 #   \item{...}{Additional arguments specifying bowtie2-build command line switches.}
 #   \item{system2ArgsList}{Named list of arguments to pass to internal system2 call.}
 #   \item{.fake}{If @TRUE, the executable is not called.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
-# @author
+# @author "TT"
+#
+# @keyword internal
 #*/###########################################################################
-setMethodS3("systemBowtie2Build", "default", function(command="bowtie2-build",
+setMethodS3("systemBowtie2Build", "default", function(commandName="bowtie2-build",
                                                       ...,
-                                                      system2ArgsList=list(stdout=TRUE, stderr=FALSE),  ## For now, explicitly split off arguments to be passed to system2
+                                                      system2ArgsList=list(stdout=TRUE, stderr=FALSE),
                                                       .fake=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -36,16 +38,12 @@ setMethodS3("systemBowtie2Build", "default", function(command="bowtie2-build",
     on.exit(popState(verbose));
   }
 
-
   verbose && enter(verbose, "Calling bowtie2-build executable");
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Locate executable
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Locates the bowtie2 executable
-  bin <- findBowtie2(command="bowtie2-build", verbose=less(verbose, 50));
+  # Locates the bowtie2-build executable
+  bin <- findBowtie2(command=commandName, verbose=less(verbose, 50));
   verbose && cat(verbose, "Executable: ", bin);
-
   verbose && cat(verbose, "Arguments passed to system2():");
   verbose && str(verbose, system2ArgsList)
   verbose && cat(verbose, "Arguments passed to bowtie2-build:");

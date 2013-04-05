@@ -1,176 +1,92 @@
-## source("systemBowtie2.R")
-
-############################################
-## System call looks like this:
-##   bowtie2 [options]* -x <bt2-idx> {-1 <m1> -2 <m2> | -U <r>} [-S <sam>]
-
-setMethodS3("systemBowtie2", "default", function(
-                                          optionsList=list(
-                                            x=NULL,     ## <bt2-idx> ## Index filename prefix (minus trailing .X.bt2).
-                                            `1`=NULL,   ## <m1>      ## Files with #1 mates, paired with files in <m2>; could be gzip'ed (extension: .gz) or bzip2'ed (extension: .bz2).
-                                            `2`=NULL,   ## <m2>      ## Files with #2 mates, paired with files in <m1>; could be gzip'ed (extension: .gz) or bzip2'ed (extension: .bz2).
-                                            U=NULL,     ## <r>       ## Files with unpaired reads; could be gzip'ed (extension: .gz) or bzip2'ed (extension: .bz2).
-                                            ##  NB: <m1>, <m2>, <r> can be comma-separated lists (no whitespace) and can be specified many times.  E.g. '-U file1.fq,file2.fq -U file3.fq'.
-                                            S=NULL ## <sam>     ## File for SAM output (default: stdout)
-                                            ),
-
-                                          ## ## Options (defaults in parentheses):
-                                          ##
-                                          ## ##  Input:
-                                          ## -q                 ## query input files are FASTQ .fq/.fastq (default)
-                                          ## --qseq             ## query input files are in Illumina's qseq format
-                                          ## -f                 ## query input files are (multi-)FASTA .fa/.mfa
-                                          ## -r                 ## query input files are raw one-sequence-per-line
-                                          ## -c                 ## <m1>, <m2>, <r> are sequences themselves, not files
-                                          ## -s <int>           ## skip the first <int> reads/pairs in the input (none)
-                                          ## --skip <int>       ## skip the first <int> reads/pairs in the input (none)
-                                          ## -u <int>           ## stop after first <int> reads/pairs (no limit)
-                                          ## --upto <int>       ## stop after first <int> reads/pairs (no limit)
-                                          ## -5 <int>           ## trim <int> bases from 5'/left end of reads (0)
-                                          ## --trim5 <int>      ## trim <int> bases from 5'/left end of reads (0)
-                                          ## -3 <int>           ## trim <int> bases from 3'/right end of reads (0)
-                                          ## --trim3 <int>      ## trim <int> bases from 3'/right end of reads (0)
-                                          ## --phred33          ## qualities are Phred+33 (default)
-                                          ## --phred64          ## qualities are Phred+64
-                                          ## --int-quals        ## qualities encoded as space-delimited integers
-                                          ##
-                                          ## ##  Presets:                 Same as:
-                                          ## ##   For --end-to-end:
-                                          ## --very-fast            ## -D 5 -R 1 -N 0 -L 22 -i S,0,2.50
-                                          ## --fast                 ## -D 10 -R 2 -N 0 -L 22 -i S,0,2.50
-                                          ## --sensitive            ## -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 (default)
-                                          ## --very-sensitive       ## -D 20 -R 3 -N 0 -L 20 -i S,1,0.50
-                                          ##
-                                          ## ##   For --local:
-                                          ## --very-fast-local      ## -D 5 -R 1 -N 0 -L 25 -i S,1,2.00
-                                          ## --fast-local           ## -D 10 -R 2 -N 0 -L 22 -i S,1,1.75
-                                          ## --sensitive-local      ## -D 15 -R 2 -N 0 -L 20 -i S,1,0.75 (default)
-                                          ## --very-sensitive-local ## -D 20 -R 3 -N 0 -L 20 -i S,1,0.50
-                                          ##
-                                          ## ##  Alignment:
-                                          ## -N <int>           ## max # mismatches in seed alignment; can be 0 or 1 (0)
-                                          ## -L <int>           ## length of seed substrings; must be >3, <32 (22)
-                                          ## -i <func>          ## interval between seed substrings w/r/t read len (S,1,1.15)
-                                          ## --n-ceil <func>    ## func for max # non-A/C/G/Ts permitted in aln (L,0,0.15)
-                                          ## --dpad <int>       ## include <int> extra ref chars on sides of DP table (15)
-                                          ## --gbar <int>       ## disallow gaps within <int> nucs of read extremes (4)
-                                          ## --ignore-quals     ## treat all quality values as 30 on Phred scale (off)
-                                          ## --nofw             ## do not align forward (original) version of read (off)
-                                          ## --norc             ## do not align reverse-complement version of read (off)
-                                          ## --end-to-end       ## entire read must align; no clipping (on)
-                                          ## ##    OR
-                                          ## --local            ## local alignment; ends might be soft clipped (off)
-                                          ##
-                                          ## ##  Scoring:
-                                          ## --ma <int>         ## match bonus (0 for --end-to-end, 2 for --local)
-                                          ## --mp <int>         ## max penalty for mismatch; lower qual = lower penalty (6)
-                                          ## --np <int>         ## penalty for non-A/C/G/Ts in read/ref (1)
-                                          ## --rdg <int>,<int>  ## read gap open, extend penalties (5,3)
-                                          ## --rfg <int>,<int>  ## reference gap open, extend penalties (5,3)
-                                          ## --score-min <func> ## min acceptable alignment score w/r/t read length
-                                          ## ## (G,20,8 for local, L,-0.6,-0.6 for end-to-end)
-                                          ##
-                                          ## ##  Reporting:
-                                          ## (default)          ## look for multiple alignments, report best, with MAPQ
-                                          ## ##    OR
-                                          ## -k <int>           ## report up to <int> alns per read; MAPQ not meaningful
-                                          ## ##    OR
-                                          ## -a/--all           ## report all alignments; very slow, MAPQ not meaningful
-                                          ##
-                                          ## ##  Effort:
-                                          ## -D <int>           ## give up extending after <int> failed extends in a row (15)
-                                          ## -R <int>           ## for reads w/ repetitive seeds, try <int> sets of seeds (2)
-                                          ##
-                                          ## ##  Paired-end:
-                                          ## -I/--minins <int>  ## minimum fragment length (0)
-                                          ## -X/--maxins <int>  ## maximum fragment length (500)
-                                          ## --fr/--rf/--ff     ## -1, -2 mates align fw/rev, rev/fw, fw/fw (--fr)
-                                          ## --no-mixed         ## suppress unpaired alignments for paired reads
-                                          ## --no-discordant    ## suppress discordant alignments for paired reads
-                                          ## --no-dovetail      ## not concordant when mates extend past each other
-                                          ## --no-contain       ## not concordant when one mate alignment contains other
-                                          ## --no-overlap       ## not concordant when mates overlap at all
-                                          ##
-                                          ## ##  Output:
-                                          ## -t/--time          ## print wall-clock time taken by search phases
-                                          ## --un <path>        ##    write unpaired reads that didn't align to <path>
-                                          ## --al <path>        ##    write unpaired reads that aligned at least once to <path>
-                                          ## --un-conc <path>   ##    write pairs that didn't align concordantly to <path>
-                                          ## --al-conc <path>   ##    write pairs that aligned concordantly at least once to <path>
-                                          ## ##   (Note: for --un, --al, --un-conc, or --al-conc, add '-gz' to the option name, e.g.
-                                          ## ##   --un-gz <path>, to gzip compress output, or add '-bz2' to bzip2 compress output.)
-                                          ## --quiet            ## print nothing to stderr except serious errors
-                                          ## --met-file <path>  ## send metrics to file at <path> (off)
-                                          ## --met-stderr       ## send metrics to stderr (off)
-                                          ## --met <int>        ## report internal counters & metrics every <int> secs (1)
-                                          ## --no-head          ## supppress header lines, i.e. lines starting with @
-                                          ## --no-sq            ## supppress @SQ header lines
-                                          ## --rg-id <text>     ## set read group id, reflected in @RG line and RG:Z: opt field
-                                          ## --rg <text>        ## add <text> ("lab:value") to @RG line of SAM header.
-                                          ## ## Note: @RG line only printed when --rg-id is set.
-                                          ##
-                                          ## ##  Performance:
-                                          ## -o/--offrate <int> ## override offrate of index; must be >= index's offrate
-                                          ## -p/--threads <int> ## number of alignment threads to launch (1)
-                                          ## --reorder          ## force SAM output order to match order of input reads
-                                          ## --mm               ## use memory-mapped I/O for index; many 'bowtie's can share
-                                          ##
-                                          ## ##  Other:
-                                          ## --qc-filter        ## filter out reads that are bad according to QSEQ filter
-                                          ## --seed <int>       ## seed for random number generator (0)
-                                          ## --version          ## print version information and quit
-                                          ## -h/--help          ## print this usage message
-                                          ...
-                                          ) {
-
+###########################################################################/**
+# @RdocDefault systemBowtie2
+#
+# @title "Wrapper for bowtie2"
+#
+# \description{
+#  @get "title".
+# }
+#
+# @synopsis
+#
+# \arguments{
+#   \item{commandName}{A @character string specifying the bowtie2 command.}
+#   \item{...}{Additional arguments specifying bowtie2-build command line switches.}
+#   \item{system2ArgsList}{Named list of arguments to pass to internal system2 call.}
+#   \item{.fake}{If @TRUE, the executable is not called.}
+#   \item{verbose}{See @see "R.utils::Verbose".}
+# }
+#
+# @author "TT"
+#
+# @keyword internal
+#*/###########################################################################
+setMethodS3("systemBowtie2", "default", function(commandName="bowtie2",
+                                                 ...,
+                                                 system2ArgsList=list(stdout=TRUE, stderr=FALSE),
+                                                 .fake=FALSE, verbose=FALSE
+                                                 ) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Arguments '...':
+  dotArgs <- list(...);  ## list with one item named 'args'; these are the arguments to *bowtie2*
+
+  # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
   if (verbose) {
     pushState(verbose);
     on.exit(popState(verbose));
   }
 
+  verbose && enter(verbose, "Calling bowtie2 executable");
 
   ## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Locate the bowtie2 executable
+  bin <- findBowtie2(command=commandName, verbose=less(verbose, 50));
+  verbose && cat(verbose, "Executable: ", bin);
+  verbose && cat(verbose, "Arguments passed to system2():");
+  verbose && str(verbose, system2ArgsList)
+  verbose && cat(verbose, "Arguments passed to bowtie2:");
+  verbose && str(verbose, dotArgs);
 
-  # Locates the bowtie2 executable
-  bin <- findBowtie2(verbose=less(verbose, 50));
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Setup command line switches
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  verbose && cat(verbose, "Command line options:");
+  verbose && print(verbose, dotArgs);
 
-  ## Create string of supported options, and unsupported options; paste together
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # System call
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  verbose && cat(verbose, "System call:");
+  cmd <- sprintf("%s %s", bin, paste(dotArgs, collapse=" "));
+  verbose && print(verbose, cmd);
+  verbose && str(verbose, system2ArgsList);
 
-  cmdOptions <- .optionsList2String(optionsList)
-  cmdOptionsAdd <- .optionsList2String(list(...))
-  cmdOptions <- paste(cmdOptions, cmdOptionsAdd)
+  verbose && enter(verbose, "system2() call");
+  callArgs <- list(command=bin, args=paste(names(dotArgs$args), dotArgs$args, sep=" "))
+  callArgs <- c(callArgs, system2ArgsList)
 
-  ## Set up command line
-  binWithArgs <- sprintf("%s", bin)
-  binWithArgs <- sprintf("%s %s", binWithArgs, cmdOptions)
-  ## binWithArgs <- sprintf("%s %s", binWithArgs, referenceIn)
-  ## binWithArgs <- sprintf("%s %s", binWithArgs, bt2IndexBase)
-  binWithArgs <- gsub("  +", " ", binWithArgs)  ## prettify
-
-  ## cmd <- sprintf("%s", binWithArgs)  ## In emacs/ess, shQuote() version with single quotes added does not run
-  cmd <- binWithArgs
-
-  verbose && enter(verbose, "Running bowtie2");
-  verbose && cat(verbose, "System call: ", cmd)
-
-  ##
-  ## ADDITIONAL TESTING FOR BOWTIE2-BUILD IN HERE?
-  ##
-
-  res <- system(cmd);
-
-  if (verbose) {
-    verbose && exit(verbose);
+  verbose && str(verbose, callArgs);
+  if (!.fake) {
+    res <- do.call(what=base::system2, args=callArgs);
+  } else {
+    cat("<fake run>\n")
+    res <- "<fake run>";
   }
 
-  return(res)
+  verbose && exit(verbose);
+  verbose && exit(verbose);
+  res;
+
+  ## Strategy:  Previously, built up the command like this
+  ##  cmdOptions <- .optionsList2String(optionsList)
+  ##  cmdOptionsAdd <- .optionsList2String(list(...))
+  ##  cmdOptions <- paste(cmdOptions, cmdOptionsAdd)
+  ## Now assume the argument string is passed fully formed to systemBowtie2.
+
 })
-
-
 
 ############################################################################
 # HISTORY:

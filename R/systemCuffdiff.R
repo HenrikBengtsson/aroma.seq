@@ -10,20 +10,25 @@
 # @synopsis
 #
 # \arguments{
-#   \item{...}{Additional arguments specifying Cuffdiff command line switches.}
+#   \item{cuffdiffStr}{A @character string of arguments to the cuffdiff command}
+#   \item{system2ArgsList}{Named list of arguments to pass to internal system2 call.}
+#   \item{...}{...}
+#   \item{commandName}{Name of executable}
 #   \item{.fake}{If @TRUE, the executable is not called.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
-# @author
+# @author "TT"
+#
+#  @keyword internal
 #*/###########################################################################
 
 ## cuffdiff [options] <transcripts.gtf> <sample1_hits.sam> <sample2_hits.sam> [... sampleN_hits.sam]
 
 setMethodS3("systemCuffdiff", "default", function(cuffdiffStr="",
                                                   system2ArgsList=list(stdout=FALSE),
-                                                  commandName="cuffdiff",
                                                   ...,
+                                                  commandName="cuffdiff",
                                                   .fake=TRUE, verbose=TRUE) {
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -52,12 +57,10 @@ setMethodS3("systemCuffdiff", "default", function(cuffdiffStr="",
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   bin <- findCmd(commandName, verbose=less(verbose, 50));
   verbose && cat(verbose, "Executable: ", bin);
-
   verbose && cat(verbose, "Arguments passed to system2():");
   verbose && str(verbose, system2ArgsList)
   verbose && cat(verbose, "Arguments passed to Cuffdiff:");
   verbose && str(verbose, cuffdiffStr)
-
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # System call
@@ -84,8 +87,6 @@ setMethodS3("systemCuffdiff", "default", function(cuffdiffStr="",
   verbose && exit(verbose);
   res;
 }) # systemCuffdiff()
-
-## Cmd line usage:   cuffdiff [options] <transcripts.gtf> <sample1_hits.sam> <sample2_hits.sam> [... sampleN_hits.sam]
 
 ############################################################################
 # HISTORY:

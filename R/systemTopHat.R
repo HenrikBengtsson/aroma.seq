@@ -10,18 +10,20 @@
 # @synopsis
 #
 # \arguments{
-#   \item{command}{A @character string specifying the tophat command.}
+#   \item{commandName}{A @character string specifying the tophat command.}
 #   \item{...}{Additional arguments specifying TopHat command line switches.}
-#   \item{system2ArgsList}{Arguments passed to system2.}
+#   \item{system2ArgsList}{Named list of arguments to pass to internal system2 call.}
 #   \item{.fake}{If @TRUE, the executable is not called.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
-# @author
+# @author "TT"
+#
+# @keyword internal
 #*/###########################################################################
-setMethodS3("systemTopHat", "default", function(command="tophat",
+setMethodS3("systemTopHat", "default", function(commandName="tophat",
                                                 ...,
-                                                system2ArgsList=list(stdout=TRUE, stderr=FALSE),  ## For now, explicitly split off arguments to be passed to system2
+                                                system2ArgsList=list(stdout=TRUE, stderr=FALSE),
                                                 .fake=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -42,7 +44,7 @@ setMethodS3("systemTopHat", "default", function(command="tophat",
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Locate executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  bin <- findCmd(command, verbose=less(verbose, 50));
+  bin <- findCmd(commandName, verbose=less(verbose, 50));
   verbose && cat(verbose, "Executable: ", bin);
 
   verbose && cat(verbose, "Arguments passed to system2():");
