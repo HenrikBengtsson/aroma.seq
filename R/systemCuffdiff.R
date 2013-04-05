@@ -20,7 +20,7 @@
 #
 # @author "TT"
 #
-#  @keyword internal
+# @keyword internal
 #*/###########################################################################
 
 ## cuffdiff [options] <transcripts.gtf> <sample1_hits.sam> <sample2_hits.sam> [... sampleN_hits.sam]
