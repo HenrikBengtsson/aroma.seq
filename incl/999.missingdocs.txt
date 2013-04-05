@@ -176,4 +176,3 @@ getParameters.PicardDuplicateRemoval
 FastqQualityReport findRspReportTemplate
 findRspReportTemplate.Object report report.FastqDataFile
 report.FastqDataSet
-systemBowtie2 systemBowtie2.default

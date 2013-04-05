@@ -1,25 +1,31 @@
 Package: aroma.seq
 ==================
 
-Version: 0.2.10 [2013-04-02]
+Version: 0.2.10 [2013-04-04]
 o SPEEDUP: Now the internal "find" function that locates external
   executables caches their results.
 o Bumped up package dependencies.
 
+
 Version: 0.2.9 [2013-03-15]
 o ...
+
 
 Version: 0.2.8 [2013-03-14]
 o Standardize args in bowtie/tophat/cuff*: Move 'command' to end, use 'optionsVec'
 
+
 Version: 0.2.7 [2013-03-08]
 o Rewrote several bowtie methods to align with tophat.R as a template
+
 
 Version: 0.2.6 [2013-02-22]
 o Added findTopHat() et al.
 
+
 Version: 0.2.5 [2013-02-15]
 o Added systemTophat(), and tophat().
+
 
 Version: 0.2.4 [2013-02-08]
 o Added systemTophat() and systemTophatBuild() and tophat().

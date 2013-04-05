@@ -3,7 +3,7 @@ Version: 0.2.10
 Depends: R (>= 2.15.0), R.oo (>= 1.13.0), R.utils (>= 1.23.2), R.filesets (>= 2.0.0), aroma.core (>= 2.8.0)
 Imports: R.methodsS3 (>= 1.4.2), R.oo (>= 1.13.0), R.utils (>= 1.23.2), R.filesets (>= 2.0.0), R.cache (>= 0.6.5)
 Suggests: Biostrings (>= 2.26.2), ShortRead (>= 1.16.2), Rsamtools (>= 1.10.2), aroma.light (>= 1.28.0), aroma.cn (>= 1.2.18), GenomicRanges (>= 1.10.5), R.devices (>= 2.2.2), R.rsp (>= 0.8.3), qrqc (>= 1.12.0)
-Date: 2013-04-03
+Date: 2013-04-04
 Title: Sequence analysis in the Aroma Framework
 Authors@R: c(person("Henrik", "Bengtsson", email = "henrikb@braju.com", role = c("aut", "cre", "cph")), person("Adam B.", "Olshen", role = c("aut")), person("Taku", "Tokuyasu", role = c("aut")))
 Author: Henrik Bengtsson, Adam B. Olshen, Taku Tokuyasu
