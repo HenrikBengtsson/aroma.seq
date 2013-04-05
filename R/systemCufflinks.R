@@ -17,7 +17,9 @@
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
-# @author
+# @author "TT"
+#
+# @keyword internal
 #*/###########################################################################
 
 ## TODO:  Add version restriction on cufflinks (cufflinks2, cuffdiff2); doesn't support --version option though!

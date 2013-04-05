@@ -17,7 +17,9 @@
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
-# @author
+# @author "TT"
+#
+# @keyword internal
 #*/###########################################################################
 setMethodS3("systemGenericCmd", "default", function(commandName=NULL,
                                                     ...,

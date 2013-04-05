@@ -28,8 +28,7 @@
   \item{...}{...}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
   \item{commandName}{Name of executable}
- # }
-
+}
 
 \author{Henrik Bengtsson}
 

@@ -28,5 +28,7 @@
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }
 
-\author{Henrik Bengtsson}
+\author{Taku Tokuyasu}
 
+
+\keyword{internal}

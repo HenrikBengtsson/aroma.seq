@@ -17,11 +17,7 @@
 #   \item{...}{...}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 #   \item{commandName}{Name of executable}
-
-
-  # }
-
-#
+# }
 #
 # @author
 #*/###########################################################################

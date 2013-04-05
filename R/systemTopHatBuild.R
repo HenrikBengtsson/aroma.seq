@@ -16,7 +16,10 @@
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
-# @author
+#
+# @author "TT"
+#
+# @keyword internal
 #*/###########################################################################
 ##
 ## - 20130215 This code will likely be superseded by systemTopHat.R; call that from a 'tophatBuild.R' (to be written)
