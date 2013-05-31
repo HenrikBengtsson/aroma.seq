@@ -23,8 +23,8 @@
 \arguments{
   \item{command}{Name of executable}
   \item{bowtieRefIndexPrefix}{bowtie2 reference index (partial pathname, i.e. minus the .x.bt2 suffix)}
-  \item{reads1}{(required) Vector of fastq files to align}
-  \item{reads2}{(optional) Vector of fastq files to align, paired with reads1}
+  \item{reads1}{(required) Vector of fastq filenames to align}
+  \item{reads2}{(optional) Vector of fastq filenames to align, paired with reads1}
   \item{optionsVec}{Vector of named options to pass to tophat}
   \item{...}{(Not used)}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
