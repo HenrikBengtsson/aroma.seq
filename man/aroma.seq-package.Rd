@@ -44,7 +44,7 @@
 \section{How to cite this package}{
  Bengtsson H, Olshen A and Tokuyasu T (2013).
 \emph{aroma.seq: Sequence analysis in the Aroma Framework}.
-R package version 0.2.10.
+R package version 0.2.11.
 }
 
 \section{License}{

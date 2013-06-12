@@ -1,23 +1,22 @@
-## source("doCounts.R")
+
 
 load("samples.RData")
 samples$countf <- paste(samples$LibraryName, "count", sep=".")
 save(samples, file="samples.RData")  ## NB: Overwriting
 
 gf <- GeneModelFile
-
-## [... RUN AROMA.SEQ WRAPPER 'HTSEQCOUNT' SAY, HERE TO REPLACE THE FOLLOWING ...]
-if (FALSE) {
-  cmds <- paste0("htseq-count -s no -a 10 ", samples$LibraryName, "_sn.sam ",
-                 gf," > ", samples$countf)
-  sapply(cmds, function(cmd)
-         {
-           cat("Running cmd:", cmd, "\n")
-           system(cmd)
-         }, simplify=FALSE)
-  cat("done\n")
-}
-
-
+samFiles <- paste0(samples$LibraryName, "_sn.sam")
+outFiles <- samples$countf)
+gfFile <- "Drosophila_melanogaster.BDGP5.70.gtf"
+sapply(1:length(samFiles), function(i)
+  {
+    samFile <- samFiles[i]
+    outFile <- outFiles[i]
+    htseqCount(samFile, gfFile,
+               optionsVec=c(s="no", a="10"),
+               outFile)
+    cat("Running htseq-count on sample ", i, "\n")  ## aroma verbose output can probably stand in for this
+  })
+cat("htseq-count done\n")
 
 
