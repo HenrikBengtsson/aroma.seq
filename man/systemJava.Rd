@@ -17,7 +17,8 @@
 }
 
 \usage{
-\method{systemJava}{default}(..., .fmtArg=c(`( |=)$` = "\%s\%s", `.*` = "\%s \%s"), .fake=FALSE, verbose=FALSE)
+\method{systemJava}{default}(..., .fmtArg=c(`( |=)$` = "\%s\%s", `.*` = "\%s \%s"), .fake=FALSE,
+  verbose=FALSE)
 }
 
 \arguments{

@@ -17,7 +17,8 @@
 }
 
 \usage{
-\method{systemTopHat}{default}(commandName="tophat", ..., system2ArgsList=list(stdout = TRUE, stderr = FALSE), .fake=FALSE, verbose=FALSE)
+\method{systemTopHat}{default}(commandName="tophat", ...,
+  system2ArgsList=list(stdout = TRUE, stderr = FALSE), .fake=FALSE, verbose=FALSE)
 }
 
 \arguments{

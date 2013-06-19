@@ -17,7 +17,8 @@
 }
 
 \usage{
-\method{systemCufflinks}{default}(commandName="cufflinks", ..., system2ArgsList=list(stdout = FALSE), .fake=FALSE, verbose=FALSE)
+\method{systemCufflinks}{default}(commandName="cufflinks", ..., system2ArgsList=list(stdout = FALSE),
+  .fake=FALSE, verbose=FALSE)
 }
 
 \arguments{

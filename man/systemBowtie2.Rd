@@ -17,7 +17,8 @@
 }
 
 \usage{
-\method{systemBowtie2}{default}(commandName="bowtie2", ..., system2ArgsList=list(stdout = TRUE, stderr = FALSE), .fake=FALSE, verbose=FALSE)
+\method{systemBowtie2}{default}(commandName="bowtie2", ...,
+  system2ArgsList=list(stdout = TRUE, stderr = FALSE), .fake=FALSE, verbose=FALSE)
 }
 
 \arguments{

@@ -17,7 +17,8 @@
 }
 
 \usage{
-\method{htseqCount}{default}(samFile=NULL, gfFile=NULL, outFile=NULL, optionsVec=c(s = "no", a = "10"), ..., command="htseq-count", verbose=FALSE)
+\method{htseqCount}{default}(samFile=NULL, gfFile=NULL, outFile=NULL, optionsVec=c(s = "no", a = "10"),
+  ..., command="htseq-count", verbose=FALSE)
 }
 
 \arguments{

@@ -65,7 +65,7 @@ setMethodS3("htseqCount", "default", function(samFile=NULL,
     names(htseqOptions) <- paste(ifelse(nchar(nms) == 1, "-", "--"), nms, sep="")
   }
 
-  res <- do.call(what=systemHtseqCount, args=list(command=command, args=c(htseqOptions, htseqArgs)))
+  res <- do.call(what=systemHTSeqCount, args=list(command=command, args=c(htseqOptions, htseqArgs)))
 
   return(res)
 })
@@ -76,5 +76,3 @@ setMethodS3("htseqCount", "default", function(samFile=NULL,
 # 2013-05-31
 # o TT:  Created
 ############################################################################
-
-

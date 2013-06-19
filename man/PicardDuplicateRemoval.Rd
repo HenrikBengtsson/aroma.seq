@@ -35,7 +35,8 @@ extends \link[aroma.core]{ParametersInterface}\cr
 }
 
 \usage{
-PicardDuplicateRemoval(dataSet=NULL, tags="*", ASSUME_SORTED=TRUE, VALIDATION_STRINGENCY="SILENT", ...)
+PicardDuplicateRemoval(dataSet=NULL, tags="*", ASSUME_SORTED=TRUE,
+  VALIDATION_STRINGENCY="SILENT", ...)
 }
 
 \arguments{

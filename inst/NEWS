@@ -1,6 +1,11 @@
 Package: aroma.seq
 ==================
 
+Version: 0.2.11 [2013-06-20]
+o Added findHTSeq() and systemHTSeq().
+o Bumped up package dependencies.
+
+
 Version: 0.2.10 [2013-04-04]
 o SPEEDUP: Now the internal "find" function that locates external
   executables caches their results.

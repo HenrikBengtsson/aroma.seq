@@ -17,7 +17,8 @@
 }
 
 \usage{
-\method{bowtie2Build}{default}(refReads=NULL, bowtieRefIndexPrefix=NULL, optionsVec=NULL, ..., commandName="bowtie2-build", verbose=FALSE)
+\method{bowtie2Build}{default}(refReads=NULL, bowtieRefIndexPrefix=NULL, optionsVec=NULL, ...,
+  commandName="bowtie2-build", verbose=FALSE)
 }
 
 \arguments{

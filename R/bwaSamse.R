@@ -6,7 +6,7 @@
 # \description{
 #  @get "title".
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -26,7 +26,8 @@
 #   pathnameSAI <- "bwaData/LambdaVirusExample/Generic/reads_1.sai";
 #   pathnameFQ <- "fastqData/LambdaVirusExample/Generic/reads_1.fq";
 #   pathnameD <- "bwaData/LambdaVirusExample/Generic/reads_1.sam";
-#   bwaSamse(pathnameSAI=pathnameSAI, pathnameFQ=pathnameFQ, pathnameFA=pathnameFA, pathnameD=pathnameD);
+#   bwaSamse(pathnameSAI=pathnameSAI, pathnameFQ=pathnameFQ,
+#            pathnameFA=pathnameFA, pathnameD=pathnameD);
 # }}
 #
 # @author
@@ -60,7 +61,7 @@ setMethodS3("bwaSamse", "default", function(pathnameSAI, pathnameFQ, indexPrefix
   stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameSAI));
   stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFQ));
 ##  stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFA));
- 
+
   res <- systemBWA("samse", "f"=pathnameD, indexPrefix, pathnameSAI, pathnameFQ, ..., verbose=less(verbose, 10));
 
   verbose && exit(verbose);

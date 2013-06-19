@@ -17,7 +17,8 @@
 }
 
 \usage{
-\method{systemCuffdiff}{default}(cuffdiffStr="", system2ArgsList=list(stdout = FALSE), ..., commandName="cuffdiff", .fake=TRUE, verbose=TRUE)
+\method{systemCuffdiff}{default}(cuffdiffStr="", system2ArgsList=list(stdout = FALSE), ...,
+  commandName="cuffdiff", .fake=TRUE, verbose=TRUE)
 }
 
 \arguments{

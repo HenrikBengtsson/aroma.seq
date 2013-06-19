@@ -6,7 +6,7 @@
 # \description{
 #  @get "title".
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -22,7 +22,9 @@
 #   pathnameFA <- "annotationData/organisms/LambdaPhage/lambda_virus.fa"
 #   bwaIndex(pathnameFA, method="is")
 #   indexPrefix <- bwaIndexPrefix(pathnameFA, method="is")
-#   bwaAln("fastqData/LambdaVirusExample/Generic/reads_1.fq", indexPrefix=indexPrefix, pathnameD="fastqData/LambdaVirusExample/Generic/reads_1.sai")
+#   bwaAln("fastqData/LambdaVirusExample/Generic/reads_1.fq",
+#          indexPrefix=indexPrefix,
+#          pathnameD="fastqData/LambdaVirusExample/Generic/reads_1.sai")
 # }}
 #
 # @author
@@ -53,7 +55,7 @@ setMethodS3("bwaAln", "default", function(pathnameFQ, indexPrefix, pathnameD, ..
   # Assert that input files are not overwritten
   stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFQ));
 ##  stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFA));
-  
+
   res <- systemBWA("aln", "f"=pathnameD, indexPrefix, pathnameFQ, ..., verbose=less(verbose, 10));
 
   verbose && exit(verbose);

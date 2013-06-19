@@ -1,8 +1,5 @@
-## Create a 'systemHtseqCount.R", modeled on systemBowtie2Build.R
-
-
 ###########################################################################/**
-# @RdocDefault systemHtseqCount
+# @RdocDefault systemHTSeqCount
 #
 # @title "Wrapper for htseq-count"
 #
@@ -24,7 +21,7 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("systemHtseqCount", "default", function(commandName="htseq-count",
+setMethodS3("systemHTSeqCount", "default", function(commandName="htseq-count",
                                                     ...,
                                                     system2ArgsList=list(stdout=TRUE, stderr=FALSE),
                                                     .fake=FALSE, verbose=FALSE) {
@@ -45,7 +42,7 @@ setMethodS3("systemHtseqCount", "default", function(commandName="htseq-count",
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Locates the htseq-count executable
-  bin <- findHtseq(command=commandName, verbose=less(verbose, 50));
+  bin <- findHTSeq(command=commandName, verbose=less(verbose, 50));
   verbose && cat(verbose, "Executable: ", bin);
   verbose && cat(verbose, "Arguments passed to system2():");
   verbose && str(verbose, system2ArgsList)
@@ -81,11 +78,13 @@ setMethodS3("systemHtseqCount", "default", function(commandName="htseq-count",
   verbose && exit(verbose);
   verbose && exit(verbose);
   res;
-}) # systemHtseqCount()
+}) # systemHTSeqCount()
 
 
 ############################################################################
 # HISTORY:
-# 2013-05-31
-# o TAT:  Created systemHtseqCount stub
+# 2013-06-20 [HB]
+# o Renamed from systemHtseqCount() to systemHTSeqCount().
+# 2013-05-31 [TAT]
+# o Created systemHtseqCount stub
 ############################################################################

@@ -35,7 +35,9 @@ extends \link[R.oo]{BasicObject}\cr
 }
 
 \usage{
-SamReadGroup(id=NULL, sample=NULL, library=NULL, platform=NULL, platformUnit=NULL, sequencingCenter=NULL, description=NULL, runDate=NULL, flowOrder=NULL, keySequence=NULL, program=NULL, predictedInsertSize=NULL, ...)
+SamReadGroup(id=NULL, sample=NULL, library=NULL, platform=NULL, platformUnit=NULL,
+  sequencingCenter=NULL, description=NULL, runDate=NULL, flowOrder=NULL,
+  keySequence=NULL, program=NULL, predictedInsertSize=NULL, ...)
 }
 
 \arguments{

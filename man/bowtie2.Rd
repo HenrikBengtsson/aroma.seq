@@ -17,7 +17,8 @@
 }
 
 \usage{
-\method{bowtie2}{default}(bowtieRefIndexPrefix=NULL, reads1=NULL, reads2=NULL, readsU=NULL, samFile=NULL, optionsVec, ..., commandName="bowtie2", verbose=FALSE)
+\method{bowtie2}{default}(bowtieRefIndexPrefix=NULL, reads1=NULL, reads2=NULL, readsU=NULL, samFile=NULL,
+  optionsVec, ..., commandName="bowtie2", verbose=FALSE)
 }
 
 \arguments{

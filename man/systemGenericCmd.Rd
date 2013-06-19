@@ -17,7 +17,8 @@
 }
 
 \usage{
-\method{systemGenericCmd}{default}(commandName=NULL, ..., system2ArgsList=list(), .fake=FALSE, verbose=FALSE)
+\method{systemGenericCmd}{default}(commandName=NULL, ..., system2ArgsList=list(), .fake=FALSE,
+  verbose=FALSE)
 }
 
 \arguments{

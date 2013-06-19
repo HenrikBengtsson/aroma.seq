@@ -17,7 +17,8 @@
 }
 
 \usage{
-\method{tophat}{default}(bowtieRefIndexPrefix=NULL, reads1=NULL, reads2=NULL, optionsVec=NULL, ..., command="tophat", verbose=FALSE)
+\method{tophat}{default}(bowtieRefIndexPrefix=NULL, reads1=NULL, reads2=NULL, optionsVec=NULL, ...,
+  command="tophat", verbose=FALSE)
 }
 
 \arguments{

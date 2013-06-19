@@ -17,7 +17,8 @@
 }
 
 \usage{
-\method{cuffdiff}{default}(transcriptsGtf, bams=NULL, optionsVec=NULL, ..., system2ArgsList=NULL, commandName="cuffdiff", verbose=FALSE)
+\method{cuffdiff}{default}(transcriptsGtf, bams=NULL, optionsVec=NULL, ..., system2ArgsList=NULL,
+  commandName="cuffdiff", verbose=FALSE)
 }
 
 \arguments{

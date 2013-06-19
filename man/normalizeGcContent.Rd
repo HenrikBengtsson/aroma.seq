@@ -18,7 +18,8 @@
 }
 
 \usage{
-\method{normalizeGcContent}{default}(y, gcContent, targetFcn=NULL, subsetToFit=NULL, onMissing=c("ignore", "median"), .isLogged=TRUE, ..., .returnFit=FALSE)
+\method{normalizeGcContent}{default}(y, gcContent, targetFcn=NULL, subsetToFit=NULL,
+  onMissing=c("ignore", "median"), .isLogged=TRUE, ..., .returnFit=FALSE)
 }
 
 \arguments{

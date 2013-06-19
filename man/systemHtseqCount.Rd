@@ -1,14 +1,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Do not modify this file since it was automatically generated from:
 % 
-%  systemHtseqCount.R
+%  systemHTSeqCount.R
 % 
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\name{systemHtseqCount}
-\alias{systemHtseqCount.default}
-\alias{systemHtseqCount}
+\name{systemHTSeqCount}
+\alias{systemHTSeqCount.default}
+\alias{systemHTSeqCount}
 
 \title{Wrapper for htseq-count}
 
@@ -17,7 +17,8 @@
 }
 
 \usage{
-\method{systemHtseqCount}{default}(commandName="htseq-count", ..., system2ArgsList=list(stdout = TRUE, stderr = FALSE), .fake=FALSE, verbose=FALSE)
+\method{systemHTSeqCount}{default}(commandName="htseq-count", ...,
+  system2ArgsList=list(stdout = TRUE, stderr = FALSE), .fake=FALSE, verbose=FALSE)
 }
 
 \arguments{
