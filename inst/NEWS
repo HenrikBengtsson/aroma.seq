@@ -3,6 +3,8 @@ Package: aroma.seq
 
 Version: 0.2.11 [2013-06-20]
 o Added findHTSeq() and systemHTSeq().
+o Now readGeometry() and getGeometry() for FastqDataFile returns
+  c(NA,NA) for gzipped files. This is better than an error. 
 o Bumped up package dependencies.
 
 
