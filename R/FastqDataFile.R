@@ -68,12 +68,18 @@ setMethodS3("getGeometry", "FastqDataFile", function(this, force=FALSE, ...) {
   geometry <- this$.geometry;
   if (force || is.null(geometry)) {
     geometry <- readGeometry(this, ...);
-    this$.geometry <- geometry;
+    if (!anyMissing(geometry)) {
+      this$.geometry <- geometry;
+    }
   }
   geometry;
 })
 
 setMethodS3("readGeometry", "FastqDataFile", function(this, ...) {
+  # TO DO: Support gzipped files. /HB 2013-06-20
+  if (isGzipped(this)) {
+    return(c(NA_integer_, NA_integer_));
+  }
   pathname <- getPathname(this);
   geo <- Biostrings::fastq.geometry(pathname);
   geo;
@@ -105,6 +111,9 @@ setMethodS3("getSamReadGroup", "FastqDataFile", function(this, ...) {
 
 ############################################################################
 # HISTORY:
+# 2013-06-20
+# o Now readGeometry() and getGeometry() returns c(NA,NA) for
+#   gzipped files. This is better than an error.
 # 2012-06-28
 # o Created.
 ############################################################################
