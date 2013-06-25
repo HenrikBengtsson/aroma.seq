@@ -49,6 +49,7 @@ setMethodS3("getSampleName", "IlluminaFastqDataFile", function(this, ...) {
   name <- getFullName(this, ...);
 
   ver <- getFileVersion(this);
+  if (is.na(ver)) ver <- "<gzipped; unknown>";
   if (ver == "Casava_v1.4") {
     barcode <- getBarcodeSequence(this);
     # AD HOC patch for observing ATGNCA when expected ATGTCA. /HB 2012-10-01

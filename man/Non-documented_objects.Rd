@@ -330,6 +330,8 @@
 \alias{report}
 \alias{report.FastqDataFile}
 \alias{report.FastqDataSet}
+\alias{queryBowtie2}
+\alias{getDefaultFullName.FastqDataFile}
 
 \description{
   This page contains aliases for all "non-documented" objects that

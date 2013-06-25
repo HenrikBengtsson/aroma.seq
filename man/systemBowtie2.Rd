@@ -23,7 +23,7 @@
 
 \arguments{
   \item{commandName}{A \code{\link[base]{character}} string specifying the bowtie2 command.}
-  \item{...}{Additional arguments specifying bowtie2-build command line switches.}
+  \item{...}{Additional arguments specifying bowtie2 command line switches.}
   \item{system2ArgsList}{Named list of arguments to pass to internal system2 call.}
   \item{.fake}{If \code{\link[base:logical]{TRUE}}, the executable is not called.}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}

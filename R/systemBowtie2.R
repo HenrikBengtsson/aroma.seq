@@ -11,7 +11,7 @@
 #
 # \arguments{
 #   \item{commandName}{A @character string specifying the bowtie2 command.}
-#   \item{...}{Additional arguments specifying bowtie2-build command line switches.}
+#   \item{...}{Additional arguments specifying bowtie2 command line switches.}
 #   \item{system2ArgsList}{Named list of arguments to pass to internal system2 call.}
 #   \item{.fake}{If @TRUE, the executable is not called.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
@@ -66,7 +66,7 @@ setMethodS3("systemBowtie2", "default", function(commandName="bowtie2",
 
   verbose && enter(verbose, "system2() call");
   callArgs <- list(command=bin, args=paste(names(dotArgs$args), dotArgs$args, sep=" "))
-  callArgs <- c(callArgs, system2ArgsList)
+  callArgs <- c(callArgs, system2ArgsList);
 
   verbose && str(verbose, callArgs);
   if (!.fake) {

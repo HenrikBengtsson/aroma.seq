@@ -6,15 +6,15 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{Bowtie2Alignment}
+\name{Bowtie2Alignment}
 \docType{class}
 \alias{Bowtie2Alignment}
 
 
- \title{The Bowtie2Alignment class}
+\title{The Bowtie2Alignment class}
 
- \description{
-  Package:  aroma.seq \cr
+\description{
+ Package:  aroma.seq \cr
 \bold{Class Bowtie2Alignment}\cr
 
 \code{\link[R.oo]{Object}}\cr
@@ -33,20 +33,20 @@ extends \emph{\link[aroma.seq]{AbstractAlignment}}\cr
 
 
 
-  ...
- }
+ ...
+}
 
- \usage{
+\usage{
 Bowtie2Alignment(..., indexSet=NULL)
 }
 
- \arguments{
-  \item{...}{Arguments passed to \code{\link{AbstractAlignment}}.}
-  \item{indexSet}{An \code{\link{Bowtie2IndexSet}}.}
- }
+\arguments{
+ \item{...}{Arguments passed to \code{\link{AbstractAlignment}}.}
+ \item{indexSet}{An \code{\link{Bowtie2IndexSet}}.}
+}
 
- \section{Fields and Methods}{
-  \bold{Methods:}\cr
+\section{Fields and Methods}{
+ \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{\link[aroma.seq:process.Bowtie2Alignment]{process}} \tab Runs the aligner.\cr
 }
@@ -62,7 +62,16 @@ getParameterSets, getParameters, getParametersAsString
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
 
- }
+}
 
- \author{Henrik Bengtsson and Pierre Neuvial}
+\section{Supported operating systems}{
+  This method is available on Linux, OSX, and Windows [1].
+}
+
+\author{Henrik Bengtsson and Pierre Neuvial}
+
+\references{
+ [1] Bowtie2, John Hopkins University, 2013.
+     \url{http://bowtie-bio.sourceforge.net/bowtie2/}
+}
 \keyword{classes}

@@ -52,6 +52,13 @@ setMethodS3("as.character", "FastqDataFile", function(x, ...) {
 }, protected=TRUE)
 
 
+setMethodS3("getDefaultFullName", "FastqDataFile", function(this, ...) {
+  name <- NextMethod("getDefaultFullName");
+  name <- gsub("[.](fastq|fq)$", "", name, ignore.case=TRUE);
+  name;
+}, protected=TRUE)
+
+
 setMethodS3("nbrOfSeqs", "FastqDataFile", function(this, ...) {
   geo <- getGeometry(this, ...);
   geo[1L];
@@ -108,9 +115,11 @@ setMethodS3("getSamReadGroup", "FastqDataFile", function(this, ...) {
 })
 
 
-
 ############################################################################
 # HISTORY:
+# 2013-06-25
+# o Added getDefaultFullName() for FastqDataFile so <fullname>.fastq.gz
+#   is properly handled.  Should ideally handled by R.filesets.
 # 2013-06-20
 # o Now readGeometry() and getGeometry() returns c(NA,NA) for
 #   gzipped files. This is better than an error.

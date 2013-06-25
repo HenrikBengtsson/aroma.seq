@@ -8,7 +8,7 @@
 #
 #  ...
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -20,8 +20,17 @@
 #  @allmethods "public"
 # }
 #
+# \section{Supported operating systems}{
+#   This method is available on Linux, OSX, and Windows [1].
+# }
+#
 # \author{Henrik Bengtsson and Pierre Neuvial}
-#*/########################################################################### 
+#
+# \references{
+#  [1] Bowtie2, John Hopkins University, 2013.
+#      \url{http://bowtie-bio.sourceforge.net/bowtie2/}
+# }
+#*/###########################################################################
 setConstructorS3("Bowtie2Alignment", function(..., indexSet=NULL) {
   # Validate arguments
   if (!is.null(indexSet)) {
@@ -42,7 +51,7 @@ setMethodS3("getParameters", "Bowtie2Alignment", function(this, ...) {
 }, protected=TRUE)
 
 
-###########################################################################/** 
+###########################################################################/**
 # @RdocMethod process
 #
 # @title "Runs the aligner"
@@ -65,7 +74,7 @@ setMethodS3("getParameters", "Bowtie2Alignment", function(this, ...) {
 # }
 #
 # @author
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Local functions
@@ -100,7 +109,7 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
     indexPrefix <- Arguments$getCharacter(indexPrefix);
     indexPath <- Arguments$getReadablePath(getParent(indexPrefix));
     pathnameSAM <- Arguments$getWritablePathname(pathnameSAM);
-    systemBowtie2(optionsList=list(x=indexPrefix, U=pathnameFQ, S=pathnameSAM), ...);
+    systemBowtie2(args=list("-x"=indexPrefix, "-U"=pathnameFQ, "-S"=pathnameSAM, ...), verbose=verbose);
   } # bowtie2()
 
 
@@ -113,7 +122,7 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
   if (verbose) {
     pushState(verbose);
     on.exit(popState(verbose));
-  } 
+  }
 
 
   verbose && enter(verbose, "Bowtie2 alignment");
@@ -134,6 +143,9 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
     validate(rgSet);
   }
 
+  # Indicates whether gzipped FASTQ files are supported or not.
+  gzAllowed <- NA;
+
   params <- getParameters(this);
   verbose && cat(verbose, "Additional bowtie2 arguments:");
   verbose && str(verbose, params);
@@ -144,7 +156,7 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
   for (kk in seq_along(ds)) {
     df <- getFile(ds, kk);
     name <- getName(df);
-    verbose && enter(verbose, sprintf("Sample #%d ('%s') of %d", 
+    verbose && enter(verbose, sprintf("Sample #%d ('%s') of %d",
                                                     kk, name, length(ds)));
 
     pathnameFQ <- getPathname(df);
@@ -172,6 +184,16 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
     # (a) Generate SAM file
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     if (!isFile(pathnameSAM)) {
+      if (isGzipped(df)) {
+        if (is.na(gzAllowed)) {
+          gzAllowed <- queryBowtie2("support:fastq.gz");
+        }
+        if (!gzAllowed) {
+          why <- attr(gzAllowed, "why");
+          throw(sprintf("Cannot align reads in '%s': %s", getPathname(df), why));
+        }
+      }
+
       # Extract sample-specific read group
       rgII <- getSamReadGroup(df);
       if (length(rgSet) > 0L) {
@@ -185,7 +207,7 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 
       args <- list(
         pathnameFQ,
-        indexPrefix=indexPrefix, 
+        indexPrefix=indexPrefix,
         pathnameSAM=pathnameSAM
       );
       args <- c(args, rgArgs);
@@ -205,7 +227,7 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
           file.remove(pathnameSAM);
         }
       }
- 
+
     }
 
     # Sanity check
@@ -225,7 +247,7 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
     verbose && exit(verbose);
   } # for (kk ...)
 
-  res <- getOutputDataSet(this, verbose=less(verbose, 1)); 
+  res <- getOutputDataSet(this, verbose=less(verbose, 1));
 
   verbose && exit(verbose);
 
@@ -245,4 +267,4 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 # o Added support for argument 'readGroup' to Bowtie2Alignment().
 # 2012-09-27
 # o Created from BwaAlignment.R.
-############################################################################ 
+############################################################################
