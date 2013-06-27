@@ -175,6 +175,10 @@ setMethodS3("buildIndex", "FastaReferenceFile", function(this, ..., skip=TRUE, v
 #   Returns a @see "R.filesets::GenericDataFileSet" consisting of the BWA index files.
 # }
 #
+# \seealso{
+#   Internally, @see "bwaIndex" is used.
+# }
+#
 # @author
 #*/###########################################################################
 setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method, ..., skip=TRUE, verbose=FALSE) {
@@ -260,18 +264,45 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method, ...
 
 
 
+###########################################################################/**
+# @RdocMethod buildBowtie2IndexSet
+#
+# @title "Builds a Bowtie2 index files set"
+#
+# \description{
+#   @get "title".
+# }
+#
+# @synopsis
+#
+# \arguments{
+#  \item{...}{Additional arguments passed to @see "bowtie2Build".}
+#  \item{skip}{If @TRUE, the index files are not rebuilt if already available.}
+#  \item{verbose}{See @see "R.utils::Verbose".}
+# }
+#
+# \value{
+#   Returns a @see "R.filesets::GenericDataFileSet" consisting of the bowtie2 index files.
+# }
+#
+#% \section{Benchmarking}{
+#%   Examples of processing times:
+#%   \itemize{
+#%    \item human_g1k_v37.fasta: ~?? minutes on System A.
+#%   }
+#%   where:
+#%   \itemize{
+#%    \item 'System A' is Linux 64-bit on a cluster.
+#%    \item 'System B' is Windows 7 Pro 64-bit on a Lenovo Thinkpad X201.
+#% }
+#
+# \seealso{
+#   Internally, @see "bowtie2Build" is used.
+# }
+#
+# @author
+#*/###########################################################################
 setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., skip=TRUE, verbose=FALSE) {
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Local functions
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  bowtie2Build <- function(pathnameFA, prefix, ..., verbose=FALSE) {
-    # Assert that the directory for the index set exists
-    path <- getParent(prefix);
-    path <- Arguments$getWritablePath(path);
-    systemBowtie2Build(pathnameFA, prefix, ...);
-  } # bowtie2Build()
-
-
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -314,10 +345,12 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
   verbose && print(verbose, this);
 
   res <- bowtie2Build(pathnameFA, prefix, ..., verbose=less(verbose, 5));
-  verbose && print(verbose, res);
+  verbose && str(verbose, res);
 
-  if (res != 0L) {
-    throw("Failed to build Bowtie2 index. Return code: ", res);
+  status <- attr(res, "status");
+  status <- if (is.null(status)) status <- 0L;
+  if (status != 0L) {
+    throw("Failed to build Bowtie2 index. Return code: ", status);
   }
 
   res <- Bowtie2IndexSet$byPrefix(prefix);
@@ -334,6 +367,10 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
 
 ############################################################################
 # HISTORY:
+# 2013-06-27
+# o Added Rdoc comments for buildBowtie2IndexSet().
+# o BUG FIX: buildBowtie2IndexSet() for FastaReferenceFile became broken
+#   after updates in systemBowtie2Build().
 # 2012-10-31
 # o Added buildIndex() for FastaReferenceFile for building FAI index files.
 # 2012-09-27

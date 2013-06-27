@@ -109,7 +109,44 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
     indexPrefix <- Arguments$getCharacter(indexPrefix);
     indexPath <- Arguments$getReadablePath(getParent(indexPrefix));
     pathnameSAM <- Arguments$getWritablePathname(pathnameSAM);
-    systemBowtie2(args=list("-x"=indexPrefix, "-U"=pathnameFQ, "-S"=pathnameSAM, ...), verbose=verbose);
+
+    # Check if FASTQ.gz files are supported
+    if (isGzipped(pathnameFQ)) {
+      if (is.na(gzAllowed)) {
+        gzAllowed <- queryBowtie2("support:fastq.gz");
+      }
+
+      if (!gzAllowed) {
+        decompress <- getOption(aromaSettings, "devel/fastq.gz/decompress", FALSE);
+        if (!decompress) {
+          why <- attr(gzAllowed, "why");
+          throw(sprintf("Cannot align reads in '%s': %s", getPathname(df), why));
+        }
+
+        # If not, temporarily decompress (=remove when done)
+        pathnameFQ <- gunzip(pathnameFQ, temporary=TRUE, remove=FALSE);
+        on.exit({
+          # Make sure to remove temporary file
+          if (isFile(pathnameFQ)) file.remove(pathnameFQ);
+        }, add=TRUE);
+
+        # Sanity check
+        stopifnot(!isGzipped(pathnameFQ));
+      }
+    } # if (isGzipped(pathnameFQ))
+
+    res <- systemBowtie2(args=list("-x"=indexPrefix, "-U"=pathnameFQ, "-S"=pathnameSAM, ...), verbose=verbose);
+
+    # In case bowtie2 generates empty SAM files
+    # /HB 2012-10-01 (still to be observed)
+    if (isFile(pathnameSAM)) {
+      if (file.info(pathnameSAM)$size == 0L) {
+        verbose && cat(verbose, "Removing empty SAM file falsely created by Bowtie2: ", pathnameSAM);
+        file.remove(pathnameSAM);
+      }
+    }
+
+    res;
   } # bowtie2()
 
 
@@ -184,16 +221,6 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
     # (a) Generate SAM file
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     if (!isFile(pathnameSAM)) {
-      if (isGzipped(df)) {
-        if (is.na(gzAllowed)) {
-          gzAllowed <- queryBowtie2("support:fastq.gz");
-        }
-        if (!gzAllowed) {
-          why <- attr(gzAllowed, "why");
-          throw(sprintf("Cannot align reads in '%s': %s", getPathname(df), why));
-        }
-      }
-
       # Extract sample-specific read group
       rgII <- getSamReadGroup(df);
       if (length(rgSet) > 0L) {
@@ -218,17 +245,7 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 
       res <- do.call(bowtie2, args=args);
       verbose && cat(verbose, "System result code: ", res);
-
-      # In case bowtie2 generates empty SAM files
-      # /HB 2012-10-01 (still to be observed)
-      if (isFile(pathnameSAM)) {
-        if (file.info(pathnameSAM)$size == 0L) {
-          verbose && cat(verbose, "Removing empty SAM file falsely created by Bowtie2: ", pathnameSAM);
-          file.remove(pathnameSAM);
-        }
-      }
-
-    }
+    } # if (!isFile(pathnameSAM))
 
     # Sanity check
     stopifnot(isFile(pathnameSAM));
@@ -257,6 +274,9 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 
 ############################################################################
 # HISTORY:
+# 2013-06-27
+# o Now process() for Bowtie2Aligment temporarily decompresses gzipped
+#   FASTQ files in case the installed bowtie2 does not support gzip files.
 # 2012-11-26
 # o BUG FIX: process() for BwaAlignment and Bowtie2Alignment was
 #   only align the first sample.

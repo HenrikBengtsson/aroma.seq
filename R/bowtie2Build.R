@@ -10,7 +10,7 @@
 # @synopsis
 #
 # \arguments{
-#   \item{refReads}{Vector of (fasta) files with reference sequence}
+#   \item{refReads}{Vector of (FASTA) files with reference sequence}
 #   \item{bowtieRefIndexPrefix}{bowtie2 reference index to be built (partial pathname, minus the .*.bt2 suffix)}
 #   \item{optionsVec}{Vector of named options}
 #   \item{...}{...}

@@ -25,7 +25,9 @@ queryBowtie2 <- function(what=c("support:fastq.gz"), ...) {
 
   if (what == "support:fastq.gz") {
     perl <- findPerl();
+    suppressWarnings({
     res <- system2(perl, args='-e "use POSIX; mkfifo(\'/tmp/aroma.seq-bowtie2-query\', 0700);"', stdout=TRUE, stderr=TRUE);
+    });
     res <- paste(res, collapse="\n");
     if (nchar(res) > 0L) {
       supported <- (regexpr("POSIX::mkfifo not implemented", res) == -1L);

@@ -1,17 +1,17 @@
 Package: aroma.seq
 ==================
 
-Version: 0.2.12 [2013-06-25]
+Version: 0.2.12 [2013-06-27]
 o GENERALIZATION: Now FastqDataFile can also hold a gzipped file.
   If so, then certain properties of the file is not parsed, e.g.
   number of sequences.  However, the file can still be passed on
   to for instance aligners that support gzipped files out of the
   box, e.g. BwaAlignment.
-o Now process() of Bowtie2Aligment gives an informative error
-  if alignment of gzipped FASTQ files are not supported on the
-  current operating system (which seems to be the case on Windows).
-  Internally, queryBowtie2() can be used to check whether bowtie2
-  supports reading gzipped FASTQ files on the current OS or not.
+o Now process() for Bowtie2Aligment temporarily decompresses
+  gzipped FASTQ files in case the installed bowtie2 does not
+  support gzip files.
+o BUG FIX: buildBowtie2IndexSet() for FastaReferenceFile became broken
+  after updates in systemBowtie2Build().
 
 
 Version: 0.2.11 [2013-06-20]
