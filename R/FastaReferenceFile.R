@@ -288,11 +288,11 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method, ...
 #% \section{Benchmarking}{
 #%   Examples of processing times:
 #%   \itemize{
-#%    \item human_g1k_v37.fasta: ~?? minutes on System A.
+#%    \item human_g1k_v37.fasta: ~120 minutes on System A.
 #%   }
 #%   where:
 #%   \itemize{
-#%    \item 'System A' is Linux 64-bit on a cluster.
+#%    \item 'System A': one core on a random node on a Linux 64-bit cluster.
 #%    \item 'System B' is Windows 7 Pro 64-bit on a Lenovo Thinkpad X201.
 #% }
 #
