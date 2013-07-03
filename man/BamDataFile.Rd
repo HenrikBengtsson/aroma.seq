@@ -48,6 +48,7 @@ BamDataFile(...)
  \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{buildIndex} \tab  -\cr
+ \tab \code{doQDNASeq} \tab  -\cr
  \tab \code{extractReadStartPositions} \tab  -\cr
  \tab \code{getChipType} \tab  -\cr
  \tab \code{getHeader} \tab  -\cr

@@ -47,7 +47,7 @@ FastaReferenceFile(...)
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{buildBowtie2IndexSet} \tab  -\cr
+ \tab \code{\link[aroma.seq:buildBowtie2IndexSet.FastaReferenceFile]{buildBowtie2IndexSet}} \tab Builds a Bowtie2 index files set.\cr
  \tab \code{\link[aroma.seq:buildBwaIndexSet.FastaReferenceFile]{buildBwaIndexSet}} \tab Builds a BWA index files set.\cr
  \tab \code{\link[aroma.seq:buildIndex.FastaReferenceFile]{buildIndex}} \tab Builds an FAI index file.\cr
  \tab \code{getSeqLengths} \tab  -\cr
