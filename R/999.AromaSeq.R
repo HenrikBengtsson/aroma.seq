@@ -74,6 +74,7 @@ setMethodS3("capabilitiesOf", "AromaSeq", function(static, what=NULL, ...) {
   res$samtools <- !is.null(findSamtools(mustExist=FALSE));
   res$tophat1 <- !is.null(findTopHat1(mustExist=FALSE));
   res$tophat2 <- !is.null(findTopHat2(mustExist=FALSE));
+  res$htseq <- !is.null(findHTSeq(mustExist=FALSE));
 
   # Order lexicographically
   o <- order(names(res));
@@ -117,6 +118,8 @@ setMethodS3("setupTests", "AromaSeq", function(static, path="redundancyTests/", 
 
 ############################################################################
 # HISTORY:
+# 2013-07-03
+# o Added 'HTSeq' to capabilitiesOf().
 # 2013-04-01
 # o Added 'tophat1' and 'tophat2' to capabilitiesOf().
 # 2012-09-27
