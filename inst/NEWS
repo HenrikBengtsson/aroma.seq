@@ -1,6 +1,13 @@
 Package: aroma.seq
 ==================
 
+Version: 0.2.13 [2013-07-03]
+o Added a first draft for FastqDownsampler.
+o Added writeSample() for FastqDataFile.
+o More help documentation.
+o Bumped up package dependencies.
+
+
 Version: 0.2.12 [2013-06-27]
 o GENERALIZATION: Now FastqDataFile can also hold a gzipped file.
   If so, then certain properties of the file is not parsed, e.g.

@@ -31,5 +31,11 @@
 
 \author{Taku Tokuyasu}
 
+\references{
+ [1] HTSeq: Analysing high-throughput sequencing data with Python,
+     June 2013.
+     \url{http://www-huber.embl.de/users/anders/HTSeq/}
+}
+
 
 \keyword{internal}

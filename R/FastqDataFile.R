@@ -115,8 +115,43 @@ setMethodS3("getSamReadGroup", "FastqDataFile", function(this, ...) {
 })
 
 
+setMethodS3("writeSample", "FastqDataFile", function(this, pathname, n, ordered=FALSE, ..., full=FALSE) {
+  require("ShortRead") || throw("Package not loaded: ShortRead");
+
+  # Argument 'pathname':
+  pathname <- Arguments$getWritablePathname(pathname, mustNotExist=TRUE);
+
+  # Argument 'n':
+  n <- Arguments$getInteger(n, range=c(1,Inf));
+
+  # Argument 'ordered':
+  ordered <- Arguments$getLogical(ordered);
+
+  # Argument 'full':
+  full <- Arguments$getLogical(full);
+
+
+  pathnameFQ <- getPathname(df);
+
+  # TODO: Added ram/buffer size option. /HB 2013-07-01
+  fs <- FastqSampler(pathnameFQ, n=n, ordered=ordered, ...);
+  on.exit({
+    if (!is.null(fs)) close(fs);
+  });
+  data <- yield(fs);
+  writeFastq(data, file=pathname, mode="w", full=full);
+  data <- NULL;
+  close(fs);
+  fs <- NULL;
+
+  newInstance(this, pathname);
+}, protected=TRUE)
+
+
 ############################################################################
 # HISTORY:
+# 2013-07-01
+# o Added writeSample() for FastqDataFile.
 # 2013-06-25
 # o Added getDefaultFullName() for FastqDataFile so <fullname>.fastq.gz
 #   is properly handled.  Should ideally handled by R.filesets.

@@ -178,3 +178,9 @@ findRspReportTemplate.Object report report.FastqDataFile
 report.FastqDataSet
 queryBowtie2
 getDefaultFullName.FastqDataFile
+
+FastqDownsampler getInputDataSet.FastqDownsampler getOutputPath
+getOutputPath.FastqDownsampler getOutputRootPath
+getOutputRootPath.FastqDownsampler getSampleSize
+getSampleSize.FastqDownsampler process.FastqDownsampler
+writeSample writeSample.FastqDataFile

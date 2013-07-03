@@ -19,6 +19,12 @@
 #
 # @author "TT"
 #
+# \references{
+#  [1] HTSeq: Analysing high-throughput sequencing data with Python,
+#      June 2013.
+#      \url{http://www-huber.embl.de/users/anders/HTSeq/}
+# }
+#
 # @keyword internal
 #*/###########################################################################
 setMethodS3("systemHTSeqCount", "default", function(commandName="htseq-count",

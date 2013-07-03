@@ -131,7 +131,6 @@
 \alias{bowtie2IndexPrefix}
 \alias{bowtie2IndexPrefix.default}
 \alias{buildBowtie2IndexSet}
-\alias{buildBowtie2IndexSet.FastaReferenceFile}
 \alias{byPrefix.AbstractIndexSet}
 \alias{getIndexPrefix.AbstractIndexFile}
 \alias{getIndexPrefix.AbstractIndexSet}
@@ -332,6 +331,17 @@
 \alias{report.FastqDataSet}
 \alias{queryBowtie2}
 \alias{getDefaultFullName.FastqDataFile}
+\alias{FastqDownsampler}
+\alias{getInputDataSet.FastqDownsampler}
+\alias{getOutputPath}
+\alias{getOutputPath.FastqDownsampler}
+\alias{getOutputRootPath}
+\alias{getOutputRootPath.FastqDownsampler}
+\alias{getSampleSize}
+\alias{getSampleSize.FastqDownsampler}
+\alias{process.FastqDownsampler}
+\alias{writeSample}
+\alias{writeSample.FastqDataFile}
 
 \description{
   This page contains aliases for all "non-documented" objects that

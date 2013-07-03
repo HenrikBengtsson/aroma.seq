@@ -32,6 +32,10 @@
   Returns a \code{\link[R.filesets]{GenericDataFileSet}} consisting of the BWA index files.
 }
 
+\seealso{
+  Internally, \code{\link{bwaIndex}}() is used.
+}
+
 \author{Henrik Bengtsson}
 \keyword{internal}
 \keyword{methods}

@@ -25,14 +25,29 @@
 }
 
 \usage{
+  # The generic internal function used
+  findExternal(mustExist=TRUE, command, version=NULL, versionPattern=NULL, force=FALSE,
+  verbose=FALSE, ...)
+
+  # Programming environments
   findJava(...)
   findPerl(...)
-  findBowtie2(..., command=c("bowtie2", "bowtie2-align", "bowtie2-build", "bowtie2-inspect"))
-  findBWA(...)
+
+  # Samtools
   findSamtools(...)
-  findTopHat(..., command=tophat)
-  findTopHat1(..., command=tophat, version=c(1, 2))
-  findTopHat2(..., command=tophat2, version=c(2, 3))
+
+  # HTSeq
+  findHTSeq(..., command=c("htseq-count", "htseq-qa"))
+
+  # BWA
+  findBWA(...)
+
+  # Bowtie and TopHat
+  findBowtie2(..., command=c("bowtie2", "bowtie2-align", "bowtie2-build",
+  "bowtie2-inspect"))
+  findTopHat(..., command="tophat")
+  findTopHat1(..., command="tophat", version=c(1, 2))
+  findTopHat2(..., command="tophat2", version=c(2, 3))
 }
 
 \arguments{
@@ -48,7 +63,7 @@
      to call the external for retrieving the version output.}
   \item{force}{If \code{\link[base:logical]{TRUE}}, cached results are ignored, otherwise not.}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
-  \item{...}{Not used.}
+  \item{...}{Additional arguments passed to \code{\link{findExternal}}(), or ignored.}
 }
 
 \value{

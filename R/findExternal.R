@@ -16,14 +16,27 @@
 # }
 #
 # \usage{
-#   findJava(@eval "t<-formals(findJava);paste(gsub('=$','',paste(names(t),t,sep='=')),collapse=', ')")
-#   findPerl(@eval "t<-formals(findPerl);paste(gsub('=$','',paste(names(t),t,sep='=')),collapse=', ')")
-#   findBowtie2(@eval "t<-formals(findBowtie2);paste(gsub('=$','',paste(names(t),t,sep='=')),collapse=', ')")
-#   findBWA(@eval "t<-formals(findBWA);paste(gsub('=$','',paste(names(t),t,sep='=')),collapse=', ')")
-#   findSamtools(@eval "t<-formals(findSamtools);paste(gsub('=$','',paste(names(t),t,sep='=')),collapse=', ')")
-#   findTopHat(@eval "t<-formals(findTopHat);paste(gsub('=$','',paste(names(t),t,sep='=')),collapse=', ')")
-#   findTopHat1(@eval "t<-formals(findTopHat1);paste(gsub('=$','',paste(names(t),t,sep='=')),collapse=', ')")
-#   findTopHat2(@eval "t<-formals(findTopHat2);paste(gsub('=$','',paste(names(t),t,sep='=')),collapse=', ')")
+#   # The generic internal function used
+#   @usage findExternal
+#
+#   # Programming environments
+#   @usage findJava
+#   @usage findPerl
+#
+#   # Samtools
+#   @usage findSamtools
+#
+#   # HTSeq
+#   @usage findHTSeq
+#
+#   # BWA
+#   @usage findBWA
+#
+#   # Bowtie and TopHat
+#   @usage findBowtie2
+#   @usage findTopHat
+#   @usage findTopHat1
+#   @usage findTopHat2
 # }
 #
 # \arguments{
@@ -39,7 +52,7 @@
 #      to call the external for retrieving the version output.}
 #   \item{force}{If @TRUE, cached results are ignored, otherwise not.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
-#   \item{...}{Not used.}
+#   \item{...}{Additional arguments passed to @see "findExternal", or ignored.}
 # }
 #
 # \value{
