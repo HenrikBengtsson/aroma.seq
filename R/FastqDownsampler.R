@@ -10,7 +10,7 @@ setConstructorS3("FastqDownsampler", function(dataSet=NULL, subset=1e6, ...) {
       if (subset <= 1) {
         subset <- Arguments$getDouble(subset, range=c(0,1));
       } else {
-        subset <- Arguments$getInteger(subset, range=c(1, Inf));
+        subset <- Arguments$getInteger(subset, range=c(1,Inf));
       }
     } else {
       throw("Not yet implemented.");

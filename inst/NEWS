@@ -1,6 +1,11 @@
 Package: aroma.seq
 ==================
 
+Version: 0.2.14 [2013-07-11]
+o BUG FIX: Error in UseMethod("getPathname") : no applicable method
+  for 'getPathname' applied to an object of class.
+
+
 Version: 0.2.13 [2013-07-03]
 o Added a first draft for FastqDownsampler.
 o Added writeSample() for FastqDataFile.

@@ -131,7 +131,7 @@ setMethodS3("writeSample", "FastqDataFile", function(this, pathname, n, ordered=
   full <- Arguments$getLogical(full);
 
 
-  pathnameFQ <- getPathname(df);
+  pathnameFQ <- getPathname(this);
 
   # TODO: Added ram/buffer size option. /HB 2013-07-01
   fs <- FastqSampler(pathnameFQ, n=n, ordered=ordered, ...);
@@ -150,6 +150,8 @@ setMethodS3("writeSample", "FastqDataFile", function(this, pathname, n, ordered=
 
 ############################################################################
 # HISTORY:
+# 2013-07-10
+# o BUG FIX: writeSample() would give Error in UseMethod("getPathname").
 # 2013-07-01
 # o Added writeSample() for FastqDataFile.
 # 2013-06-25
