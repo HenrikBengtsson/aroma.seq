@@ -21,7 +21,7 @@
 #
 # \arguments{
 #  \item{dataSet, df}{A @see "FastqDataSet" or a @see "BamDataSet" (or a @see "BamDataFile".}
-#  \item{binWidth}{A @numeric specifying the bin width (in units kbp).}
+#  \item{binWidth}{A positive @numeric specifying the bin width (in units of kbp).}
 #  \item{reference}{A @see "FastaReferenceFile" or a @see "BwaIndexSet" specifying the genome reference to align the FASTQ reads to.}
 #  \item{log}{If @TRUE, the copy numbers are calculated on the log2 scale.}
 #  \item{mappability, blacklist, residual, bases}{Post-filter arguments.}
