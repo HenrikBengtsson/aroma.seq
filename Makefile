@@ -88,7 +88,7 @@ debug_full: debug
 
 # Update existing packages
 update:
-	$(R_SCRIPT) -e "update.packages(ask=FALSE)"
+	$(R_SCRIPT) -e "update.packages(ask=FALSE); source('http://bioconductor.org/biocLite.R'); biocLite(ask=FALSE);"
 
 # Install missing dependencies
 deps: DESCRIPTION

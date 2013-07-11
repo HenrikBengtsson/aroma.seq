@@ -1,6 +1,11 @@
 Package: aroma.seq
 ==================
 
+Version: 0.2.15 [2013-07-11]
+o Package now requires R v3.0.0 or newer.
+o Bumped up package dependencies.
+
+
 Version: 0.2.14 [2013-07-11]
 o BUG FIX: Error in UseMethod("getPathname") : no applicable method
   for 'getPathname' applied to an object of class.
