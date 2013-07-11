@@ -21,7 +21,8 @@
 #
 # \arguments{
 #  \item{dataSet, df}{A @see "FastqDataSet" or a @see "BamDataSet" (or a @see "BamDataFile".}
-#  \item{binWidth}{A positive @numeric specifying the bin width (in units of kbp).}
+#  \item{binWidth}{A positive @numeric specifying the bin width (in units of kbp).
+#    Alternatively, a @see "Biobase::AnnotatedDataFrame" specifying the bins.}
 #  \item{reference}{A @see "FastaReferenceFile" or a @see "BwaIndexSet" specifying the genome reference to align the FASTQ reads to.}
 #  \item{log}{If @TRUE, the copy numbers are calculated on the log2 scale.}
 #  \item{mappability, blacklist, residual, bases}{Post-filter arguments.}
@@ -52,7 +53,12 @@ setMethodS3("doQDNASeq", "BamDataFile", function(df, binWidth, log=TRUE, mappabi
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'binWidth':
-  binWidth <- Arguments$getInteger(binWidth, range=c(0.1, 10e3));
+  bins <- NULL;
+  if (inherits(binWidth, "AnnotatedDataFrame")) {
+    bins <- binWidth;
+  } else {
+    binWidth <- Arguments$getInteger(binWidth, range=c(0.1, 10e3));
+  }
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -65,11 +71,20 @@ setMethodS3("doQDNASeq", "BamDataFile", function(df, binWidth, log=TRUE, mappabi
   verbose && enter(verbose, "QDNASeq");
   verbose && print(verbose, df);
 
-  verbose && enter(verbose, "QDNASeq/Retrieve QDNASeq bin annotation");
-  bins <- getBinAnnotations(binWidth);
-  verbose && print(verbose, bins);
-  verbose && exit(verbose);
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Setup
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (is.null(bins)) {
+    verbose && enter(verbose, "QDNASeq/Retrieve QDNASeq bin annotation");
+    bins <- getBinAnnotations(binWidth);
+    verbose && print(verbose, bins);
+    verbose && exit(verbose);
+  }
 
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Processing
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "QDNASeq/Reading and binning data");
   pathname <- getPathname(df);
   data <- binReadCounts(bins, bamfiles=pathname, cache=TRUE, force=force);
@@ -105,7 +120,12 @@ setMethodS3("doQDNASeq", "BamDataSet", function(dataSet, binWidth, ..., verbose=
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'binWidth':
-  binWidth <- Arguments$getInteger(binWidth);
+  bins <- NULL;
+  if (inherits(binWidth, "AnnotatedDataFrame")) {
+    bins <- binWidth;
+  } else {
+    binWidth <- Arguments$getInteger(binWidth, range=c(0.1, 10e3));
+  }
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -120,16 +140,14 @@ setMethodS3("doQDNASeq", "BamDataSet", function(dataSet, binWidth, ..., verbose=
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Checking requirements
+  # Setup
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "QDNASeq/Check requirements");
-
-  verbose && enter(verbose, "QDNASeq/Check requirements/Retrieve QDNASeq bin annotation");
-  bins <- getBinAnnotations(binWidth);
-  verbose && print(verbose, bins);
-  verbose && exit(verbose);
-
-  verbose && exit(verbose);
+  if (is.null(bins)) {
+    verbose && enter(verbose, "QDNASeq/Retrieve QDNASeq bin annotation");
+    bins <- getBinAnnotations(binWidth);
+    verbose && print(verbose, bins);
+    verbose && exit(verbose);
+  }
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -140,7 +158,7 @@ setMethodS3("doQDNASeq", "BamDataSet", function(dataSet, binWidth, ..., verbose=
     df <- getFile(dataSet, ii);
     verbose && enter(verbose, sprintf("Sample %d ('%s') of %d", ii, getName(df), length(dataSet)));
 
-    dataN <- doQDNASeq(df, binWidth=binWidth, ..., verbose=less(verbose,1));
+    dataN <- doQDNASeq(df, binWidth=bins, ..., verbose=less(verbose,1));
     verbose && print(verbose, dataN);
 
     if (is.null(res)) {
@@ -170,7 +188,12 @@ setMethodS3("doQDNASeq", "FastqDataSet", function(dataSet, binWidth, reference, 
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'binWidth':
-  binWidth <- Arguments$getInteger(binWidth, range=c(0.1, 10e3));
+  bins <- NULL;
+  if (inherits(binWidth, "AnnotatedDataFrame")) {
+    bins <- binWidth;
+  } else {
+    binWidth <- Arguments$getInteger(binWidth, range=c(0.1, 10e3));
+  }
 
   # Argument 'reference':
   if (inherits(reference, "FastaReferenceFile")) {
@@ -202,12 +225,18 @@ setMethodS3("doQDNASeq", "FastqDataSet", function(dataSet, binWidth, reference, 
   stopifnot(isCapableOf(aroma.seq, "picard"));
   verbose && exit(verbose);
 
-  verbose && enter(verbose, "QDNASeq/Check requirements/Retrieve QDNASeq bin annotation");
-  bins <- getBinAnnotations(binWidth);
-  verbose && print(verbose, bins);
   verbose && exit(verbose);
 
-  verbose && exit(verbose);
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Setup
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (is.null(bins)) {
+    verbose && enter(verbose, "QDNASeq/Retrieve QDNASeq bin annotation");
+    bins <- getBinAnnotations(binWidth);
+    verbose && print(verbose, bins);
+    verbose && exit(verbose);
+  }
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -257,7 +286,7 @@ setMethodS3("doQDNASeq", "FastqDataSet", function(dataSet, binWidth, reference, 
   # QDNASeq copy number estimation
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "QDNASeq/copy number estimation");
-  cns <- doQDNASeq(bsU, binWidth=binWidth, ..., verbose=verbose);
+  cns <- doQDNASeq(bsU, binWidth=bins, ..., verbose=verbose);
   verbose && print(verbose, cns);
   verbose && exit(verbose);
 
@@ -275,6 +304,8 @@ setMethodS3("doQDNASeq", "default", function(...) {
 ############################################################################
 # HISTORY:
 # 2013-07-11
+# o SPEEDUP: Now doQDNASeq() only retrieves the bin annotation data
+#   onces per call/data set.
 # o Added Rdoc comments for doQDNASeq().
 # o Added doQDNASeq() for FastqDataSet, which leverages ditto for
 #   BamDataSet.
