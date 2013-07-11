@@ -39,6 +39,8 @@
 # }
 #
 # @author "HB"
+#
+# @keyword internal
 #*/###########################################################################
 setMethodS3("doQDNASeq", "BamDataFile", function(df, binWidth, log=TRUE, mappability=50, blacklist=0, residual=2, bases=0, ..., force=FALSE, verbose=FALSE) {
   require("Biobase") || throw("Package not loaded: Biobase"); # combine()
