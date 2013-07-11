@@ -97,6 +97,7 @@ setMethodS3("doQDNASeq", "BamDataFile", function(df, binWidth, log=TRUE, mappabi
 setMethodS3("doQDNASeq", "BamDataSet", function(dataSet, binWidth, ..., verbose=FALSE) {
   pkgName <- "qdnaseq";
   require(pkgName, character.only=TRUE) || throw("Package not loaded: qdnaseq");
+  getBinAnnotations <- NULL;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
