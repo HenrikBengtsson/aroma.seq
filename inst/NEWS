@@ -2,6 +2,7 @@ Package: aroma.seq
 ==================
 
 Version: 0.2.15 [2013-07-11]
+o Added doQDNASeq() for FastqDataSet and BamDataSet.
 o Package now requires R v3.0.0 or newer.
 o Bumped up package dependencies.
 

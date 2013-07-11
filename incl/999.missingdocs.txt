@@ -185,4 +185,3 @@ getOutputRootPath.FastqDownsampler getSampleSize
 getSampleSize.FastqDownsampler process.FastqDownsampler
 writeSample writeSample.FastqDataFile
 
-doQDNASeq doQDNASeq.BamDataFile doQDNASeq.BamDataSet

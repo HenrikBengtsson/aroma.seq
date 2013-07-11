@@ -1,3 +1,45 @@
+###########################################################################/**
+# @RdocDefault doQDNASeq
+# @alias doQDNASeq.BamDataFile
+# @alias doQDNASeq.BamDataSet
+# @alias doQDNASeq.FastqDataSet
+#
+# @title "Quantitative inference of copy number aberrations with DNA isolated from fresh or formalin-fixed tissues by shallow whole-genome sequencing (QDNASeq)"
+#
+# \description{
+#  @get "title" based on [1].
+#  The algorithm is processed in bounded memory, meaning virtually
+#  any number of samples can be analyzed on also very limited computer
+#  systems.
+# }
+#
+# \usage{
+#   @usage doQDNASeq,FastqDataSet
+#   @usage doQDNASeq,BamDataSet
+#   @usage doQDNASeq,BamDataFile
+# }
+#
+# \arguments{
+#  \item{dataSet, df}{A @see "FastqDataSet" or a @see "BamDataSet" (or a @see "BamDataFile".}
+#  \item{binWidth}{A @numeric specifying the bin width (in units kbp).}
+#  \item{reference}{A @see "FastaReferenceFile" or a @see "BwaIndexSet" specifying the genome reference to align the FASTQ reads to.}
+#  \item{log}{If @TRUE, the copy numbers are calculated on the log2 scale.}
+#  \item{mappability, blacklist, residual, bases}{Post-filter arguments.}
+#  \item{...}{Ignored, or passed to \code{doQDNASeq()}.}
+#  \item{force}{If @TRUE, cached results are ignored.}
+#  \item{verbose}{See @see "Verbose".}
+# }
+#
+# \value{
+#   Returns a @see "qdnaseq::QDNAseqReadCounts" object.
+# }
+#
+# \references{
+#  [1] TBA.
+# }
+#
+# @author "HB"
+#*/###########################################################################
 setMethodS3("doQDNASeq", "BamDataFile", function(df, binWidth, log=TRUE, mappability=50, blacklist=0, residual=2, bases=0, ..., force=FALSE, verbose=FALSE) {
   require("Biobase") || throw("Package not loaded: Biobase"); # combine()
   pkgName <- "qdnaseq";
@@ -74,11 +116,23 @@ setMethodS3("doQDNASeq", "BamDataSet", function(dataSet, binWidth, ..., verbose=
   verbose && enter(verbose, "QDNASeq");
   verbose && print(verbose, dataSet);
 
-  verbose && enter(verbose, "QDNASeq/Retrieve QDNASeq bin annotation");
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Checking requirements
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  verbose && enter(verbose, "QDNASeq/Check requirements");
+
+  verbose && enter(verbose, "QDNASeq/Check requirements/Retrieve QDNASeq bin annotation");
   bins <- getBinAnnotations(binWidth);
   verbose && print(verbose, bins);
   verbose && exit(verbose);
 
+  verbose && exit(verbose);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Processing samples
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   res <- NULL;
   for (ii in seq_along(dataSet)) {
     df <- getFile(dataSet, ii);
@@ -105,10 +159,16 @@ setMethodS3("doQDNASeq", "BamDataSet", function(dataSet, binWidth, ..., verbose=
 }) # doQDNASeq()
 
 
-setMethodS3("doQDNASeq", "FastqDataSet", function(ds, reference, ..., verbose=FALSE) {
+setMethodS3("doQDNASeq", "FastqDataSet", function(dataSet, binWidth, reference, ..., verbose=FALSE) {
+  pkgName <- "qdnaseq";
+  require(pkgName, character.only=TRUE) || throw("Package not loaded: qdnaseq");
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'binWidth':
+  binWidth <- Arguments$getInteger(binWidth, range=c(0.1, 10e3));
+
   # Argument 'reference':
   if (inherits(reference, "FastaReferenceFile")) {
   } else if (inherits(reference, "BwaIndexSet")) {
@@ -127,12 +187,33 @@ setMethodS3("doQDNASeq", "FastqDataSet", function(ds, reference, ..., verbose=FA
   verbose && enter(verbose, "QDNASeq");
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Checking requirements
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  verbose && enter(verbose, "QDNASeq/Check requirements");
+
+  verbose && enter(verbose, "QDNASeq/Check requirements/BWA");
+  stopifnot(isCapableOf(aroma.seq, "bwa"));
+  verbose && exit(verbose);
+
+  verbose && enter(verbose, "QDNASeq/Check requirements/Picard");
+  stopifnot(isCapableOf(aroma.seq, "picard"));
+  verbose && exit(verbose);
+
+  verbose && enter(verbose, "QDNASeq/Check requirements/Retrieve QDNASeq bin annotation");
+  bins <- getBinAnnotations(binWidth);
+  verbose && print(verbose, bins);
+  verbose && exit(verbose);
+
+  verbose && exit(verbose);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # BWA 'aln' with options '-n 2' and '-q 40'.
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "QDNASeq/BWA alignment");
 
   # Retrieve BWA index set?
-  if (inherits(reference, "BWAIndexSet")) {
+  if (inherits(reference, "BwaIndexSet")) {
     is <- reference;
   } else if (inherits(reference, "FastaReferenceFile")) {
     verbose && enter(verbose, "QDNASeq/BWA alignment/Retrieving index set");
@@ -147,7 +228,7 @@ setMethodS3("doQDNASeq", "FastqDataSet", function(ds, reference, ..., verbose=FA
     # Not needed anymore
   reference <- NULL;
 
-  alg <- BwaAlignment(ds, indexSet=is, n=2, q=40);
+  alg <- BwaAlignment(dataSet, indexSet=is, n=2, q=40);
   verbose && print(verbose, alg);
 
   bs <- process(alg, verbose=verbose);
@@ -173,7 +254,7 @@ setMethodS3("doQDNASeq", "FastqDataSet", function(ds, reference, ..., verbose=FA
   # QDNASeq copy number estimation
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "QDNASeq/copy number estimation");
-  cns <- doQDNASeq(bsU, ..., verbose=verbose);
+  cns <- doQDNASeq(bsU, binWidth=binWidth, ..., verbose=verbose);
   verbose && print(verbose, cns);
   verbose && exit(verbose);
 
@@ -183,9 +264,15 @@ setMethodS3("doQDNASeq", "FastqDataSet", function(ds, reference, ..., verbose=FA
 }) # doQDNASeq()
 
 
+setMethodS3("doQDNASeq", "default", function(...) {
+  throw("The \"default\" method is still not implemented. Please see help('doQDNASeq').");
+})
+
+
 ############################################################################
 # HISTORY:
 # 2013-07-11
+# o Added Rdoc comments for doQDNASeq().
 # o Added doQDNASeq() for FastqDataSet, which leverages ditto for
 #   BamDataSet.
 # 2013-07-03

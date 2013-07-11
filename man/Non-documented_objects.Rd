@@ -342,9 +342,6 @@
 \alias{process.FastqDownsampler}
 \alias{writeSample}
 \alias{writeSample.FastqDataFile}
-\alias{doQDNASeq}
-\alias{doQDNASeq.BamDataFile}
-\alias{doQDNASeq.BamDataSet}
 
 \description{
   This page contains aliases for all "non-documented" objects that

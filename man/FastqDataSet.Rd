@@ -48,6 +48,7 @@ FastqDataSet(files=NULL, ...)
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
+ \tab \code{doQDNASeq} \tab  -\cr
  \tab \code{getDefaultSamReadGroup} \tab  -\cr
  \tab \code{getSamReadGroup} \tab  -\cr
  \tab \code{report} \tab  -\cr
