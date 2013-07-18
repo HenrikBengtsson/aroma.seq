@@ -25,24 +25,20 @@ for (ii in seq_along(fqs)) {
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Gzip data set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pathGZ <- file.path("fastqData", "TopHat-example,gz", "LambdaPhage")
+pathZ <- file.path("fastqData", "TopHat-example,gz", "LambdaPhage")
 for (ii in seq_along(fqs)) {
   fq <- getFile(fqs, ii)
-  pathnameGZ <- file.path(pathGZ, sprintf("%s.gz", getFilename(fq)))
-  if (!isFile(pathnameGZ)) {
-    fqGZ <- gzip(getPathname(fq), pathnameGZ)
-  }
-  print(fqGZ)
+  pathnameZ <- file.path(pathZ, sprintf("%s.gz", getFilename(fq)))
+  if (!isFile(pathnameZ)) gzip(getPathname(fq), pathnameZ, remove=FALSE)
 }
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup gzip'ed FASTQ set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-path <- pathGZ
-fqs <- FastqDataSet$byPath(path, pattern="[.]gz$")
-print(fqs)
-for (ii in seq_along(fqs)) {
-  fq <- getFile(fqs, ii)
-  print(fq)
+fqsZ <- FastqDataSet$byPath(pathZ, pattern="[.]gz$")
+print(fqsZ)
+for (ii in seq_along(fqsZ)) {
+  fqZ <- getFile(fqsZ, ii)
+  print(fqZ)
 }
