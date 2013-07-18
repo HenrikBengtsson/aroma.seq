@@ -3,6 +3,10 @@ Package: aroma.seq
 
 Version: 0.2.16 [2013-07-18]
 o Now all NnnAlignment methods outputs to root directory 'bamData/'.
+o BUG FIX: Now Bowtie2Alignment handles if there are commas in the
+  pathname of the FASTQ file by using a tempory file link without
+  commas.  This is needed because the bowtie2 executable does not
+  support commas.
 o ROBUSTNESS: Added several system tests.
 o Added annotationData/ and fastqData/ under package's exData/.
 o BUG FIX: queryBowtie2("support:fastq.gz") did not always

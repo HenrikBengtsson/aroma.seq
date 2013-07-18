@@ -89,7 +89,7 @@ stopifnot(identical(getFullNames(bamsZ), getFullNames(bams)))
 for (ii in seq_along(bams)) {
   bam <- getFile(bams, ii)
   bamZ <- getFile(bamsZ, ii)
-##  stopifnot(getChecksum(bamZ) == getChecksum(bam))
+  stopifnot(getChecksum(bamZ) == getChecksum(bam))
 }
 
 
