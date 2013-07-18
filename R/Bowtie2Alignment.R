@@ -135,6 +135,19 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
       }
     } # if (isGzipped(pathnameFQ))
 
+    # WORKAROUND: Bowtie2() does not support commas in the
+    # FASTQ pathname.  If so, use a temporary filename
+    # without commas.
+    if (regexpr(",", pathnameFQ, fixed=TRUE) != -1L) {
+      ext <- if (isGzipped(pathnameFQ)) ".fq.gz" else ".fq";
+      pathnameT <- tempfile(fileext=ext);
+      createLink(pathnameT, target=pathnameFQ);
+      on.exit({
+        file.remove(pathnameT);
+      }, add=TRUE);
+      pathnameFQ <- pathnameT;
+    }
+
     res <- systemBowtie2(args=list("-x"=indexPrefix, "-U"=pathnameFQ, "-S"=pathnameSAM, ...), verbose=verbose);
 
     # In case bowtie2 generates empty SAM files
@@ -274,6 +287,10 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 
 ############################################################################
 # HISTORY:
+# 2013-07-18
+# o Now Bowtie2Alignment handles if there are commas in the pathname of
+#   the FASTQ file by using a tempory file link without commas.  This
+#   is needed because the bowtie2 executable does not support commas.
 # 2013-06-27
 # o Now process() for Bowtie2Aligment temporarily decompresses gzipped
 #   FASTQ files in case the installed bowtie2 does not support gzip files.
