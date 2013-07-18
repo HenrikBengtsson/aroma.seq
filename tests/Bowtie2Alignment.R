@@ -63,6 +63,36 @@ if (isCapableOf(aroma.seq, "picard")) {
   print(bamsU)
 }
 
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Single-end Bowtie2 alignment on gzip'ed FASTQ files
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Gzip data set
+pathZ <- file.path("fastqData", "TopHat-example,gz", "LambdaPhage")
+for (ii in seq_along(fqs)) {
+  fq <- getFile(fqs, ii)
+  pathnameZ <- file.path(pathZ, sprintf("%s.gz", getFilename(fq)))
+  if (!isFile(pathnameZ)) gzip(getPathname(fq), pathnameZ, remove=FALSE)
+}
+fqsZ <- FastqDataSet$byPath(pathZ, pattern="[.]gz$")
+
+# Bowtie2 alignment
+algZ <- Bowtie2Alignment(fqsZ, indexSet=is)
+print(algZ)
+
+bamsZ <- process(algZ, verbose=-20)
+print(bamsZ)
+
+# Bowtie2 results should be identical with and without gzip'ed FASTQ files
+stopifnot(length(bamsZ) == length(bams))
+stopifnot(identical(getFullNames(bamsZ), getFullNames(bams)))
+for (ii in seq_along(bams)) {
+  bam <- getFile(bams, ii)
+  bamZ <- getFile(bamsZ, ii)
+  stopifnot(getChecksum(bamZ) == getChecksum(bam))
+}
+
+
 } # if (fullTest)
 
 
