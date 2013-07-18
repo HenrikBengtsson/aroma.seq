@@ -117,7 +117,7 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
       }
 
       if (!gzAllowed) {
-        decompress <- getOption(aromaSettings, "devel/fastq.gz/decompress", FALSE);
+        decompress <- getOption(aromaSettings, "devel/fastq.gz/decompress", TRUE);
         if (!decompress) {
           why <- attr(gzAllowed, "why");
           throw(sprintf("Cannot align reads in '%s': %s", getPathname(df), why));
