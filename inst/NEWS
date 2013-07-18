@@ -5,6 +5,8 @@ Version: 0.2.16 [2013-07-18]
 o Now all NnnAlignment methods outputs to root directory 'bamData/'.
 o ROBUSTNESS: Added several system tests.
 o Added annotationData/ and fastqData/ under package's exData/.
+o BUG FIX: queryBowtie2("support:fastq.gz") did not always
+  return a logical.
 
 
 Version: 0.2.15 [2013-07-11]
