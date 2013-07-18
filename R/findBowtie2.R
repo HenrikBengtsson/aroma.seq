@@ -26,27 +26,28 @@ queryBowtie2 <- function(what=c("support:fastq.gz"), ...) {
   if (what == "support:fastq.gz") {
     perl <- findPerl();
     suppressWarnings({
-    res <- system2(perl, args='-e "use POSIX; mkfifo(\'/tmp/aroma.seq-bowtie2-query\', 0700);"', stdout=TRUE, stderr=TRUE);
+    resT <- system2(perl, args='-e "use POSIX; mkfifo(\'/tmp/aroma.seq-bowtie2-query\', 0700);"', stdout=TRUE, stderr=TRUE);
     });
-    res <- paste(res, collapse="\n");
-    if (nchar(res) > 0L) {
-      supported <- (regexpr("POSIX::mkfifo not implemented", res) == -1L);
-      res <- supported;
-      if (!supported) {
-        why <- sprintf("Your bowtie2 (v%s) does not support reading gzipped FASTQ files on this platform (%s)", ver, .Platform$OS.type);
-        attr(res, "why") <- why;
-      }
+    resT <- paste(resT, collapse="\n");
+    supported <- (regexpr("POSIX::mkfifo not implemented", resT) == -1L);
+    res <- supported;
+    if (!supported) {
+      why <- sprintf("Your bowtie2 (v%s) does not support reading gzipped FASTQ files on this platform (%s)", ver, .Platform$OS.type);
+      attr(res, "why") <- why;
     }
   }
 
   attr(res, "version") <- ver;
 
   res;
-} # # queryBowtie2()
+} # queryBowtie2()
 
 
 ############################################################################
 # HISTORY:
+# 2013-07-18
+# o BUG FIX: queryBowtie2("support:fastq.gz") did not always
+#   return a logical.
 # 2013-06-25
 # o Added queryBowtie2().
 # 2013-04-01
