@@ -1,4 +1,4 @@
-setMethodS3("report", "FastqDataFile", function(this, dataSetSet, ..., flavor="qrqc", outPath=".", verbose=FALSE) {
+setMethodS3("report", "FastqDataFile", function(this, dataSet, ..., flavor="qrqc", outPath=".", verbose=FALSE) {
   require("R.rsp") || throw("Package not loaded: R.rsp");
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -80,7 +80,7 @@ setMethodS3("report", "FastqDataSet", function(this, dataSet=getFullName(this), 
     df <- getFile(this, ii);
     name <- getFullName(df);
     verbose && enter(verbose, sprintf("File #%d ('%s') of %d", ii, name, length(this)));
-   
+
     resList[[ii]] <- report(df, dataSet=dataSet, flavor=flavor, outPath=outPath, ..., verbose=less(verbose));
     verbose && exit(verbose);
   } # for (ii ...)
@@ -93,6 +93,8 @@ setMethodS3("report", "FastqDataSet", function(this, dataSet=getFullName(this), 
 
 ############################################################################
 # HISTORY:
+# 2013-07-18
+# o BUG FIX: Incorrectly named argument ('dataSetSet').
 # 2012-12-06
 # o Added report() for FastqDataFile.
 # o Created.

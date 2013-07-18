@@ -165,7 +165,8 @@ setMethodS3("buildIndex", "FastaReferenceFile", function(this, ..., skip=TRUE, v
 # @synopsis
 #
 # \arguments{
-#  \item{method}{A @character string specifying the algorithm to use.}
+#  \item{method}{A @character string specifying the algorithm to use,
+#     cf. @see "bwaIndexPrefix"}
 #  \item{...}{Additional arguments passed to @see "bwaIndex".}
 #  \item{skip}{If @TRUE, the index files are not rebuilt if already available.}
 #  \item{verbose}{See @see "R.utils::Verbose".}

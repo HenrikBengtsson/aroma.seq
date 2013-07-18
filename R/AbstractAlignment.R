@@ -176,9 +176,10 @@ setMethodS3("getFullName", "AbstractAlignment", function(this, ...) {
 
 
 setMethodS3("getRootPath", "AbstractAlignment", function(this, ...) {
-  alignName <- gsub("Alignment", "", class(this)[1], fixed=TRUE);
-  alignName <- tolower(alignName);
-  sprintf("%sData", alignName);
+##  alignName <- gsub("Alignment", "", class(this)[1], fixed=TRUE);
+##  alignName <- tolower(alignName);
+##  sprintf("%sData", alignName);
+  "bamData";
 }, protected=TRUE)
 
 
@@ -239,6 +240,8 @@ setMethodS3("process", "AbstractAlignment", abstract=TRUE);
 
 ############################################################################
 # HISTORY:
+# 2013-07-18
+# o Now getRootPath() for AbstractAlignment returns "bamData".
 # 2012-11-26
 # o BUG FIX: getOutputDataSet() would return a data set with "missing"
 #   files, if not complete.  Now it only returns the existing files.
