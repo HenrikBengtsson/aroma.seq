@@ -31,7 +31,8 @@
 
 \arguments{
  \item{dataSet, df}{A \code{\link{FastqDataSet}} or a \code{\link{BamDataSet}} (or a \code{\link{BamDataFile}}.}
- \item{binWidth}{A \code{\link[base]{numeric}} specifying the bin width (in units kbp).}
+ \item{binWidth}{A positive \code{\link[base]{numeric}} specifying the bin width (in units of kbp).
+   Alternatively, a \code{\link[Biobase]{AnnotatedDataFrame}} specifying the bins.}
  \item{reference}{A \code{\link{FastaReferenceFile}} or a \code{\link{BwaIndexSet}} specifying the genome reference to align the FASTQ reads to.}
  \item{log}{If \code{\link[base:logical]{TRUE}}, the copy numbers are calculated on the log2 scale.}
  \item{mappability, blacklist, residual, bases}{Post-filter arguments.}

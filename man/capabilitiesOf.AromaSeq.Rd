@@ -24,14 +24,15 @@
 
 \usage{
 ## Static method (use this):
-## AromaSeq$capabilitiesOf(what=NULL, ...)
+## AromaSeq$capabilitiesOf(what=NULL, force=FALSE, ...)
 
 ## Don't use the below:
-\method{capabilitiesOf}{AromaSeq}(static, what=NULL, ...)
+\method{capabilitiesOf}{AromaSeq}(static, what=NULL, force=FALSE, ...)
 }
 
 \arguments{
  \item{what}{Optional \code{\link[base]{character}} \code{\link[base]{vector}} of which tools to check.}
+ \item{force}{If \code{\link[base:logical]{TRUE}}, cached results are ignored, otherwise not.}
  \item{...}{Not used.}
 }
 
@@ -40,7 +41,7 @@
 }
 
 \examples{
-  # Display which sequencing tools are supported by the package
+  # Display which tools are supported by the package
   print(capabilitiesOf(aroma.seq))
 
   # Check whether BWA is supported

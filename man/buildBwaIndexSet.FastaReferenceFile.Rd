@@ -22,7 +22,8 @@
 }
 
 \arguments{
- \item{method}{A \code{\link[base]{character}} string specifying the algorithm to use.}
+ \item{method}{A \code{\link[base]{character}} string specifying the algorithm to use,
+    cf. \code{\link{bwaIndexPrefix}}()}
  \item{...}{Additional arguments passed to \code{\link{bwaIndex}}().}
  \item{skip}{If \code{\link[base:logical]{TRUE}}, the index files are not rebuilt if already available.}
  \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
