@@ -41,6 +41,7 @@ setConstructorS3("AromaSeq", function(...) {
 #
 # \arguments{
 #  \item{what}{Optional @character @vector of which tools to check.}
+#  \item{force}{If @TRUE, cached results are ignored, otherwise not.}
 #  \item{...}{Not used.}
 # }
 #
@@ -49,7 +50,7 @@ setConstructorS3("AromaSeq", function(...) {
 # }
 #
 # \examples{
-#   # Display which sequencing tools are supported by the package
+#   # Display which tools are supported by the package
 #   print(capabilitiesOf(aroma.seq))
 #
 #   # Check whether BWA is supported
@@ -59,29 +60,35 @@ setConstructorS3("AromaSeq", function(...) {
 # @author "HB"
 #
 #*/###########################################################################
-setMethodS3("capabilitiesOf", "AromaSeq", function(static, what=NULL, ...) {
-  res <- list();
+setMethodS3("capabilitiesOf", "AromaSeq", function(static, what=NULL, force=FALSE, ...) {
+  res <- static$.capabilities;
+  if (force || is.null(res)) {
+    res <- list();
 
-  # General software frameworks
-  res$java <- !is.null(findJava(mustExist=FALSE));
-  res$perl <- !is.null(findPerl(mustExist=FALSE));
+    # General software frameworks
+    res$java <- !is.null(findJava(mustExist=FALSE));
+    res$perl <- !is.null(findPerl(mustExist=FALSE));
 
-  # Sequencing tools
-  res$bowtie2 <- !is.null(findBowtie2(mustExist=FALSE));
-  res$bwa <- !is.null(findBWA(mustExist=FALSE));
-  res$gatk <- !is.null(findGATK(mustExist=FALSE));
-  res$picard <- !is.null(findPicard(mustExist=FALSE));
-  res$samtools <- !is.null(findSamtools(mustExist=FALSE));
-  res$tophat1 <- !is.null(findTopHat1(mustExist=FALSE));
-  res$tophat2 <- !is.null(findTopHat2(mustExist=FALSE));
-  res$htseq <- !is.null(findHTSeq(mustExist=FALSE));
+    # Sequencing tools
+    res$bowtie2 <- !is.null(findBowtie2(mustExist=FALSE));
+    res$bwa <- !is.null(findBWA(mustExist=FALSE));
+    res$gatk <- !is.null(findGATK(mustExist=FALSE));
+    res$picard <- !is.null(findPicard(mustExist=FALSE));
+    res$samtools <- !is.null(findSamtools(mustExist=FALSE));
+    res$tophat1 <- !is.null(findTopHat1(mustExist=FALSE));
+    res$tophat2 <- !is.null(findTopHat2(mustExist=FALSE));
+    res$htseq <- !is.null(findHTSeq(mustExist=FALSE));
 
-  # Order lexicographically
-  o <- order(names(res));
-  res <- res[o];
+    # Order lexicographically
+    o <- order(names(res));
+    res <- res[o];
 
-  # Coerce into a named character vector
-  res <- unlist(res);
+    # Coerce into a named character vector
+    res <- unlist(res);
+
+    # Record
+    static$.capabilities <- res;
+  }
 
   if (!is.null(what)) {
     res <- res[what];
@@ -118,6 +125,8 @@ setMethodS3("setupTests", "AromaSeq", function(static, path="redundancyTests/", 
 
 ############################################################################
 # HISTORY:
+# 2013-07-19
+# o SPEEDUP: Now the results of capabilitiesOf() are cached.
 # 2013-07-03
 # o Added 'HTSeq' to capabilitiesOf().
 # 2013-04-01

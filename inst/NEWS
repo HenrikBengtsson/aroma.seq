@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.2.17 [2013-07-19]
+o SPEEDUP: Now the results of capabilitiesOf() are cached.
+
+
 Version: 0.2.16 [2013-07-18]
 o Now all NnnAlignment methods outputs to root directory 'bamData/'.
 o BUG FIX: Now Bowtie2Alignment handles if there are commas in the
