@@ -147,9 +147,7 @@ setMethodS3("doQDNASeq", "BamDataSet", function(dataSet, binWidth, ..., force=FA
   # Setup
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   rootPath <- "qdnaseqData";
-  dataSet <- getFullName(dataSet);
-  chipType <- "Generic";
-  path <- file.path(rootPath, dataSet, chipType);
+  path <- file.path(rootPath, getFullName(dataSet), "Generic");
   path <- Arguments$getWritablePath(path);
 
 
@@ -169,7 +167,7 @@ setMethodS3("doQDNASeq", "BamDataSet", function(dataSet, binWidth, ..., force=FA
     df <- getFile(dataSet, ii);
     verbose && enter(verbose, sprintf("Sample %d ('%s') of %d", ii, getName(df), length(dataSet)));
 
-    filename <- sprintf("%s.rds", getFullname(df));
+    filename <- sprintf("%s.rds", getFullName(df));
     pathname <- Arguments$getReadablePathname(filename, path=path, mustExist=FALSE);
     if (!force && isFile(pathname)) {
       verbose && cat(verbose, "Already processed. Skipping.");
