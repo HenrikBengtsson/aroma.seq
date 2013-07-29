@@ -71,6 +71,7 @@ setMethodS3("doQDNASeq", "BamDataFile", function(df, binWidth, log=TRUE, mappabi
   verbose && enter(verbose, "QDNASeq");
   verbose && print(verbose, df);
 
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -111,7 +112,7 @@ setMethodS3("doQDNASeq", "BamDataFile", function(df, binWidth, log=TRUE, mappabi
 
 
 
-setMethodS3("doQDNASeq", "BamDataSet", function(dataSet, binWidth, ..., verbose=FALSE) {
+setMethodS3("doQDNASeq", "BamDataSet", function(dataSet, binWidth, ..., force=FALSE, verbose=FALSE) {
   pkgName <- "qdnaseq";
   require(pkgName, character.only=TRUE) || throw("Package not loaded: qdnaseq");
   getBinAnnotations <- NULL;
@@ -126,6 +127,9 @@ setMethodS3("doQDNASeq", "BamDataSet", function(dataSet, binWidth, ..., verbose=
   } else {
     binWidth <- Arguments$getInteger(binWidth, range=c(0.1, 10e3));
   }
+
+  # Argument 'force':
+  force <- Arguments$getLogical(force);
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -142,6 +146,13 @@ setMethodS3("doQDNASeq", "BamDataSet", function(dataSet, binWidth, ..., verbose=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  rootPath <- "qdnaseqData";
+  dataSet <- getFullName(dataSet);
+  chipType <- "Generic";
+  path <- file.path(rootPath, dataSet, chipType);
+  path <- Arguments$getWritablePath(path);
+
+
   if (is.null(bins)) {
     verbose && enter(verbose, "QDNASeq/Retrieve QDNASeq bin annotation");
     bins <- getBinAnnotations(binWidth);
@@ -158,24 +169,30 @@ setMethodS3("doQDNASeq", "BamDataSet", function(dataSet, binWidth, ..., verbose=
     df <- getFile(dataSet, ii);
     verbose && enter(verbose, sprintf("Sample %d ('%s') of %d", ii, getName(df), length(dataSet)));
 
+    filename <- sprintf("%s.rds", getFullname(df));
+    pathname <- Arguments$getReadablePathname(filename, path=path, mustExist=FALSE);
+    if (!force && isFile(pathname)) {
+      verbose && cat(verbose, "Already processed. Skipping.");
+      verbose && exit(verbose);
+    }
+
     dataN <- doQDNASeq(df, binWidth=bins, ..., verbose=less(verbose,1));
     verbose && print(verbose, dataN);
+    saveObject(dataN, file=pathname);
 
-    if (is.null(res)) {
-      res <- dataN;
-    } else {
-      res <- combine(res, dataN);
-    }
+    # Not needed anymore
     dataN <- NULL;
 
     verbose && exit(verbose);
   } # for (ii ...)
 
-  verbose && print(verbose, res);
+  ds <- GenericDataFileSet$byPath(path, pattern="[.]rds$");
+  ds <- extract(ds, indexOf(ds, getNames(dataSet)));
+  verbose && print(verbose, ds);
 
   verbose && exit(verbose);
 
-  res;
+  ds;
 }) # doQDNASeq()
 
 
@@ -303,6 +320,8 @@ setMethodS3("doQDNASeq", "default", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2013-07-29
+# o Now doQDNASeq() for BamDataSet saves processed data to qdnaseqData/.
 # 2013-07-11
 # o SPEEDUP: Now doQDNASeq() only retrieves the bin annotation data
 #   onces per call/data set.

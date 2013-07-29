@@ -24,7 +24,7 @@
 
 \usage{
   \method{doQDNASeq}{FastqDataSet}(dataSet, binWidth, reference, ..., verbose=FALSE)
-  \method{doQDNASeq}{BamDataSet}(dataSet, binWidth, ..., verbose=FALSE)
+  \method{doQDNASeq}{BamDataSet}(dataSet, binWidth, ..., force=FALSE, verbose=FALSE)
   \method{doQDNASeq}{BamDataFile}(df, binWidth, log=TRUE, mappability=50, blacklist=0, residual=2, bases=0, ...,
   force=FALSE, verbose=FALSE)
 }

@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.2.18 [2013-07-29]
+o Now doQDNASeq() for BamDataSet saves processed data to qdnaseqData/.
+
+
 Version: 0.2.17 [2013-07-19]
 o SPEEDUP: Now the results of capabilitiesOf() are cached.
 
