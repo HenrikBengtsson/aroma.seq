@@ -1,33 +1,35 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Do not modify this file since it was automatically generated from:
 % 
-%  AbstractAlignment.R
+%  TopHatAlignment.R
 % 
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\name{AbstractAlignment}
+\name{TopHatAlignment}
 \docType{class}
-\alias{AbstractAlignment}
+\alias{TopHatAlignment}
 
 
-\title{The AbstractAlignment class}
+\title{The TopHatAlignment class}
 
 \description{
  Package:  aroma.seq \cr
-\bold{Class AbstractAlignment}\cr
+\bold{Class TopHatAlignment}\cr
 
 \code{\link[R.oo]{Object}}\cr
 \code{~~|}\cr
 \code{~~+--}\code{\link[aroma.core]{ParametersInterface}}\cr
 \code{~~~~~~~|}\cr
-\code{~~~~~~~+--}\emph{\code{AbstractAlignment}}\cr
+\code{~~~~~~~+--}\code{\link[aroma.seq]{AbstractAlignment}}\cr
+\code{~~~~~~~~~~~~|}\cr
+\code{~~~~~~~~~~~~+--}\code{TopHatAlignment}\cr
 
 \bold{Directly known subclasses:}\cr
-\link[aroma.seq]{Bowtie2Alignment}, \link[aroma.seq]{BwaAlignment}, \link[aroma.seq]{TopHatAlignment}\cr
+\cr
 
-public abstract static class \bold{AbstractAlignment}\cr
-extends \link[aroma.core]{ParametersInterface}\cr
+public static class \bold{TopHatAlignment}\cr
+extends \emph{\link[aroma.seq]{AbstractAlignment}}\cr
 
 
 
@@ -35,32 +37,23 @@ extends \link[aroma.core]{ParametersInterface}\cr
 }
 
 \usage{
-AbstractAlignment(dataSet=NULL, indexSet=NULL, tags="*", rgSet=NULL, ...)
+TopHatAlignment(..., indexSet=NULL)
 }
 
 \arguments{
- \item{dataSet}{An \code{\link{FastqDataSet}}.}
- \item{indexSet}{An \code{\link{AbstractIndexSet}}.}
- \item{tags}{Additional tags for the output data sets.}
- \item{rgSet}{(optional) An \code{\link{SamReadGroup}} for added
-   SAM read group to the results.}
- \item{...}{Additional alignment arguments.}
+ \item{...}{Arguments passed to \code{\link{AbstractAlignment}}.}
+ \item{indexSet}{An \code{\link{Bowtie2IndexSet}}.}
 }
 
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{getFullName} \tab  -\cr
- \tab \code{getIndexSet} \tab  -\cr
- \tab \code{getInputDataSet} \tab  -\cr
- \tab \code{getName} \tab  -\cr
- \tab \code{getOutputDataSet} \tab  -\cr
- \tab \code{getTags} \tab  -\cr
- \tab \code{nbrOfFiles} \tab  -\cr
  \tab \code{process} \tab  -\cr
- \tab \code{setTags} \tab  -\cr
 }
 
+
+ \bold{Methods inherited from AbstractAlignment}:\cr
+as.character, getAsteriskTags, getFlavor, getFullName, getIndexSet, getInputDataSet, getName, getOptionalArguments, getOutputDataSet, getParameterSets, getPath, getRootPath, getTags, nbrOfFiles, process, setTags
 
  \bold{Methods inherited from ParametersInterface}:\cr
 getParameterSets, getParameters, getParametersAsString
@@ -71,5 +64,14 @@ $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCa
 
 }
 
-\author{Henrik Bengtsson}
+\section{Supported operating systems}{
+  This method is available on Linux, OSX, and Windows [1].
+}
+
+\author{Taku Tokuyasu}
+
+\references{
+ [1] TopHat, University of Maryland, 2013.
+     \url{http://http://tophat.cbcb.umd.edu/}
+}
 \keyword{classes}
