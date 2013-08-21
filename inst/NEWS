@@ -1,6 +1,19 @@
 Package: aroma.seq
 ==================
 
+Version: 0.2.21 [2013-08-21]
+o BUG FIX: Package gave errors with 'R CMD check' on R devel.
+
+
+Version: 0.2.20 [2013-08-15]
+o Added TopHatAlignment, FastaReferenceSet, and prototype RNA-seq
+  workflow script.
+
+
+Version: 0.2.19 [2013-08-06]
+o Bumped up package dependencies to match what is on available on CRAN.
+
+
 Version: 0.2.18 [2013-07-29]
 o Now doQDNASeq() for BamDataSet saves processed data to qdnaseqData/.
 

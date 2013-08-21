@@ -167,7 +167,7 @@ setMethodS3("doQDNASeq", "BamDataSet", function(dataSet, binWidth, ..., force=FA
     df <- getFile(dataSet, ii);
     verbose && enter(verbose, sprintf("Sample %d ('%s') of %d", ii, getName(df), length(dataSet)));
 
-    filename <- sprintf("%s.rds", getFullName(df));
+    filename <- sprintf("%s.RData", getFullName(df));
     pathname <- Arguments$getReadablePathname(filename, path=path, mustExist=FALSE);
     if (!force && isFile(pathname)) {
       verbose && cat(verbose, "Already processed. Skipping.");

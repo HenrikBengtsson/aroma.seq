@@ -1,9 +1,9 @@
 Package: aroma.seq
-Version: 0.2.19
-Depends: R (>= 3.0.0), R.oo (>= 1.13.9), R.utils (>= 1.26.0), R.filesets (>= 2.0.1), aroma.core (>= 2.9.0)
-Imports: R.methodsS3 (>= 1.4.4), R.oo (>= 1.13.9), R.utils (>= 1.26.0), R.filesets (>= 2.0.1), R.cache (>= 0.7.1)
-Suggests: Biobase (>= 2.20.1), Biostrings (>= 2.28.0), ShortRead (>= 1.18.0), Rsamtools (>= 1.12.3), aroma.light (>= 1.30.2), aroma.cn (>= 1.3.3), GenomicRanges (>= 1.12.4), R.devices (>= 2.2.2), R.rsp (>= 0.9.14), qrqc (>= 1.14.0)
-Date: 2013-07-29
+Version: 0.2.21
+Depends: R (>= 3.0.0), R.oo (>= 1.13.9), R.utils (>= 1.26.2), R.filesets (>= 2.1.0), aroma.core (>= 2.10.0)
+Imports: R.methodsS3 (>= 1.4.4), R.oo (>= 1.13.9), R.utils (>= 1.26.2), R.filesets (>= 2.1.0), R.cache (>= 0.7.1)
+Suggests: Biobase (>= 2.20.1), Biostrings (>= 2.28.0), ShortRead (>= 1.18.0), Rsamtools (>= 1.12.3), aroma.light (>= 1.30.2), aroma.cn (>= 1.4.0), GenomicRanges (>= 1.12.4), R.devices (>= 2.5.0), R.rsp (>= 0.9.17), qrqc (>= 1.14.0)
+Date: 2013-08-15
 Title: Sequence analysis in the Aroma Framework
 Authors@R: c(person("Henrik", "Bengtsson", email = "henrikb@braju.com", role = c("aut", "cre", "cph")), person("Adam B.", "Olshen", role = c("aut")), person("Taku", "Tokuyasu", role = c("aut")))
 Author: Henrik Bengtsson, Adam B. Olshen, Taku Tokuyasu

@@ -75,7 +75,7 @@ setMethodS3("getGeometry", "FastqDataFile", function(this, force=FALSE, ...) {
   geometry <- this$.geometry;
   if (force || is.null(geometry)) {
     geometry <- readGeometry(this, ...);
-    if (!anyMissing(geometry)) {
+    if (!Biobase::anyMissing(geometry)) {
       this$.geometry <- geometry;
     }
   }
