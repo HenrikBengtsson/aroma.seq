@@ -48,6 +48,8 @@ FastqDataSet(files=NULL, ...)
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
+ \tab \code{doBWA} \tab  -\cr
+ \tab \code{doBowtie2} \tab  -\cr
  \tab \code{doQDNASeq} \tab  -\cr
  \tab \code{getDefaultSamReadGroup} \tab  -\cr
  \tab \code{getSamReadGroup} \tab  -\cr

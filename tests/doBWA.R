@@ -30,37 +30,15 @@ print(fqs)
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Build index set
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-is <- buildBowtie2IndexSet(fa, verbose=-10)
-print(is)
-
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Single-end alignment
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-alg <- Bowtie2Alignment(fqs, indexSet=is)
-print(alg)
-
-bams <- process(alg, verbose=-20)
+bams <- doBWA(fqs, reference=fa, verbose=-20)
 print(bams)
 
-# Display an example BAM file
+# Display individual BAM files
 for (ii in seq_along(bams)) {
   bam <- getFile(bams, ii)
   print(bam)
-}
-
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Remove duplicated reads using Picard
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-if (isCapableOf(aroma.seq, "picard")) {
-  dr <- PicardDuplicateRemoval(bams)
-  print(dr)
-
-  bamsU <- process(dr, verbose=-20)
-  print(bamsU)
 }
 
 
@@ -76,12 +54,9 @@ for (ii in seq_along(fqs)) {
 }
 fqsZ <- FastqDataSet$byPath(pathZ, pattern="[.]gz$")
 
-# Alignment
-algZ <- Bowtie2Alignment(fqsZ, indexSet=is)
-print(algZ)
-
-bamsZ <- process(algZ, verbose=-20)
+bamsZ <- doBWA(fqsZ, reference=fa, verbose=-20)
 print(bamsZ)
+
 
 # Results should be identical with and without gzip'ed FASTQ files
 stopifnot(length(bamsZ) == length(bams))
@@ -98,6 +73,6 @@ for (ii in seq_along(bams)) {
 
 ############################################################################
 # HISTORY:
-# 2012-09-27
+# 2013-08-22
 # o Created.
 ############################################################################

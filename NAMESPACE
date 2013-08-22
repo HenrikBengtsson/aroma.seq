@@ -32,3 +32,9 @@ S3method("doQDNASeq", "default")
 S3method("doQDNASeq", "BamDataFile")
 S3method("doQDNASeq", "BamDataSet")
 S3method("doQDNASeq", "FastqDataSet")
+
+S3method("doBowtie2", "default")
+S3method("doBowtie2", "FastqDataSet")
+
+S3method("doBWA", "default")
+S3method("doBWA", "FastqDataSet")

@@ -30,14 +30,14 @@ print(fqs)
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Build BWA index set
+# Build index set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 is <- buildBwaIndexSet(fa, method="is", verbose=-10)
 print(is)
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Single-end BWA alignment
+# Single-end alignment
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # BWA with BWA 'aln' options '-n 2' and '-q 40'.
 alg <- BwaAlignment(fqs, indexSet=is, n=2, q=40)
@@ -66,7 +66,7 @@ if (isCapableOf(aroma.seq, "picard")) {
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Single-end BWA alignment on gzip'ed FASTQ files
+# Single-end alignment on gzip'ed FASTQ files
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Gzip data set
 pathZ <- file.path("fastqData", "TopHat-example,gz", "LambdaPhage")
@@ -84,7 +84,7 @@ print(algZ)
 bamsZ <- process(algZ, verbose=-20)
 print(bamsZ)
 
-# BWA results should be identical with and without gzip'ed FASTQ files
+# Results should be identical with and without gzip'ed FASTQ files
 stopifnot(length(bamsZ) == length(bams))
 stopifnot(identical(getFullNames(bamsZ), getFullNames(bams)))
 for (ii in seq_along(bams)) {

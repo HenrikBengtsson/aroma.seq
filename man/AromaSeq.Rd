@@ -55,7 +55,7 @@ AromaSeq(...)
 fixSearchPath, fixSearchPathInternal, patch
 
  \bold{Methods inherited from Package}:\cr
-as.character, getAuthor, getBundle, getBundlePackages, getChangeLog, getClasses, getContents, getDataPath, getDate, getDescription, getDescriptionFile, getDocPath, getEnvironment, getExamplePath, getHistory, getHowToCite, getLicense, getMaintainer, getName, getNews, getPath, getPosition, getTitle, getUrl, getVersion, isLoaded, isOlderThan, ll, load, showChangeLog, showContents, showDescriptionFile, showHistory, showHowToCite, showNews, startupMessage, unload, update, browseRsp
+as.character, getAuthor, getBundle, getBundlePackages, getChangeLog, getClasses, getContents, getDataPath, getDate, getDescription, getDescriptionFile, getDocPath, getEnvironment, getExamplePath, getHistory, getHowToCite, getLicense, getMaintainer, getName, getNews, getPath, getPosition, getTitle, getUrl, getVersion, isLoaded, isOlderThan, ll, load, showChangeLog, showContents, showDescriptionFile, showHistory, showHowToCite, showNews, startupMessage, unload, update
 
  \bold{Methods inherited from Object}:\cr
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
