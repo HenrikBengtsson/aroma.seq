@@ -82,7 +82,7 @@ setMethodS3("doBowtie2", "FastqDataSet", function(dataSet, reference, ..., verbo
     verbose && enter(verbose, "Bowtie2/Alignment/Retrieving index set");
     fa <- reference;
     verbose && print(verbose, fa);
-    is <- buildBwaIndexSet(fa, method="is", verbose=verbose);
+    is <- buildBowtie2IndexSet(fa, verbose=verbose);
     verbose && print(verbose, is);
     verbose && exit(verbose);
     # Not needed anymore
