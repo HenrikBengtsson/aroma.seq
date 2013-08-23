@@ -96,9 +96,9 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
     rgArgs <- sprintf("\"%s\"", rgArgs);
 
     rgArgs <- as.list(rgArgs);
-    names(rgArgs) <- rep("rg", times=length(rgArgs));
+    names(rgArgs) <- rep("--rg", times=length(rgArgs));
 
-    rgArgs <- c(list("rg-id"=asSamList(rg)$ID), rgArgs);
+    rgArgs <- c(list("--rg-id"=asSamList(rg)$ID), rgArgs);
 
     rgArgs;
   } # asBowtie2Parameters()
@@ -287,6 +287,9 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 
 ############################################################################
 # HISTORY:
+# 2013-08-23
+# o BUG FIX: Read Group options ('--rg' and '--rg-id') passed to 'bowtie2'
+#   by the Bowtie2Aligment class missed the preceeding '--'.
 # 2013-07-18
 # o Now Bowtie2Alignment handles if there are commas in the pathname of
 #   the FASTQ file by using a tempory file link without commas.  This

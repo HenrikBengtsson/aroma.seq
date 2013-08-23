@@ -1,6 +1,11 @@
 Package: aroma.seq
 ==================
 
+Version: 0.2.23 [2013-08-22]
+o BUG FIX: Read Group options ('--rg' and '--rg-id') passed to 'bowtie2'
+  by the Bowtie2Aligment class did not have the preceeding '--'.
+
+
 Version: 0.2.22 [2013-08-22]
 o CLEANUP: Now doQDNASeq() utilizes doBWA().
 o Added doBWA() and doBowtie2().
