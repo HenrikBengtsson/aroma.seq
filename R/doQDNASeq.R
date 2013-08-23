@@ -255,31 +255,15 @@ setMethodS3("doQDNASeq", "FastqDataSet", function(dataSet, binWidth, reference, 
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # BWA 'aln' with options '-n 2' and '-q 40'.
+  # BWA alignment
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "QDNASeq/BWA alignment");
 
-  # Retrieve BWA index set?
-  if (inherits(reference, "BwaIndexSet")) {
-    is <- reference;
-  } else if (inherits(reference, "FastaReferenceFile")) {
-    verbose && enter(verbose, "QDNASeq/BWA alignment/Retrieving index set");
-    fa <- reference;
-    verbose && print(verbose, fa);
-    is <- buildBwaIndexSet(fa, method="is", verbose=verbose);
-    verbose && print(verbose, is);
-    verbose && exit(verbose);
-    # Not needed anymore
-    fa <- NULL;
-  }
-    # Not needed anymore
-  reference <- NULL;
-
-  alg <- BwaAlignment(dataSet, indexSet=is, n=2, q=40);
-  verbose && print(verbose, alg);
-
-  bs <- process(alg, verbose=verbose);
+  bs <- doBWA(dataSet, reference=reference, n=2, q=40, verbose=verbose);
   verbose && print(verbose, bs);
+
+  # Not needed anymore
+  reference <- NULL;
 
   verbose && exit(verbose);
 
@@ -318,6 +302,8 @@ setMethodS3("doQDNASeq", "default", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2013-08-22
+# o CLEANUP: Now doQDNASeq() utilizes doBWA().
 # 2013-07-29
 # o Now doQDNASeq() for BamDataSet saves processed data to qdnaseqData/.
 # 2013-07-11

@@ -2,6 +2,7 @@ Package: aroma.seq
 ==================
 
 Version: 0.2.22 [2013-08-22]
+o CLEANUP: Now doQDNASeq() utilizes doBWA().
 o Added doBWA() and doBowtie2().
 
 
