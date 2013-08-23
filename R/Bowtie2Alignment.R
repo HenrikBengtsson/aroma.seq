@@ -89,8 +89,11 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 ##      throw("Bowtie requires that the SAM read group has an ID.");
 ##    }
 
+    rgId <- asSamList(rg)$ID;
+    if (is.null(rgId)) rgId <- 1L;
+
     rgArgs <- asString(rg, fmtstr="%s:%s");
-    rgArgs <- rgArgs[regexpr("^ID:", rgArgs) == -1];
+    rgArgs <- rgArgs[regexpr("^ID:", rgArgs) == -1L];
 
     # Don't forget to put within quotation marks
     rgArgs <- sprintf("\"%s\"", rgArgs);
@@ -98,7 +101,7 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
     rgArgs <- as.list(rgArgs);
     names(rgArgs) <- rep("--rg", times=length(rgArgs));
 
-    rgArgs <- c(list("--rg-id"=asSamList(rg)$ID), rgArgs);
+    rgArgs <- c(list("--rg-id"=rgId), rgArgs);
 
     rgArgs;
   } # asBowtie2Parameters()
@@ -289,7 +292,8 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 # HISTORY:
 # 2013-08-23
 # o BUG FIX: Read Group options ('--rg' and '--rg-id') passed to 'bowtie2'
-#   by the Bowtie2Aligment class missed the preceeding '--'.
+#   by the Bowtie2Aligment class missed the preceeding '--'.  Also, if
+#   the Read Group ID was missing NULL was used - now it is set to 1.
 # 2013-07-18
 # o Now Bowtie2Alignment handles if there are commas in the pathname of
 #   the FASTQ file by using a tempory file link without commas.  This
