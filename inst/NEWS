@@ -8,6 +8,7 @@ o Made AbstractAlignment aware of paired-end FastqDataSet:s.
 o Added byPath() for FastqDataSet that acknowledge 'paired' argument.
 o Added argument 'paired' to constructor of FastqDataSet and methods
   isPaired() and getFilePairs().
+o Added getMateFile() for FastqDataFile.
 
 
 Version: 0.2.23 [2013-08-22]

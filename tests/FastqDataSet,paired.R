@@ -11,7 +11,7 @@ for (dir in c("fastqData")) {
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Setup FASTQ set
+# Setup paired-end FASTQ set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 path <- file.path("fastqData", "TopHat-example", "LambdaPhage")
 fqs <- FastqDataSet$byPath(path, pattern="_1[.](fq|fastq)$", paired=TRUE)
@@ -20,3 +20,13 @@ pairs <- getFilePairs(fqs)
 print(pairs)
 print(pairs[,1])
 print(pairs[,2])
+
+
+# Locate mate pair
+r1 <- getFile(fqs, 1)
+print(r1)
+r2 <- getMateFile(r1)
+print(r2)
+r1b <- getMateFile(r2)
+stopifnot(equals(r1b, r1))
+

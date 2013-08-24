@@ -148,8 +148,60 @@ setMethodS3("writeSample", "FastqDataFile", function(this, pathname, n, ordered=
 }, protected=TRUE)
 
 
+setMethodS3("findMateFile", "FastqDataFile", function(this, mustExist=FALSE, ...) {
+  path <- getPath(this);
+  filename <- getFilename(this);
+
+  # Recognized R1/R2 filename patterns
+  formats <- c(
+    "_(R%d)(_[0-9]+)",
+    "_(R%d)()",
+    "_(%d)(_[0-9]+)",
+    "_(%d)()"
+  );
+  formats <- sprintf("^(.*)%s[.]((fq|fastq)(|[.]gz))$", formats);
+
+  # For R1 and R2...
+  pathnameM <- NULL;
+  for (mm in 1:2) {
+    patterns <- unname(sapply(formats, FUN=sprintf, mm));
+    pos <- unlist(sapply(patterns, FUN=regexpr, filename), use.names=FALSE);
+    pattern <- patterns[pos != -1L][1L];
+    if (!is.na(pattern)) {
+      p1 <- gsub(pattern, "\\1", filename);
+      p2 <- gsub(pattern, "\\2", filename);
+      p3 <- gsub(pattern, "\\3", filename);
+      ext <- gsub(pattern, "\\4", filename);
+      mate <- 2L-mm+1L;
+      p2M <-gsub(mm, mate, p2, fixed=TRUE);
+      filenameM <- sprintf("%s_%s%s.%s", p1, p2M, p3, ext);
+      pathnameM <- Arguments$getReadablePathname(filenameM, path=path, mustExist=FALSE);
+
+      # Found mate file?
+      if (isFile(pathnameM)) {
+        break;
+      }
+    }
+  } # for (mm ...)
+
+  # Sanity check
+  if (mustExist && is.null(pathnameM)) {
+    throw("Failed to locate mate-pair file: ", getPathname(this));
+  }
+
+  pathnameM;
+}, protected=TRUE)
+
+setMethodS3("getMateFile", "FastqDataFile", function(this, ...) {
+  pathnameM <- findMateFile(this, ..., mustExist=TRUE);
+  newInstance(this, pathnameM);
+}, protected=TRUE)
+
+
 ############################################################################
 # HISTORY:
+# 2013-08-24
+# o Added getMateFile() for FastqDataFile.
 # 2013-07-10
 # o BUG FIX: writeSample() would give Error in UseMethod("getPathname").
 # 2013-07-01
