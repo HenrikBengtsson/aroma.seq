@@ -108,13 +108,16 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 
 
   bowtie2 <- function(pathnameFQ, indexPrefix, pathnameSAM, ..., verbose=FALSE) {
-    pathnameFQ <- Arguments$getReadablePathname(pathnameFQ);
+    pathnameFQ <- Arguments$getReadablePathnames(pathnameFQ, length=1:2);
+    isPaired <- (length(pathnameFQ) == 2L);
+
     indexPrefix <- Arguments$getCharacter(indexPrefix);
     indexPath <- Arguments$getReadablePath(getParent(indexPrefix));
     pathnameSAM <- Arguments$getWritablePathname(pathnameSAM);
 
     # Check if FASTQ.gz files are supported
-    if (isGzipped(pathnameFQ)) {
+    isGzipped <- any(sapply(pathnameFQ, FUN=isGzipped));
+    if (isGzipped) {
       if (is.na(gzAllowed)) {
         gzAllowed <- queryBowtie2("support:fastq.gz");
       }
@@ -127,31 +130,43 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
         }
 
         # If not, temporarily decompress (=remove when done)
-        pathnameFQ <- gunzip(pathnameFQ, temporary=TRUE, remove=FALSE);
+        pathnameFQ <- sapply(pathnameFQ, FUN=gunzip, temporary=TRUE, remove=FALSE);
         on.exit({
           # Make sure to remove temporary file
-          if (isFile(pathnameFQ)) file.remove(pathnameFQ);
+          lapply(pathnameFQ, FUN=function(pathname) {
+            if (isFile(pathname)) file.remove(pathname);
+          });
         }, add=TRUE);
 
         # Sanity check
-        stopifnot(!isGzipped(pathnameFQ));
+        isGzipped <- any(sapply(pathnameFQ, FUN=isGzipped));
+        stopifnot(!isGzipped);
       }
-    } # if (isGzipped(pathnameFQ))
+    } # if (isGzipped)
 
     # WORKAROUND: Bowtie2() does not support commas in the
     # FASTQ pathname.  If so, use a temporary filename
     # without commas.
-    if (regexpr(",", pathnameFQ, fixed=TRUE) != -1L) {
-      ext <- if (isGzipped(pathnameFQ)) ".fq.gz" else ".fq";
-      pathnameT <- tempfile(fileext=ext);
-      createLink(pathnameT, target=pathnameFQ);
-      on.exit({
-        file.remove(pathnameT);
-      }, add=TRUE);
-      pathnameFQ <- pathnameT;
-    }
+    pathnameFQ <- sapply(pathnameFQ, FUN=function(pathname) {
+      if (regexpr(",", pathname, fixed=TRUE) != -1L) {
+        ext <- if (isGzipped(pathname)) ".fq.gz" else ".fq";
+        pathnameT <- tempfile(fileext=ext);
+        createLink(pathnameT, target=pathname);
+        on.exit({
+          file.remove(pathnameT);
+        }, add=TRUE);
+        pathname <- pathnameT;
+      }
+      pathname;
+    });
 
-    res <- systemBowtie2(args=list("-x"=indexPrefix, "-U"=pathnameFQ, "-S"=pathnameSAM, ...), verbose=verbose);
+    if (isPaired) {
+      # Sanity check
+      stopifnot(pathnameFQ[1L] != pathnameFQ[2L]);
+      res <- systemBowtie2(args=list("-x"=indexPrefix, "-1"=pathnameFQ[1L], "-2"=pathnameFQ[2L], "-S"=pathnameSAM, ...), verbose=verbose);
+    } else {
+      res <- systemBowtie2(args=list("-x"=indexPrefix, "-U"=pathnameFQ, "-S"=pathnameSAM, ...), verbose=verbose);
+    }
 
     # In case bowtie2 generates empty SAM files
     # /HB 2012-10-01 (still to be observed)
@@ -205,6 +220,11 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 
   verbose && cat(verbose, "Number of files: ", length(ds));
 
+  isPaired <- isPaired(this);
+  if (isPaired) {
+    pairs <- getFilePairs(ds);
+  }
+
   outPath <- getPath(this);
   for (kk in seq_along(ds)) {
     df <- getFile(ds, kk);
@@ -212,8 +232,16 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
     verbose && enter(verbose, sprintf("Sample #%d ('%s') of %d",
                                                     kk, name, length(ds)));
 
-    pathnameFQ <- getPathname(df);
-    verbose && cat(verbose, "FASTQ pathname: ", pathnameFQ);
+
+    if (isPaired) {
+      pairKK <- pairs[kk,];
+      pathnameFQ <- sapply(pairKK, FUN=getPathname);
+      verbose && cat(verbose, "FASTQ R1 pathname: ", pathnameFQ[1L]);
+      verbose && cat(verbose, "FASTQ R2 pathname: ", pathnameFQ[2L]);
+    } else {
+      pathnameFQ <- getPathname(df);
+      verbose && cat(verbose, "FASTQ pathname: ", pathnameFQ);
+    }
 
     # The SAM and BAM files to be generated
     fullname <- getFullName(df);
@@ -290,6 +318,9 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 
 ############################################################################
 # HISTORY:
+# 2013-08-24
+# o Now Bowtie2Alignment() will do paired-end alignment if the
+#   FastqDataSet specifies paired-end reads.
 # 2013-08-23
 # o BUG FIX: Read Group options ('--rg' and '--rg-id') passed to 'bowtie2'
 #   by the Bowtie2Aligment class missed the preceeding '--'.  Also, if

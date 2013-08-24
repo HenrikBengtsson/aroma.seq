@@ -1,6 +1,15 @@
 Package: aroma.seq
 ==================
 
+Version: 0.2.24 [2013-08-24]
+o Now Bowtie2Alignment() will do paired-end alignment if the
+  FastqDataSet specifies paired-end reads.
+o Made AbstractAlignment aware of paired-end FastqDataSet:s.
+o Added byPath() for FastqDataSet that acknowledge 'paired' argument.
+o Added argument 'paired' to constructor of FastqDataSet and methods
+  isPaired() and getFilePairs().
+
+
 Version: 0.2.23 [2013-08-22]
 o BUG FIX: Read Group options ('--rg' and '--rg-id') passed to 'bowtie2'
   by the Bowtie2Aligment class did not have the preceeding '--'.

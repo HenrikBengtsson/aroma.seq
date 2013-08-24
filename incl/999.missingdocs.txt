@@ -185,3 +185,8 @@ getOutputRootPath.FastqDownsampler getSampleSize
 getSampleSize.FastqDownsampler process.FastqDownsampler
 writeSample writeSample.FastqDataFile
 
+as.character.FastqDataSet byPath.FastaReferenceSet
+byPath.FastqDataSet getDepth.FastaReferenceSet getFilePairs
+getFilePairs.FastqDataSet getParameters.TopHatAlignment
+isPaired.AbstractAlignment isPaired.FastqDataSet
+process.TopHatAlignment validate.FastaReferenceSet

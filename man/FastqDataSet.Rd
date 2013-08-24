@@ -37,12 +37,14 @@ extends \link[R.filesets]{GenericDataFileSet}\cr
 }
 
 \usage{
-FastqDataSet(files=NULL, ...)
+FastqDataSet(files=NULL, ..., paired=FALSE)
 }
 
 \arguments{
   \item{files}{A \code{\link[base]{list}} of \code{\link{FastqDataFile}}:s.}
   \item{...}{Arguments passed to \code{\link[R.filesets]{GenericDataFileSet}}.}
+  \item{paired}{If \code{\link[base:logical]{TRUE}}, the data set contains paired-end reads,
+    otherwise not.}
 }
 
 \section{Fields and Methods}{
@@ -68,6 +70,12 @@ appendFullNameTranslator, appendFullNameTranslatorByNULL, appendFullNameTranslat
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, registerFinalizer, save, findRspReportTemplate, asThis
 
 
+}
+
+\section{Paired reads}{
+  If argument \code{paired=TRUE}, the \code{files} arguments is assumed
+  to contain the "R1" files whereas the corresponding "R2" files are
+  implicit (inferred and located by matching the filenames).
 }
 
 \author{Henrik Bengtsson}

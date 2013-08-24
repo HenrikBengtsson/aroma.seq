@@ -8,7 +8,7 @@
 #
 #  ...
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -28,7 +28,7 @@
 # }
 #
 # \author{Henrik Bengtsson}
-#*/########################################################################### 
+#*/###########################################################################
 setConstructorS3("BwaAlignment", function(..., indexSet=NULL) {
   # Validate arguments
   if (!is.null(indexSet)) {
@@ -50,7 +50,7 @@ setMethodS3("getParameterSets", "BwaAlignment", function(this, ...) {
 
 
 
-###########################################################################/** 
+###########################################################################/**
 # @RdocMethod process
 #
 # @title "Runs the BWA aligner"
@@ -73,7 +73,7 @@ setMethodS3("getParameterSets", "BwaAlignment", function(this, ...) {
 # }
 #
 # @author
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Local functions
@@ -107,7 +107,7 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
   if (verbose) {
     pushState(verbose);
     on.exit(popState(verbose));
-  } 
+  }
 
 
   verbose && enter(verbose, "BWA alignment");
@@ -133,15 +133,28 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
 
   verbose && cat(verbose, "Number of files: ", length(ds));
 
+  isPaired <- isPaired(this);
+  if (isPaired) {
+    pairs <- getFilePairs(ds);
+  }
+
   outPath <- getPath(this);
   for (kk in seq_along(ds)) {
     df <- getFile(ds, kk);
     name <- getName(df);
-    verbose && enter(verbose, sprintf("Sample #%d ('%s') of %d", 
+    verbose && enter(verbose, sprintf("Sample #%d ('%s') of %d",
                                                     kk, name, length(ds)));
 
-    pathnameFQ <- getPathname(df);
-    verbose && cat(verbose, "FASTQ pathname: ", pathnameFQ);
+    if (isPaired) {
+      pairKK <- pairs[kk,];
+      pathnameFQ <- sapply(pairKK, FUN=getPathname);
+      verbose && cat(verbose, "FASTQ R1 pathname: ", pathnameFQ[1L]);
+      verbose && cat(verbose, "FASTQ R2 pathname: ", pathnameFQ[2L]);
+      stop("Paired-end BWA alignment is not yet supported.");
+    } else {
+      pathnameFQ <- getPathname(df);
+      verbose && cat(verbose, "FASTQ pathname: ", pathnameFQ);
+    }
 
     # The SAI and SAM files to be generated
     fullname <- getFullName(df);
@@ -194,7 +207,7 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
       rgArg <- asBwaParameter(rgII);
       verbose && print(verbose, rgArg);
 
-      args <- list(pathnameSAI=pathnameSAI, pathnameFQ=pathnameFQ, 
+      args <- list(pathnameSAI=pathnameSAI, pathnameFQ=pathnameFQ,
                    indexPrefix=indexPrefix, pathnameD=pathnameSAM);
       args <- c(args, rgArg);
       args$verbose <- less(verbose, 5);
@@ -226,7 +239,7 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
     verbose && exit(verbose);
   } # for (kk ...)
 
-  res <- getOutputDataSet(this, verbose=less(verbose, 1)); 
+  res <- getOutputDataSet(this, verbose=less(verbose, 1));
 
   verbose && exit(verbose);
 
@@ -248,4 +261,4 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
 # 2012-09-25
 # o Now process() passes additional arguments to bwaAln().
 # o Created from Bowtie2Alignment.R.
-############################################################################ 
+############################################################################

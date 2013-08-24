@@ -76,6 +76,7 @@ setMethodS3("as.character", "AbstractAlignment", function(x, ...) {
   s <- c(s, as.character(is));
 
   # Algorithm parameters
+  s <- c(s, sprintf("Paired alignment: %s", isPaired(this)));
   s <- c(s, sprintf("Parameters: %s", getParametersAsString(this)));
 
   class(s) <- "GenericSummary";
@@ -86,6 +87,12 @@ setMethodS3("as.character", "AbstractAlignment", function(x, ...) {
 setMethodS3("getInputDataSet", "AbstractAlignment", function(this, ...) {
   this$.ds;
 })
+
+setMethodS3("isPaired", "AbstractAlignment", function(this, ...) {
+  ds <- getInputDataSet(this);
+  isPaired(ds, ...);
+}, protected=TRUE)
+
 
 setMethodS3("getIndexSet", "AbstractAlignment", function(this, ...) {
   this$.indexSet;
@@ -107,7 +114,13 @@ setMethodS3("getAsteriskTags", "AbstractAlignment", function(this, collapse=NULL
 
   alignName <- gsub("Alignment", "", class(this)[1], fixed=TRUE);
   alignName <- tolower(alignName);
-  tags <- c(alignName, getTags(is, collapse=NULL));
+
+  tags <- alignName;
+  if (isPaired(this)) {
+    tags <- c(tags, "paired");
+  }
+
+  tags <- c(tags, getTags(is, collapse=NULL));
   tags <- unique(tags);
 
   if (!is.null(collapse)) {
@@ -240,6 +253,9 @@ setMethodS3("process", "AbstractAlignment", abstract=TRUE);
 
 ############################################################################
 # HISTORY:
+# 2013-08-24
+# o Added isPaired() for AbstractAlignment.  Made as.character() and
+#   getAsteriskTags() aware of it.
 # 2013-07-18
 # o Now getRootPath() for AbstractAlignment returns "bamData".
 # 2012-11-26

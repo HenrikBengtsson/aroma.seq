@@ -53,7 +53,7 @@ TopHatAlignment(..., indexSet=NULL)
 
 
  \bold{Methods inherited from AbstractAlignment}:\cr
-as.character, getAsteriskTags, getFlavor, getFullName, getIndexSet, getInputDataSet, getName, getOptionalArguments, getOutputDataSet, getParameterSets, getPath, getRootPath, getTags, nbrOfFiles, process, setTags
+as.character, getAsteriskTags, getFlavor, getFullName, getIndexSet, getInputDataSet, getName, getOptionalArguments, getOutputDataSet, getParameterSets, getPath, getRootPath, getTags, isPaired, nbrOfFiles, process, setTags
 
  \bold{Methods inherited from ParametersInterface}:\cr
 getParameterSets, getParameters, getParametersAsString

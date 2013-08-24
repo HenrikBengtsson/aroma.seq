@@ -53,7 +53,7 @@ IlluminaFastqDataSet(...)
 
 
  \bold{Methods inherited from FastqDataSet}:\cr
-doBWA, doBowtie2, doQDNASeq, getDefaultSamReadGroup, getDepth, getSamReadGroup, report, setSamReadGroup, validate
+as.character, byPath, doBWA, doBowtie2, doQDNASeq, getDefaultSamReadGroup, getDepth, getFilePairs, getSamReadGroup, isPaired, report, setSamReadGroup, validate
 
  \bold{Methods inherited from GenericDataFileSet}:\cr
 append, appendFiles, appendFullNamesTranslator, appendFullNamesTranslatorByNULL, appendFullNamesTranslatorByTabularTextFile, appendFullNamesTranslatorByTabularTextFileSet, appendFullNamesTranslatorBydata.frame, appendFullNamesTranslatorByfunction, appendFullNamesTranslatorBylist, as.character, as.list, byName, byPath, clearCache, clearFullNamesTranslator, clone, copyTo, equals, extract, findByName, getChecksum, getChecksumObjects, getDefaultFullName, getFile, getFileClass, getFileSize, getFiles, getFullNames, getNames, getOneFile, getPath, getPathnames, getSubdirs, hasFile, indexOf, nbrOfFiles, resetFullNames, seq, setFullNamesTranslator, sortBy, update2, updateFullName, updateFullNames, validate, getFullNameTranslatorSet, getParentName
