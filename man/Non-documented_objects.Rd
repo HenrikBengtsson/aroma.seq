@@ -342,6 +342,21 @@
 \alias{process.FastqDownsampler}
 \alias{writeSample}
 \alias{writeSample.FastqDataFile}
+\alias{as.character.FastqDataSet}
+\alias{byPath.FastaReferenceSet}
+\alias{byPath.FastqDataSet}
+\alias{getDepth.FastaReferenceSet}
+\alias{getFilePairs}
+\alias{getFilePairs.FastqDataSet}
+\alias{getParameters.TopHatAlignment}
+\alias{isPaired.AbstractAlignment}
+\alias{isPaired.FastqDataSet}
+\alias{process.TopHatAlignment}
+\alias{validate.FastaReferenceSet}
+\alias{findMateFile}
+\alias{findMateFile.FastqDataFile}
+\alias{getMateFile}
+\alias{getMateFile.FastqDataFile}
 
 \description{
   This page contains aliases for all "non-documented" objects that

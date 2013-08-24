@@ -190,3 +190,5 @@ byPath.FastqDataSet getDepth.FastaReferenceSet getFilePairs
 getFilePairs.FastqDataSet getParameters.TopHatAlignment
 isPaired.AbstractAlignment isPaired.FastqDataSet
 process.TopHatAlignment validate.FastaReferenceSet
+findMateFile findMateFile.FastqDataFile getMateFile
+getMateFile.FastqDataFile
