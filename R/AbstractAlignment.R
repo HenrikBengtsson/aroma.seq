@@ -30,7 +30,11 @@ setConstructorS3("AbstractAlignment", function(dataSet=NULL, indexSet=NULL, tags
   # Validate arguments
   if (!is.null(dataSet)) {
     # Argument 'dataSet':
-    dataSet <- Arguments$getInstanceOf(dataSet, "FastqDataSet");
+    if (is.list(dataSet)) {  ## [ This is now DEPRECATED: paired end dataset as a list ]
+      dataSet <- sapply(fqs, function(x) {Arguments$getInstanceOf(x, "FastqDataSet")}, simplify=FALSE)
+    } else {
+      dataSet <- Arguments$getInstanceOf(dataSet, "FastqDataSet");
+    }
 
     # Argument 'indexSet':
     indexSet <- Arguments$getInstanceOf(indexSet, "AbstractIndexSet");
