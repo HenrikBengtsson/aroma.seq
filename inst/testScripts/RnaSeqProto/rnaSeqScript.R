@@ -135,42 +135,37 @@ system.time({
 # Step 1: Quality assess
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-if (!bPairedEnd)
-{
-  # NB: For now, the following overwrites the fastq dataset
-  
-  # adapter trim first
-  fqs <- doScythe(fqs, "pairedEnd")
-  
-  # quality trim reads
-  fqs <- doSickle(fqs, "pairedEnd")
-
-} else {
-  pdfList <- sapply(fqs, report)    ### Uses qrqc; this could take a while...probably should make verbose
-  fqs <- sapply(fqs, doScythe)
-  fqs <- sapply(fqs, doSickle)
+if (FALSE) {  # Skip for now
+  if (!bPairedEnd)
+  {
+    # NB: For now, the following overwrites the fastq dataset
+    
+    # adapter trim first
+    fqs <- doScythe(fqs, "pairedEnd")
+    
+    # quality trim reads
+    fqs <- doSickle(fqs, "pairedEnd")
+    
+  } else {
+    pdfList <- sapply(fqs, report)    ### Uses qrqc; this could take a while...probably should make verbose
+    fqs <- sapply(fqs, doScythe)
+    fqs <- sapply(fqs, doSickle)
+  }
+  # Quality assessment reports
+  pdfs <- report(fqs)
+  # doQRQC(fqs)   ## TBD
 }
-
-
-# Quality assessment reports
-# pdfs <- report(fqs)
-# doQRQC(fqs)   ## TBD
-
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Step 2: Gather experiment metadata
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# ... [TBD; probably a manual step; how to capture the experimental design?]
+# ... [TBD; move this to after htseq?; probably a manual step; how to capture the experimental design?]
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Step 3: Align reads
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-source("/Users/tokuyasu/SVN/aroma.seq.RS/R/AbstractAlignment.R")
-# - This is Taku's version, which allows dataset to be a list of FastqDataSet's
-
 
 if (FALSE)  # run tophat 'by hand' first
 {
@@ -185,12 +180,21 @@ if (FALSE)  # run tophat 'by hand' first
 }
 
 
+# source("/Users/tokuyasu/SVN/aroma.seq.RS/R/AbstractAlignment.R")
+# # - This is Taku's version, which allows dataset to be a list of FastqDataSet's
+# # source("/Users/tokuyasu/SVN/aroma.seq/R/TopHatAlignment.R")
+# source("/Users/tokuyasu/work/projects/12/CCSP/proto/TopHatAlignment.R")
+# source("/Users/tokuyasu/work/projects/12/CCSP/proto/tophat.R")
+# source("/Users/tokuyasu/work/projects/12/CCSP/proto/systemTopHat.R")  ## This is key - need to be able to find the tophat executable!
 ta <- TopHatAlignment(dataSet=fqs, indexSet=is)
 # - Works! (with Taku's version of AbstractAlignment)
-process(ta)
-
 
 stop("Got to here!")
+
+# TODO:  Make this run only if not done already
+system.time({
+  process(ta, verbose=TRUE)
+})
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
