@@ -357,6 +357,11 @@
 \alias{findMateFile.FastqDataFile}
 \alias{getMateFile}
 \alias{getMateFile.FastqDataFile}
+\alias{getBatchJobRegistry}
+\alias{getBatchJobRegistry.default}
+\alias{getBatchJobRegistryIdByMethod}
+\alias{getBatchJobRegistryIdByMethod.GenericDataFileSet}
+\alias{getBatchJobRegistryIdByMethod.default}
 
 \description{
   This page contains aliases for all "non-documented" objects that

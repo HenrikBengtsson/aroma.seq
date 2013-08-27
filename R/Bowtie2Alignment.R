@@ -181,6 +181,93 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
   } # bowtie2()
 
 
+  processOne <- function(df, paired=FALSE, indexPrefix, rgSet, params, ..., path, skip=TRUE) {
+    # Argument 'verbose':
+    verbose <- Arguments$getVerbose(verbose);
+    if (verbose) {
+      pushState(verbose);
+      on.exit(popState(verbose));
+    }
+
+    verbose && enter(verbose, "Bowtie2 alignment of one sample");
+
+    # Paired-end?
+    if (paired) {
+      pair <- list(R1=df, R2=getMateFile(df));
+      pathnameFQ <- sapply(pair, FUN=getPathname);
+      verbose && cat(verbose, "FASTQ R1 pathname: ", pathnameFQ[1L]);
+      verbose && cat(verbose, "FASTQ R2 pathname: ", pathnameFQ[2L]);
+    } else {
+      pathnameFQ <- getPathname(df);
+      verbose && cat(verbose, "FASTQ pathname: ", pathnameFQ);
+    }
+
+    # The SAM and BAM files to be generated
+    fullname <- getFullName(df);
+    filename <- sprintf("%s.sam", fullname);
+    pathnameSAM <- Arguments$getWritablePathname(filename, path=path);
+    verbose && cat(verbose, "SAM pathname: ", pathnameSAM);
+    filename <- sprintf("%s.bam", fullname);
+    pathnameBAM <- Arguments$getWritablePathname(filename, path=path);
+    verbose && cat(verbose, "BAM pathname: ", pathnameBAM);
+
+    done <- (skip && isFile(pathnameBAM));
+    if (done) {
+      verbose && cat(verbose, "Already aligned. Skipping");
+    } else {
+      verbose && print(verbose, df);
+
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      # (a) Generate SAM file
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      if (!isFile(pathnameSAM)) {
+        # Extract sample-specific read group
+        rgII <- getSamReadGroup(df);
+        if (length(rgSet) > 0L) {
+          rgII <- merge(rgSet, rgII);
+        }
+        verbose && cat(verbose, "Writing SAM Read Groups:");
+        verbose && print(verbose, rgII);
+        verbose && cat(verbose, "Bowtie2 parameter:");
+        rgArgs <- asBowtie2Parameters(rgII);
+        verbose && print(verbose, rgArgs);
+        rgII <- NULL; # Not needed anymore
+
+        args <- list(
+          pathnameFQ,
+          indexPrefix=indexPrefix,
+          pathnameSAM=pathnameSAM
+        );
+        args <- c(args, rgArgs);
+        args <- c(args, params);
+        verbose && cat(verbose, "Arguments:");
+        verbose && str(verbose, args);
+        args$verbose <- less(verbose, 5);
+
+        res <- do.call(bowtie2, args=args);
+        verbose && cat(verbose, "System result code: ", res);
+      } # if (!isFile(pathnameSAM))
+
+      # Sanity check
+      stopifnot(isFile(pathnameSAM));
+
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      # (b) Generate BAM file from SAM file
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      if (!isFile(pathnameBAM)) {
+        sf <- SamDataFile(pathnameSAM);
+        bf <- convertToBamDataFile(sf, verbose=less(verbose, 5));
+        print(pathnameBAM);
+      }
+      # Sanity check
+      stopifnot(isFile(pathnameBAM));
+    }
+
+    verbose && exit(verbose);
+
+    invisible(list(pathnameFQ=pathnameFQ, pathnameSAM=pathnameSAM, pathnameBAM=pathnameBAM));
+  } # processOne()
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -226,87 +313,87 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
   }
 
   outPath <- getPath(this);
-  for (kk in seq_along(ds)) {
-    df <- getFile(ds, kk);
-    name <- getName(df);
-    verbose && enter(verbose, sprintf("Sample #%d ('%s') of %d",
-                                                    kk, name, length(ds)));
 
+  useBatchJobs <- getOption(aromaSettings, "devel/BatchJobs", FALSE);
 
-    if (isPaired) {
-      pairKK <- pairs[kk,];
-      pathnameFQ <- sapply(pairKK, FUN=getPathname);
-      verbose && cat(verbose, "FASTQ R1 pathname: ", pathnameFQ[1L]);
-      verbose && cat(verbose, "FASTQ R2 pathname: ", pathnameFQ[2L]);
-    } else {
-      pathnameFQ <- getPathname(df);
-      verbose && cat(verbose, "FASTQ pathname: ", pathnameFQ);
-    }
+  if (useBatchJobs) {
+    verbose && enter(verbose, "Processing using BatchJobs");
 
-    # The SAM and BAM files to be generated
-    fullname <- getFullName(df);
-    filename <- sprintf("%s.sam", fullname);
-    pathnameSAM <- Arguments$getWritablePathname(filename, path=outPath);
-    verbose && cat(verbose, "SAM pathname: ", pathnameSAM);
-    filename <- sprintf("%s.bam", fullname);
-    pathnameBAM <- Arguments$getWritablePathname(filename, path=outPath);
-    verbose && cat(verbose, "BAM pathname: ", pathnameBAM);
+    # BatchJob registry to be used
+    dataSetArgs <- list(paired=isPaired, indexPrefix=indexPrefix, rgSet=rgSet, params=params, path=outPath);
+    reg <- getBatchJobRegistry(ds, method="process", dataSetArgs=dataSetArgs);
+    verbose && print(verbose, reg);
 
-    # Nothing to do?
-    if (skip && isFile(pathnameBAM)) {
-      verbose && cat(verbose, "Already aligned. Skipping");
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # (i) Add jobs, iff missing
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    nbrOfJobs <- getJobNr(reg);
+    if (nbrOfJobs == 0L) {
+      verbose && enter(verbose, "Adding jobs to registry");
+      more.args <- list(paired=isPaired, indexPrefix=indexPrefix, rgSet=rgSet, params=params, path=outPath, skip=skip, verbose=verbose);
+      ids <- batchMap(reg, fun=processOne, getFiles(ds), more.args=more.args);
+      verbose && cat(verbose, "Job IDs added:");
+      verbose && str(verbose, ids);
+      verbose && print(verbose, reg);
       verbose && exit(verbose);
-      next;
     }
 
-    verbose && print(verbose, df);
+    verbose && print(verbose, showStatus(reg));
+#    throw("Jobs have already been added: ", reg$id);
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # (a) Generate SAM file
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    if (!isFile(pathnameSAM)) {
-      # Extract sample-specific read group
-      rgII <- getSamReadGroup(df);
-      if (length(rgSet) > 0L) {
-        rgII <- merge(rgSet, rgII);
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # (ii) Launch jobs
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    verbose && enter(verbose, "Launching jobs");
+    lastTodo <- NULL;
+    todo <- findNotSubmitted(reg);
+    if (length(todo) > 0L) {
+      # (a) Wait and see if jobs are being submitted by other process
+      while(!identical(todo, lastTodo)) {
+         lastTodo <- todo;
+         Sys.sleep(1.0);
+         todo <- findNotRunning(reg);
       }
-      verbose && cat(verbose, "Writing SAM Read Groups:");
-      verbose && print(verbose, rgII);
-      verbose && cat(verbose, "Bowtie2 parameter:");
-      rgArgs <- asBowtie2Parameters(rgII);
-      verbose && print(verbose, rgArgs);
 
-      args <- list(
-        pathnameFQ,
-        indexPrefix=indexPrefix,
-        pathnameSAM=pathnameSAM
-      );
-      args <- c(args, rgArgs);
-      args <- c(args, params);
-      verbose && cat(verbose, "Arguments:");
-      verbose && str(verbose, args);
-      args$verbose <- less(verbose, 5);
-
-      res <- do.call(bowtie2, args=args);
-      verbose && cat(verbose, "System result code: ", res);
-    } # if (!isFile(pathnameSAM))
-
-    # Sanity check
-    stopifnot(isFile(pathnameSAM));
-
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # (b) Generate BAM file from SAM file
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    if (!isFile(pathnameBAM)) {
-      sf <- SamDataFile(pathnameSAM);
-      bf <- convertToBamDataFile(sf, verbose=less(verbose, 5));
-      print(pathnameBAM);
+      verbose && cat(verbose, "Job IDs to be submitted:");
+      verbose && print(verbose, todo);
+      submitted <- submitJobs(reg, ids=todo);
+      verbose && cat(verbose, "Job IDs actually submitted:");
+      verbose && print(verbose, submitted);
+      verbose && cat(verbose, "Job IDs not submitted:");
+      verbose && print(verbose, setdiff(todo, submitted));
+    } else {
+      verbose && cat(verbose, "No new jobs to be submitted.");
     }
-    # Sanity check
-    stopifnot(isFile(pathnameBAM));
+    verbose && exit(verbose);
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # (iii) Wait for jobs to finish
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    verbose && enter(verbose, "Waiting for jobs to finish");
+    while (length(findNotTerminated(reg)) > 0L) {
+      verbose && print(verbose, showStatus(reg));
+      Sys.sleep(10);
+    }
+    verbose && exit(verbose);
+
+    verbose && print(verbose, showStatus(reg));
 
     verbose && exit(verbose);
-  } # for (kk ...)
+  } else {
+    for (kk in seq_along(ds)) {
+      df <- getFile(ds, kk);
+      verbose && enter(verbose, sprintf("Sample #%d ('%s') of %d", kk, getName(df), length(ds)));
+
+      res <- processOne(df, paired=isPaired, indexPrefix=indexPrefix, rgSet=rgSet, params=params, path=outPath, skip=skip, verbose=verbose);
+      verbose && str(verbose, res);
+
+      # Not needed anymore
+      df <- res <- NULL;
+
+      verbose && exit(verbose);
+    } # for (kk ...)
+  }
 
   res <- getOutputDataSet(this, verbose=less(verbose, 1));
 
@@ -318,6 +405,8 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 
 ############################################################################
 # HISTORY:
+# 2013-08-26
+# o Now process() for Bowtie2Alignment() can utilize BatchJobs.
 # 2013-08-24
 # o Now Bowtie2Alignment() will do paired-end alignment if the
 #   FastqDataSet specifies paired-end reads.

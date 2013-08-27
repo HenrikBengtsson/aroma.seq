@@ -11,16 +11,16 @@ as.character.BamDataFile
 getFlavor
 getHeader.BamDataFile getInputDataSet
 getOutputDataSet
- getReferenceFile
- getRootPath
+getReferenceFile
+getRootPath
 getTargetLengths getTargetLengths.BamDataFile getTargetNames
 getTargetNames.BamDataFile getTargets getTargets.BamDataFile
 getTotalTargetLength getTotalTargetLength.BamDataFile hasIndex
 hasIndex.BamDataFile isSorted isSorted.BamDataFile
- nbrOfSeqs.BamDataFile nbrOfTargets
+nbrOfSeqs.BamDataFile nbrOfTargets
 nbrOfTargets.BamDataFile process
 processOne readHeader
-readHeader.BamDataFile  sort.BamDataFile
+readHeader.BamDataFile sort.BamDataFile
 validate.BamDataSet
 as.character.Bowtie2Alignment bDebugSystemBowtie2Build
 getAsteriskTags.Bowtie2Alignment getFlavor.Bowtie2Alignment
@@ -69,7 +69,7 @@ getOptionalArguments.Bowtie2Alignment
 getSequenceNames getSequenceNames.Bowtie2IndexSet getSummary
 getSummary.Bowtie2IndexSet
 buildIndex buildIndex.BamDataFile getReadGroups
-getReadGroups.BamDataFile  replaceAllReadGroups
+getReadGroups.BamDataFile replaceAllReadGroups
 replaceAllReadGroups.BamDataFile
 as.character.SamReadGroup asBwaString asBwaString.SamReadGroup
 asSamList asSamList.SamReadGroup asString
@@ -131,7 +131,7 @@ getReadCounts.BamDataFile nbrOfMappedReads
 nbrOfMappedReads.BamDataFile nbrOfReads.BamDataFile
 nbrOfUnmappedReads nbrOfUnmappedReads.BamDataFile
 extractReadStartPositions extractReadStartPositions.BamDataFile
-readDataFrame.BamDataFile  readReadPositions
+readDataFrame.BamDataFile readReadPositions
 readReadPositions.BamDataFile
 binTabulate.MaskedDNAString
 binTabulate extractRawCopyNumbers.BamDataFile
@@ -192,3 +192,8 @@ isPaired.AbstractAlignment isPaired.FastqDataSet
 process.TopHatAlignment validate.FastaReferenceSet
 findMateFile findMateFile.FastqDataFile getMateFile
 getMateFile.FastqDataFile
+
+getBatchJobRegistry getBatchJobRegistry.default
+getBatchJobRegistryIdByMethod
+getBatchJobRegistryIdByMethod.GenericDataFileSet
+getBatchJobRegistryIdByMethod.default

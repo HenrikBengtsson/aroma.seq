@@ -1,6 +1,15 @@
 Package: aroma.seq
 ==================
 
+Version: 0.2.26 [2013-08-26]
+o Basic support for distributed processing via Bowtie2Alignment works.
+o Starting to put in the core framework for distributed processing.
+
+
+Version: 0.2.25 [2013-08-26]
+o Now TopHatAlignment supports the new style of "paired" FastqDataSet:s.
+
+
 Version: 0.2.24 [2013-08-24]
 o Now Bowtie2Alignment() will do paired-end alignment if the
   FastqDataSet specifies paired-end reads.
