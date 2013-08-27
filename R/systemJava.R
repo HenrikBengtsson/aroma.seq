@@ -82,7 +82,7 @@ setMethodS3("systemJava", "default", function(..., .fmtArg=c("( |=)$"="%s%s", ".
   }
 
   at <- match("*", .fmtArg)[1L];
-  .fmtArg <- insert(.fmtArg, at=at+1L, defFmtArg)[-at];
+  .fmtArg <- R.utils::insert(.fmtArg, at=at+1L, defFmtArg)[-at];
   .fmtArg <- rev(.fmtArg);
   dups <- duplicated(names(.fmtArg));
   .fmtArg <- .fmtArg[!dups];
