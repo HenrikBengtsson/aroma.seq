@@ -144,21 +144,22 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
       }
     } # if (isGzipped)
 
-    # WORKAROUND: Bowtie2() does not support commas in the
-    # FASTQ pathname.  If so, use a temporary filename
-    # without commas.
-    pathnameFQ <- sapply(pathnameFQ, FUN=function(pathname) {
-      if (regexpr(",", pathname, fixed=TRUE) != -1L) {
+    # WORKAROUND: Bowtie2() does not support commas in the FASTQ
+    # pathname.  If so, use a temporary filename without commas.
+    hasComma <- (regexpr(",", pathnameFQ, fixed=TRUE) != -1L);
+    if (any(hasComma)) {
+      pathnameFQ[hasComma] <- sapply(pathnameFQ[hasComma], FUN=function(pathname) {
         ext <- if (isGzipped(pathname)) ".fq.gz" else ".fq";
         pathnameT <- tempfile(fileext=ext);
         createLink(pathnameT, target=pathname);
-        on.exit({
-          file.remove(pathnameT);
-        }, add=TRUE);
-        pathname <- pathnameT;
-      }
-      pathname;
-    });
+        pathnameT;
+      });
+
+      # Remove temporary files
+      on.exit({
+        file.remove(pathnameT[hasComma]);
+      }, add=TRUE);
+    }
 
     if (isPaired) {
       # Sanity check
@@ -406,6 +407,9 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 ############################################################################
 # HISTORY:
 # 2013-08-26
+# o BUG FIX: The internal workaround of process() for Bowtie2Alignment
+#   that handled commas in FASTQ filenames deleted the temporary files
+#   too soon resulting in garbage alignments.
 # o Now process() for Bowtie2Alignment() can utilize BatchJobs.
 # 2013-08-24
 # o Now Bowtie2Alignment() will do paired-end alignment if the

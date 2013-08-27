@@ -53,18 +53,6 @@ for (ii in seq_along(bams)) {
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Remove duplicated reads using Picard
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-if (isCapableOf(aroma.seq, "picard")) {
-  dr <- PicardDuplicateRemoval(bams)
-  print(dr)
-
-  bamsU <- process(dr, verbose=-20)
-  print(bamsU)
-}
-
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Single-end alignment on gzip'ed FASTQ files
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Gzip data set
@@ -90,6 +78,19 @@ for (ii in seq_along(bams)) {
   bam <- getFile(bams, ii)
   bamZ <- getFile(bamsZ, ii)
   stopifnot(getChecksum(bamZ) == getChecksum(bam))
+}
+
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Remove duplicated reads using Picard
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+if (isCapableOf(aroma.seq, "picard")) {
+  dr <- PicardDuplicateRemoval(bams)
+  print(dr)
+
+  bamsU <- process(dr, verbose=-20)
+  print(bamsU)
 }
 
 
