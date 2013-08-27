@@ -157,7 +157,7 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 
       # Remove temporary files
       on.exit({
-        file.remove(pathnameT[hasComma]);
+        file.remove(pathnameFQ[hasComma]);
       }, add=TRUE);
     }
 
