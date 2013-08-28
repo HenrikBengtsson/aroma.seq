@@ -372,10 +372,33 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
     # (iii) Wait for jobs to finish
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     verbose && enter(verbose, "Waiting for jobs to finish");
+    dW <- 1.00; # Pool every dW seconds
+    t0 <- Sys.time();
+    tCount <- 0L;
+    status <- NULL;
     while (length(findNotTerminated(reg)) > 0L) {
-      verbose && print(verbose, showStatus(reg));
-      Sys.sleep(10);
-    }
+      lastStatus <- status;
+      out <- capture.output(status <- showStatus(reg));
+      if (identical(status, lastStatus)) {
+        verbose && printf(verbose, ".");
+        # Time stamp?
+        dt <- difftime(Sys.time(), t0, units="secs");
+        dMins <- as.integer(dt) %/% 10;
+        if (dMins > tCount) {
+          tCount <- dMins;
+          if (dt > 1.5*60) {
+            units(dt) <- "mins";
+          } else if (dt > 1.5*3600) {
+            units(dt) <- "hours";
+          }
+          verbose && printf(verbose, "[%s]\n", format(dt));
+        }
+      } else {
+        verbose && printf(verbose, "\n");
+        verbose && print(verbose, status);
+      }
+      Sys.sleep(dW);
+    } # while(...)
     verbose && exit(verbose);
 
     verbose && print(verbose, showStatus(reg));
@@ -406,6 +429,9 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 
 ############################################################################
 # HISTORY:
+# 2013-08-28
+# o Now process() outputs distributed status reports on when the status
+#   changes.  Inbetween, there is a progress bar.
 # 2013-08-26
 # o BUG FIX: The internal workaround of process() for Bowtie2Alignment
 #   that handled commas in FASTQ filenames deleted the temporary files
