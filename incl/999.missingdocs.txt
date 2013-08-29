@@ -202,3 +202,4 @@ getOutputDataSet.TopHat2Alignment
 getParameters.TopHat2Alignment
 getRootPath.TopHat2Alignment
 process.TopHat2Alignment
+getPath.TopHat2Alignment

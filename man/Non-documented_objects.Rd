@@ -366,6 +366,7 @@
 \alias{getParameters.TopHat2Alignment}
 \alias{getRootPath.TopHat2Alignment}
 \alias{process.TopHat2Alignment}
+\alias{getPath.TopHat2Alignment}
 
 \description{
   This page contains aliases for all "non-documented" objects that
