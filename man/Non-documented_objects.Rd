@@ -362,6 +362,10 @@
 \alias{getBatchJobRegistryIdByMethod}
 \alias{getBatchJobRegistryIdByMethod.GenericDataFileSet}
 \alias{getBatchJobRegistryIdByMethod.default}
+\alias{getOutputDataSet.TopHat2Alignment}
+\alias{getParameters.TopHat2Alignment}
+\alias{getRootPath.TopHat2Alignment}
+\alias{process.TopHat2Alignment}
 
 \description{
   This page contains aliases for all "non-documented" objects that

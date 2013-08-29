@@ -24,7 +24,7 @@
 \code{~~~~~~~+--}\emph{\code{AbstractAlignment}}\cr
 
 \bold{Directly known subclasses:}\cr
-\link[aroma.seq]{Bowtie2Alignment}, \link[aroma.seq]{BwaAlignment}, \link[aroma.seq]{TopHatAlignment}\cr
+\link[aroma.seq]{Bowtie2Alignment}, \link[aroma.seq]{BwaAlignment}, \link[aroma.seq]{TopHat2Alignment}\cr
 
 public abstract static class \bold{AbstractAlignment}\cr
 extends \link[aroma.core]{ParametersInterface}\cr

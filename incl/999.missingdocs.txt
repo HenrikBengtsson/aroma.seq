@@ -197,3 +197,8 @@ getBatchJobRegistry getBatchJobRegistry.default
 getBatchJobRegistryIdByMethod
 getBatchJobRegistryIdByMethod.GenericDataFileSet
 getBatchJobRegistryIdByMethod.default
+
+getOutputDataSet.TopHat2Alignment
+getParameters.TopHat2Alignment
+getRootPath.TopHat2Alignment
+process.TopHat2Alignment

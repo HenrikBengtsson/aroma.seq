@@ -1,21 +1,21 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Do not modify this file since it was automatically generated from:
 % 
-%  TopHatAlignment.R
+%  TopHat2Alignment.R
 % 
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\name{TopHatAlignment}
+\name{TopHat2Alignment}
 \docType{class}
-\alias{TopHatAlignment}
+\alias{TopHat2Alignment}
 
 
-\title{The TopHatAlignment class}
+\title{The TopHat2Alignment class}
 
 \description{
  Package:  aroma.seq \cr
-\bold{Class TopHatAlignment}\cr
+\bold{Class TopHat2Alignment}\cr
 
 \code{\link[R.oo]{Object}}\cr
 \code{~~|}\cr
@@ -23,12 +23,12 @@
 \code{~~~~~~~|}\cr
 \code{~~~~~~~+--}\code{\link[aroma.seq]{AbstractAlignment}}\cr
 \code{~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~+--}\code{TopHatAlignment}\cr
+\code{~~~~~~~~~~~~+--}\code{TopHat2Alignment}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
 
-public static class \bold{TopHatAlignment}\cr
+public static class \bold{TopHat2Alignment}\cr
 extends \emph{\link[aroma.seq]{AbstractAlignment}}\cr
 
 
@@ -37,17 +37,20 @@ extends \emph{\link[aroma.seq]{AbstractAlignment}}\cr
 }
 
 \usage{
-TopHatAlignment(..., indexSet=NULL)
+TopHat2Alignment(..., indexSet=NULL, outputDir=NULL, geneModelFile=NULL)
 }
 
 \arguments{
  \item{...}{Arguments passed to \code{\link{AbstractAlignment}}.}
  \item{indexSet}{An \code{\link{Bowtie2IndexSet}}.}
+ \item{outputDir}{A placeholder for the output path (overwritten by the code at present).}
+ \item{geneModelFile}{Gene model (transcriptome) gtf/gff file.}
 }
 
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
+ \tab \code{getOutputDataSet} \tab  -\cr
  \tab \code{process} \tab  -\cr
 }
 

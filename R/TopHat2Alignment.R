@@ -1,7 +1,7 @@
 ###########################################################################/**
-# @RdocClass TopHatAlignment
+# @RdocClass TopHat2Alignment
 #
-# @title "The TopHatAlignment class"
+# @title "The TopHat2Alignment class"
 #
 # \description{
 #  @classhierarchy
@@ -14,7 +14,8 @@
 # \arguments{
 #  \item{...}{Arguments passed to @see "AbstractAlignment".}
 #  \item{indexSet}{An @see "Bowtie2IndexSet".}
-#  \item{outputDirs}{A placeholder for a vector of output paths (overwritten by the code at present).}
+#  \item{outputDir}{A placeholder for the output path (overwritten by the code at present).}
+#  \item{geneModelFile}{Gene model (transcriptome) gtf/gff file.}
 # }
 #
 # \section{Fields and Methods}{
@@ -33,36 +34,56 @@
 # }
 #*/###########################################################################
 
-setConstructorS3("TopHatAlignment", function(..., indexSet=NULL, outputDirs=NULL) {
+setConstructorS3("TopHat2Alignment", function(..., indexSet=NULL, outputDir=NULL, geneModelFile=NULL) {
   # Validate arguments
   if (!is.null(indexSet)) {
     indexSet <- Arguments$getInstanceOf(indexSet, "Bowtie2IndexSet");
   }
-  if (!is.null(outputDirs)) {
-    outputDirs <- Arguments$getWritablePath(outputDirs)
-    ## [ NB this is meant to be a vector in the case of multiple samples ]
+  if (!is.null(outputDir)) {
+    outputDir <- Arguments$getWritablePath(outputDir)
+    ## [ 20130827 - Current convention:  This should be a single path, below which there can be multiple per-sample dirs ]
   }
 
+  if (!is.null(geneModelFile)) {
+    geneModelFile <- Arguments$getReadablePath(geneModelFile)
+    ## [ 20130827 - Current convention:  This should be a single path, below which there can be multiple per-sample dirs ]
+  }
+  
   # Arguments '...':
   args <- list(...);
 
-  extend(AbstractAlignment(..., indexSet=indexSet), "TopHatAlignment");
+  extend(AbstractAlignment(..., indexSet=indexSet), "TopHat2Alignment");
 })
 
 
-setMethodS3("getParameters", "TopHatAlignment", function(this, ...) {
+setMethodS3("getParameters", "TopHat2Alignment", function(this, ...) {
   params <- NextMethod("getParameters");
   params <- c(params, getOptionalArguments(this, ...));
   params;
 }, protected=TRUE)
 
 
-setMethodS3("getPath", "TopHatAlignment", function(this, create=TRUE, ...) {
-  # [Create] Return the (sub-)directory tree for the data set
+# HB-approved
+setMethodS3("getRootPath", "TopHat2Alignment", function(this, ...) {
+  "tophat2Data";
+}, protected=TRUE)
+
+
+setMethodS3("getPath", "AbstractAlignment", function(this, create=TRUE, ...) {
+  # Create the (sub-)directory tree for the data set
+  
+  # Root path
+  rootPath <- getRootPath(this);
+  
+  # Full name  (HACK FOR NOW)
+  fullname <- gsub(",", "_", getFullName(this))  # Accomodate tophat (bowtie2-build) dislike of commas
+  
+  # Platform
+  ds <- getInputDataSet(this);
+  platform <- "Generic";
   
   # The full path
-  # path <- filePath(rootPath, fullname, platform);
-  path <- "tophat_out"  # Hard code the TopHat default for now
+  path <- filePath(rootPath, fullname, platform);
   
   if (create) {
     path <- Arguments$getWritablePath(path);
@@ -71,11 +92,7 @@ setMethodS3("getPath", "TopHatAlignment", function(this, create=TRUE, ...) {
   }
   
   # Verify that it is not the same as the input path
-  if (is.list(ds)) {
-    inPath <- getPath(ds[[1]])
-  } else {
-    inPath <- getPath(ds);
-  }
+  inPath <- getPath(ds);
   if (getAbsolutePath(path) == getAbsolutePath(inPath)) {
     throw("The generated output data path equals the input data path: ", path, " == ", inPath);
   }
@@ -83,20 +100,18 @@ setMethodS3("getPath", "TopHatAlignment", function(this, create=TRUE, ...) {
   path;
 }, protected=TRUE)
 
-setMethodS3("getOutputDataSet", "TopHatAlignment", function(this, ...) {
+
+setMethodS3("getOutputDataSet", "TopHat2Alignment", function(this, ...) {
   ## Find all existing output data files
-  res <- 
-    sapply(this$outputDirs, function(dir) {
-      BamDataSet$byPath(path=dir)
-    }, simplify=FALSE)
+  res <- GenericDataFileSet$byPath(path=getPath(this), pattern="accepted_hits.bam", recursive=TRUE)
+  # [- Could be BamDataSet in the future, but currently that presumes a single subdir, it appears ]
   
   ## TODO: Assert completeness
   res;
 })
 
 
-
-setMethodS3("process", "TopHatAlignment", function(this, ..., skip=TRUE, force=FALSE, verbose=FALSE) {
+setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Local functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -123,8 +138,7 @@ setMethodS3("process", "TopHatAlignment", function(this, ..., skip=TRUE, force=F
 
     rgArgs;
   } # asTopHatParameters()
-
-
+  
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -135,7 +149,7 @@ setMethodS3("process", "TopHatAlignment", function(this, ..., skip=TRUE, force=F
     on.exit(popState(verbose));
   }
   
-  verbose && enter(verbose, "TopHat alignment");
+  verbose && enter(verbose, "TopHat2 alignment");
   ds <- getInputDataSet(this);
   verbose && cat(verbose, "Input data set:");
   verbose && print(verbose, ds);
@@ -144,7 +158,7 @@ setMethodS3("process", "TopHatAlignment", function(this, ..., skip=TRUE, force=F
   verbose && cat(verbose, "Aligning using index set:");
   verbose && print(verbose, is);
   indexPrefix <- getIndexPrefix(is);
-
+  
   rgSet <- this$.rgSet;
   if (!is.null(rgSet)) {
     verbose && cat(verbose, "Assigning SAM read group:");
@@ -152,18 +166,20 @@ setMethodS3("process", "TopHatAlignment", function(this, ..., skip=TRUE, force=F
     validate(rgSet);
   }
 
-  # The following assumes ds is a list (i.e. paired-end data)
-  fullNames <- sub("_1.fastq", "", basename(getPathnames(ds$read1)))
-  outputDirs <- paste0("tophat_", fullNames)
-  for (i in seq_along(ds$read1))
+  outputDir <- Arguments$getWritablePath(gsub(",", "_", getPath(this)))
+  this$outputDir <- outputDir
+  outputDirs <- file.path(outputDir, sub("_1$", "", getFullNames(ds)))
+  filePairs <- getFilePairs(ds)
+  fnsR1 <- sapply(filePairs[,1], function(x) {getPathname(x)})
+  fnsR2 <- sapply(filePairs[,2], function(x) {getPathname(x)})  
+  for (i in seq_along(ds))
   {
-    res <- do.call(what=tophat, args=list(getIndexPrefix(is),
-                                          reads1=getPathnames(ds$read1)[i],
-                                          reads2=getPathnames(ds$read2)[i],
-                                          optionsVec=c("o"=outputDirs[i])))
+    res <- do.call(what=tophat, args=list(bowtieRefIndexPrefix=getIndexPrefix(is),
+                                          reads1=fnsR1[i],
+                                          reads2=fnsR2[i],
+                                          optionsVec=c("G"=this$geneModelFile, "o"=outputDirs[i]),
+                                          command="tophat2"))
   }
-
-  this$outputDirs <- outputDirs  ## [ TAT - This is probably not aroma style]
 
   params <- getParameters(this);
   verbose && cat(verbose, "Additional tophat2 arguments:");
@@ -173,11 +189,9 @@ setMethodS3("process", "TopHatAlignment", function(this, ..., skip=TRUE, force=F
   } else {
     verbose && cat(verbose, "Number of input data files: ", length(ds));
   }
-  # outPath <- getPath(this); # [ 201308 Punt on this for now; need to resolve getName, etc. for paired end datasets ]
+
   res <- getOutputDataSet(this, verbose=less(verbose, 1));
-
   verbose && exit(verbose);
-
   invisible(res);
 })
 
