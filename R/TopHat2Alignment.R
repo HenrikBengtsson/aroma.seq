@@ -48,7 +48,7 @@ setConstructorS3("TopHat2Alignment", function(..., indexSet=NULL, outputDir=NULL
     geneModelFile <- Arguments$getReadablePath(geneModelFile)
     ## [ 20130827 - Current convention:  This should be a single path, below which there can be multiple per-sample dirs ]
   }
-  
+
   # Arguments '...':
   args <- list(...);
 
@@ -69,34 +69,34 @@ setMethodS3("getRootPath", "TopHat2Alignment", function(this, ...) {
 }, protected=TRUE)
 
 
-setMethodS3("getPath", "AbstractAlignment", function(this, create=TRUE, ...) {
+setMethodS3("getPath", "TopHat2Alignment", function(this, create=TRUE, ...) {
   # Create the (sub-)directory tree for the data set
-  
+
   # Root path
   rootPath <- getRootPath(this);
-  
+
   # Full name  (HACK FOR NOW)
   fullname <- gsub(",", "_", getFullName(this))  # Accomodate tophat (bowtie2-build) dislike of commas
-  
+
   # Platform
   ds <- getInputDataSet(this);
   platform <- "Generic";
-  
+
   # The full path
   path <- filePath(rootPath, fullname, platform);
-  
+
   if (create) {
     path <- Arguments$getWritablePath(path);
   } else {
     path <- Arguments$getReadablePath(path, mustExist=FALSE);
   }
-  
+
   # Verify that it is not the same as the input path
   inPath <- getPath(ds);
   if (getAbsolutePath(path) == getAbsolutePath(inPath)) {
     throw("The generated output data path equals the input data path: ", path, " == ", inPath);
   }
-  
+
   path;
 }, protected=TRUE)
 
@@ -105,7 +105,7 @@ setMethodS3("getOutputDataSet", "TopHat2Alignment", function(this, ...) {
   ## Find all existing output data files
   res <- GenericDataFileSet$byPath(path=getPath(this), pattern="accepted_hits.bam", recursive=TRUE)
   # [- Could be BamDataSet in the future, but currently that presumes a single subdir, it appears ]
-  
+
   ## TODO: Assert completeness
   res;
 })
@@ -138,7 +138,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
 
     rgArgs;
   } # asTopHatParameters()
-  
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -148,17 +148,17 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
     pushState(verbose);
     on.exit(popState(verbose));
   }
-  
+
   verbose && enter(verbose, "TopHat2 alignment");
   ds <- getInputDataSet(this);
   verbose && cat(verbose, "Input data set:");
   verbose && print(verbose, ds);
-  
+
   is <- getIndexSet(this);
   verbose && cat(verbose, "Aligning using index set:");
   verbose && print(verbose, is);
   indexPrefix <- getIndexPrefix(is);
-  
+
   rgSet <- this$.rgSet;
   if (!is.null(rgSet)) {
     verbose && cat(verbose, "Assigning SAM read group:");
@@ -171,7 +171,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   outputDirs <- file.path(outputDir, sub("_1$", "", getFullNames(ds)))
   filePairs <- getFilePairs(ds)
   fnsR1 <- sapply(filePairs[,1], function(x) {getPathname(x)})
-  fnsR2 <- sapply(filePairs[,2], function(x) {getPathname(x)})  
+  fnsR2 <- sapply(filePairs[,2], function(x) {getPathname(x)})
   for (i in seq_along(ds))
   {
     res <- do.call(what=tophat, args=list(bowtieRefIndexPrefix=getIndexPrefix(is),
@@ -184,7 +184,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   params <- getParameters(this);
   verbose && cat(verbose, "Additional tophat2 arguments:");
   verbose && str(verbose, params);
-  if (is.list(ds)) { 
+  if (is.list(ds)) {
     verbose && cat(verbose, "Number of input data file pairs: ", length(ds[[1]]));
   } else {
     verbose && cat(verbose, "Number of input data files: ", length(ds));
