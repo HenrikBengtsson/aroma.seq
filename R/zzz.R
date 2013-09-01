@@ -6,6 +6,11 @@
   pkg <- AromaSeq(pkgname);
   assign(pkgname, pkg, pos=getPosition(pkg));
 
-  packageStartupMessage(getName(pkg), " v", getVersion(pkg), " (", 
-    getDate(pkg), ") successfully loaded. See ?", pkgname, " for help.");
+startupMessage(pkg, '\n\n',
+  '-------------------------------------------------\n',
+  ' During developing phase, install/update using:\n',
+  '   source("http://aroma-project.org/hbLite.R")\n',
+  '   hbInstall("aroma.seq", devel=TRUE)\n',
+  '-------------------------------------------------\n'
+);
 }
