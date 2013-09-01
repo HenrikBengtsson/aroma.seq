@@ -321,7 +321,7 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
       }
       # Sanity check
       stopifnot(isFile(pathnameBAM));
-    }
+    } # if (done)
 
     verbose && exit(verbose);
 

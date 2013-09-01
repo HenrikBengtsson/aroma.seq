@@ -1,6 +1,6 @@
 library("aroma.seq")
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
-fullTest <- fullTest && isCapableOf(aroma.seq, "bowtie2")
+fullTest <- fullTest && isCapableOf(aroma.seq, "bwa")
 if (fullTest) {
 
 

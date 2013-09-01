@@ -2,11 +2,12 @@ Package: aroma.seq
 ==================
 
 Version: 0.2.28 [2013-08-31]
+o Basic support for parallel processing via BwaAlignment works.
 o CLEANUP: Restructuring code for parallel/distributed processing.
 
 
 Version: 0.2.26 [2013-08-26]
-o Basic support for distributed processing via Bowtie2Alignment works.
+o Basic support for parallel processing via Bowtie2Alignment works.
 o Starting to put in the core framework for distributed processing.
 o BUG FIX: The internal workaround of process() for Bowtie2Alignment
   that handled commas in FASTQ filenames deleted the temporary files
