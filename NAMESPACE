@@ -8,7 +8,7 @@ import("R.oo")
 # importFrom("R.utils", cat)
 import("R.utils")
 
-import("R.cache")
+##import("R.cache", "getChecksum")
 import("R.filesets")
 import("aroma.core")
 
