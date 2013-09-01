@@ -32,8 +32,8 @@ print(cns)
 
 # Display individual BAM files
 for (ii in seq_along(cns)) {
-  cns <- getFile(cns, ii)
-  print(cns)
+  cn <- getFile(cns, ii)
+  print(cn)
 }
 
 
