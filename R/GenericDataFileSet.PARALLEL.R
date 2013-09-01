@@ -268,40 +268,8 @@ setMethodS3(".getBatchJobRegistry", "default", function(..., skip=TRUE) {
 }, protected=TRUE) # .getBatchJobRegistry()
 
 
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# To be replaced by R.utils::use(). /HB 2013-08-31
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-.usePackage <- function(pkg, minVersion=NULL, how=c("attach", "import"), install=FALSE, ...) {
-  # Argument 'how':
-  how <- match.arg(how);
-
-  if (!is.null(minVersion) && !is.na(minVersion)) {
-    ver <- packageVersion(pkg);
-    if (ver < minVersion) {
-      if (install) {
-        install.packages(pkg, ...);
-        res <- .usePackage(pkg, minVersion=minVersion, how=how, install=FALSE, ...);
-        return(invisible(res));
-      } else {
-        throw(sprintf("%s v%s or newer is not installed: %s", pkg, minVersion, ver));
-      }
-    }
-  }
-
-  if (how == "attach") {
-    require(pkg, character.only=TRUE) || throw("Package not attached: ", pkg);
-  } else if (how == "import") {
-    requireNamespace(pkg) || throw("Package not loaded: ", pkg);
-  }
-
-  res <- packageVersion(pkg);
-  invisible(res);
-} # .usePackage()
-
-
-.useBatchJobs <- function(minVersion="*", ...) {
-  if (identical(minVersion, "*")) {
+.useBatchJobs <- function(version="*", ...) {
+  if (identical(version, "*")) {
     desc <- packageDescription("aroma.seq");
     desc <- desc[c("Depends", "Imports", "Suggests")];
     desc <- unlist(desc, use.names=FALSE);
@@ -315,10 +283,9 @@ setMethodS3(".getBatchJobRegistry", "default", function(..., skip=TRUE) {
     names(vers) <- pkgs;
     dups <- duplicated(pkgs);
     vers <- vers[!dups];
-    minVersion <- vers["BatchJobs"];
-    minVersion <- gsub("[>= ]*", "", minVersion);
+    version <- vers["BatchJobs"];
   }
-  .usePackage("BatchJobs", minVersion=minVersion, ...);
+  R.utils::use("BatchJobs", version=version, ...);
 } # .useBatchJobs()
 
 
@@ -326,6 +293,7 @@ setMethodS3(".getBatchJobRegistry", "default", function(..., skip=TRUE) {
 ############################################################################
 # HISTORY:
 # 2013-08-31
+# o Now .useBatchJobs() utilizes R.utils::use().
 # o Added dsApply() for GenericDataFileSet.  Added Rdocs.
 # 2013-08-26
 # o Added .getBatchJobRegistry() and .getBatchJobRegistryId().

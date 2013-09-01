@@ -107,7 +107,7 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
   } # asBowtie2Parameters()
 
 
-  bowtie2 <- function(pathnameFQ, indexPrefix, pathnameSAM, ..., verbose=FALSE) {
+  bowtie2 <- function(pathnameFQ, indexPrefix, pathnameSAM, ..., gzAllowed=NA, verbose=FALSE) {
     pathnameFQ <- Arguments$getReadablePathnames(pathnameFQ, length=1:2);
     isPaired <- (length(pathnameFQ) == 2L);
 
@@ -182,7 +182,67 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
   } # bowtie2()
 
 
-  processOne <- function(df, paired=FALSE, indexPrefix, rgSet, params, ..., path, skip=TRUE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
+
+  verbose && enter(verbose, "Bowtie2 alignment");
+
+  ds <- getInputDataSet(this);
+  verbose && cat(verbose, "Input data set:");
+  verbose && print(verbose, ds);
+
+  is <- getIndexSet(this);
+  verbose && cat(verbose, "Aligning using index set:");
+  verbose && print(verbose, is);
+  indexPrefix <- getIndexPrefix(is);
+
+  rgSet <- this$.rgSet;
+  if (!is.null(rgSet)) {
+    verbose && cat(verbose, "Assigning SAM read group:");
+    verbose && print(verbose, rgSet);
+    validate(rgSet);
+  }
+
+  # Indicates whether gzipped FASTQ files are supported or not.
+  params <- getParameters(this);
+  verbose && cat(verbose, "Additional bowtie2 arguments:");
+  verbose && str(verbose, params);
+
+  verbose && cat(verbose, "Number of files: ", length(ds));
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Apply aligner to each of the FASTQ files
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  dsApply(ds, FUN=function(df, paired=FALSE, indexPrefix, rgSet, params, path, ...., skip=TRUE, verbose=FALSE) {
+    R.utils::use("R.utils, aroma.seq");
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # Validate arguments
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # Argument 'df':
+    df <- Arguments$getInstanceOf(df, "FastqDataFile");
+
+    # Argument 'paired':
+    paired <- Arguments$getLogical(paired);
+
+    # Argument 'indexPrefix':
+    indexPrefix <- Arguments$getCharacter(indexPrefix);
+
+    # Argument 'skip':
+    skip <- Arguments$getLogical(skip);
+
+    # Argument 'path':
+    path <- Arguments$getWritablePath(path);
+
     # Argument 'verbose':
     verbose <- Arguments$getVerbose(verbose);
     if (verbose) {
@@ -194,8 +254,7 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 
     # Paired-end?
     if (paired) {
-      pair <- list(R1=df, R2=getMateFile(df));
-      pathnameFQ <- sapply(pair, FUN=getPathname);
+      pathnameFQ <- sapply(list(R1=df, R2=getMateFile(df)), FUN=getPathname);
       verbose && cat(verbose, "FASTQ R1 pathname: ", pathnameFQ[1L]);
       verbose && cat(verbose, "FASTQ R2 pathname: ", pathnameFQ[2L]);
     } else {
@@ -267,57 +326,7 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
     verbose && exit(verbose);
 
     invisible(list(pathnameFQ=pathnameFQ, pathnameSAM=pathnameSAM, pathnameBAM=pathnameBAM));
-  } # processOne()
-
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
-  if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
-  }
-
-
-  verbose && enter(verbose, "Bowtie2 alignment");
-
-  ds <- getInputDataSet(this);
-  verbose && cat(verbose, "Input data set:");
-  verbose && print(verbose, ds);
-
-  is <- getIndexSet(this);
-  verbose && cat(verbose, "Aligning using index set:");
-  verbose && print(verbose, is);
-  indexPrefix <- getIndexPrefix(is);
-
-  rgSet <- this$.rgSet;
-  if (!is.null(rgSet)) {
-    verbose && cat(verbose, "Assigning SAM read group:");
-    verbose && print(verbose, rgSet);
-    validate(rgSet);
-  }
-
-  # Indicates whether gzipped FASTQ files are supported or not.
-  gzAllowed <- NA;
-
-  params <- getParameters(this);
-  verbose && cat(verbose, "Additional bowtie2 arguments:");
-  verbose && str(verbose, params);
-
-  verbose && cat(verbose, "Number of files: ", length(ds));
-
-  isPaired <- isPaired(this);
-  if (isPaired) {
-    pairs <- getFilePairs(ds);
-  }
-
-  outPath <- getPath(this);
-
-
-
-  dsApply(ds, FUN=processOne, paired=isPaired, indexPrefix=indexPrefix, rgSet=rgSet, params=params, path=outPath, skip=FALSE, verbose=FALSE);
+  }, paired=isPaired(this), indexPrefix=indexPrefix, rgSet=rgSet, params=params, path=getPath(this), skip=skip, verbose=verbose) # dsApply()
 
   res <- getOutputDataSet(this, verbose=less(verbose, 1));
 
@@ -330,7 +339,7 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 ############################################################################
 # HISTORY:
 # 2013-08-31
-# o Now process() utilizse
+# o Now process() for Bowtie2Alignment utilizes dsApply().
 # 2013-08-28
 # o Now process() outputs distributed status reports on when the status
 #   changes.  Inbetween, there is a progress bar.
