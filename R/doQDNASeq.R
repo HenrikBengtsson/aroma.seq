@@ -112,6 +112,8 @@ setMethodS3("doQDNASeq", "BamDataFile", function(df, binWidth, log=TRUE, mappabi
 
 
 
+
+
 setMethodS3("doQDNASeq", "BamDataSet", function(dataSet, binWidth, ..., force=FALSE, verbose=FALSE) {
   pkgName <- "qdnaseq";
   require(pkgName, character.only=TRUE) || throw("Package not loaded: qdnaseq");
@@ -172,6 +174,7 @@ setMethodS3("doQDNASeq", "BamDataSet", function(dataSet, binWidth, ..., force=FA
     if (!force && isFile(pathname)) {
       verbose && cat(verbose, "Already processed. Skipping.");
       verbose && exit(verbose);
+      next;
     }
 
     dataN <- doQDNASeq(df, binWidth=bins, ..., verbose=less(verbose,1));
@@ -184,6 +187,10 @@ setMethodS3("doQDNASeq", "BamDataSet", function(dataSet, binWidth, ..., force=FA
     verbose && exit(verbose);
   } # for (ii ...)
 
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Collect results
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ds <- GenericDataFileSet$byPath(path, pattern="[.]rds$");
   ds <- extract(ds, indexOf(ds, getNames(dataSet)));
   verbose && print(verbose, ds);
@@ -302,6 +309,9 @@ setMethodS3("doQDNASeq", "default", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2013-08-31
+# o BUG FIX: doQDNASeq() for BamDataSet would give an error if data set
+#   was already processed and verbose output was enabled.
 # 2013-08-22
 # o CLEANUP: Now doQDNASeq() utilizes doBWA().
 # 2013-07-29
