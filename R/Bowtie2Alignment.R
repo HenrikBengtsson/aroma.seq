@@ -315,109 +315,9 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 
   outPath <- getPath(this);
 
-  useBatchJobs <- getOption(aromaSettings, "devel/BatchJobs", FALSE);
 
-  if (useBatchJobs) {
-    verbose && enter(verbose, "Processing using BatchJobs");
 
-    # BatchJob registry to be used
-    dataSetArgs <- list(paired=isPaired, indexPrefix=indexPrefix, rgSet=rgSet, params=params, path=outPath);
-    reg <- getBatchJobRegistry(ds, method="process", dataSetArgs=dataSetArgs);
-    verbose && print(verbose, reg);
-
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # (i) Add jobs, iff missing
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    nbrOfJobs <- getJobNr(reg);
-    if (nbrOfJobs == 0L) {
-      verbose && enter(verbose, "Adding jobs to registry");
-      more.args <- list(paired=isPaired, indexPrefix=indexPrefix, rgSet=rgSet, params=params, path=outPath, skip=skip, verbose=verbose);
-      ids <- batchMap(reg, fun=processOne, getFiles(ds), more.args=more.args);
-      verbose && cat(verbose, "Job IDs added:");
-      verbose && str(verbose, ids);
-      verbose && print(verbose, reg);
-      verbose && exit(verbose);
-    }
-
-    verbose && print(verbose, showStatus(reg));
-#    throw("Jobs have already been added: ", reg$id);
-
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # (ii) Launch jobs
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    verbose && enter(verbose, "Launching jobs");
-    lastTodo <- NULL;
-    todo <- findNotSubmitted(reg);
-    if (length(todo) > 0L) {
-      # (a) Wait and see if jobs are being submitted by other process
-      while(!identical(todo, lastTodo)) {
-         lastTodo <- todo;
-         Sys.sleep(1.0);
-         todo <- findNotRunning(reg);
-      }
-
-      verbose && cat(verbose, "Job IDs to be submitted:");
-      verbose && print(verbose, todo);
-      submitted <- submitJobs(reg, ids=todo);
-      verbose && cat(verbose, "Job IDs actually submitted:");
-      verbose && print(verbose, submitted);
-      verbose && cat(verbose, "Job IDs not submitted:");
-      verbose && print(verbose, setdiff(todo, submitted));
-    } else {
-      verbose && cat(verbose, "No new jobs to be submitted.");
-    }
-    verbose && exit(verbose);
-
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # (iii) Wait for jobs to finish
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    verbose && enter(verbose, "Waiting for jobs to finish");
-    dW <- 1.00; # Pool every dW seconds
-    t0 <- Sys.time();
-    tCount <- 0L;
-    status <- NULL;
-    while (length(findNotTerminated(reg)) > 0L) {
-      lastStatus <- status;
-      out <- capture.output(status <- showStatus(reg));
-      if (identical(status, lastStatus)) {
-        verbose && printf(verbose, ".");
-        # Time stamp?
-        dt <- difftime(Sys.time(), t0, units="secs");
-        dMins <- as.integer(dt) %/% 10;
-        if (dMins > tCount) {
-          tCount <- dMins;
-          if (dt > 1.5*60) {
-            units(dt) <- "mins";
-          } else if (dt > 1.5*3600) {
-            units(dt) <- "hours";
-          }
-          verbose && printf(verbose, "[%s]\n", format(dt));
-        }
-      } else {
-        verbose && printf(verbose, "\n");
-        verbose && print(verbose, status);
-      }
-      Sys.sleep(dW);
-    } # while(...)
-    verbose && exit(verbose);
-
-    verbose && print(verbose, showStatus(reg));
-
-    verbose && exit(verbose);
-  } else {
-    for (kk in seq_along(ds)) {
-      df <- getFile(ds, kk);
-      verbose && enter(verbose, sprintf("Sample #%d ('%s') of %d", kk, getName(df), length(ds)));
-
-      res <- processOne(df, paired=isPaired, indexPrefix=indexPrefix, rgSet=rgSet, params=params, path=outPath, skip=skip, verbose=verbose);
-      verbose && str(verbose, res);
-
-      # Not needed anymore
-      df <- res <- NULL;
-
-      verbose && exit(verbose);
-    } # for (kk ...)
-  }
+  dsApply(ds, FUN=processOne, paired=isPaired, indexPrefix=indexPrefix, rgSet=rgSet, params=params, path=outPath, skip=FALSE, verbose=FALSE);
 
   res <- getOutputDataSet(this, verbose=less(verbose, 1));
 
@@ -429,6 +329,8 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 
 ############################################################################
 # HISTORY:
+# 2013-08-31
+# o Now process() utilizse
 # 2013-08-28
 # o Now process() outputs distributed status reports on when the status
 #   changes.  Inbetween, there is a progress bar.

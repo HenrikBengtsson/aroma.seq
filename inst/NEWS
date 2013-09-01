@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.2.28 [2013-08-31]
+o CLEANUP: Restructuring code for parallel/distributed processing.
+
+
 Version: 0.2.26 [2013-08-26]
 o Basic support for distributed processing via Bowtie2Alignment works.
 o Starting to put in the core framework for distributed processing.
