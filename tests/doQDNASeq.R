@@ -54,7 +54,7 @@ print(cn)
 cns <- doQDNASeq(bams, binWidth=100, verbose=-20)
 print(cns)
 
-
+} # if (fullTest)
 
 ############################################################################
 # HISTORY:

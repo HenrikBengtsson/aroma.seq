@@ -191,7 +191,7 @@ setMethodS3("doQDNASeq", "BamDataSet", function(dataSet, binWidth, ..., force=FA
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Collect results
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  ds <- GenericDataFileSet$byPath(path, pattern="[.]rds$");
+  ds <- GenericDataFileSet$byPath(path, pattern="[.]RData$");
   ds <- extract(ds, indexOf(ds, getNames(dataSet)));
   verbose && print(verbose, ds);
 
@@ -310,6 +310,8 @@ setMethodS3("doQDNASeq", "default", function(...) {
 ############################################################################
 # HISTORY:
 # 2013-08-31
+# o BUG FIX: doQDNASeq() for BamDataSet would give an error when it
+#   tried to collect and return the result file set.
 # o BUG FIX: doQDNASeq() for BamDataSet would give an error if data set
 #   was already processed and verbose output was enabled.
 # 2013-08-22
