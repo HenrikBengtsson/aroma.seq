@@ -1,5 +1,6 @@
 ###########################################################################/**
 # @RdocDefault bowtie2
+# @alias bowtie2_hb
 #
 # @title "Calls the Bowtie2 executable to align input reads"
 #

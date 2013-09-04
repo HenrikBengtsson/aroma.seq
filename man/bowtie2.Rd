@@ -9,6 +9,7 @@
 \name{bowtie2}
 \alias{bowtie2.default}
 \alias{bowtie2}
+\alias{bowtie2_hb}
 
 \title{Calls the Bowtie2 executable to align input reads}
 
