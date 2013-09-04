@@ -155,7 +155,7 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, FUN, ..., args=list(),
           } else if (dt > 1.5*3600) {
             units(dt) <- "hours";
           }
-          verbose && writeRaw(verbose, sprintf(verbose, "[%s]\n", format(dt)));
+          verbose && writeRaw(verbose, sprintf("[%s]\n", format(dt)));
         }
       } else {
         verbose && writeRaw(verbose, "\n");
