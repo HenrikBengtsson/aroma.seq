@@ -65,6 +65,11 @@ setMethodS3("process", "FastqDownsampler", function(this, ..., force=FALSE) {
   ds <- getInputDataSet(this);
   path <- getOutputPath(this);
 
+  if (isPaired(ds)) {
+    throw(sprintf("%s does not yet support paired-end FASTQ data sets: %s",
+                  class(this)[1L], getPathname(ds)));
+  }
+
   dfTList <- list();
   for (ii in seq_along(this)) {
     df <- getFile(ds, ii);
@@ -99,6 +104,9 @@ setMethodS3("process", "FastqDownsampler", function(this, ..., force=FALSE) {
 
 ############################################################################
 # HISTORY:
+# 2013-09-03
+# o ROBUSTNESS: Now process() for FastqDownsampler gives an error
+#   if the data set is paired-end; will implement later.
 # 2013-07-01
 # o Created.
 ############################################################################
