@@ -242,12 +242,33 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
   verbose && cat(verbose, "Additional Picard MarkDuplicates arguments:");
   verbose && str(verbose, params);
 
-  outPath <- getPath(this);
-  for (kk in seq_len(nbrOfFiles)) {
-    df <- getFile(ds, kk);
-    name <- getName(df);
-    verbose && enter(verbose, sprintf("Sample #%d ('%s') of %d",
-                                                    kk, name, nbrOfFiles));
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Apply aligner to each of the FASTQ files
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  dsApply(ds, FUN=function(df, params, path, ...., skip=TRUE, verbose=FALSE) {
+    R.utils::use("R.utils, aroma.seq");
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # Validate arguments
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # Argument 'df':
+    df <- Arguments$getInstanceOf(df, "BamDataFile");
+
+    # Argument 'skip':
+    skip <- Arguments$getLogical(skip);
+
+    # Argument 'path':
+    path <- Arguments$getWritablePath(path);
+
+    # Argument 'verbose':
+    verbose <- Arguments$getVerbose(verbose);
+    if (verbose) {
+      pushState(verbose);
+      on.exit(popState(verbose));
+    }
+
+    verbose && enter(verbose, "Picard MarkDuplicates on one sample");
 
     pathname <- getPathname(df);
     verbose && cat(verbose, "Input BAM pathname: ", pathname);
@@ -255,60 +276,66 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
     # Output BAM file
     fullname <- getFullName(df);
     filename <- sprintf("%s.bam", fullname);
-    pathnameD <- Arguments$getWritablePathname(filename, path=outPath);
+    pathnameD <- Arguments$getWritablePathname(filename, path=path);
     verbose && cat(verbose, "Output BAM pathname: ", pathnameD);
     pathnameDI <- gsub("[.]bam$", ".bai", pathnameD);
     verbose && cat(verbose, "Output BAM index pathname: ", pathnameDI);
 
     # Nothing to do?
-    if (skip && isFile(pathnameD) && isFile(pathnameDI)) {
+    done <- (skip && isFile(pathnameD) && isFile(pathnameDI));
+    if (done) {
       verbose && cat(verbose, "Already processed. Skipping");
-      verbose && exit(verbose);
-      next;
-    }
+    } else {
+      verbose && print(verbose, df);
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Filter via Picard
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    if (!isFile(pathnameD)) {
-      verbose && enter(verbose, "Calling Picard MarkDuplicates");
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      # (a) Filter via Picard
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      if (!isFile(pathnameD)) {
+        verbose && enter(verbose, "Calling Picard MarkDuplicates");
 
-      pathnameM <- gsub("[.]bam$", ",picard,MarkDuplicates,metrics.log", pathnameD);
-      args <- list(
-        "MarkDuplicates",
-        INPUT=pathname,
-        OUTPUT=pathnameD,
-        METRICS_FILE=pathnameM,
-        REMOVE_DUPLICATES=TRUE,
-        ASSUME_SORTED=TRUE,            # TODO: Assert! /HB 2012-10-02
-        VALIDATION_STRINGENCY="SILENT"
-      );
-      verbose && cat(verbose, "Arguments:");
-      verbose && str(verbose, df);
+        pathnameM <- gsub("[.]bam$", ",picard,MarkDuplicates,metrics.log", pathnameD);
+        args <- list(
+          "MarkDuplicates",
+          INPUT=pathname,
+          OUTPUT=pathnameD,
+          METRICS_FILE=pathnameM,
+          REMOVE_DUPLICATES=TRUE,
+          ASSUME_SORTED=TRUE,            # TODO: Assert! /HB 2012-10-02
+          VALIDATION_STRINGENCY="SILENT"
+        );
+        verbose && cat(verbose, "Arguments:");
+        verbose && str(verbose, df);
 
-      # Assert no overwrite
-      stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathname));
-      stopifnot(getAbsolutePath(pathnameM) != getAbsolutePath(pathnameD));
+        # Assert no overwrite
+        stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathname));
+        stopifnot(getAbsolutePath(pathnameM) != getAbsolutePath(pathnameD));
 
-      args$verbose <- less(verbose, 20);
-      res <- do.call(systemPicard, args);
-      verbose && cat(verbose, "System call results:");
-      verbose && print(verbose, res);
+        args$verbose <- less(verbose, 20);
+        res <- do.call(systemPicard, args);
+        verbose && cat(verbose, "System call results:");
+        verbose && print(verbose, res);
 
-      verbose && exit(verbose);
-    } # if (!isFile(pathnameD))
+        verbose && exit(verbose);
+      } # if (!isFile(pathnameD))
 
-    bf <- BamDataFile(pathnameD);
-    verbose && print(verbose, bf);
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      # (b) Generic BAM index
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      bf <- BamDataFile(pathnameD);
+      verbose && print(verbose, bf);
 
-    if (!hasIndex(bf)) {
-      verbose && enter(verbose, "Creating BAM index");
-      bfi <- buildIndex(bf, verbose=less(verbose, 10));
-      verbose && exit(verbose);
-    } # if (!isFile(pathnameDI))
+      if (!hasIndex(bf)) {
+        verbose && enter(verbose, "Creating BAM index");
+        bfi <- buildIndex(bf, verbose=less(verbose, 10));
+        verbose && exit(verbose);
+      }
+    } # if (done)
 
     verbose && exit(verbose);
-  } # for (kk ...)
+
+    invisible(list(pathnameD=pathnameD, pathnameDI=pathnameDI));
+  }, params=params, path=getPath(this), skip=skip, verbose=verbose) # dsApply()
 
   res <- getOutputDataSet(this);
 
@@ -321,6 +348,8 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
 
 ############################################################################
 # HISTORY:
+# 2013-09-03
+# o Now process() for PicardDuplicateRemoval utilizes dsApply().
 # 2012-11-26
 # o BUG FIX: getOutputDataSet() would return a data set with "missing"
 #   files, if not complete.  Now it only returns the existing files.
