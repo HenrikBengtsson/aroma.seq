@@ -144,7 +144,7 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, FUN, ..., args=list(),
       lastStatus <- status;
       out <- capture.output(status <- showStatus(reg));
       if (identical(status, lastStatus)) {
-        verbose && printf(verbose, ".");
+        verbose && writeRaw(verbose, ".");
         # Time stamp?
         dt <- difftime(Sys.time(), t0, units="secs");
         dMins <- as.integer(dt) %/% 10;
@@ -155,10 +155,10 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, FUN, ..., args=list(),
           } else if (dt > 1.5*3600) {
             units(dt) <- "hours";
           }
-          verbose && printf(verbose, "[%s]\n", format(dt));
+          verbose && writeRaw(verbose, sprintf(verbose, "[%s]\n", format(dt)));
         }
       } else {
-        verbose && printf(verbose, "\n");
+        verbose && writeRaw(verbose, "\n");
         verbose && print(verbose, status);
       }
       Sys.sleep(dW);

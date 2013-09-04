@@ -171,7 +171,7 @@ setMethodS3("doQDNASeq", "BamDataSet", function(dataSet, binWidth, ..., force=FA
     # Validate arguments
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Argument 'df':
-    df <- Arguments$getInstanceOf(df, "FastqDataFile");
+    df <- Arguments$getInstanceOf(df, "BamDataFile");
 
     # Argument 'path':
     path <- Arguments$getWritablePath(path);
