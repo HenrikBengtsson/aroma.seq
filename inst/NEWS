@@ -2,7 +2,8 @@ Package: aroma.seq
 ==================
 
 Version: 0.2.29 [2013-09-03]
-o Added basic support for parallel processing of PicardDuplicateRemoval.
+o Added basic support for parallel processing of doQDNASeq() and
+  PicardDuplicateRemoval.
 
 
 Version: 0.2.28 [2013-08-31]

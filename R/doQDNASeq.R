@@ -162,30 +162,47 @@ setMethodS3("doQDNASeq", "BamDataSet", function(dataSet, binWidth, ..., force=FA
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Processing samples
+  # Process each sample
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  res <- NULL;
-  for (ii in seq_along(dataSet)) {
-    df <- getFile(dataSet, ii);
-    verbose && enter(verbose, sprintf("Sample %d ('%s') of %d", ii, getName(df), length(dataSet)));
+  dsApply(dataSet, FUN=function(df, bins, ..., path, force=FALSE, verbose=FALSE) {
+    R.utils::use("R.utils, aroma.seq");
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # Validate arguments
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # Argument 'df':
+    df <- Arguments$getInstanceOf(df, "FastqDataFile");
+
+    # Argument 'path':
+    path <- Arguments$getWritablePath(path);
+
+    # Argument 'force':
+    force <- Arguments$getLogical(force);
+
+    # Argument 'verbose':
+    verbose <- Arguments$getVerbose(verbose);
+    if (verbose) {
+      pushState(verbose);
+      on.exit(popState(verbose));
+    }
+
+    verbose && enter(verbose, "QDNASeq of one sample");
 
     filename <- sprintf("%s.RData", getFullName(df));
     pathname <- Arguments$getReadablePathname(filename, path=path, mustExist=FALSE);
-    if (!force && isFile(pathname)) {
+    done <- (!force && isFile(pathname));
+    if (done) {
       verbose && cat(verbose, "Already processed. Skipping.");
-      verbose && exit(verbose);
-      next;
-    }
-
-    dataN <- doQDNASeq(df, binWidth=bins, ..., verbose=less(verbose,1));
-    verbose && print(verbose, dataN);
-    saveObject(dataN, file=pathname);
-
-    # Not needed anymore
-    dataN <- NULL;
+    } else {
+      dataN <- doQDNASeq(df, binWidth=bins, ..., verbose=less(verbose,1));
+      verbose && print(verbose, dataN);
+      saveObject(dataN, file=pathname);
+    } # if (done)
 
     verbose && exit(verbose);
-  } # for (ii ...)
+
+    invisible(list(pathname=pathname));
+  }, bins=bins, path=path, force=force, verbose=verbose) # dsApply()
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -309,6 +326,8 @@ setMethodS3("doQDNASeq", "default", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2013-08-31
+# o Now doQDNASeq for BamDataSet utilizes dsApply().
 # 2013-08-31
 # o BUG FIX: doQDNASeq() for BamDataSet would give an error when it
 #   tried to collect and return the result file set.
