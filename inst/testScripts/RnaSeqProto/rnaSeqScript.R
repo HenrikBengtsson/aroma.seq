@@ -1,8 +1,5 @@
 # 201307-09 Taku
 # Prototype RNA-seq workflow (minimal checking)
-# - Current timing on a MacBook Pro:     
-#     user  system elapsed 
-#   21.879   1.545  26.414 
 #
 # This script builds (or assumes) a directory structure as follows (20130730 convention):
 #   ./annotationData/organisms/<organism>/<reference annotation .fa, .gtf, bowtie2 / bwa indices, etc.>
@@ -16,8 +13,9 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 bTest <- TRUE  ## Run script in package test mode
-bDebug <- FALSE
+bDebug <- TRUE
 bSetupR <- FALSE
+bOverwrite <- TRUE
 
 if (bSetupR) {
   # Setup BioConductor / aroma packages
@@ -33,7 +31,7 @@ library("aroma.seq")
 if (bTest) {
   pathD <- system.file("exData", package="aroma.seq")
   for (dir in c("annotationData", "fastqData")) {
-    copyDirectory(file.path(pathD, "RNAseq", dir), to=dir, overwrite=FALSE)
+    copyDirectory(file.path(pathD, "RNAseq", dir), to=dir, overwrite=bOverwrite)
   }
 } else {
   # NB:  Using full paths below.  The following is meant as prototype code to aid a user who has a set
@@ -46,14 +44,14 @@ if (bTest) {
 organism <- "SaccharomycesCerevisiae"
 datasetName <- "YeastTest"
 bPairedEnd <- TRUE
-overwrite <- FALSE
 qualityEncoding <- "illumina" # c("sanger", "solexa", "illumina"); cf. qrqc:ReadSeqFile
 # - This is difficult to determine automatically, and difficult for naive users to obtain, but important
 #   to get right for the quality assessment step.  In particular, the code bombs if it encounters phred
 #   scores outside range (might be worse if it does not bomb actually).
 
-# Dummy data for edgeR
-MinNumberOfReplicates <- 2  # Used in edgeR preprocessing as recommended by Anders et al; NB must be >= 3 for edgeR to work, I think
+# Sample config for edgeR (not run here)
+MinOKReplicates <- 2  # Min number of OK replicate samples per feature; recommended by Anders et al
+                      # NB: edgeR requires at least 3 replicate samples to work, I think
 Groups <- c("a", "a", "b", "b")  # Sample assignments to (two) groups
 
 
@@ -66,7 +64,7 @@ Groups <- c("a", "a", "b", "b")  # Sample assignments to (two) groups
 pathLocalAnnots <- file.path("annotationData", "organisms", organism)
 pathLocalAnnots <- Arguments$getWritablePath(pathLocalAnnots)
 if (exists("pathRef")) {
-  copyDirectory(from=pathRef, to=pathLocalAnnots, overwrite=FALSE)  
+  copyDirectory(from=pathRef, to=pathLocalAnnots, overwrite=bOverwrite)  
 }
 if (exists("pathData")) {
   pathLocalData <- file.path("fastqData", datasetName, organism)
@@ -74,15 +72,16 @@ if (exists("pathData")) {
   # patternData <- "fastq$"
   patternData <- "*1e\\+.*fastq$"  # subsampled data
   dataFiles <- findFiles(pattern=patternData, path=pathData, firstOnly=FALSE)
-  file.copy(from=dataFiles, to=pathLocalData, overwrite=FALSE)
+  file.copy(from=dataFiles, to=pathLocalData, overwrite=bOverwrite)
 } else {
-  pathLocalData <- dirname(findFiles(path="fastqData", pattern="[.](fq|fastq)(.gz)*$"))
+  pathLocalData <- dirname(findFiles(path="fastqData", pattern="[.](fq|fastq)(.gz)*$", recursive=TRUE))
 }
 
 # Gunzip input / reference data
-sapply(findFiles(path=pathLocalData, pattern=".gz$", firstOnly=FALSE), gunzip)
-sapply(findFiles(path=pathLocalAnnots, pattern=".gz$", firstOnly=FALSE), gunzip)
-
+sapply(findFiles(path=pathLocalData, pattern=".gz$", firstOnly=FALSE),
+       function (f) {gunzip(f, overwrite=bOverwrite)})
+sapply(findFiles(path=pathLocalAnnots, pattern=".gz$", firstOnly=FALSE),
+       function (f) {gunzip(f, overwrite=bOverwrite)})
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup FASTA reference file
@@ -141,7 +140,7 @@ if (!bPairedEnd) {
 # Step 0: Set up reference index
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# [ LIMITATION:  Following should not be req'd if reference indices already exist ]
+# [ LIMITATION:  Following should not be req'd if reference index already exists ]
 isCapableOf(aroma.seq, "bowtie2")
 
 
@@ -151,8 +150,10 @@ system.time({
   print(is)
 })
 
-# For TopHat (otherwise it builds the reference fasta file from the bowtie2 index)
-copyFile(getPathname(refFasta), file.path(dirname(getIndexPrefix(is)), getFilename(refFasta)))
+# For TopHat convenience (otherwise it builds reference .fa from bowtie2 index)
+copyFile(getPathname(refFasta), file.path(dirname(getIndexPrefix(is)), getFilename(refFasta)),
+         overwrite=bOverwrite)
+
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Step 1: Quality assess
@@ -182,7 +183,6 @@ if (FALSE) {  # Skip for now
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Step 2: Gather experiment metadata
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 # [TBD:  This is probably a manual step for the user;
 #  important especially if the input filenames are not sufficient / satisfactory for the user ]
 
@@ -195,14 +195,11 @@ if (FALSE) {  # Skip for now
 gtfFile <- findFiles(path=pathLocalAnnots, pattern="gtf$")[1]
 # - POSSIBLE MANUAL STEP:  User needs to specify which gene model to use if more than one is available
 
-
 ta <- TopHat2Alignment(dataSet=fqs, indexSet=is)
 # TODO:  Make this run only if not done already
 system.time({
   process(ta, verbose=TRUE)
 })
-## [ WARNING:  In strsplit(lines, split = sep) : input string 10 is invalid in this locale ]
-
 taout <- getOutputDataSet(ta)  # For now, this is a GenericDataFileSet
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -284,7 +281,7 @@ cpms <- cpm(counts);
 # From Anders et al: 'In edgeR, we recommend removing features without at least 1 read per million in n of
 # the samples, where n is the size of the smallest group of replicates'
 if (!bTest) {
-  keep <- (rowSums(cpms>1)>=MinNumberOfReplicates) & !noint;
+  keep <- (rowSums(cpms>1)>=MinOKReplicates) & !noint;
   counts <- counts[keep,];
 }
 
