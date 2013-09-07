@@ -1,53 +1,60 @@
-# 201307-08 Taku
+# 201307-09 Taku
 # Prototype RNA-seq workflow (minimal checking)
+# - Current timing on a MacBook Pro:     
+#     user  system elapsed 
+#   21.879   1.545  26.414 
 #
-# This script builds / assumes a directory structure as follows (20130730 convention):
+# This script builds (or assumes) a directory structure as follows (20130730 convention):
 #   ./annotationData/organisms/<organism>/<reference annotation .fa, .gtf, bowtie2 / bwa indices, etc.>
 #   ./fastqData/<dataset>/<organism>/*.fastq
 # 
-# Output dirs:  probably bamData/  (e.g. output from BWA, bowtie2)
-# - TopHat output probably goes into its own output folder
+# Output dir:  tophat2Data/ (htseq-count output goes here as well)
 # 
-
-bDEBUG <- FALSE
-
-library("aroma.seq")
-## [- NB:  Order of library loading may be significant for the code to work properly ]
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup config variables
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# [ Using full paths here only for local 'dump' dirs ]
-# If pathRef does not exist, then reference genome will be downloaded
-pathRef <- "/Users/tokuyasu/Data/CCSP/annotationData/organism/SaccharomycesCerevisiae"
-pathData <- "/Users/tokuyasu/Data/CCSP/20130620.Yeast"
-datasetName <- "YeastTest"
+bTest <- TRUE  ## Run script in package test mode
+bDebug <- FALSE
+bSetupR <- FALSE
+
+if (bSetupR) {
+  # Setup BioConductor / aroma packages
+  source( "http://www.bioconductor.org/biocLite.R" )
+  biocLite("BiocUpgrade")
+  biocLite( c("ShortRead","DESeq", "edgeR") )
+  source("http://www.braju.com/R/hbLite.R")
+  hbInstall("aroma.seq")
+}
+
+library("aroma.seq")
+
+if (bTest) {
+  pathD <- system.file("exData", package="aroma.seq")
+  for (dir in c("annotationData", "fastqData")) {
+    copyDirectory(file.path(pathD, "RNAseq", dir), to=dir, overwrite=FALSE)
+  }
+} else {
+  # NB:  Using full paths below.  The following is meant as prototype code to aid a user who has a set
+  # of fastq files in pathData, and possibly some reference annotation data in pathRef as well, and
+  # wants to get started.  If pathRef does not exist, then reference genome for 'organism' will be
+  # downloaded.
+  pathRef <- "/Users/tokuyasu/Data/CCSP/annotationData/organisms/SaccharomycesCerevisiae"
+  pathData <- "/Users/tokuyasu/Data/CCSP/20130620.Yeast"
+}
 organism <- "SaccharomycesCerevisiae"
+datasetName <- "YeastTest"
 bPairedEnd <- TRUE
 overwrite <- FALSE
 qualityEncoding <- "illumina" # c("sanger", "solexa", "illumina"); cf. qrqc:ReadSeqFile
 # - This is difficult to determine automatically, and difficult for naive users to obtain, but important
 #   to get right for the quality assessment step.  In particular, the code bombs if it encounters phred
 #   scores outside range (might be worse if it does not bomb actually).
-bSetupR <- FALSE
 
-# For edgeR
+# Dummy data for edgeR
 MinNumberOfReplicates <- 2  # Used in edgeR preprocessing as recommended by Anders et al; NB must be >= 3 for edgeR to work, I think
 Groups <- c("a", "a", "b", "b")  # Sample assignments to (two) groups
-
-
-# R packages, reference genome downloads
-if (bSetupR) {
-  # Setup BioConductor packages
-  source( "http://www.bioconductor.org/biocLite.R" )
-  biocLite("BiocUpgrade")
-  biocLite( c("ShortRead","DESeq", "edgeR") )
-  
-  ## [ Henrik:  IS THIS THE BEST WAY TO SETUP AROMA.SEQ? ]
-  source("http://aroma-project.org/hbLite.R")
-  hbLite("aroma.seq")
-}
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -58,16 +65,23 @@ if (bSetupR) {
 #   that don't accept output (aroma convention is to create local dirs for the output only?) ]
 pathLocalAnnots <- file.path("annotationData", "organisms", organism)
 pathLocalAnnots <- Arguments$getWritablePath(pathLocalAnnots)
-if (exists("pathRef"))
-{
+if (exists("pathRef")) {
   copyDirectory(from=pathRef, to=pathLocalAnnots, overwrite=FALSE)  
 }
-pathLocalData <- file.path("fastqData", datasetName, organism)
-pathLocalData <- Arguments$getWritablePath(pathLocalData)
-# patternData <- "fastq$"
-patternData <- "*1e\\+.*fastq$"  # subsampled data
-dataFiles <- findFiles(pattern=patternData, path=pathData, firstOnly=FALSE)
-file.copy(from=dataFiles, to=pathLocalData, overwrite=FALSE)
+if (exists("pathData")) {
+  pathLocalData <- file.path("fastqData", datasetName, organism)
+  pathLocalData <- Arguments$getWritablePath(pathLocalData)
+  # patternData <- "fastq$"
+  patternData <- "*1e\\+.*fastq$"  # subsampled data
+  dataFiles <- findFiles(pattern=patternData, path=pathData, firstOnly=FALSE)
+  file.copy(from=dataFiles, to=pathLocalData, overwrite=FALSE)
+} else {
+  pathLocalData <- dirname(findFiles(path="fastqData", pattern="[.](fq|fastq)(.gz)*$"))
+}
+
+# Gunzip input / reference data
+sapply(findFiles(path=pathLocalData, pattern=".gz$", firstOnly=FALSE), gunzip)
+sapply(findFiles(path=pathLocalAnnots, pattern=".gz$", firstOnly=FALSE), gunzip)
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -137,6 +151,8 @@ system.time({
   print(is)
 })
 
+# For TopHat (otherwise it builds the reference fasta file from the bowtie2 index)
+copyFile(getPathname(refFasta), file.path(dirname(getIndexPrefix(is)), getFilename(refFasta)))
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Step 1: Quality assess
@@ -176,54 +192,24 @@ if (FALSE) {  # Skip for now
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 # Gene model
-gtfFile <- findFiles(path=pathLocalAnnots, pattern="gtf$", firstOnly=TRUE)
-# - MANUAL STEP:  User must specify which gene model to use, if more than one is available
+gtfFile <- findFiles(path=pathLocalAnnots, pattern="gtf$")[1]
+# - POSSIBLE MANUAL STEP:  User needs to specify which gene model to use if more than one is available
 
-if (FALSE)  # Example of how to run tophat 'by hand'
-{
-  fqs1 <- extract(fqs, 1)
-  Reads1 <- getPathname(getFile(fqs1, 1))
-  Reads2 <- getPathname(getMateFile(getFile(fqs1,1)))
-  # Alt1:
-  # Reads1 <- sapply(getFilePairs(fqs1)[,1], function(x) {getPathname(x)})[1]
-  # Reads2 <- sapply(getFilePairs(fqs1)[,2], function(x) {getPathname(x)})[1]
-  # Alt2:
-  # Reads1 <- getPathnames(fqs1)[1]
-  # Reads2 <- getPathname(getMateFile(getFile(fqs1, 1)))    
-  # source("/Users/tokuyasu/SVN/aroma.seq.RS/R/tophat.R")
-  # source("/Users/tokuyasu/SVN/aroma.seq.RS/R/systemTopHat.R")
-  ## - Possible remaining bug for bin assignment => use Sys.which("tophat")
-  system.time({
-    tophat(getIndexPrefix(is), reads1=Reads1, reads2=Reads2, verbose=TRUE)
-  })
-  system.time({
-    tophat(getIndexPrefix(is), reads1=Reads1, reads2=Reads2, optionsVec=c("G"=gtfFile, "o"="tophat_byHand"), verbose=TRUE)
-  })
-}
 
-source("/Users/tokuyasu/work/projects/12/CCSP/proto/TopHat2Alignment.R")
-if (FALSE) {  # This is DEBUG-only
-  source("/Users/tokuyasu/work/projects/12/CCSP/proto/tophat.R")
-  source("/Users/tokuyasu/work/projects/12/CCSP/proto/systemTopHat.R")  ## This is key - need to be able to find the tophat executable!
-}
 ta <- TopHat2Alignment(dataSet=fqs, indexSet=is)
-# Following is DEBUG-only
-if (bDEBUG) {
-  ta <- TopHat2Alignment(dataSet=extract(fqs, files=c(1,2)), indexSet=is)
-}
-
 # TODO:  Make this run only if not done already
 system.time({
   process(ta, verbose=TRUE)
 })
+## [ WARNING:  In strsplit(lines, split = sep) : input string 10 is invalid in this locale ]
 
 taout <- getOutputDataSet(ta)  # For now, this is a GenericDataFileSet
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Step 4: Organize, sort and index the BAM files and create SAM files
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# [ This step may be needed for htseq-count, esp. for non-TopHat alignment; use Rsamtools as alternative? ]
 
-# [ ... I'm not sure this step is really necessary; probably is needed for htseq-count; use an Rsamtools alternative? ] ;
 
 ## [ ...Step 5 is now Step 8... ]
 
@@ -259,11 +245,12 @@ system.time({
   }
 })
 
-# Creating the count matrix 'by hand' may be useful, but skip for now, since readDGE() does this for us
+# NB: The following is not necessary, since readDGE() does this for us
+# Create the count matrix 'by hand', for human purposes.
 if (FALSE) {
   # Load the htseq count files as a TabularTextFileSet
   db <- TabularTextFileSet$byPath(path=getPath(ta), pattern="[.]count$", recursive=TRUE)
-  # - ISSUE:  This drops the first row, since treated as column names
+  ## [ ISSUE:  This drops the first row, since treated as column names ]
   
   # Get the 2nd column from each htseq count table
   mat <-
@@ -289,19 +276,17 @@ library(edgeR);
 hcounts <- sub(".sam$", ".count", osams)
 counts <- readDGE(hcounts)$counts;
 
-## In edgeR, we recommend removing features without at least 1 read per million in n of the samples, where n is the size of the smallest group of replicates (here, n=3 for the Knockdown group). Filter these as well as non-informative (e. g., non-aligned) features using a command like: ;
+# Filter features w/ too low coverage and uninformative read counts 
 noint <- rownames(counts) %in%
   c("no_feature","ambiguous","too_low_aQual",
     "not_aligned","alignment_not_unique")
 cpms <- cpm(counts);
-
-# From Anders et al
-## 'In edgeR, we recommend removing features without at least 1 read per million in n of
-##  the samples, where n is the size of the smallest group of replicates'
-keep <- (rowSums(cpms>1)>=MinNumberOfReplicates) & !noint;
-counts <- counts[keep,];
-
-
+# From Anders et al: 'In edgeR, we recommend removing features without at least 1 read per million in n of
+# the samples, where n is the size of the smallest group of replicates'
+if (!bTest) {
+  keep <- (rowSums(cpms>1)>=MinNumberOfReplicates) & !noint;
+  counts <- counts[keep,];
+}
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Step 7b: Visualize and create DGEList for edgeR
@@ -318,13 +303,24 @@ d <- DGEList(counts=counts, group=Groups);
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Step 8 (was Step 5): Inspect alignments with IGV
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 # [ ... This is probably a useful but manual step; user intervention required; skip for auto-pipeline ] ;
+
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Run edgeR for differential expression
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# [...See Adam...] ;
 #
+# [ Example code ]
+# # Estimate normalization factors using:
+# d <- calcNormFactors(d)
+# 
+# # For simple designs, estimate tagwise dispersion estimates using:
+# d <- estimateCommonDisp(d)
+# d <- estimateTagwiseDisp(d)
+# 
+# # For a simple two-group design, perform an exact test for the difference in expression
+# # between the two conditions:
+# de <- exactTest(d, pair=c("CTL","KD"))
+# 
 
 

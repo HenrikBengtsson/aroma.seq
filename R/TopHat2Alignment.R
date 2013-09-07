@@ -41,12 +41,11 @@ setConstructorS3("TopHat2Alignment", function(..., indexSet=NULL, outputDir=NULL
   }
   if (!is.null(outputDir)) {
     outputDir <- Arguments$getWritablePath(outputDir)
-    ## [ 20130827 - Current convention:  This should be a single path, below which there can be multiple per-sample dirs ]
+    ## [ Convention:  This should be a single path, below which there can be multiple per-sample dirs ]
   }
 
   if (!is.null(geneModelFile)) {
     geneModelFile <- Arguments$getReadablePath(geneModelFile)
-    ## [ 20130827 - Current convention:  This should be a single path, below which there can be multiple per-sample dirs ]
   }
 
   # Arguments '...':
@@ -63,7 +62,6 @@ setMethodS3("getParameters", "TopHat2Alignment", function(this, ...) {
 }, protected=TRUE)
 
 
-# HB-approved
 setMethodS3("getRootPath", "TopHat2Alignment", function(this, ...) {
   "tophat2Data";
 }, protected=TRUE)
@@ -102,9 +100,8 @@ setMethodS3("getPath", "TopHat2Alignment", function(this, create=TRUE, ...) {
 
 
 setMethodS3("getOutputDataSet", "TopHat2Alignment", function(this, ...) {
-  ## Find all existing output data files
-  res <- GenericDataFileSet$byPath(path=getPath(this), pattern="accepted_hits.bam", recursive=TRUE)
-  # [- Could be BamDataSet in the future, but currently that presumes a single subdir, it appears ]
+  ## Find all existing output data files  
+  res <- BamDataSet$byPath(path=getPath(this), pattern="accepted_hits.bam", recursive=TRUE)
 
   ## TODO: Assert completeness
   res;
@@ -153,7 +150,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   ds <- getInputDataSet(this);
   verbose && cat(verbose, "Input data set:");
   verbose && print(verbose, ds);
-
+  
   is <- getIndexSet(this);
   verbose && cat(verbose, "Aligning using index set:");
   verbose && print(verbose, is);
@@ -165,7 +162,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
     verbose && print(verbose, rgSet);
     validate(rgSet);
   }
-
+  
   outputDir <- Arguments$getWritablePath(gsub(",", "_", getPath(this)))
   this$outputDir <- outputDir
   outputDirs <- file.path(outputDir, sub("_1$", "", getFullNames(ds)))
