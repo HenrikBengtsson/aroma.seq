@@ -21,6 +21,7 @@
 #
 # @author "TT"
 #
+# @keyword internal
 #*/###########################################################################
 setMethodS3("htseqCount", "default", function(samFile=NULL,
                                               gfFile=NULL,

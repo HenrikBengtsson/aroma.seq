@@ -31,7 +31,9 @@
 #   processing.
 # }
 #
-# @author
+# @author "HB"
+#
+# @keyword internal
 #*/###########################################################################
 setMethodS3("dsApply", "GenericDataFileSet", function(ds, FUN, ..., args=list(), skip=FALSE, verbose=FALSE, .parallel=FALSE, .control=list(dW=1.0)) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

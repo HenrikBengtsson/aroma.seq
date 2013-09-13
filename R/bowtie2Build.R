@@ -18,8 +18,9 @@
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
+# @author "TT"
 #
-# @author
+# @keyword internal
 #*/###########################################################################
 setMethodS3("bowtie2Build", "default", function(refReads=NULL,  ## vector of pathnames
                                                 bowtieRefIndexPrefix=NULL, ## Index filename prefix (i.e. minus trailing .X.bt2)

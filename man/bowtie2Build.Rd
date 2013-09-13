@@ -30,6 +30,7 @@
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }
 
+\author{Taku Tokuyasu}
 
-\author{Henrik Bengtsson}
 
+\keyword{internal}

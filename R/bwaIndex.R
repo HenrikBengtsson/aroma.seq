@@ -7,7 +7,7 @@
 # \description{
 #  @get "title".
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -24,7 +24,9 @@
 #   bwaIndex("annotationData/organisms/LambdaPhage/lambda_virus.fa")
 # }}
 #
-# @author
+# @author "HB"
+#
+# @keyword internal
 #*/###########################################################################
 setMethodS3("bwaIndex", "default", function(pathnameFA, indexPrefix="*", method, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

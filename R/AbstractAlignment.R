@@ -25,6 +25,8 @@
 # }
 #
 # @author "HB"
+#
+# @keyword internal
 #*/###########################################################################
 setConstructorS3("AbstractAlignment", function(dataSet=NULL, indexSet=NULL, tags="*", rgSet=NULL, ...) {
   # Validate arguments

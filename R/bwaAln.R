@@ -27,7 +27,9 @@
 #          pathnameD="fastqData/LambdaVirusExample/Generic/reads_1.sai")
 # }}
 #
-# @author
+# @author "HB"
+#
+# @keyword internal
 #*/###########################################################################
 setMethodS3("bwaAln", "default", function(pathnameFQ, indexPrefix, pathnameD, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

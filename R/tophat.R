@@ -21,6 +21,7 @@
 #
 # @author "TT"
 #
+# @keyword internal
 #*/###########################################################################
 setMethodS3("tophat", "default", function(bowtieRefIndexPrefix=NULL,  ##
                                           reads1=NULL,

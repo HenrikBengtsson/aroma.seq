@@ -31,5 +31,7 @@
   \item{commandName}{Name of executable}
 }
 
-\author{Henrik Bengtsson}
+\author{Taku Tokuyasu}
 
+
+\keyword{internal}

@@ -72,4 +72,7 @@ $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCa
 }
 
 \author{Henrik Bengtsson}
+
+
 \keyword{classes}
+\keyword{internal}

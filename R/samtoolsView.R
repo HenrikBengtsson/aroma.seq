@@ -18,6 +18,8 @@
 # }
 #
 # @author "HB"
+#
+# @keyword internal
 #*/###########################################################################
 setMethodS3("samtoolsView", "default", function(pathname, pathnameD, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

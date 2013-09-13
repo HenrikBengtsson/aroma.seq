@@ -27,7 +27,7 @@
 #  Internally, the @see "ShortRead::FastqSampler" method is used.
 # }
 #
-# \author{Henrik Bengtsson}
+# @author "HB"
 #*/###########################################################################
 setConstructorS3("FastqDownsampler", function(dataSet=NULL, subset=1e6, tags="*", ...) {
   # Validate arguments

@@ -26,7 +26,7 @@
 #   This method is available on Linux, OSX, and Windows [1].
 # }
 #
-# \author{Taku Tokuyasu}
+# @author "TT"
 #
 # \references{
 #  [1] TopHat, University of Maryland, 2013.
@@ -100,7 +100,7 @@ setMethodS3("getPath", "TopHat2Alignment", function(this, create=TRUE, ...) {
 
 
 setMethodS3("getOutputDataSet", "TopHat2Alignment", function(this, ...) {
-  ## Find all existing output data files  
+  ## Find all existing output data files
   res <- BamDataSet$byPath(path=getPath(this), pattern="accepted_hits.bam", recursive=TRUE)
 
   ## TODO: Assert completeness
@@ -150,7 +150,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   ds <- getInputDataSet(this);
   verbose && cat(verbose, "Input data set:");
   verbose && print(verbose, ds);
-  
+
   is <- getIndexSet(this);
   verbose && cat(verbose, "Aligning using index set:");
   verbose && print(verbose, is);
@@ -162,7 +162,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
     verbose && print(verbose, rgSet);
     validate(rgSet);
   }
-  
+
   outputDir <- Arguments$getWritablePath(gsub(",", "_", getPath(this)))
   this$outputDir <- outputDir
   outputDirs <- file.path(outputDir, sub("_1$", "", getFullNames(ds)))

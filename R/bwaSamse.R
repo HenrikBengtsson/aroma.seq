@@ -30,7 +30,9 @@
 #            pathnameFA=pathnameFA, pathnameD=pathnameD);
 # }}
 #
-# @author
+# @author "HB"
+#
+# @keyword internal
 #*/###########################################################################
 setMethodS3("bwaSamse", "default", function(pathnameSAI, pathnameFQ, indexPrefix, pathnameD, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -19,6 +19,7 @@
 #
 # @author "TT"
 #
+# @keyword internal
 #*/###########################################################################
 setMethodS3("cufflinks", "default", function(bams=NULL,  ## vector of pathnames
                                              optionsVec, ## vector of named options

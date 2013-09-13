@@ -45,5 +45,7 @@
 }
 
 \author{Henrik Bengtsson}
+
+
 \keyword{internal}
 \keyword{methods}

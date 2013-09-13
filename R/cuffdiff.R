@@ -19,7 +19,9 @@
 #   \item{commandName}{Name of executable}
 # }
 #
-# @author
+# @author "TT"
+#
+# @keyword internal
 #*/###########################################################################
 setMethodS3("cuffdiff", "default", function(transcriptsGtf, ## e.g. from TopHat?
                                             bams=NULL,  ## vector of pathnames (will assume bam or sam works here)

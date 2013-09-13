@@ -23,7 +23,9 @@
 # }
 #
 #
-# @author
+# @author "TT, HB"
+#
+# @keyword internal
 #*/###########################################################################
 
 ## TODO:  This function has not been tested; the logic may not be complete; etc.
