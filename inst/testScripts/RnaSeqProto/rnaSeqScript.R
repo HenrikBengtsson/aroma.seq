@@ -1,5 +1,8 @@
 # 201307-09 Taku
 # Prototype RNA-seq workflow (minimal checking)
+# - Current timing on a MacBook Pro:     
+#     user  system elapsed 
+#   21.879   1.545  26.414 
 #
 # This script builds (or assumes) a directory structure as follows (20130730 convention):
 #   ./annotationData/organisms/<organism>/<reference annotation .fa, .gtf, bowtie2 / bwa indices, etc.>
@@ -28,8 +31,8 @@ if (bSetupR) {
 
 library("aroma.seq")
 
+pathD <- system.file("exData", package="aroma.seq")
 if (bTest) {
-  pathD <- system.file("exData", package="aroma.seq")
   for (dir in c("annotationData", "fastqData")) {
     copyDirectory(file.path(pathD, "RNAseq", dir), to=dir, overwrite=bOverwrite)
   }
@@ -93,15 +96,15 @@ refFas <- FastaReferenceSet$byPath(path=pathLocalAnnots, pattern="[.](fa|fasta)(
 if (length(refFas) < 1)
 {
   # Download reference files, gunzip, move to standard location, if needed
-  load("RefUrlsList.RData")
+  source(file.path(pathD, "ReferenceGenomes.R"))
   RefUrls <- RefUrlsList[[organism]]
   sapply(RefUrls, function(loc)
   {
     fnameGZ <- basename(loc)
     fname <- sub(".gz", "", fnameGZ)   # [ Cludgey on two counts: assuming .gz suffix, assuming gzip'd in the first place ] 
-    # TODO:  Make this agnostic to .gz or .bz2 or not
+    # TODO:  Make this agnostic to .gz or .bz2 or uncompressed
     
-    # Check to see if the file has been downloaded already
+    # Download file if it has not been downloaded already
     if (!isFile(file.path(pathLocalAnnots, fnameGZ)) && !isFile(file.path(pathLocalAnnots, fname)))
     {
       pathLocalAnnots <- Arguments$getWritablePath(pathLocalAnnots)
