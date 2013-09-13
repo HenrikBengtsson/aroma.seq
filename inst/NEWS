@@ -1,6 +1,12 @@
 Package: aroma.seq
 ==================
 
+Version: 0.2.30 [2013-09-12]
+o Added basic support for parallel processing of FastqDownsampler().
+o DOCUMENTATION: Added Rd help for FastqDownsampler.
+o Added system test for FastqDownsampler.
+
+
 Version: 0.2.29 [2013-09-03]
 o Added basic support for parallel processing of doQDNASeq() and
   PicardDuplicateRemoval.

@@ -144,7 +144,7 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
   dsApply(ds, FUN=function(df, paired=FALSE, indexPrefix, rgSet, paramsList, path, ...., skip=TRUE, verbose=FALSE) {
     R.utils::use("R.utils, aroma.seq");
 
-   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Validate arguments
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Argument 'df':

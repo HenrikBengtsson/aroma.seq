@@ -331,7 +331,6 @@
 \alias{report.FastqDataSet}
 \alias{queryBowtie2}
 \alias{getDefaultFullName.FastqDataFile}
-\alias{FastqDownsampler}
 \alias{getInputDataSet.FastqDownsampler}
 \alias{getOutputPath}
 \alias{getOutputPath.FastqDownsampler}
@@ -342,6 +341,11 @@
 \alias{process.FastqDownsampler}
 \alias{writeSample}
 \alias{writeSample.FastqDataFile}
+\alias{as.character.FastqDownsampler}
+\alias{getAsteriskTags.FastqDownsampler}
+\alias{getOutputDataSet.FastqDownsampler}
+\alias{getPath.FastqDownsampler}
+\alias{getTags.FastqDownsampler}
 \alias{as.character.FastqDataSet}
 \alias{byPath.FastaReferenceSet}
 \alias{byPath.FastqDataSet}

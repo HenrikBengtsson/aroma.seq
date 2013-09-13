@@ -179,11 +179,14 @@ report.FastqDataSet
 queryBowtie2
 getDefaultFullName.FastqDataFile
 
-FastqDownsampler getInputDataSet.FastqDownsampler getOutputPath
+getInputDataSet.FastqDownsampler getOutputPath
 getOutputPath.FastqDownsampler getOutputRootPath
 getOutputRootPath.FastqDownsampler getSampleSize
 getSampleSize.FastqDownsampler process.FastqDownsampler
 writeSample writeSample.FastqDataFile
+  as.character.FastqDownsampler getAsteriskTags.FastqDownsampler
+  getOutputDataSet.FastqDownsampler getPath.FastqDownsampler
+  getTags.FastqDownsampler
 
 as.character.FastqDataSet byPath.FastaReferenceSet
 byPath.FastqDataSet getDepth.FastaReferenceSet getFilePairs
