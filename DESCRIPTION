@@ -6,8 +6,6 @@ Suggests: Biobase (>= 2.20.1), Biostrings (>= 2.28.0), ShortRead (>= 1.18.0), Rs
 Date: 2013-09-13
 Title: Sequence analysis in the Aroma Framework
 Authors@R: c(person("Henrik", "Bengtsson", email = "henrikb@braju.com", role = c("aut", "cre", "cph")), person("Adam B.", "Olshen", role = c("aut")), person("Taku", "Tokuyasu", role = c("aut")))
-Author: Henrik Bengtsson, Adam B. Olshen, Taku Tokuyasu
-Maintainer: Henrik Bengtsson <henrikb@braju.com>
 Description: [STUB ONLY/DON'T INSTALL] Methods for performing common sequence analysis.  Most of the actual analysis is performed by external software, which this package provides transparent wrappers for.
 License: LGPL (>= 2.1)
 LazyLoad: TRUE
