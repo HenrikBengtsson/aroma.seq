@@ -2,10 +2,12 @@ Package: aroma.seq
 ==================
 
 Version: 0.2.31 [2013-09-28]
+o ROBUSTNESS: Now dsApply() generates more unique BatchJobs
+  registry names in order to avoid potential name clashes.
 o Now the 'aroma.seq' Package object is also available when the
   package is only loaded (but not attached).
-o Updated package dependences.
 o BUG FIX: Forgot argument 'verbose' of process() of FastqDownsampler.
+o Updated package dependences.
 
 
 Version: 0.2.30 [2013-09-13]

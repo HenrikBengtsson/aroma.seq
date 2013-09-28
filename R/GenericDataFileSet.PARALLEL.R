@@ -99,6 +99,14 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, FUN, ..., args=list(),
     nbrOfJobs <- getJobNr(reg);
     if (nbrOfJobs == 0L) {
       verbose && enter(verbose, "Adding jobs to registry");
+      # Tweak FUN()
+##      FUNx <- function(...) {
+##        # Allow comma-separated registry directory paths
+##        oopts <- options("BatchJobs.check.posix");
+##        on.exit({ options(oopts) }, add=TRUE);
+##        options("BatchJobs.check.posix"=FALSE);
+##        FUN(...);
+##      } # FUNx()
       ids <- batchMap(reg, fun=FUN, getFiles(ds), more.args=allArgs);
       verbose && cat(verbose, "Job IDs added:");
       verbose && str(verbose, ids);
@@ -217,8 +225,9 @@ setMethodS3(".getBatchJobRegistryId", "default", function(class, label=NULL, ver
     ...
   );
   keyId <- R.cache::getChecksum(key, algo="crc32");
-
-  id <- paste(c(key$class[1L], key$label, keyId), collapse="_");
+  keyTime <- format(Sys.time(), "%Y%m%d%H%M%S");
+  pid <- Sys.getpid();
+  id <- paste(c(key$class[1L], key$label, keyId, keyTime, pid), collapse="_");
   id <- Arguments$getCharacter(id, length=c(1L,1L));
 
   id;
@@ -294,6 +303,11 @@ setMethodS3(".getBatchJobRegistry", "default", function(..., skip=TRUE) {
 
 ############################################################################
 # HISTORY:
+# 2013-09-28
+# o ROBUSTNESS: Now .getBatchJobRegistryId() adds process ID ("pid") and#   a timestamp to the registry path to make it even more unique.
+# o BUG FIX: dsApply() for GenericDataFileSet when executed via the
+#   'BatchJobs' methods would not allow commas in the work directory
+#   among other directories.
 # 2013-08-31
 # o Now .useBatchJobs() utilizes R.utils::use().
 # o Added dsApply() for GenericDataFileSet.  Added Rdocs.
