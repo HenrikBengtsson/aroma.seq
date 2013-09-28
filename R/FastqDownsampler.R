@@ -152,7 +152,7 @@ setMethodS3("getOutputDataSet", "FastqDownsampler", function(this, ...) {
 
 
 
-setMethodS3("process", "FastqDownsampler", function(this, ..., force=FALSE) {
+setMethodS3("process", "FastqDownsampler", function(this, ..., force=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
