@@ -1,6 +1,12 @@
 Package: aroma.seq
 ==================
 
+Version: 0.2.31 [2013-09-28]
+o Now the 'aroma.seq' Package object is also available when the
+  package is only loaded (but not attached).
+o Updated package dependences.
+
+
 Version: 0.2.30 [2013-09-13]
 o Added basic support for parallel processing of FastqDownsampler().
 o DOCUMENTATION: Added Rd help for FastqDownsampler.

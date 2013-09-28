@@ -2,9 +2,14 @@
 # conflicts() in [R] base.
 .conflicts.OK <- TRUE;
 
-.onAttach <- function(libname, pkgname) {
+.onLoad <- function(libname, pkgname) {
+  ns <- getNamespace(pkgname);
   pkg <- AromaSeq(pkgname);
-  assign(pkgname, pkg, pos=getPosition(pkg));
+  assign(pkgname, pkg, envir=ns);
+} # .onLoad()
+
+.onAttach <- function(libname, pkgname) {
+  pkg <- get(pkgname, envir=getNamespace(pkgname));
 
   startupMessage(pkg, '\n\n',
     '-------------------------------------------------\n',
