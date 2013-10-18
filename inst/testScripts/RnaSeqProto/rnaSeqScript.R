@@ -1,107 +1,108 @@
-# 201307-09 Taku
-# Prototype RNA-seq workflow (minimal checking)
-# - Current timing on a MacBook Pro:     
-#     user  system elapsed 
-#   21.879   1.545  26.414 
+# 
+# Prototype RNA-seq script
+# 
+# This script is a pipeline for performing RNA-seq read quantification in aroma.seq.
+# It starts with fastq files and ends with a read count matrix on transcript features.
+# Sample code to set up the aroma.seq package and other suggested R packages, and download
+# reference genome and transcript annotations are included for convenience.
+# External binaries bowtie2 and tophat must exist on the user's path (setup described elsewhere).
+# 
+# This script builds (or assumes) a directory structure as follows:
+#   ./annotationData/organisms/<organism>/
+#     - This contains (or will contain) reference annotation .fa, .gtf, bowtie2/bwa indices, etc.
+#   ./fastqData/<dataset>/<organism>/, which contains input *.fastq files
+#     - This contains the reads that will be aligned/quantified.  Currently all sample reads must be paired-end or single-end, not mixed.
 #
-# This script builds (or assumes) a directory structure as follows (20130730 convention):
-#   ./annotationData/organisms/<organism>/<reference annotation .fa, .gtf, bowtie2 / bwa indices, etc.>
-#   ./fastqData/<dataset>/<organism>/*.fastq
-# 
-# Output dir:  tophat2Data/ (htseq-count output goes here as well)
-# 
+# Output dir at end of pipeline:  tophat2Data/ (htseq-count output goes here as well)
+#
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Setup config variables
+# Setup R and run config
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-bTest <- TRUE  ## Run script in package test mode
-bDebug <- TRUE
-bSetupR <- FALSE
+# Set up R packages
 bOverwrite <- TRUE
-
+bSetupR <- FALSE
 if (bSetupR) {
   # Setup BioConductor / aroma packages
   source( "http://www.bioconductor.org/biocLite.R" )
   biocLite("BiocUpgrade")
   biocLite( c("ShortRead","DESeq", "edgeR") )
   source("http://www.braju.com/R/hbLite.R")
-  hbInstall("aroma.seq")
+  hbInstall("aroma.seq", devel=TRUE)
 }
+
+# Set up run parameters
+config <- list()
+
+# Dir for reference fasta and gtf files; these will be copied locally
+config$pathRef <- "" # E.g. "/data/annotationData/organisms/HomoSapiens"
+
+# Dir for input fastq files; these will be copied locally
+config$pathData <- "" # E.g. "/data/SRA/GSE18508/"
+
+# Dataset metadata
+config$datasetName <- "MyDataSet"
+config$organism <- "HomoSapiens"
+config$bPairedEnd <- FALSE
+config$qualityEncoding <- "illumina" # c("sanger", "solexa", "illumina"); cf. qrqc:ReadSeqFile
+# - This is difficult to determine automatically or for users to obtain, but important
+#   to get right for the quality assessment step.  In particular, the code bombs if it
+#   encounters phred scores outside range (though it might be worse if it does not bomb).
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Start aroma.seq run
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 library("aroma.seq")
-
-pathD <- system.file("exData", package="aroma.seq")
-if (bTest) {
-  for (dir in c("annotationData", "fastqData")) {
-    copyDirectory(file.path(pathD, "RNAseq", dir), to=dir, overwrite=bOverwrite)
-  }
-} else {
-  # NB:  Using full paths below.  The following is meant as prototype code to aid a user who has a set
-  # of fastq files in pathData, and possibly some reference annotation data in pathRef as well, and
-  # wants to get started.  If pathRef does not exist, then reference genome for 'organism' will be
-  # downloaded.
-  pathRef <- "/Users/tokuyasu/Data/CCSP/annotationData/organisms/SaccharomycesCerevisiae"
-  pathData <- "/Users/tokuyasu/Data/CCSP/20130620.Yeast"
-}
-organism <- "SaccharomycesCerevisiae"
-datasetName <- "YeastTest"
-bPairedEnd <- TRUE
-qualityEncoding <- "illumina" # c("sanger", "solexa", "illumina"); cf. qrqc:ReadSeqFile
-# - This is difficult to determine automatically, and difficult for naive users to obtain, but important
-#   to get right for the quality assessment step.  In particular, the code bombs if it encounters phred
-#   scores outside range (might be worse if it does not bomb actually).
-
-# Sample config for edgeR (not run here)
-MinOKReplicates <- 2  # Min number of OK replicate samples per feature; recommended by Anders et al
-                      # NB: edgeR requires at least 3 replicate samples to work, I think
-Groups <- c("a", "a", "b", "b")  # Sample assignments to (two) groups
-
+pathExData <- system.file("exData", package="aroma.seq")
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Setup local directories for annotations and data
+# Copy reference and input files to local dirs
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# [ Copying these to a local dir is a temp step; needed for now to handle read-only dirs
-#   that don't accept output (aroma convention is to create local dirs for the output only?) ]
-pathLocalAnnots <- file.path("annotationData", "organisms", organism)
+# If config$pathRef and config$pathData do not exist, then the reference annotations
+# and input fastq files must already be in the correct local locations.
+pathLocalAnnots <- file.path("annotationData", "organisms", config$organism)
 pathLocalAnnots <- Arguments$getWritablePath(pathLocalAnnots)
-if (exists("pathRef")) {
-  copyDirectory(from=pathRef, to=pathLocalAnnots, overwrite=bOverwrite)  
+if (exists("config$pathRef")) {
+  copyDirectory(from=config$pathRef, to=pathLocalAnnots, overwrite=bOverwrite)
 }
-if (exists("pathData")) {
-  pathLocalData <- file.path("fastqData", datasetName, organism)
-  pathLocalData <- Arguments$getWritablePath(pathLocalData)
-  # patternData <- "fastq$"
-  patternData <- "*1e\\+.*fastq$"  # subsampled data
+pathLocalData <- file.path("fastqData", config$datasetName, config$organism)
+pathLocalData <- Arguments$getWritablePath(pathLocalData)
+if (exists("config$pathData")) {
+  patternData <- "fastq$"
   dataFiles <- findFiles(pattern=patternData, path=pathData, firstOnly=FALSE)
   file.copy(from=dataFiles, to=pathLocalData, overwrite=bOverwrite)
-} else {
-  pathLocalData <- dirname(findFiles(path="fastqData", pattern="[.](fq|fastq)(.gz)*$", recursive=TRUE))
 }
 
-# Gunzip input / reference data
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Gunzip input / reference data if necessary
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 sapply(findFiles(path=pathLocalData, pattern=".gz$", firstOnly=FALSE),
        function (f) {gunzip(f, overwrite=bOverwrite)})
 sapply(findFiles(path=pathLocalAnnots, pattern=".gz$", firstOnly=FALSE),
        function (f) {gunzip(f, overwrite=bOverwrite)})
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Setup FASTA reference file
+# Setup reference fasta file
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# [ LIMITATION:  This will fail if both the .gz and the gunzip'd reference file exist in pathLocalAnnots ]
-refFas <- FastaReferenceSet$byPath(path=pathLocalAnnots, pattern="[.](fa|fasta)(.gz)*$")
-# Download reference fasta file if necessary
+refFas <- FastaReferenceSet$byPath(path=pathLocalAnnots, pattern="[.](fa|fasta)$")
+# Download reference files, gunzip, move to standard location, if needed
 if (length(refFas) < 1)
 {
-  # Download reference files, gunzip, move to standard location, if needed
-  source(file.path(pathD, "ReferenceGenomes.R"))
-  RefUrls <- RefUrlsList[[organism]]
+  
+  # Get list of reference URLs from the package
+  source(file.path(pathExData, "ReferenceGenomes.R"))
+  
+  RefUrls <- RefUrlsList[[config$organism]]
   sapply(RefUrls, function(loc)
   {
     fnameGZ <- basename(loc)
-    fname <- sub(".gz", "", fnameGZ)   # [ Cludgey on two counts: assuming .gz suffix, assuming gzip'd in the first place ] 
+    fname <- sub(".gz", "", fnameGZ)   # [ Cludgey on two counts: assuming .gz suffix, assuming gzip'd in the first place ]
     # TODO:  Make this agnostic to .gz or .bz2 or uncompressed
     
     # Download file if it has not been downloaded already
@@ -125,41 +126,37 @@ print(refFasta)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup input FASTQ set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 if (!bPairedEnd) {
   fqs <- FastqDataSet$byPath(pathLocalData, pattern="[.](fq|fastq)$")   ## This pattern should already be the default...
   print(fqs)
 } else {
-  if (FALSE)  {# First version:  paired end data as a list
-    fqs1 <- FastqDataSet$byPath(pathLocalData, pattern="[._]1.(fq|fastq)$")  ## (Should allow these to be .gz as wel)
-    fqs2 <- FastqDataSet$byPath(pathLocalData, pattern="[._]2.(fq|fastq)$")
-    fqs <- list(read1 = fqs1, read2 = fqs2)   ## [ Is this reasonable?  fqs = list => PE data? ]
-  } else { # New paired-end style FastqDataSet
-    fqs <- FastqDataSet$byPath(pathLocalData, paired=TRUE);
-  }
+  fqs <- FastqDataSet$byPath(pathLocalData, paired=TRUE);
+  print(fqs)
 }
 
+# Check here for bowtie2 capability before proceeding
+# (bowtie2 is required by TopHat, i.e. required even if reference index already exists)
+stopifnot(isCapableOf(aroma.seq, "bowtie2"))
+
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Step 0: Set up reference index
+# Set up reference index
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# [ LIMITATION:  Following should not be req'd if reference index already exists ]
-isCapableOf(aroma.seq, "bowtie2")
+is <- buildBowtie2IndexSet(refFasta, verbose=-10)  # is = 'index set'
+print(is)
+# - NB bowtie2 is actually only run of the index does not exist already
 
 
-# NB: bowtie2 is run only if the index set does not already exist
-system.time({
-  is <- buildBowtie2IndexSet(refFasta, verbose=-10)  # is = 'index set'
-  print(is)
-})
-
-# For TopHat convenience (otherwise it builds reference .fa from bowtie2 index)
+# Copy reference fasta file to bowtie index directory
+# (This is for TopHat; otherwise it builds the reference .fa from the bowtie2 index)
 copyFile(getPathname(refFasta), file.path(dirname(getIndexPrefix(is)), getFilename(refFasta)),
          overwrite=bOverwrite)
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Step 1: Quality assess
+# Quality assess
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 if (FALSE) {  # Skip for now
@@ -184,14 +181,7 @@ if (FALSE) {  # Skip for now
 }
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Step 2: Gather experiment metadata
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# [TBD:  This is probably a manual step for the user;
-#  important especially if the input filenames are not sufficient / satisfactory for the user ]
-
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Step 3: Align reads
+# Align reads
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 # Gene model
@@ -206,16 +196,15 @@ system.time({
 taout <- getOutputDataSet(ta)  # For now, this is a GenericDataFileSet
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Step 4: Organize, sort and index the BAM files and create SAM files
+# Organize, sort and index the BAM files and create SAM files
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# [ This step may be needed for htseq-count, esp. for non-TopHat alignment; use Rsamtools as alternative? ]
 
-
-## [ ...Step 5 is now Step 8... ]
+# [ ... not done yet ... ]
+# [ This step needed for htseq-count; use Rsamtools as alternative? ]
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Step 6: Count reads
+# Count reads
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 if (FALSE) {
@@ -264,63 +253,4 @@ if (FALSE) {
   bDrop <- rns %in% c("no_feature", "ambiguous", "too_low_aQual", "not_aligned", "alignment_not_unique")
   mat <- mat[!bDrop,]
 }
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Step 7a:  Set up edgeR count datastruct and filter reads
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-## Step 1 edgeR Create container for count data and filter features ;
-## Load the edgeR package and use the utility function, readDGE, to read in the COUNT files created from htseq-count:
-
-library(edgeR);
-hcounts <- sub(".sam$", ".count", osams)
-counts <- readDGE(hcounts)$counts;
-
-# Filter features w/ too low coverage and uninformative read counts 
-noint <- rownames(counts) %in%
-  c("no_feature","ambiguous","too_low_aQual",
-    "not_aligned","alignment_not_unique")
-cpms <- cpm(counts);
-# From Anders et al: 'In edgeR, we recommend removing features without at least 1 read per million in n of
-# the samples, where n is the size of the smallest group of replicates'
-if (!bTest) {
-  keep <- (rowSums(cpms>1)>=MinOKReplicates) & !noint;
-  counts <- counts[keep,];
-}
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Step 7b: Visualize and create DGEList for edgeR
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-## Visualize and inspect the count table using: ;
-
-
-colnames(counts) <- sub("_1$", "", getFullNames(getInputDataSet(ta)))
-# head( counts[,order(samples$condition)], 5 );
-
-## Create a DGEList object (s container for RNA-seq count data), as follows: ;
-d <- DGEList(counts=counts, group=Groups);
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Step 8 (was Step 5): Inspect alignments with IGV
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# [ ... This is probably a useful but manual step; user intervention required; skip for auto-pipeline ] ;
-
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Run edgeR for differential expression
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#
-# [ Example code ]
-# # Estimate normalization factors using:
-# d <- calcNormFactors(d)
-# 
-# # For simple designs, estimate tagwise dispersion estimates using:
-# d <- estimateCommonDisp(d)
-# d <- estimateTagwiseDisp(d)
-# 
-# # For a simple two-group design, perform an exact test for the difference in expression
-# # between the two conditions:
-# de <- exactTest(d, pair=c("CTL","KD"))
-# 
-
 

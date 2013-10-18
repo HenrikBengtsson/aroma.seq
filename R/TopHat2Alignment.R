@@ -101,7 +101,7 @@ setMethodS3("getPath", "TopHat2Alignment", function(this, create=TRUE, ...) {
 
 setMethodS3("getOutputDataSet", "TopHat2Alignment", function(this, ...) {
   ## Find all existing output data files
-  res <- BamDataSet$byPath(path=getPath(this), pattern="accepted_hits.bam", recursive=TRUE)
+  res <- BamDataSet$byPath(path=getPath(this), pattern="accepted_hits.bam$", recursive=TRUE)
 
   ## TODO: Assert completeness
   res;
@@ -166,16 +166,32 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   outputDir <- Arguments$getWritablePath(gsub(",", "_", getPath(this)))
   this$outputDir <- outputDir
   outputDirs <- file.path(outputDir, sub("_1$", "", getFullNames(ds)))
-  filePairs <- getFilePairs(ds)
-  fnsR1 <- sapply(filePairs[,1], function(x) {getPathname(x)})
-  fnsR2 <- sapply(filePairs[,2], function(x) {getPathname(x)})
-  for (i in seq_along(ds))
-  {
-    res <- do.call(what=tophat, args=list(bowtieRefIndexPrefix=getIndexPrefix(is),
-                                          reads1=fnsR1[i],
-                                          reads2=fnsR2[i],
-                                          optionsVec=c("G"=this$geneModelFile, "o"=outputDirs[i]),
-                                          command="tophat2"))
+
+  if (isPaired(ds)) {
+    filePairs <- getFilePairs(ds)
+    fnsR1 <- sapply(filePairs[,1], function(x) {getPathname(x)})
+    fnsR2 <- sapply(filePairs[,2], function(x) {getPathname(x)})
+    for (i in seq_along(ds))
+    {
+      res <- do.call(what=tophat, args=list(bowtieRefIndexPrefix=getIndexPrefix(is),
+                                            reads1=fnsR1[i],
+                                            reads2=fnsR2[i],
+                                            finalTopHatOutDir=outputDirs[i],
+                                            optionsVec=c("G"=this$geneModelFile),
+                                            command="tophat2"))
+      ## DEBUG
+      cat(i, "\n")
+    }
+  } else {
+    fnsR1 <- sapply(ds, function(x) {getPathname(x)})
+    for (i in seq_along(ds))
+    {
+      res <- do.call(what=tophat, args=list(bowtieRefIndexPrefix=getIndexPrefix(is),
+                                            reads1=fnsR1[i],
+                                            finalTopHatOutDir=outputDirs[i],
+                                            optionsVec=c("G"=this$geneModelFile),
+                                            command="tophat2"))
+    }
   }
 
   params <- getParameters(this);

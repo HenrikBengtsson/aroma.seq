@@ -17,7 +17,8 @@
 }
 
 \usage{
-\method{tophat}{default}(bowtieRefIndexPrefix=NULL, reads1=NULL, reads2=NULL, optionsVec=NULL, ...,
+\method{tophat}{default}(bowtieRefIndexPrefix=NULL, reads1=NULL, reads2=NULL, tophatInDir="tophatIn",
+  initialTopHatOutDir="tophatAroma", finalTopHatOutDir=NULL, optionsVec=NULL, ...,
   command="tophat", verbose=FALSE)
 }
 
@@ -26,6 +27,8 @@
   \item{bowtieRefIndexPrefix}{bowtie2 reference index (partial pathname, i.e. minus the .x.bt2 suffix)}
   \item{reads1}{(required) Vector of fastq filenames to align}
   \item{reads2}{(optional) Vector of fastq filenames to align, paired with reads1}
+  \item{initialTopHatOutDir}{(optional) TopHat output dir used by tophat executable}
+  \item{finalTopHatOutDir}{(optional) TopHat output dir when this tophat() method exits}
   \item{optionsVec}{Vector of named options to pass to tophat}
   \item{...}{(Not used)}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
