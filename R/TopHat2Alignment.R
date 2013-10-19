@@ -73,8 +73,8 @@ setMethodS3("getPath", "TopHat2Alignment", function(this, create=TRUE, ...) {
   # Root path
   rootPath <- getRootPath(this);
 
-  # Full name  (HACK FOR NOW)
-  fullname <- gsub(",", "_", getFullName(this))  # Accomodate tophat (bowtie2-build) dislike of commas
+  # Full name
+  fullname <- getFullName(this)
 
   # Platform
   ds <- getInputDataSet(this);
@@ -163,9 +163,8 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
     validate(rgSet);
   }
 
-  outputDir <- Arguments$getWritablePath(gsub(",", "_", getPath(this)))
-  this$outputDir <- outputDir
-  outputDirs <- file.path(outputDir, sub("_1$", "", getFullNames(ds)))
+  this$outputDir <- getPath(this)
+  outputDirs <- file.path(this$outputDir, sub("_1$", "", getFullNames(ds)))
 
   if (isPaired(ds)) {
     filePairs <- getFilePairs(ds)
@@ -176,7 +175,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
       res <- do.call(what=tophat, args=list(bowtieRefIndexPrefix=getIndexPrefix(is),
                                             reads1=fnsR1[i],
                                             reads2=fnsR2[i],
-                                            finalTopHatOutDir=outputDirs[i],
+                                            outDir=outputDirs[i],
                                             optionsVec=c("G"=this$geneModelFile),
                                             command="tophat2"))
       ## DEBUG
@@ -188,7 +187,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
     {
       res <- do.call(what=tophat, args=list(bowtieRefIndexPrefix=getIndexPrefix(is),
                                             reads1=fnsR1[i],
-                                            finalTopHatOutDir=outputDirs[i],
+                                            outDir=outputDirs[i],
                                             optionsVec=c("G"=this$geneModelFile),
                                             command="tophat2"))
     }
