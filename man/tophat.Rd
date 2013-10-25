@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Do not modify this file since it was automatically generated from:
 % 
-%  tophatMod.R
+%  tophat.R
 % 
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -18,7 +18,7 @@
 
 \usage{
 \method{tophat}{default}(bowtieRefIndexPrefix=NULL, reads1=NULL, reads2=NULL, outDir=NULL, optionsVec=NULL,
-  ..., .tophatInDir="tophatIn", .initialTopHatOutDir="tophatAroma", command="tophat",
+  ..., .tophatInDirPref="tophatIn", .initialTopHatOutDir=NULL, command="tophat",
   verbose=FALSE)
 }
 

@@ -1,5 +1,5 @@
 # 
-# Prototype RNA-seq script
+# Prototype RNA-seq pipeline script
 # 
 # This script is a pipeline for performing RNA-seq read quantification in aroma.seq.
 # It starts with fastq files and ends with a read count matrix on transcript features.
@@ -184,10 +184,6 @@ if (FALSE) {  # Skip for now
 # Align reads
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# Gene model
-gtfFile <- findFiles(path=pathLocalAnnots, pattern="gtf$")[1]
-# - POSSIBLE MANUAL STEP:  User needs to specify which gene model to use if more than one is available
-
 ta <- TopHat2Alignment(dataSet=fqs, indexSet=is)
 # TODO:  Make this run only if not done already
 system.time({
@@ -206,6 +202,10 @@ taout <- getOutputDataSet(ta)  # For now, this is a GenericDataFileSet
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Count reads
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# Gene model
+gtfFile <- findFiles(path=pathLocalAnnots, pattern="gtf$")[1]
+# - POSSIBLE MANUAL STEP:  User needs to specify which gene model to use if more than one is available
 
 if (FALSE) {
   # Convert bam to sam

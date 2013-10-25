@@ -32,27 +32,32 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix=NULL,
                                           outDir=NULL,
                                           optionsVec=NULL,
                                           ...,
-                                          .tophatInDir="tophatIn",
+                                          .tophatInDirPref="tophatIn",
                                           .initialTopHatOutDir=NULL,
                                           command='tophat',
                                           verbose=FALSE) {
   
   # ( Support a call like this: "tophat <options> bowtieRefIndexPrefix reads1 reads2" )
   
-  # Argument '.tophatInDir'
+  # Argument '.tophatInDirPref'
+  .tophatInDir <- paste(.tophatInDirPref, getChecksum(reads1), sep="")  # parallel-ready
   .tophatInDir <- Arguments$getWritablePathname(.tophatInDir)
-  
+
   # Argument '.initialTopHatOutDir'
   if (is.null(.initialTopHatOutDir)) {
-    .initialTopHatOutDir <- gsub(",", "_", outDir)
+    if (!is.null(outDir)) {
+      .initialTopHatOutDir <- gsub(",", "_", outDir)
+    } else {
+      .initialTopHatOutDir <- paste("tophatOut", getChecksum(reads1), sep="")      
+    }
   }
   .initialTopHatOutDir <- Arguments$getWritablePathname(.initialTopHatOutDir)
-
-            
-  # # Argument 'outDir'
-  if (!is.null(outDir)) {
-    outDir <- Arguments$getWritablePathname(outDir)
+  
+  # Argument 'outDir'
+  if (is.null(outDir)) {
+    outDir <- .initialTopHatOutDir
   }
+  outDir <- Arguments$getWritablePathname(outDir)
   
   # Set up the reference index and input read filenames as symbolic links, to avoid TopHat issues w/ commas
   # (This will still fail if the basenames have commas)
@@ -110,7 +115,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix=NULL,
   
   res <- do.call(what=systemTopHat, args=list(command=command, args=c(tophatOptions, tophatArgs)))
     
-  if (!is.null(outDir)) {
+  if (!is.null(outDir) && !(identical(outDir, .initialTopHatOutDir))) {
     # Move TopHat output to 'final' (e.g. aroma.seq-specified) directory.
     file.rename(.initialTopHatOutDir, outDir)
   }
@@ -120,6 +125,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix=NULL,
   
   # Remove temp dir
   # removeDirectory(dirname(.initialTopHatOutDir)) # Too dangerous as is; could do recursive delete of empty dirs
+
   
   return(res)
 })
