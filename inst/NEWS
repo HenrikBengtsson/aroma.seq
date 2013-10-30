@@ -1,6 +1,14 @@
 Package: aroma.seq
 ==================
 
+Version: 0.2.34 [2013-10-19]
+o Added tophat1() and tophat2() which are wrappers for tophat().
+
+
+Version: 0.2.33 [2013-10-18]
+o ...
+
+
 Version: 0.2.32 [2013-10-17]
 o Package now requires R (>= 3.0.2) [and Bioc (>= 2.13.0)].
 o Updated package dependences.
