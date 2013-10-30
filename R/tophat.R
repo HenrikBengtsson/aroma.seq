@@ -1,5 +1,10 @@
 ###########################################################################/**
-# @RdocDefault tophat
+# @RdocGeneric tophat
+# @alias tophat1
+# @alias tophat2
+# @alias tophat.default
+# @alias tophat1.default
+# @alias tophat2.default
 #
 # @title "Calls the TopHat executable to align input reads"
 #
@@ -7,7 +12,11 @@
 #  @get "title".
 # }
 #
-# @synopsis
+# \usage{
+#  @usage tophat,default
+#  @usage tophat1,default
+#  @usage tophat2,default
+# }
 #
 # \arguments{
 #   \item{command}{Name of executable}
@@ -142,6 +151,8 @@ setMethodS3("tophat2", "default", function(..., command="tophat2") {
 
 ############################################################################
 # HISTORY:
+# 2013-10-30 [HB]
+# o Added documentation for tophat1() and tophat2().
 # 2013-10-19 [HB]
 # o Added tophat1() and tophat2() which are wrappers for tophat().
 # 2013-03-07
@@ -149,5 +160,3 @@ setMethodS3("tophat2", "default", function(..., command="tophat2") {
 # 2013-02-08
 # o TT:  Created
 ############################################################################
-
-

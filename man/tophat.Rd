@@ -7,8 +7,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \name{tophat}
-\alias{tophat.default}
 \alias{tophat}
+
+\alias{tophat1}
+\alias{tophat2}
+\alias{tophat.default}
+\alias{tophat1.default}
+\alias{tophat2.default}
 
 \title{Calls the TopHat executable to align input reads}
 
@@ -17,9 +22,11 @@
 }
 
 \usage{
-\method{tophat}{default}(bowtieRefIndexPrefix=NULL, reads1=NULL, reads2=NULL, outDir=NULL, optionsVec=NULL,
+ \method{tophat}{default}(bowtieRefIndexPrefix=NULL, reads1=NULL, reads2=NULL, outDir=NULL, optionsVec=NULL,
   ..., .tophatInDirPref="tophatIn", .initialTopHatOutDir=NULL, command="tophat",
   verbose=FALSE)
+ \method{tophat1}{default}(..., command="tophat")
+ \method{tophat2}{default}(..., command="tophat2")
 }
 
 \arguments{
@@ -38,4 +45,5 @@
 \author{Taku Tokuyasu}
 
 
+\keyword{methods}
 \keyword{internal}
