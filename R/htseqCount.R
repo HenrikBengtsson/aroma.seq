@@ -11,7 +11,7 @@
 #
 # \arguments{
 #   \item{command}{Name of executable}
-#   \item{samFile}{sam file containing aligned reads, sorted by *name* if paired end}
+#   \item{inFile}{input file containing aligned reads, sorted by *name* if paired end; .sam and .bam supported}
 #   \item{gfFile}{gene feature file, in gff format}
 #   \item{outFile}{name of file to receive htseq-count output}
 #   \item{optionsVec}{Vector of named options to pass to htseq-count}
@@ -23,7 +23,7 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("htseqCount", "default", function(samFile=NULL,
+setMethodS3("htseqCount", "default", function(inFile=NULL,
                                               gfFile=NULL,
                                               outFile=NULL,
                                               optionsVec=c(s='no', a='10'),  ## Anders et al default
@@ -33,11 +33,19 @@ setMethodS3("htseqCount", "default", function(samFile=NULL,
 
   ## ( Support a call like this: "htseq-count -s no -a 10 lib_sn.sam gfFile > countFile")
 
-  # Argument 'samFile'
-  if (!is.null(samFile)) {
-    samFile <- Arguments$getReadablePathname(samFile);
+  # Argument 'inFile'
+  if (!is.null(inFile)) {
+    inFile <- Arguments$getReadablePathname(inFile);
   } else {
-    throw("Argument samFile is empty; supply sam file, sorted by name")
+    throw("Argument inFile is empty; supply sam file, sorted by name")
+  }
+  
+  # Assign 'samFile' = actual input filename, with support for .bam input
+  if (regexpr(".*[.]sam$", inFile, ignore.case=TRUE) != -1) {
+    samFile <- inFile
+  } else if (regexpr(".*[.]bam$", inFile, ignore.case=TRUE) != -1) {
+    samFile <- sub("[.]bam$", "\\.sam", inFile, ignore.case=TRUE)
+    samtoolsView(pathname=inFile, pathnameD=samFile)
   }
 
   # Argument 'gfFile'
@@ -53,7 +61,6 @@ setMethodS3("htseqCount", "default", function(samFile=NULL,
   } else {
     throw("Argument outFile is empty; supply output file name\n")
   }
-
 
   htseqArgs <- c(samFile, gfFile)
   htseqArgs <- c(htseqArgs, " > ", outFile)

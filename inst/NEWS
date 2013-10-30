@@ -1,6 +1,9 @@
 Package: aroma.seq
 ==================
 
+Version: 0.2.36 [2013-10-30]
+o Added input bam file support to htseqCount 
+
 Version: 0.2.35 [2013-10-30]
 o ROBUSTNESS: Added package system test for TopHat2Alignment.
 o ROBUSTNESS: Now process() for TopHat2Alignment checks for known

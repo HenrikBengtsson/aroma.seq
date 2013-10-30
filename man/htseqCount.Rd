@@ -17,13 +17,13 @@
 }
 
 \usage{
-\method{htseqCount}{default}(samFile=NULL, gfFile=NULL, outFile=NULL, optionsVec=c(s = "no", a = "10"),
-  ..., command="htseq-count", verbose=FALSE)
+\method{htseqCount}{default}(inFile=NULL, gfFile=NULL, outFile=NULL, optionsVec=c(s = "no", a = "10"), ...,
+  command="htseq-count", verbose=FALSE)
 }
 
 \arguments{
   \item{command}{Name of executable}
-  \item{samFile}{sam file containing aligned reads, sorted by *name* if paired end}
+  \item{inFile}{input file containing aligned reads, sorted by *name* if paired end; .sam and .bam supported}
   \item{gfFile}{gene feature file, in gff format}
   \item{outFile}{name of file to receive htseq-count output}
   \item{optionsVec}{Vector of named options to pass to htseq-count}
