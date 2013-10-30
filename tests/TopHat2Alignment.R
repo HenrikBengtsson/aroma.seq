@@ -1,19 +1,9 @@
 library("aroma.seq")
 
-test <- isCapableOf(aroma.seq, "bowtie2")
-test <- test && isCapableOf(aroma.seq, "tophat2")
-
-if (test) {
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Test for non-compatible bowtie2 and tophat2 versions
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-verT <- attr(findTopHat2(), "version")
-verB <- attr(findBowtie2(), "version")
-bad <- (verT == "2.0.3" && verB == "2.1.0")
-if (bad) {
-  throw(sprintf("TopHat2 v%s is known to not work with Bowtie2 v%s.", verT, verB))
-}
-
+fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
+fullTest <- fullTest && isCapableOf(aroma.seq, "bowtie2")
+fullTest <- fullTest && isCapableOf(aroma.seq, "tophat2")
+if (fullTest) {
 
 dataSet <- "YeastTest"
 organism <- "SC"
@@ -68,4 +58,4 @@ print(bams)
 # Sanity checks
 stopifnot(length(bams) == length(fqs))
 
-} # if (test)
+} # if (fullTest)

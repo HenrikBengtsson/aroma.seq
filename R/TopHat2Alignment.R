@@ -136,6 +136,19 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
     rgArgs;
   } # asTopHatParameters()
 
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Test for non-compatible bowtie2 and tophat2 versions
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  verT <- attr(findTopHat2(), "version");
+  verB <- attr(findBowtie2(), "version");
+  bad <- (verT == "2.0.3" && verB == "2.1.0");
+  if (bad) {
+    throw(sprintf("Detected incompatible software installations. TopHat2 v%s is known to not work with Bowtie2 v%s.", verT, verB))
+  }
+  verT <- verB <- NULL;
+
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -210,6 +223,9 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
 
 ############################################################################
 # HISTORY:
+# 2013-10-30
+# o ROBUSTNESS: Now process() for TopHat2Alignment checks for known
+#   incompatible versions of bowtie2 and tophat2.
 # 2013-08-12
 # o Created from Bowtie2Alignment.R
 ############################################################################

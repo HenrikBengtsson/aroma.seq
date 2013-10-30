@@ -1,6 +1,12 @@
 Package: aroma.seq
 ==================
 
+Version: 0.2.35 [2013-10-30]
+o ROBUSTNESS: Added package system test for TopHat2Alignment.
+o ROBUSTNESS: Now process() for TopHat2Alignment checks for known
+  incompatible versions of bowtie2 and tophat2.
+
+
 Version: 0.2.34 [2013-10-19]
 o Added tophat1() and tophat2() which are wrappers for tophat().
 
