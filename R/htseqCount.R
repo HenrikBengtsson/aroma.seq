@@ -23,8 +23,8 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("htseqCount", "default", function(inFile=NULL,
-                                              gfFile=NULL,
+setMethodS3("htseqCount", "default", function(inFile,
+                                              gfFile,
                                               outFile=NULL,
                                               optionsVec=c(s='no', a='10'),  ## Anders et al default
                                               ...,
@@ -34,26 +34,20 @@ setMethodS3("htseqCount", "default", function(inFile=NULL,
   ## ( Support a call like this: "htseq-count -s no -a 10 lib_sn.sam gfFile > countFile")
 
   # Argument 'inFile'
-  if (!is.null(inFile)) {
-    inFile <- Arguments$getReadablePathname(inFile);
-  } else {
-    throw("Argument inFile is empty; supply sam file, sorted by name")
-  }
-  
+  inFile <- Arguments$getReadablePathname(inFile);
+
   # Assign 'samFile' = actual input filename, with support for .bam input
   if (regexpr(".*[.]sam$", inFile, ignore.case=TRUE) != -1) {
     samFile <- inFile
   } else if (regexpr(".*[.]bam$", inFile, ignore.case=TRUE) != -1) {
-    samFile <- sub("[.]bam$", "\\.sam", inFile, ignore.case=TRUE)
+    samFile <- sub("[.]bam$", ".sam", inFile, ignore.case=TRUE)
     samtoolsView(pathname=inFile, pathnameD=samFile)
+  } else {
+    throw("Unknown file extension: ", inFile);
   }
 
   # Argument 'gfFile'
-  if (!is.null(gfFile)) {
-    gfFile <- Arguments$getReadablePathname(gfFile);
-  } else {
-    throw("Argument gfFile is empty; supply gene ('transcript') model file")
-  }
+  gfFile <- Arguments$getReadablePathname(gfFile);
 
   # Argument 'outFile'
   if (!is.null(outFile)) {
