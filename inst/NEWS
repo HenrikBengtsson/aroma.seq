@@ -3,6 +3,7 @@ Package: aroma.seq
 
 Version: 0.2.36 [2013-10-30]
 o Added input BAM file support to HTSeq.
+o Added check for 'python' to capabilitiesOf(aroma.seq).
 
 
 Version: 0.2.35 [2013-10-30]

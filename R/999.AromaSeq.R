@@ -68,6 +68,7 @@ setMethodS3("capabilitiesOf", "AromaSeq", function(static, what=NULL, force=FALS
     # General software frameworks
     res$java <- !is.null(findJava(mustExist=FALSE));
     res$perl <- !is.null(findPerl(mustExist=FALSE));
+    res$python <- !is.null(findPython(mustExist=FALSE));
 
     # Sequencing tools
     res$bowtie2 <- !is.null(findBowtie2(mustExist=FALSE));
@@ -125,6 +126,8 @@ setMethodS3("setupTests", "AromaSeq", function(static, path="redundancyTests/", 
 
 ############################################################################
 # HISTORY:
+# 2013-10-30
+# o Added 'python' to capabilities.
 # 2013-07-19
 # o SPEEDUP: Now the results of capabilitiesOf() are cached.
 # 2013-07-03

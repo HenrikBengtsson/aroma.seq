@@ -11,6 +11,7 @@
 
 \alias{findJava}
 \alias{findPerl}
+\alias{findPython}
 \alias{findBowtie2}
 \alias{findBWA}
 \alias{findSamtools}
@@ -32,6 +33,7 @@
   # Programming environments
   findJava(...)
   findPerl(...)
+  findPython(...)
 
   # Samtools
   findSamtools(...)

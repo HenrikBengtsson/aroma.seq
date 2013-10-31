@@ -2,6 +2,7 @@
 # @RdocFunction findExternal
 # @alias findJava
 # @alias findPerl
+# @alias findPython
 # @alias findBowtie2
 # @alias findBWA
 # @alias findSamtools
@@ -22,6 +23,7 @@
 #   # Programming environments
 #   @usage findJava
 #   @usage findPerl
+#   @usage findPython
 #
 #   # Samtools
 #   @usage findSamtools
