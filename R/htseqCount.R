@@ -41,7 +41,11 @@ setMethodS3("htseqCount", "default", function(inFile,
     samFile <- inFile
   } else if (regexpr(".*[.]bam$", inFile, ignore.case=TRUE) != -1) {
     samFile <- sub("[.]bam$", ".sam", inFile, ignore.case=TRUE)
+    samFile <- Argument$getWritablePathname(samFile, mustNotExist=TRUE)
     samtoolsView(pathname=inFile, pathnameD=samFile)
+    on.exit({
+      file.remove(samFile)
+    }, add=TRUE)
   } else {
     throw("Unknown file extension: ", inFile);
   }
@@ -50,11 +54,7 @@ setMethodS3("htseqCount", "default", function(inFile,
   gfFile <- Arguments$getReadablePathname(gfFile);
 
   # Argument 'outFile'
-  if (!is.null(outFile)) {
-    outFile <- Arguments$getWritablePathname(outFile);
-  } else {
-    throw("Argument outFile is empty; supply output file name\n")
-  }
+  outFile <- Arguments$getWritablePathname(outFile);
 
   htseqArgs <- c(samFile, gfFile)
   htseqArgs <- c(htseqArgs, " > ", outFile)
