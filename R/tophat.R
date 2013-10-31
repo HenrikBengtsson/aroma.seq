@@ -23,7 +23,6 @@
 #   \item{bowtieRefIndexPrefix}{bowtie2 reference index (partial pathname, i.e. minus the .x.bt2 suffix)}
 #   \item{reads1}{(required) Vector of fastq filenames to align; currently only a single filename is supported}
 #   \item{reads2}{(optional) Vector of fastq filenames to align, paired with reads1; currently only a single filename is supported}
-#   \item{.tophatInDir}{(optional) Directory for symbolic links to input fastq files}
 #   \item{.initialTopHatOutDir}{(optional) TopHat output dir used by tophat executable}
 #   \item{outDir}{(optional) TopHat output dir at method exit}
 #   \item{optionsVec}{Vector of named options to pass to tophat}
@@ -41,16 +40,11 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix=NULL,
                                           outDir=NULL,
                                           optionsVec=NULL,
                                           ...,
-                                          .tophatInDirPref="tophatIn",
                                           .initialTopHatOutDir=NULL,
                                           command='tophat',
                                           verbose=FALSE) {
 
-  # ( Support a call like this: "tophat <options> bowtieRefIndexPrefix reads1 reads2" )
-
-  # Argument '.tophatInDirPref'
-  .tophatInDir <- paste(.tophatInDirPref, getChecksum(reads1), sep="")  # parallel-ready
-  .tophatInDir <- Arguments$getWritablePathname(.tophatInDir)
+  # ( Support a command line like this: "tophat <options> bowtieRefIndexPrefix reads1 reads2" )
 
   # Argument '.initialTopHatOutDir'
   if (is.null(.initialTopHatOutDir)) {
@@ -68,6 +62,9 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix=NULL,
   }
   outDir <- Arguments$getWritablePathname(outDir)
 
+  # Dir for TopHat input symbolic links
+  tophatInDir <- Arguments$getWritablePath(file.path(.initialTopHatOutDir, "tophatIn"))
+
   # Set up the reference index and input read filenames as symbolic links, to avoid TopHat issues w/ commas
   # (This will still fail if the basenames have commas)
 
@@ -75,10 +72,10 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix=NULL,
   if (!is.null(bowtieRefIndexPrefix)) {
     bowtieRefIndexDir <- dirname(bowtieRefIndexPrefix)
     bowtieRefIndexDir <- Arguments$getReadablePathname(bowtieRefIndexDir);
-    bowtieRefIndexDirForTopHat <- createLink(link=file.path(.tophatInDir, "bowtieRefIndexDir"), bowtieRefIndexDir)
+    bowtieRefIndexDirForTopHat <- createLink(link=file.path(tophatInDir, "bowtieRefIndexDir"), bowtieRefIndexDir)
     bowtieRefIndexPrefixForTopHat <- file.path(bowtieRefIndexDirForTopHat, basename(bowtieRefIndexPrefix))
   } else {
-    throw("Argument bowtieRefIndexPrefix is empty; supply (prefix of) bowtie reference index")
+    throw("bowtieRefIndexPrefix is NULL; supply (prefix of) bowtie reference index")
   }
 
   reads1ForTopHat <- NULL
@@ -87,7 +84,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix=NULL,
   if (!is.null(reads1))
   {
     reads1 <- Arguments$getReadablePathname(reads1)
-    symLink <- createLink(link=file.path(.tophatInDir, basename(reads1)), reads1)
+    symLink <- createLink(link=file.path(tophatInDir, basename(reads1)), reads1)
     reads1ForTopHat <- symLink
   } else {
     throw("Argument reads1 is empty; supply at least one input read file")
@@ -96,14 +93,14 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix=NULL,
   if (!is.null(reads2))
   {
     reads2 <- Arguments$getReadablePathname(reads2)
-    symLink <- createLink(link=file.path(.tophatInDir, basename(reads2)), reads2)
+    symLink <- createLink(link=file.path(tophatInDir, basename(reads2)), reads2)
     reads2ForTopHat <- symLink
   }
 
   # Check that input files to tophat executable do not have commas
   stopifnot(length(grep(",", c(bowtieRefIndexPrefixForTopHat, reads1ForTopHat, reads2ForTopHat))) == 0)
 
-  ## Combine the above into "tophat arguments"
+  # Combine the above into "tophat arguments"
   if (!is.null(reads2ForTopHat)) {
     tophatArgs <- c(bowtieRefIndexPrefixForTopHat,
                     paste(reads1ForTopHat, collapse=","),
@@ -122,19 +119,16 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix=NULL,
     names(tophatOptions) <- paste(ifelse(nchar(nms) == 1, "-", "--"), nms, sep="")
   }
 
+  # Call tophat
   res <- do.call(what=systemTopHat, args=list(command=command, args=c(tophatOptions, tophatArgs)))
 
+  # Clean up input symbolic links
+  removeDirectory(tophatInDir, recursive=TRUE)
+  
+  # Move TopHat output to 'final' (e.g. aroma.seq-specified) directory
   if (!is.null(outDir) && !(identical(outDir, .initialTopHatOutDir))) {
-    # Move TopHat output to 'final' (e.g. aroma.seq-specified) directory.
     file.rename(.initialTopHatOutDir, outDir)
   }
-
-  # Clean up symbolic links to input files
-  removeDirectory(.tophatInDir, recursive=TRUE)
-
-  # Remove temp dir
-  # removeDirectory(dirname(.initialTopHatOutDir)) # Too dangerous as is; could do recursive delete of empty dirs
-
 
   return(res)
 })
