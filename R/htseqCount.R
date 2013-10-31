@@ -41,7 +41,7 @@ setMethodS3("htseqCount", "default", function(inFile,
     samFile <- inFile
   } else if (regexpr(".*[.]bam$", inFile, ignore.case=TRUE) != -1) {
     samFile <- sub("[.]bam$", ".sam", inFile, ignore.case=TRUE)
-    samFile <- Argument$getWritablePathname(samFile, mustNotExist=TRUE)
+    samFile <- Arguments$getWritablePathname(samFile, mustNotExist=TRUE)
     samtoolsView(pathname=inFile, pathnameD=samFile)
     on.exit({
       file.remove(samFile)
