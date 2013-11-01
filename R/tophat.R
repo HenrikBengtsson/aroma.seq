@@ -59,7 +59,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'outDir'
-  outDir <- Arguments$getWritablePathname(outDir)
+  outDir <- Arguments$getWritablePath(outDir)
 
   # Argument 'bowtieRefIndexPrefix'
   bowtieRefIndexPrefix <- Arguments$getCharacter(bowtieRefIndexPrefix,
