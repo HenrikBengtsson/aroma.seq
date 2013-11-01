@@ -2,7 +2,7 @@ library("aroma.seq")
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 fullTest <- fullTest && isCapableOf(aroma.seq, "bwa")
 fullTest <- fullTest && isCapableOf(aroma.seq, "picard")
-fullTest <- fullTest && isPackageInstalled("qdnaseq")
+fullTest <- fullTest && isPackageInstalled("QDNAseq")
 fullTest <- fullTest && isDirectory("annotationData,aroma.seq,private");
 fullTest <- fullTest && isDirectory("fastqData,aroma.seq,private");
 if (fullTest) {
@@ -25,9 +25,9 @@ print(fqs)
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# QDNASeq on FASTQ files
+# QDNAseq on FASTQ files
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-cns <- doQDNASeq(fqs, reference=fa, binWidth=100, verbose=-20)
+cns <- doQDNAseq(fqs, reference=fa, binWidth=100, verbose=-20)
 print(cns)
 
 # Display individual BAM files
@@ -38,20 +38,20 @@ for (ii in seq_along(cns)) {
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# QDNASeq on BAM files
+# QDNAseq on BAM files
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 path <- "bamData/AlbertsonD_2012-SCC,AB042,bwa,is,-dups/Generic/"
 bams <- BamDataSet$byPath(path)
 print(bams)
 
-# QDNASeq on a single BAM file
+# QDNAseq on a single BAM file
 bf <- getFile(bams, 1)
 print(bf)
-cn <- doQDNASeq(bf, binWidth=100, verbose=-20)
+cn <- doQDNAseq(bf, binWidth=100, verbose=-20)
 print(cn)
 
-# QDNASeq on a BAM file set
-cns <- doQDNASeq(bams, binWidth=100, verbose=-20)
+# QDNAseq on a BAM file set
+cns <- doQDNAseq(bams, binWidth=100, verbose=-20)
 print(cns)
 
 } # if (fullTest)

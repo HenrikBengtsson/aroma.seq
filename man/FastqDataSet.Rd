@@ -52,7 +52,7 @@ FastqDataSet(files=NULL, ..., paired=FALSE)
 \tabular{rll}{
  \tab \code{doBWA} \tab  -\cr
  \tab \code{doBowtie2} \tab  -\cr
- \tab \code{doQDNASeq} \tab  -\cr
+ \tab \code{doQDNAseq} \tab  -\cr
  \tab \code{getDefaultSamReadGroup} \tab  -\cr
  \tab \code{getSamReadGroup} \tab  -\cr
  \tab \code{report} \tab  -\cr

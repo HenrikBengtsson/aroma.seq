@@ -29,9 +29,9 @@ setSamReadGroup(ds, SamReadGroup(LB="MPS-034", ID=1L));
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Complete QDNASeq pipeline
+# Complete QDNAseq pipeline
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-cns <- doQDNASeq(ds, reference=fa, binWidth=1000, verbose=-20);
+cns <- doQDNAseq(ds, reference=fa, binWidth=1000, verbose=-20);
 print(cns);
 
 

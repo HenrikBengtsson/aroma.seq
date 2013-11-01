@@ -1,9 +1,11 @@
 Package: aroma.seq
 ==================
 
-Version: 0.2.36 [2013-10-30]
+Version: 0.2.36 [2013-10-31]
 o Added input BAM file support to HTSeq.
 o Added check for 'python' to capabilitiesOf(aroma.seq).
+o Updated capitalization everywhere to reflect the updated
+  name of the 'QDNAseq' package (was 'qdnaseq').
 
 
 Version: 0.2.35 [2013-10-30]
