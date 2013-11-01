@@ -37,13 +37,12 @@ extends \emph{\link[aroma.seq]{AbstractAlignment}}\cr
 }
 
 \usage{
-TopHat2Alignment(..., indexSet=NULL, outputDir=NULL, geneModelFile=NULL)
+TopHat2Alignment(..., indexSet=NULL, geneModelFile=NULL)
 }
 
 \arguments{
  \item{...}{Arguments passed to \code{\link{AbstractAlignment}}.}
  \item{indexSet}{An \code{\link{Bowtie2IndexSet}}.}
- \item{outputDir}{A placeholder for the output path (overwritten by the code at present).}
  \item{geneModelFile}{Gene model (transcriptome) gtf/gff file.}
 }
 

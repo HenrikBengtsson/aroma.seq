@@ -14,7 +14,6 @@
 # \arguments{
 #  \item{...}{Arguments passed to @see "AbstractAlignment".}
 #  \item{indexSet}{An @see "Bowtie2IndexSet".}
-#  \item{outputDir}{A placeholder for the output path (overwritten by the code at present).}
 #  \item{geneModelFile}{Gene model (transcriptome) gtf/gff file.}
 # }
 #
@@ -33,19 +32,18 @@
 #      \url{http://http://tophat.cbcb.umd.edu/}
 # }
 #*/###########################################################################
-
-setConstructorS3("TopHat2Alignment", function(..., indexSet=NULL, outputDir=NULL, geneModelFile=NULL) {
+setConstructorS3("TopHat2Alignment", function(..., indexSet=NULL, geneModelFile=NULL) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'indexSet':
   if (!is.null(indexSet)) {
     indexSet <- Arguments$getInstanceOf(indexSet, "Bowtie2IndexSet");
   }
-  if (!is.null(outputDir)) {
-    outputDir <- Arguments$getWritablePath(outputDir)
-    ## [ Convention:  This should be a single path, below which there can be multiple per-sample dirs ]
-  }
 
+  # Argument 'geneModelFile':
   if (!is.null(geneModelFile)) {
-    geneModelFile <- Arguments$getReadablePath(geneModelFile)
+    geneModelFile <- Arguments$getReadablePath(geneModelFile);
   }
 
   # Arguments '...':
@@ -109,34 +107,6 @@ setMethodS3("getOutputDataSet", "TopHat2Alignment", function(this, ...) {
 
 
 setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=FALSE, verbose=FALSE) {
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Local functions
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  asTopHatParameters <- function(rg, ...) {
-    if (isEmpty(rg)) {
-      return(NULL);
-    }
-
-    # Validate
-##    if (!hasID(rg)) {
-##      throw("... requires that the SAM read group has an ID.");
-##    }
-
-    rgArgs <- asString(rg, fmtstr="%s:%s");
-    rgArgs <- rgArgs[regexpr("^ID:", rgArgs) == -1];
-
-    # Don't forget to put within quotation marks
-    rgArgs <- sprintf("\"%s\"", rgArgs);
-
-    rgArgs <- as.list(rgArgs);
-    names(rgArgs) <- rep("rg", times=length(rgArgs));
-
-    rgArgs <- c(list("rg-id"=asSamList(rg)$ID), rgArgs);
-
-    rgArgs;
-  } # asTopHatParameters()
-
-
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Test for non-compatible bowtie2 and tophat2 versions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -159,7 +129,10 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
     on.exit(popState(verbose));
   }
 
+
   verbose && enter(verbose, "TopHat2 alignment");
+  verbose && cat(verbose, "Paired-end analysis: ", isPaired(ds));
+
   ds <- getInputDataSet(this);
   verbose && cat(verbose, "Input data set:");
   verbose && print(verbose, ds);
@@ -167,65 +140,69 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   is <- getIndexSet(this);
   verbose && cat(verbose, "Aligning using index set:");
   verbose && print(verbose, is);
-  indexPrefix <- getIndexPrefix(is);
 
-  rgSet <- this$.rgSet;
-  if (!is.null(rgSet)) {
-    verbose && cat(verbose, "Assigning SAM read group:");
-    verbose && print(verbose, rgSet);
-    validate(rgSet);
-  }
+  sampleNames <- sub("_1$", "", getFullNames(ds));
+  verbose && cat(verbose, "Sample names:");
+  verbose && print(verbose, sampleNames);
 
-  this$outputDir <- getPath(this)
-  outputDirs <- file.path(this$outputDir, sub("_1$", "", getFullNames(ds)))
+  outPath <- getPath(this);
+  verbose && cat(verbose, "Output directory: ", outPath);
+
+  # Setup arguments for tophat()
+  args <- list(
+    bowtieRefIndexPrefix=getIndexPrefix(is),
+    reads1=NA,
+    reads2=NA,
+    outPath=NA,
+    optionsVec=c("G"=this$geneModelFile)
+  );
 
   if (isPaired(ds)) {
     filePairs <- getFilePairs(ds)
-    fnsR1 <- sapply(filePairs[,1], function(x) {getPathname(x)})
-    fnsR2 <- sapply(filePairs[,2], function(x) {getPathname(x)})
-    for (i in seq_along(ds))
-    {
-      res <- do.call(what=tophat, args=list(bowtieRefIndexPrefix=getIndexPrefix(is),
-                                            reads1=fnsR1[i],
-                                            reads2=fnsR2[i],
-                                            outDir=outputDirs[i],
-                                            optionsVec=c("G"=this$geneModelFile),
-                                            command="tophat2"))
-      ## DEBUG
-      cat(i, "\n")
-    }
-  } else {
-    fnsR1 <- sapply(ds, function(x) {getPathname(x)})
-    for (i in seq_along(ds))
-    {
-      res <- do.call(what=tophat, args=list(bowtieRefIndexPrefix=getIndexPrefix(is),
-                                            reads1=fnsR1[i],
-                                            outDir=outputDirs[i],
-                                            optionsVec=c("G"=this$geneModelFile),
-                                            command="tophat2"))
-    }
-  }
+    fnsR1 <- sapply(filePairs[,1], FUN=getPathname)
+    fnsR2 <- sapply(filePairs[,2], FUN=getPathname)
+    for (ii in seq_along(ds)) {
+      df <- getFile(ds, ii);
+      verbose && enter(verbose, sprintf("Sample #%d ('%s') of %d", ii, getName(df), length(ds)));
 
-  params <- getParameters(this);
-  verbose && cat(verbose, "Additional tophat2 arguments:");
-  verbose && str(verbose, params);
-  if (is.list(ds)) {
-    verbose && cat(verbose, "Number of input data file pairs: ", length(ds[[1]]));
+      args$reads1 <- fnsR1[ii];
+      args$reads2 <- fnsR2[ii];
+      args$outPath <- file.path(outPath, sampleNames[ii]);
+      res <- do.call(tophat2, args=args);
+
+      verbose && exit(verbose);
+    } # for (ii ...)
   } else {
-    verbose && cat(verbose, "Number of input data files: ", length(ds));
+    throw("Not yet implemented!");
+    fnsR1 <- sapply(filePairs[,1], FUN=getPathname)  # <= BUG: Won't work! /HB 2013-11-01
+    for (ii in seq_along(ds)) {
+      df <- getFile(ds, ii);
+      verbose && enter(verbose, sprintf("Sample #%d ('%s') of %d", ii, getName(df), length(ds)));
+
+      args$reads1 <- fnsR1[ii];
+      args$outPath <- file.path(outPath, sampleNames[ii]);
+      res <- do.call(tophat2, args=args);
+
+      verbose && exit(verbose);
+    } # for (ii ...)
   }
 
   res <- getOutputDataSet(this, verbose=less(verbose, 1));
   verbose && exit(verbose);
+
   invisible(res);
 })
 
 
 ############################################################################
 # HISTORY:
-# 2013-10-30
+# 2013-10-31 [HB]
+# o Now utilizing tophat2().
+# o CLEANUP: Dropped non-used argument 'outputDir' from constructor.
+# o CLEANUP: Dropping stray cut'n'paste code.
+# 2013-10-30 [HB]
 # o ROBUSTNESS: Now process() for TopHat2Alignment checks for known
 #   incompatible versions of bowtie2 and tophat2.
-# 2013-08-12
-# o Created from Bowtie2Alignment.R
+# 2013-08-12 [TT]
+# o Created from Bowtie2Alignment.R.
 ############################################################################
