@@ -94,12 +94,6 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
   tophatOutDir <- gsub(",", "_", outDir)
   tophatOutDir <- Arguments$getWritablePath(tophatOutDir)
   assertNoCommas(tophatOutDir)
-  # When done, make sure to rename it to the final one.
-  on.exit({
-    if (!identical(outDir, tophatOutDir)) {
-      file.rename(tophatOutDir, outDir)
-    }
-  }, add=TRUE)
 
 
   # (1b) Inside the temporary output directory, setup a temporary
@@ -115,7 +109,9 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
   bowtieRefIndexDirForTopHat <- createLink(link=link, bowtieRefIndexDir)
   # When done, make sure to remove the temporary file link
   on.exit({
-    file.remove(bowtieRefIndexDirForTopHat)
+    if (file.exists(reads2ForTopHat)) {
+      file.remove(bowtieRefIndexDirForTopHat)
+    }
   }, add=TRUE)
   bowtieRefIndexPrefixForTopHat <- file.path(bowtieRefIndexDirForTopHat, basename(bowtieRefIndexPrefix))
   assertNoCommas(bowtieRefIndexPrefixForTopHat)
@@ -126,7 +122,9 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
   reads1ForTopHat <- createLink(link=link, reads1)
   # When done, make sure to remove the temporary file link
   on.exit({
-    file.remove(reads1ForTopHat)
+    if (file.exists(reads2ForTopHat)) {
+      file.remove(reads1ForTopHat)
+    }
   }, add=TRUE)
   assertNoCommas(reads1ForTopHat)
 
@@ -139,15 +137,25 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
     reads2ForTopHat <- createLink(link=link, reads2)
     # When done, make sure to remove the temporary file link
     on.exit({
-      file.remove(reads2ForTopHat)
+      if (file.exists(reads2ForTopHat)) {
+        file.remove(reads2ForTopHat)
+      }
     }, add=TRUE)
     assertNoCommas(reads2ForTopHat)
   }
 
-  # (4) Finally, when done, make sure to remove the temporary input
-  #     directory which should be empty at this point ('recursive=FALSE')
+  # (4a) Finally, when done, make sure to remove the temporary input
+  #      directory which should be empty at this point ('recursive=FALSE')
   on.exit({
-    removeDirectory(tophatInDir, recursive=FALSE)
+    removeDirectory(tophatInDir, recursive=FALSE, mustExist=FALSE)
+  }, add=TRUE)
+
+  # (4b) ...and lastly, rename the temporary output directory to the
+  #      final one.
+  on.exit({
+    if (!identical(outDir, tophatOutDir)) {
+      file.rename(tophatOutDir, outDir)
+    }
   }, add=TRUE)
 
 
