@@ -96,8 +96,8 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
   assertNoCommas(bowtieRefIndexPrefixForTopHat)
   assertNoCommas(reads1ForTopHat)
   assertNoCommas(reads2ForTopHat)
-  assertNoCommas(topHatOutDir)
-  assertNoCommas(topHatInDir)
+  assertNoCommas(tophatOutDir)
+  assertNoCommas(tophatInDir)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
