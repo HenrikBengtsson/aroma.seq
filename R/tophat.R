@@ -86,7 +86,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Use a temporary output directory without commas
   tophatOutDir <- gsub(",", "_", outDir)
-  tophatOutDir <- Arguments$getWritablePathname(tophatOutDir)
+  tophatOutDir <- Arguments$getWritablePath(tophatOutDir)
   assertNoCommas(tophatOutDir)
 
   # Inside the temporary output directory, setup a temporary input
