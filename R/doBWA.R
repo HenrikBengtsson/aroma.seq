@@ -105,7 +105,7 @@ setMethodS3("doBWA", "FastqDataSet", function(dataSet, reference, ..., verbose=F
   verbose && exit(verbose);
 
   bs;
-}) # doQDNASeq()
+}) # doBWA()
 
 
 setMethodS3("doBWA", "default", function(...) {

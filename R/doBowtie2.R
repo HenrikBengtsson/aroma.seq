@@ -103,7 +103,7 @@ setMethodS3("doBowtie2", "FastqDataSet", function(dataSet, reference, ..., verbo
   verbose && exit(verbose);
 
   bs;
-}) # doQDNASeq()
+}) # doBowtie2()
 
 
 setMethodS3("doBowtie2", "default", function(...) {
