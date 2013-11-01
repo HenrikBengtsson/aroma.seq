@@ -59,9 +59,15 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'outDir'
-  outDir <- Arguments$getWritablePath(outDir)
+  # Here we assert that the output directory does not already exists,
+  # that it can be created, but we really don't want to create it because
+  # later the temporary directory will be renamed to it, so we delete
+  # immediately.
+  outDir <- Arguments$getWritablePath(outDir, mustNotExist=TRUE)
+  unlink(outDir)
 
   # Argument 'bowtieRefIndexPrefix'
+  # (and the existence of the corresponding directory)
   bowtieRefIndexPrefix <- Arguments$getCharacter(bowtieRefIndexPrefix,
                                                            length=c(1L,1L))
   bowtieRefIndexDir <- dirname(bowtieRefIndexPrefix)
@@ -84,34 +90,65 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
   # names, not in the filenames.  If the filenames have commas,
   # the below assertion tests will throw an error.
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Use a temporary output directory without commas
+  # (1a) Use a temporary output directory without commas
   tophatOutDir <- gsub(",", "_", outDir)
   tophatOutDir <- Arguments$getWritablePath(tophatOutDir)
   assertNoCommas(tophatOutDir)
+  # When done, make sure to rename it to the final one.
+  on.exit({
+    if (!identical(outDir, tophatOutDir)) {
+      file.rename(tophatOutDir, outDir)
+    }
+  }, add=TRUE)
 
-  # Inside the temporary output directory, setup a temporary input
-  # directory without commas
-  tophatInDir <- Arguments$getWritablePath(file.path(tophatOutDir, "tophatIn"))
+
+  # (1b) Inside the temporary output directory, setup a temporary
+  #      input directory without commas
+  tophatInDir <- file.path(tophatOutDir, "tophatIn")
+  tophatInDir <- Arguments$getWritablePath(tophatInDir)
   assertNoCommas(tophatInDir)
 
-  # Link to the bowtie2 index directory (such that tophat sees no commas)
-  bowtieRefIndexDirForTopHat <- createLink(link=file.path(tophatInDir, "bowtieRefIndexDir"), bowtieRefIndexDir)
+
+  # (2a) Link to the bowtie2 index directory
+  #      (such that tophat sees no commas)
+  link <- file.path(tophatInDir, "bowtieRefIndexDir")
+  bowtieRefIndexDirForTopHat <- createLink(link=link, bowtieRefIndexDir)
+  # When done, make sure to remove the temporary file link
+  on.exit({
+    file.remove(bowtieRefIndexDirForTopHat)
+  }, add=TRUE)
   bowtieRefIndexPrefixForTopHat <- file.path(bowtieRefIndexDirForTopHat, basename(bowtieRefIndexPrefix))
   assertNoCommas(bowtieRefIndexPrefixForTopHat)
 
-  # Link to the FASTQ 'R1' (such that tophat sees no commas)
-  symLink <- createLink(link=file.path(tophatInDir, basename(reads1)), reads1)
-  reads1ForTopHat <- symLink
+  # (3a) Link to the FASTQ 'R1'
+  #      (such that tophat sees no commas)
+  link <- file.path(tophatInDir, basename(reads1))
+  reads1ForTopHat <- createLink(link=link, reads1)
+  # When done, make sure to remove the temporary file link
+  on.exit({
+    file.remove(reads1ForTopHat)
+  }, add=TRUE)
   assertNoCommas(reads1ForTopHat)
 
-  # Link to the (optional) FASTQ 'R2' (such that tophat sees no commas)
+  # (3b) Link to the (optional) FASTQ 'R2'
+  #      (such that tophat sees no commas)
   reads2ForTopHat <- NULL
   if (!is.null(reads2)) {
     reads2 <- Arguments$getReadablePathname(reads2)
-    symLink <- createLink(link=file.path(tophatInDir, basename(reads2)), reads2)
-    reads2ForTopHat <- symLink
+    link <- file.path(tophatInDir, basename(reads2))
+    reads2ForTopHat <- createLink(link=link, reads2)
+    # When done, make sure to remove the temporary file link
+    on.exit({
+      file.remove(reads2ForTopHat)
+    }, add=TRUE)
     assertNoCommas(reads2ForTopHat)
   }
+
+  # (4) Finally, when done, make sure to remove the temporary input
+  #     directory which should be empty at this point ('recursive=FALSE')
+  on.exit({
+    removeDirectory(tophatInDir, recursive=FALSE)
+  }, add=TRUE)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -140,17 +177,6 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
   res <- do.call(what=systemTopHat, args=list(command=command, args=c(tophatOptions, tophatArgs)))
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Cleanup
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Clean up input symbolic links
-  removeDirectory(tophatInDir, recursive=TRUE)
-
-  # Move TopHat output to 'final' (e.g. aroma.seq-specified) directory
-  if (!identical(outDir, tophatOutDir)) {
-    file.rename(tophatOutDir, outDir)
-  }
-
   res
 }) # tophat()
 
@@ -167,6 +193,9 @@ setMethodS3("tophat2", "default", function(..., command="tophat2") {
 ############################################################################
 # HISTORY:
 # 2013-10-31 [HB]
+# o ROBUSTNESS: Now tophat() does a better job in making sure all
+#   temporary directories and file links are removed regardless how
+#   the function exits.
 # o CLEANUP: Separated the validation of the arguments and the
 #   workaround for dealing with commas.
 # o CLEANUP: Dropped unnecessary argument '.initialTopHatOutDir'.
