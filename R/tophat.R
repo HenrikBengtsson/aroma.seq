@@ -73,7 +73,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
   # Argument 'bowtieRefIndexPrefix'
   bowtieRefIndexPrefix <- Arguments$getCharacter(bowtieRefIndexPrefix, length=c(1L,1L))
   bowtieRefIndexDir <- dirname(bowtieRefIndexPrefix)
-  bowtieRefIndexDir <- Arguments$getReadablePathname(bowtieRefIndexDir);
+  bowtieRefIndexDir <- Arguments$getReadablePath(bowtieRefIndexDir);
   bowtieRefIndexDirForTopHat <- createLink(link=file.path(tophatInDir, "bowtieRefIndexDir"), bowtieRefIndexDir)
   bowtieRefIndexPrefixForTopHat <- file.path(bowtieRefIndexDirForTopHat, basename(bowtieRefIndexPrefix))
 
