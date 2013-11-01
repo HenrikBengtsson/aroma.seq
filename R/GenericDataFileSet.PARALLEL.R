@@ -36,6 +36,11 @@
 # @keyword internal
 #*/###########################################################################
 setMethodS3("dsApply", "GenericDataFileSet", function(ds, FUN, ..., args=list(), skip=FALSE, verbose=FALSE, .parallel=FALSE, .control=list(dW=1.0)) {
+  # To please R CMD check (because BatchJobs is just "suggested")
+  getJobNr <- batchMap <- showStatus <- findNotSubmitted <-
+      findNotRunning <- submitJobs <- findNotTerminated <- NULL;
+
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
