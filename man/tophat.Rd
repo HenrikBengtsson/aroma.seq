@@ -22,8 +22,8 @@
 }
 
 \usage{
- \method{tophat}{default}(bowtieRefIndexPrefix, reads1, reads2=NULL, outDir="tophat/", optionsVec=NULL, ...,
-  command="tophat", verbose=FALSE)
+ \method{tophat}{default}(bowtieRefIndexPrefix, reads1, reads2=NULL, outPath="tophat/", optionsVec=NULL,
+  ..., command="tophat", verbose=FALSE)
  \method{tophat1}{default}(..., command="tophat")
  \method{tophat2}{default}(..., command="tophat2")
 }
@@ -32,14 +32,14 @@
   \item{bowtieRefIndexPrefix}{bowtie2 reference index (partial pathname, i.e. minus the .x.bt2 suffix)}
   \item{reads1}{(required) Vector of fastq filenames to align; currently only a single filename is supported}
   \item{reads2}{(optional) Vector of fastq filenames to align, paired with reads1; currently only a single filename is supported}
-  \item{outDir}{Directory where result files are written}
+  \item{outPath}{Directory where result files are written}
   \item{optionsVec}{Vector of named options to pass to tophat}
   \item{...}{(Not used)}
   \item{command}{Name of executable}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }
 
-\author{Taku Tokuyasu}
+\author{Henrik Bengtsson, Taku Tokuyasu}
 
 
 \keyword{methods}
