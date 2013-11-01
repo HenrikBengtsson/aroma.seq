@@ -5,6 +5,7 @@
 # @alias findPython
 # @alias findBowtie2
 # @alias findBWA
+# @alias findHTSeq
 # @alias findSamtools
 # @alias findTopHat
 # @alias findTopHat1
@@ -39,6 +40,9 @@
 #   @usage findTopHat
 #   @usage findTopHat1
 #   @usage findTopHat2
+#
+#   HTSeq
+#   @usage findHTSeq
 # }
 #
 # \arguments{

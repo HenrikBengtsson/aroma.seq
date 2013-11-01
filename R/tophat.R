@@ -34,8 +34,8 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("tophat", "default", function(bowtieRefIndexPrefix=NULL,
-                                          reads1=NULL,
+setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
+                                          reads1,
                                           reads2=NULL,
                                           outDir=NULL,
                                           optionsVec=NULL,
@@ -45,7 +45,21 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix=NULL,
                                           verbose=FALSE) {
 
   # ( Support a command line like this: "tophat <options> bowtieRefIndexPrefix reads1 reads2" )
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Local functions
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  hasCommas <- function(pathnames, ...) {
+    (regexpr(",", pathnames, fixed=TRUE) != -1L);
+  } # hasCommas()
 
+  assertNoCommas <- function(pathnames, ...) {
+    stopifnot(!any(hasCommas(pathnames)));
+  } # assertNoCommas()
+		       
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Argument '.initialTopHatOutDir'
   if (is.null(.initialTopHatOutDir)) {
     if (!is.null(outDir)) {
@@ -69,27 +83,19 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix=NULL,
   # (This will still fail if the basenames have commas)
 
   # Argument 'bowtieRefIndexPrefix'
-  if (!is.null(bowtieRefIndexPrefix)) {
-    bowtieRefIndexDir <- dirname(bowtieRefIndexPrefix)
-    bowtieRefIndexDir <- Arguments$getReadablePathname(bowtieRefIndexDir);
-    bowtieRefIndexDirForTopHat <- createLink(link=file.path(tophatInDir, "bowtieRefIndexDir"), bowtieRefIndexDir)
-    bowtieRefIndexPrefixForTopHat <- file.path(bowtieRefIndexDirForTopHat, basename(bowtieRefIndexPrefix))
-  } else {
-    throw("bowtieRefIndexPrefix is NULL; supply (prefix of) bowtie reference index")
-  }
+  bowtieRefIndexPrefix <- Arguments$getCharacter(bowtieRefIndexPrefix, length=c(1L,1L))
+  bowtieRefIndexDir <- dirname(bowtieRefIndexPrefix)
+  bowtieRefIndexDir <- Arguments$getReadablePathname(bowtieRefIndexDir);
+  bowtieRefIndexDirForTopHat <- createLink(link=file.path(tophatInDir, "bowtieRefIndexDir"), bowtieRefIndexDir)
+  bowtieRefIndexPrefixForTopHat <- file.path(bowtieRefIndexDirForTopHat, basename(bowtieRefIndexPrefix))
 
-  reads1ForTopHat <- NULL
-  reads2ForTopHat <- NULL
   # Argument 'reads1'
-  if (!is.null(reads1))
-  {
-    reads1 <- Arguments$getReadablePathname(reads1)
-    symLink <- createLink(link=file.path(tophatInDir, basename(reads1)), reads1)
-    reads1ForTopHat <- symLink
-  } else {
-    throw("Argument reads1 is empty; supply at least one input read file")
-  }
+  reads1 <- Arguments$getReadablePathname(reads1)
+  symLink <- createLink(link=file.path(tophatInDir, basename(reads1)), reads1)
+  reads1ForTopHat <- symLink
+
   # Argument 'reads2'
+  reads2ForTopHat <- NULL
   if (!is.null(reads2))
   {
     reads2 <- Arguments$getReadablePathname(reads2)
@@ -97,9 +103,17 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix=NULL,
     reads2ForTopHat <- symLink
   }
 
-  # Check that input files to tophat executable do not have commas
-  stopifnot(length(grep(",", c(bowtieRefIndexPrefixForTopHat, reads1ForTopHat, reads2ForTopHat))) == 0)
 
+
+  # Check that input files to tophat executable do not have commas
+  assertNoCommas(bowtieRefIndexPrefixForTopHat)
+  assertNoCommas(reads1ForTopHat)
+  assertNoCommas(reads2ForTopHat)
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Call the tophat executable
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Combine the above into "tophat arguments"
   if (!is.null(reads2ForTopHat)) {
     tophatArgs <- c(bowtieRefIndexPrefixForTopHat,
@@ -122,6 +136,10 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix=NULL,
   # Call tophat
   res <- do.call(what=systemTopHat, args=list(command=command, args=c(tophatOptions, tophatArgs)))
 
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Cleanup
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Clean up input symbolic links
   removeDirectory(tophatInDir, recursive=TRUE)
   
@@ -130,8 +148,8 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix=NULL,
     file.rename(.initialTopHatOutDir, outDir)
   }
 
-  return(res)
-})
+  res
+}) # tophat()
 
 
 setMethodS3("tophat1", "default", function(..., command="tophat") {

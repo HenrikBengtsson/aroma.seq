@@ -14,6 +14,7 @@
 \alias{findPython}
 \alias{findBowtie2}
 \alias{findBWA}
+\alias{findHTSeq}
 \alias{findSamtools}
 \alias{findTopHat}
 \alias{findTopHat1}
@@ -50,6 +51,9 @@
   findTopHat(..., command="tophat")
   findTopHat1(..., command="tophat", version=c(1, 2))
   findTopHat2(..., command="tophat2", version=c(2, 3))
+
+  HTSeq
+  findHTSeq(..., command=c("htseq-count", "htseq-qa"))
 }
 
 \arguments{
