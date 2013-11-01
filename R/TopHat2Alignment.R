@@ -131,9 +131,9 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
 
 
   verbose && enter(verbose, "TopHat2 alignment");
-  verbose && cat(verbose, "Paired-end analysis: ", isPaired(ds));
-
   ds <- getInputDataSet(this);
+
+  verbose && cat(verbose, "Paired-end analysis: ", isPaired(ds));
   verbose && cat(verbose, "Input data set:");
   verbose && print(verbose, ds);
 
