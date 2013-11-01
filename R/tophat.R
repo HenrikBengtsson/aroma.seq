@@ -61,43 +61,57 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
   # Argument 'outDir'
   outDir <- Arguments$getWritablePathname(outDir)
 
-
-  # Dir for TopHat output and input symbolic links
-  tophatOutDir <- gsub(",", "_", outDir)
-  tophatOutDir <- Arguments$getWritablePathname(tophatOutDir)
-  tophatInDir <- Arguments$getWritablePath(file.path(tophatOutDir, "tophatIn"))
-
-  # Set up the reference index and input read filenames as symbolic links, to avoid TopHat issues w/ commas
-  # (This will still fail if the basenames have commas)
-
   # Argument 'bowtieRefIndexPrefix'
-  bowtieRefIndexPrefix <- Arguments$getCharacter(bowtieRefIndexPrefix, length=c(1L,1L))
+  bowtieRefIndexPrefix <- Arguments$getCharacter(bowtieRefIndexPrefix,
+                                                           length=c(1L,1L))
   bowtieRefIndexDir <- dirname(bowtieRefIndexPrefix)
-  bowtieRefIndexDir <- Arguments$getReadablePath(bowtieRefIndexDir);
-  bowtieRefIndexDirForTopHat <- createLink(link=file.path(tophatInDir, "bowtieRefIndexDir"), bowtieRefIndexDir)
-  bowtieRefIndexPrefixForTopHat <- file.path(bowtieRefIndexDirForTopHat, basename(bowtieRefIndexPrefix))
+  bowtieRefIndexDir <- Arguments$getReadablePath(bowtieRefIndexDir)
 
   # Argument 'reads1'
   reads1 <- Arguments$getReadablePathname(reads1)
-  symLink <- createLink(link=file.path(tophatInDir, basename(reads1)), reads1)
-  reads1ForTopHat <- symLink
 
   # Argument 'reads2'
-  reads2ForTopHat <- NULL
-  if (!is.null(reads2))
-  {
+  if (!is.null(reads2)) {
     reads2 <- Arguments$getReadablePathname(reads2)
-    symLink <- createLink(link=file.path(tophatInDir, basename(reads2)), reads2)
-    reads2ForTopHat <- symLink
   }
 
 
-  # Check that input files to tophat executable do not have commas
-  assertNoCommas(bowtieRefIndexPrefixForTopHat)
-  assertNoCommas(reads1ForTopHat)
-  assertNoCommas(reads2ForTopHat)
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Workaround the fact that tophat2 binary does not support commas
+  # in input pathnames, e.g. reference index files and FASTQ files.
+  #
+  # NOTE: The current workaround only adjusts for commas in the path
+  # names, not in the filenames.  If the filenames have commas,
+  # the below assertion tests will throw an error.
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Use a temporary output directory without commas
+  tophatOutDir <- gsub(",", "_", outDir)
+  tophatOutDir <- Arguments$getWritablePathname(tophatOutDir)
   assertNoCommas(tophatOutDir)
+
+  # Inside the temporary output directory, setup a temporary input
+  # directory without commas
+  tophatInDir <- Arguments$getWritablePath(file.path(tophatOutDir, "tophatIn"))
   assertNoCommas(tophatInDir)
+
+  # Link to the bowtie2 index directory (such that tophat sees no commas)
+  bowtieRefIndexDirForTopHat <- createLink(link=file.path(tophatInDir, "bowtieRefIndexDir"), bowtieRefIndexDir)
+  bowtieRefIndexPrefixForTopHat <- file.path(bowtieRefIndexDirForTopHat, basename(bowtieRefIndexPrefix))
+  assertNoCommas(bowtieRefIndexPrefixForTopHat)
+
+  # Link to the FASTQ 'R1' (such that tophat sees no commas)
+  symLink <- createLink(link=file.path(tophatInDir, basename(reads1)), reads1)
+  reads1ForTopHat <- symLink
+  assertNoCommas(reads1ForTopHat)
+
+  # Link to the (optional) FASTQ 'R2' (such that tophat sees no commas)
+  reads2ForTopHat <- NULL
+  if (!is.null(reads2)) {
+    reads2 <- Arguments$getReadablePathname(reads2)
+    symLink <- createLink(link=file.path(tophatInDir, basename(reads2)), reads2)
+    reads2ForTopHat <- symLink
+    assertNoCommas(reads2ForTopHat)
+  }
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -153,6 +167,8 @@ setMethodS3("tophat2", "default", function(..., command="tophat2") {
 ############################################################################
 # HISTORY:
 # 2013-10-31 [HB]
+# o CLEANUP: Separated the validation of the arguments and the
+#   workaround for dealing with commas.
 # o CLEANUP: Dropped unnecessary argument '.initialTopHatOutDir'.
 # o Now arguments in help appear in the same order as in the code.
 # o Made arguments 'bowtieRefIndexPrefix' and 'reads1' mandatory.
