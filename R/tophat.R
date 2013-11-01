@@ -19,14 +19,14 @@
 # }
 #
 # \arguments{
-#   \item{command}{Name of executable}
 #   \item{bowtieRefIndexPrefix}{bowtie2 reference index (partial pathname, i.e. minus the .x.bt2 suffix)}
 #   \item{reads1}{(required) Vector of fastq filenames to align; currently only a single filename is supported}
 #   \item{reads2}{(optional) Vector of fastq filenames to align, paired with reads1; currently only a single filename is supported}
-#   \item{.initialTopHatOutDir}{(optional) TopHat output dir used by tophat executable}
-#   \item{outDir}{(optional) TopHat output dir at method exit}
+#   \item{outDir}{Directory where result files are written}
 #   \item{optionsVec}{Vector of named options to pass to tophat}
 #   \item{...}{(Not used)}
+#   \item{.initialTopHatOutDir}{(optional) TopHat output dir used by tophat executable}
+#   \item{command}{Name of executable}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
@@ -37,7 +37,7 @@
 setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
                                           reads1,
                                           reads2=NULL,
-                                          outDir=NULL,
+                                          outDir="tophat/",
                                           optionsVec=NULL,
                                           ...,
                                           .initialTopHatOutDir=NULL,
@@ -55,26 +55,19 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
   assertNoCommas <- function(pathnames, ...) {
     stopifnot(!any(hasCommas(pathnames)));
   } # assertNoCommas()
-		       
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'outDir'
+  outDir <- Arguments$getWritablePathname(outDir)
+
   # Argument '.initialTopHatOutDir'
   if (is.null(.initialTopHatOutDir)) {
-    if (!is.null(outDir)) {
-      .initialTopHatOutDir <- gsub(",", "_", outDir)
-    } else {
-      .initialTopHatOutDir <- paste("tophatOut", getChecksum(reads1), sep="")
-    }
+    .initialTopHatOutDir <- gsub(",", "_", outDir)
   }
   .initialTopHatOutDir <- Arguments$getWritablePathname(.initialTopHatOutDir)
-
-  # Argument 'outDir'
-  if (is.null(outDir)) {
-    outDir <- .initialTopHatOutDir
-  }
-  outDir <- Arguments$getWritablePathname(outDir)
 
   # Dir for TopHat input symbolic links
   tophatInDir <- Arguments$getWritablePath(file.path(.initialTopHatOutDir, "tophatIn"))
@@ -113,7 +106,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Call the tophat executable
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Combine the above into "tophat arguments"
   if (!is.null(reads2ForTopHat)) {
     tophatArgs <- c(bowtieRefIndexPrefixForTopHat,
@@ -142,9 +135,9 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Clean up input symbolic links
   removeDirectory(tophatInDir, recursive=TRUE)
-  
+
   # Move TopHat output to 'final' (e.g. aroma.seq-specified) directory
-  if (!is.null(outDir) && !(identical(outDir, .initialTopHatOutDir))) {
+  if (!identical(outDir, .initialTopHatOutDir)) {
     file.rename(.initialTopHatOutDir, outDir)
   }
 
@@ -163,6 +156,10 @@ setMethodS3("tophat2", "default", function(..., command="tophat2") {
 
 ############################################################################
 # HISTORY:
+# 2013-10-31 [HB]
+# o Now arguments in help appear in the same order as in the code.
+# o Made arguments 'bowtieRefIndexPrefix' and 'reads1' mandatory.
+#   Argument 'outDir' now defaults to 'tophat/' (and not NULL).
 # 2013-10-30 [HB]
 # o Added documentation for tophat1() and tophat2().
 # 2013-10-19 [HB]
