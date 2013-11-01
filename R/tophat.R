@@ -25,7 +25,6 @@
 #   \item{outDir}{Directory where result files are written}
 #   \item{optionsVec}{Vector of named options to pass to tophat}
 #   \item{...}{(Not used)}
-#   \item{.initialTopHatOutDir}{(optional) TopHat output dir used by tophat executable}
 #   \item{command}{Name of executable}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
@@ -40,7 +39,6 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
                                           outDir="tophat/",
                                           optionsVec=NULL,
                                           ...,
-                                          .initialTopHatOutDir=NULL,
                                           command='tophat',
                                           verbose=FALSE) {
 
@@ -63,14 +61,11 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
   # Argument 'outDir'
   outDir <- Arguments$getWritablePathname(outDir)
 
-  # Argument '.initialTopHatOutDir'
-  if (is.null(.initialTopHatOutDir)) {
-    .initialTopHatOutDir <- gsub(",", "_", outDir)
-  }
-  .initialTopHatOutDir <- Arguments$getWritablePathname(.initialTopHatOutDir)
 
-  # Dir for TopHat input symbolic links
-  tophatInDir <- Arguments$getWritablePath(file.path(.initialTopHatOutDir, "tophatIn"))
+  # Dir for TopHat output and input symbolic links
+  tophatOutDir <- gsub(",", "_", outDir)
+  tophatOutDir <- Arguments$getWritablePathname(tophatOutDir)
+  tophatInDir <- Arguments$getWritablePath(file.path(tophatOutDir, "tophatIn"))
 
   # Set up the reference index and input read filenames as symbolic links, to avoid TopHat issues w/ commas
   # (This will still fail if the basenames have commas)
@@ -97,11 +92,12 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
   }
 
 
-
   # Check that input files to tophat executable do not have commas
   assertNoCommas(bowtieRefIndexPrefixForTopHat)
   assertNoCommas(reads1ForTopHat)
   assertNoCommas(reads2ForTopHat)
+  assertNoCommas(topHatOutDir)
+  assertNoCommas(topHatInDir)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -119,7 +115,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
 
   ## Add dashes as appropriate to names of "tophat options"
   tophatOptions <- NULL
-  optionsVec <- c(optionsVec, "o"=.initialTopHatOutDir)
+  optionsVec <- c(optionsVec, "o"=tophatOutDir)
   if (!is.null(optionsVec)) {
     tophatOptions <- optionsVec
     nms <- names(tophatOptions)
@@ -137,8 +133,8 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
   removeDirectory(tophatInDir, recursive=TRUE)
 
   # Move TopHat output to 'final' (e.g. aroma.seq-specified) directory
-  if (!identical(outDir, .initialTopHatOutDir)) {
-    file.rename(.initialTopHatOutDir, outDir)
+  if (!identical(outDir, tophatOutDir)) {
+    file.rename(tophatOutDir, outDir)
   }
 
   res
@@ -157,6 +153,7 @@ setMethodS3("tophat2", "default", function(..., command="tophat2") {
 ############################################################################
 # HISTORY:
 # 2013-10-31 [HB]
+# o CLEANUP: Dropped unnecessary argument '.initialTopHatOutDir'.
 # o Now arguments in help appear in the same order as in the code.
 # o Made arguments 'bowtieRefIndexPrefix' and 'reads1' mandatory.
 #   Argument 'outDir' now defaults to 'tophat/' (and not NULL).

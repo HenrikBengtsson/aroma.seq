@@ -23,7 +23,7 @@
 
 \usage{
  \method{tophat}{default}(bowtieRefIndexPrefix, reads1, reads2=NULL, outDir="tophat/", optionsVec=NULL, ...,
-  .initialTopHatOutDir=NULL, command="tophat", verbose=FALSE)
+  command="tophat", verbose=FALSE)
  \method{tophat1}{default}(..., command="tophat")
  \method{tophat2}{default}(..., command="tophat2")
 }
@@ -35,7 +35,6 @@
   \item{outDir}{Directory where result files are written}
   \item{optionsVec}{Vector of named options to pass to tophat}
   \item{...}{(Not used)}
-  \item{.initialTopHatOutDir}{(optional) TopHat output dir used by tophat executable}
   \item{command}{Name of executable}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }
