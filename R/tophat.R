@@ -92,6 +92,14 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # (1a) Use a temporary output directory without commas
   tophatOutDir <- gsub(",", "_", outDir)
+  # Record which subdirectories already exists, so we can know which
+  # are create here and hence should be deleted at the end.
+  depth <- 0L;
+  while (!is.null(dir <- getParent(tophatOutDir, depth=depth))) {
+    if (isDirectory(dir)) break;
+    depth <- depth + 1L;
+  }
+  tophatOutDirToDelete <- getParent(tophatOutDir, depth=depth-1L);
   tophatOutDir <- Arguments$getWritablePath(tophatOutDir)
   assertNoCommas(tophatOutDir)
 
@@ -156,6 +164,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
     if (!identical(outDir, tophatOutDir)) {
       file.rename(tophatOutDir, outDir)
     }
+    removeDirectory(tophatOutDirToDelete, recursive=TRUE, mustExist=FALSE);
   }, add=TRUE)
 
 
