@@ -187,10 +187,13 @@ setMethodS3("getOutputDataSet0", "BinnedGcNormalization", function(this, pattern
 
 
 
-setMethodS3("process", "BinnedGcNormalization", function(this, ..., verbose=FALSE) {
+setMethodS3("process", "BinnedGcNormalization", function(this, ..., force=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'force':
+  force <- Arguments$getLogical(force);
+
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
   if (verbose) {
@@ -239,7 +242,7 @@ setMethodS3("process", "BinnedGcNormalization", function(this, ..., verbose=FALS
     # Validate arguments
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Argument 'df':
-    df <- Arguments$getInstanceOf(df, "AromaUnitTotalCnBinarySet");
+    df <- Arguments$getInstanceOf(df, "AromaUnitTotalCnBinaryFile");
 
     # Argument 'unc':
     unc <- Arguments$getInstanceOf(unc, "AromaUnitNucleotideCountsFile");
@@ -358,7 +361,7 @@ setMethodS3("process", "BinnedGcNormalization", function(this, ..., verbose=FALS
     verbose && exit(verbose);
 
     invisible(list(dfNormalized=dfOut));
-  }, unc=unc, gc=gc, params=params, ext=ext, path=getPath(this), skip=skip, verbose=verbose) # dsApply()
+  }, unc=unc, gc=gc, params=params, ext=ext, path=getPath(this), skip=!force, verbose=verbose) # dsApply()
 
   verbose && exit(verbose);
 
