@@ -119,14 +119,23 @@ setMethodS3("getExpectedOutputPaths", "TopHat2Alignment", function(this, ...) {
 setMethodS3("getOutputDataSet", "TopHat2Alignment", function(this, ...) {
   ## Find all possible existing output data files
   bams <- BamDataSet$byPath(path=getPath(this), pattern="accepted_hits.bam$", recursive=TRUE);
-  if (length(bams) > 0L) {
-    # Keep the subset that corresponds to the input data set
-    sampleNames <- sapply(bams, FUN=getPathname);
-    sampleNames <- sapply(bams, FUN=dirname);
-    sampleNames <- sapply(bams, FUN=basename);
-    idxs <- match(getSampleNames(this), sampleNames);
-    bams <- extract(bams, idxs);
+
+  # Special case
+  if (length(bams) == 0L) {
+    bam <- BamDataFile(NA_character_, mustExist=FALSE);
+    bams <- newInstance(bams, list(bam));
   }
+
+  # Get the sample names in the found output set
+  sampleNamesExpected <- getSampleNames(this);
+  sampleNames <- getPathnames(bams);
+  sampleNames <- basename(dirname(sampleNames));
+  idxs <- match(sampleNamesExpected, sampleNames);
+  bams <- extract(bams, idxs);
+
+  # Sanity check
+  stopifnot(length(bams) == length(sampleNamesExpected));
+
   bams;
 })
 
