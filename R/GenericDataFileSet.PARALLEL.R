@@ -44,8 +44,8 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, FUN, ..., args=list(),
   # Local functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   assertNoGlobalVariables <- function(FUN, ...) {
-    globals <- findGlobals(FUN, merge=FALSE);
     # TO DO...
+    ## globals <- findGlobals(FUN, merge=FALSE);
   } # assertNoGlobalVariables()
 
 
