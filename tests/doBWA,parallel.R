@@ -4,7 +4,7 @@ fullTest <- fullTest && isCapableOf(aroma.seq, "bwa")
 fullTest <- fullTest && isPackageInstalled("BatchJobs")
 if (fullTest) {
 
-setOption(aromaSettings, "devel/BatchJobs", TRUE)
+setOption(aromaSettings, "devel/parallel", "BiocParallel::BatchJobs")
 
 # Setup (writable) local data directory structure
 setupExampleData()
@@ -29,7 +29,7 @@ print(fqs)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Single-end alignment
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bams <- doBWA(fqs, reference=fa, tags=c("*", "BatchJobs"), verbose=-20)
+bams <- doBWA(fqs, reference=fa, tags=c("*", "parallel"), verbose=-20)
 print(bams)
 
 } # if (fullTest)

@@ -4,7 +4,7 @@ fullTest <- fullTest && isPackageInstalled("ShortRead")
 fullTest <- fullTest && isPackageInstalled("BatchJobs")
 if (fullTest) {
 
-setOption(aromaSettings, "devel/BatchJobs", TRUE)
+setOption(aromaSettings, "devel/parallel", "BiocParallel::BatchJobs")
 
 # Setup (writable) local data directory structure
 setupExampleData()

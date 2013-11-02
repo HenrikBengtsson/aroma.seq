@@ -54,12 +54,10 @@ importFrom("R.filesets", "setAttributesByTags")
 importFrom("R.filesets", "TabularTextFile")
 
 
-# importFrom("R.utils", cat)
 import("R.utils")
-
 import("aroma.core")
-
 # importFrom("Biobase", "anyMissing")
+import("BiocParallel")
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

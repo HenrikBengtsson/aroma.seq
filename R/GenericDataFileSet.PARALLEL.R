@@ -17,7 +17,8 @@
 #    passed to \code{FUN}.}
 #  \item{skip}{If @TRUE, already processed files are skipped.}
 #  \item{verbose}{See @see "R.utils::Verbose".}
-#  \item{.parallel}{If @TRUE, parallel/distributed processing is utilized.}
+#  \item{.parallel}{A @character string specifying what mechanism to use
+#    for performing parallel processing, if at all.}
 #  \item{.control}{(internal) A named @list structure controlling
 #        the processing.}
 # }
@@ -27,15 +28,15 @@
 # }
 #
 # \seealso{
-#   The \pkg{BatchJobs} package is utilized for parallel/distributed
-#   processing.
+#   The \pkg{BiocParallel} and \pkg{BatchJobs} packages is utilized
+#   for parallel/distributed processing, depending on settings.
 # }
 #
 # @author "HB"
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("dsApply", "GenericDataFileSet", function(ds, FUN, ..., args=list(), skip=FALSE, verbose=FALSE, .parallel=FALSE, .control=list(dW=1.0)) {
+setMethodS3("dsApply", "GenericDataFileSet", function(ds, FUN, ..., args=list(), skip=FALSE, verbose=FALSE, .parallel=c("none", "BatchJobs", "BiocParallel::BatchJobs"), .control=list(dW=1.0)) {
   # To please R CMD check (because BatchJobs is just "suggested")
   getJobNr <- batchMap <- showStatus <- findNotSubmitted <-
       findNotRunning <- submitJobs <- findNotTerminated <- NULL;
@@ -70,7 +71,8 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, FUN, ..., args=list(),
   skip <- Arguments$getLogical(skip);
 
   # Argument '.parallel':
-  .parallel <- Arguments$getLogical(.parallel);
+  parallel <- getOption(aromaSettings, "devel/parallel", .parallel);
+  parallel <- match.arg(parallel, choices=eval(formals(dsApply.GenericDataFileSet)$.parallel));
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -80,9 +82,9 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, FUN, ..., args=list(),
   }
 
 
-
-  # Run via BatchJobs?
-  parallel <- getOption(aromaSettings, "devel/BatchJobs", .parallel);
+  verbose && enter(verbose, "Processing ", class(ds)[1L]);
+  verbose && cat(verbose, "Mechanism for parallel processing: ", parallel);
+  verbose && print(verbose, ds);
 
   # The additional set of arguments passed in each function call
   vargs <- c(vargs, args);
@@ -90,9 +92,32 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, FUN, ..., args=list(),
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Alt 1: BatchJobs
+  # Alt 1: Sequentially using regular R
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  if (parallel) {
+  res <- NULL;
+  if (parallel == "none") {
+    for (ii in seq_along(ds)) {
+      df <- ds[[ii]];
+      verbose && enter(verbose, sprintf("Item #%d ('%s') of %d", ii, getName(df), length(ds)));
+
+      argsII <- c(list(df), allArgs);
+      verbose && cat(verbose, "Call arguments:");
+      verbose && str(verbose, argsII);
+      res <- do.call(FUN, args=argsII);
+      verbose && str(verbose, res);
+
+      # Not needed anymore
+      df <- argsII <- res <- NULL;
+
+      verbose && exit(verbose);
+    } # for (ii ...)
+  } # if (parallel == "none")
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Alt 2: BatchJobs processing
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (parallel == "BatchJobs") {
     verbose && enter(verbose, "Processing using BatchJobs");
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -122,7 +147,7 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, FUN, ..., args=list(),
 ##        options("BatchJobs.check.posix"=FALSE);
 ##        FUN(...);
 ##      } # FUNx()
-      ids <- batchMap(reg, fun=FUN, getFiles(ds), more.args=allArgs);
+      ids <- batchMap(reg, fun=FUN, as.list(ds), more.args=allArgs);
       verbose && cat(verbose, "Job IDs added:");
       verbose && str(verbose, ids);
       verbose && print(verbose, reg);
@@ -156,6 +181,7 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, FUN, ..., args=list(),
     } else {
       verbose && cat(verbose, "No new jobs to be submitted.");
     }
+
     verbose && exit(verbose);
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -193,32 +219,40 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, FUN, ..., args=list(),
     verbose && print(verbose, showStatus(reg));
 
     verbose && exit(verbose);
-  }
+  } # if (parallel == "BatchJobs")
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Alt 2: Sequentially using regular R
+  # Alt 3: BiocParallel processing
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  if (!parallel) {
-    for (ii in seq_along(ds)) {
-      df <- getFile(ds, ii);
-      verbose && enter(verbose, sprintf("Item #%d ('%s') of %d", ii, getName(df), length(ds)));
-      argsII <- c(list(df), allArgs);
-      verbose && cat(verbose, "Call arguments:");
-      verbose && str(verbose, argsII);
-      res <- do.call(FUN, args=argsII);
-      verbose && str(verbose, res);
+  if (parallel == "BiocParallel::BatchJobs") {
+    verbose && enter(verbose, "Processing using BiocParallel");
 
-      # Not needed anymore
-      df <- argsII <- res <- NULL;
+    # WORKAROUND: Allow for commas in BatchJobs-related pathnames
+    oopts <- options("BatchJobs.check.posix");
+    on.exit({ options(oopts) }, add=TRUE);
+    options("BatchJobs.check.posix"=FALSE);
 
-      verbose && exit(verbose);
-    } # for (ii ...)
-  }
+    bpParam <- BatchJobsParam();
+    register(bpParam);
+    verbose && cat(verbose, "Using parameters:");
+    verbose && print(verbose, bpParam);
 
-  res <- NULL;
+    verbose && enter(verbose, "Calling bplapply()");
+    args <- c(list(ds, FUN=FUN), allArgs);
+    verbose && cat(verbose, "Arguments passed to bplapply():");
+    verbose && str(verbose, args);
+    res <- do.call(BiocParallel::bplapply, args);
+    verbose && exit(verbose);
+
+    verbose && exit(verbose);
+  } # if (parallel == "BiocParallel")
+
+  verbose && exit(verbose);
+
   invisible(res);
 }, protected=TRUE) # dsApply()
+
 
 
 setMethodS3(".getBatchJobRegistryId", "default", function(class, label=NULL, version=NULL, ..., verbose=FALSE) {
@@ -250,8 +284,7 @@ setMethodS3(".getBatchJobRegistryId", "default", function(class, label=NULL, ver
 
 
 setMethodS3(".getBatchJobRegistryId", "GenericDataFileSet", function(object, ...) {
-  files <- getFiles(object);
-  keys <- lapply(files, FUN=function(file) {
+  keys <- lapply(object, FUN=function(file) {
     list(filename=getFilename(file), fileSize=getFileSize(file));
   });
   .getBatchJobRegistryId(class=class(object), fileKeys=keys, ...);
@@ -261,7 +294,8 @@ setMethodS3(".getBatchJobRegistryId", "GenericDataFileSet", function(object, ...
 
 setMethodS3(".getBatchJobRegistry", "default", function(..., skip=TRUE) {
   .useBatchJobs();
-  require("BatchJobs"); # To please R CMD check.
+  # To please R CMD check.
+  require("BatchJobs");
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -318,6 +352,10 @@ setMethodS3(".getBatchJobRegistry", "default", function(..., skip=TRUE) {
 
 ############################################################################
 # HISTORY:
+# 2013-11-02
+# o Adding support for distributed processing via 'BiocParallel'.
+# 2013-11-01
+# o Made the code more generic.
 # 2013-09-28
 # o ROBUSTNESS: Now .getBatchJobRegistryId() adds process ID ("pid") and#   a timestamp to the registry path to make it even more unique.
 # o BUG FIX: dsApply() for GenericDataFileSet when executed via the

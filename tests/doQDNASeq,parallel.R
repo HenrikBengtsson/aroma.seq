@@ -8,7 +8,7 @@ fullTest <- fullTest && isDirectory("fastqData,aroma.seq,private");
 fullTest <- fullTest && isPackageInstalled("BatchJobs")
 if (fullTest) {
 
-setOption(aromaSettings, "devel/BatchJobs", TRUE)
+setOption(aromaSettings, "devel/parallel", "BiocParallel::BatchJobs")
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup FASTA reference file
@@ -30,7 +30,7 @@ print(fqs)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # QDNAseq on FASTQ files
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-cns <- doQDNAseq(fqs, reference=fa, binWidth=100, verbose=-20)
+cns <- doQDNAseq(fqs, reference=fa, binWidth=100, tags=c("*", "parallel"), verbose=-20)
 print(cns)
 
 # Display individual BAM files
@@ -54,7 +54,7 @@ cn <- doQDNAseq(bf, binWidth=100, verbose=-20)
 print(cn)
 
 # QDNAseq on a BAM file set
-cns <- doQDNAseq(bams, binWidth=100, verbose=-20)
+cns <- doQDNAseq(bams, binWidth=100, tags=c("*", "parallel"), verbose=-20)
 print(cns)
 
 } # if (fullTest)

@@ -19,8 +19,8 @@
 }
 
 \usage{
-\method{dsApply}{GenericDataFileSet}(ds, FUN, ..., args=list(), skip=FALSE, verbose=FALSE, .parallel=FALSE,
-  .control=list(dW = 1))
+\method{dsApply}{GenericDataFileSet}(ds, FUN, ..., args=list(), skip=FALSE, verbose=FALSE,
+  .parallel=c("none", "BatchJobs", "BiocParallel::BatchJobs"), .control=list(dW = 1))
 }
 
 \arguments{
@@ -30,7 +30,8 @@
    passed to \code{FUN}.}
  \item{skip}{If \code{\link[base:logical]{TRUE}}, already processed files are skipped.}
  \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
- \item{.parallel}{If \code{\link[base:logical]{TRUE}}, parallel/distributed processing is utilized.}
+ \item{.parallel}{A \code{\link[base]{character}} string specifying what mechanism to use
+   for performing parallel processing, if at all.}
  \item{.control}{(internal) A named \code{\link[base]{list}} structure controlling
        the processing.}
 }
@@ -40,8 +41,8 @@
 }
 
 \seealso{
-  The \pkg{BatchJobs} package is utilized for parallel/distributed
-  processing.
+  The \pkg{BiocParallel} and \pkg{BatchJobs} packages is utilized
+  for parallel/distributed processing, depending on settings.
 }
 
 \author{Henrik Bengtsson}

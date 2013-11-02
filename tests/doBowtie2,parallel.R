@@ -4,7 +4,7 @@ fullTest <- fullTest && isCapableOf(aroma.seq, "bowtie2")
 fullTest <- fullTest && isPackageInstalled("BatchJobs")
 if (fullTest) {
 
-setOption(aromaSettings, "devel/BatchJobs", TRUE)
+setOption(aromaSettings, "devel/parallel", "BiocParallel")
 
 
 # Setup (writable) local data directory structure
@@ -30,7 +30,7 @@ print(fqs)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Single-end alignment
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bams <- doBowtie2(fqs, reference=fa, tags=c("*", "BatchJobs"), verbose=-20)
+bams <- doBowtie2(fqs, reference=fa, tags=c("*", "parallel"), verbose=-20)
 print(bams)
 
 } # if (fullTest)
