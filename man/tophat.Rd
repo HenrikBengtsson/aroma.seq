@@ -39,7 +39,17 @@
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }
 
+\section{Support for compressed input files}{
+  TopHat (>= 1.3.0) handles FASTQ files that have been compressed by gzip (or bzip2) [1].
+  If not supported, this method will give an informative error message about it.
+}
+
 \author{Henrik Bengtsson, Taku Tokuyasu}
+
+\references{
+ [1] TopHat, University of Maryland, 2013.
+     \url{http://http://tophat.cbcb.umd.edu/}
+}
 
 
 \keyword{methods}

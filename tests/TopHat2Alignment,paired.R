@@ -14,17 +14,13 @@ organism <- "SC"
 # The directory where all example data files are
 path0 <- system.file(file.path("exData"), package="aroma.seq", mustWork=TRUE)
 
-# Annotation data
+# FASTA data
 path <- file.path("annotationData", "organisms", organism)
 if (!isDirectory(path)) copyDirectory(from=file.path(path0, path), to=path)
-sapply(GenericDataFileSet$byPath(path, pattern="[.]gz$"), FUN=gunzip)
-
 
 # FASTQ data
 path <- file.path("fastqData", dataSet, organism)
 if (!isDirectory(path)) copyDirectory(from=file.path(path0, path), to=path)
-sapply(GenericDataFileSet$byPath(path, pattern="[.]gz$"), FUN=gunzip)
-
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

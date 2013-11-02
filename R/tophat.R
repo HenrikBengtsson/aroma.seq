@@ -29,7 +29,17 @@
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
+# \section{Support for compressed input files}{
+#   TopHat (>= 1.3.0) handles FASTQ files that have been compressed by gzip (or bzip2) [1].
+#   If not supported, this method will give an informative error message about it.
+# }
+#
 # @author "HB,TT"
+#
+# \references{
+#  [1] TopHat, University of Maryland, 2013.
+#      \url{http://http://tophat.cbcb.umd.edu/}
+# }
 #
 # @keyword internal
 #*/###########################################################################
@@ -79,6 +89,18 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
   # Argument 'reads2'
   if (!is.null(reads2)) {
     reads2 <- Arguments$getReadablePathname(reads2)
+  }
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Check whether gzipped FASTQ files are supported or not
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  gzipped <- any(regexpr("[.]gz$", c(reads1, reads2), ignore.case=TRUE) != -1L);
+  if (gzipped) {
+    ver <- attr(findTopHat2(), "version");
+    if (ver <= "1.3.0") {
+      throw("Detected gzip'ed FASTQ files, which is only supported by TopHat (>= 1.3.0): ", ver);
+    }
   }
 
 

@@ -1,6 +1,12 @@
 Package: aroma.seq
 ==================
 
+Version: 0.2.37 [2013-11-01]
+o Now FastaReferenceSet$byPath() also finds gzip'ed FASTA files.
+o Now buildBowtie2IndexSet() for FastaReferenceFile supports
+  gzip'ed FASTA files.
+
+
 Version: 0.2.36 [2013-10-31]
 o Added input BAM file support to HTSeq.
 o Added check for 'python' to capabilitiesOf(aroma.seq).

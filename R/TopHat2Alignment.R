@@ -14,7 +14,7 @@
 # \arguments{
 #  \item{...}{Arguments passed to @see "AbstractAlignment".}
 #  \item{indexSet}{An @see "Bowtie2IndexSet".}
-#  \item{geneModelFile}{Gene model (transcriptome) gtf/gff file.}
+#  \item{geneModelFile}{Gene model (transcriptome) GTF/GFF3 file.}
 # }
 #
 # \section{Fields and Methods}{
@@ -43,14 +43,17 @@ setConstructorS3("TopHat2Alignment", function(..., indexSet=NULL, geneModelFile=
 
   # Argument 'geneModelFile':
   if (!is.null(geneModelFile)) {
-    geneModelFile <- Arguments$getReadablePath(geneModelFile);
+    geneModelFile <- Arguments$getReadablePathname(geneModelFile);
   }
 
   # Arguments '...':
   args <- list(...);
 
-  extend(AbstractAlignment(..., indexSet=indexSet), "TopHat2Alignment");
+  extend(AbstractAlignment(..., indexSet=indexSet), "TopHat2Alignment",
+    geneModelFile = geneModelFile
+  )
 })
+
 
 
 setMethodS3("getParameters", "TopHat2Alignment", function(this, ...) {
@@ -97,12 +100,40 @@ setMethodS3("getPath", "TopHat2Alignment", function(this, create=TRUE, ...) {
 }, protected=TRUE)
 
 
-setMethodS3("getOutputDataSet", "TopHat2Alignment", function(this, ...) {
-  ## Find all existing output data files
-  res <- BamDataSet$byPath(path=getPath(this), pattern="accepted_hits.bam$", recursive=TRUE)
+setMethodS3("getSampleNames", "TopHat2Alignment", function(this, ...) {
+  ds <- getInputDataSet(this);
+  sampleNames <- sub("_(1|R1)$", "", getFullNames(ds));
+  sampleNames;
+})
 
-  ## TODO: Assert completeness
-  res;
+
+setMethodS3("getExpectedOutputPaths", "TopHat2Alignment", function(this, ...) {
+  # Find all available output directories
+  path <- getPath(this);
+  sampleNames <- getSampleNames(this);
+  paths <- file.path(path, sampleNames);
+  paths;
+}, protected=TRUE)
+
+
+setMethodS3("getOutputDataSet", "TopHat2Alignment", function(this, ...) {
+  ## Find all possible existing output data files
+  bams <- BamDataSet$byPath(path=getPath(this), pattern="accepted_hits.bam$", recursive=TRUE);
+  if (length(bams) > 0L) {
+    # Keep the subset that corresponds to the input data set
+    sampleNames <- sapply(bams, FUN=getPathname);
+    sampleNames <- sapply(bams, FUN=dirname);
+    sampleNames <- sapply(bams, FUN=basename);
+    idxs <- match(getSampleNames(this), sampleNames);
+    bams <- extract(bams, idxs);
+  }
+  bams;
+})
+
+
+setMethodS3("isDone", "TopHat2Alignment", function(this, ...) {
+  bams <- getOutputDataSet(this);
+  all(sapply(bams, FUN=isFile));
 })
 
 
@@ -122,6 +153,9 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'force':
+  force <- Arguments$getLogical(force);
+
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
   if (verbose) {
@@ -132,70 +166,98 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
 
   verbose && enter(verbose, "TopHat2 alignment");
   ds <- getInputDataSet(this);
-
-  verbose && cat(verbose, "Paired-end analysis: ", isPaired(ds));
   verbose && cat(verbose, "Input data set:");
   verbose && print(verbose, ds);
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Identify samples to be processed
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (force) {
+    todo <- seq_along(ds);
+  } else {
+    bams <- getOutputDataSet(this, verbose=less(verbose, 1));
+    todo <- which(!sapply(bams, FUN=isFile));
+  }
+  verbose && cat(verbose, "Number of samples to process: ", length(todo));
+
+  # Already done?
+  if (!force && length(todo) == 0L) {
+    verbose && cat(verbose, "Already processed.");
+    verbose && print(verbose, bams);
+    verbose && exit(verbose);
+    return(bams);
+  }
+
+  # The subset to be processed
+  ds <- extract(ds, todo);
+  verbose && cat(verbose, "Input data set (to be processed):");
+  verbose && print(verbose, ds);
+
+  isPaired <- isPaired(ds);
+  verbose && cat(verbose, "Paired-end analysis: ", isPaired);
 
   is <- getIndexSet(this);
   verbose && cat(verbose, "Aligning using index set:");
   verbose && print(verbose, is);
 
-  sampleNames <- sub("_1$", "", getFullNames(ds));
-  verbose && cat(verbose, "Sample names:");
-  verbose && print(verbose, sampleNames);
-
   outPath <- getPath(this);
   verbose && cat(verbose, "Output directory: ", outPath);
 
-  # Setup arguments for tophat()
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Setup arguments for TopHat
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   args <- list(
     bowtieRefIndexPrefix=getIndexPrefix(is),
-    reads1=NA,
-    reads2=NA,
-    outPath=NA,
-    optionsVec=c("G"=this$geneModelFile)
+    reads1=NA_character_,
+    reads2=NULL,
+    outPath=NA_character_,
+    optionsVec=character(0L)
   );
+  gmf <- this$geneModelFile;
+  if (!is.null(gmf)) args$optionsVec <- c("G"=gmf);
 
-  if (isPaired(ds)) {
-    filePairs <- getFilePairs(ds)
-    fnsR1 <- sapply(filePairs[,1], FUN=getPathname)
-    fnsR2 <- sapply(filePairs[,2], FUN=getPathname)
-    for (ii in seq_along(ds)) {
-      df <- getFile(ds, ii);
-      verbose && enter(verbose, sprintf("Sample #%d ('%s') of %d", ii, getName(df), length(ds)));
 
-      args$reads1 <- fnsR1[ii];
-      args$reads2 <- fnsR2[ii];
-      args$outPath <- file.path(outPath, sampleNames[ii]);
-      res <- do.call(tophat2, args=args);
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Process sample by sample...
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  for (ii in seq_along(ds)) {
+    dfR1 <- getFile(ds, ii);
+    sampleName <- sub("_(1|R1)$", "", getFullName(dfR1));
+    verbose && enter(verbose, sprintf("Sample #%d ('%s') of %d", ii, sampleName, length(ds)));
 
-      verbose && exit(verbose);
-    } # for (ii ...)
-  } else {
-    throw("Not yet implemented!");
-    fnsR1 <- sapply(filePairs[,1], FUN=getPathname)  # <= BUG: Won't work! /HB 2013-11-01
-    for (ii in seq_along(ds)) {
-      df <- getFile(ds, ii);
-      verbose && enter(verbose, sprintf("Sample #%d ('%s') of %d", ii, getName(df), length(ds)));
+    args$reads1 <- getPathname(dfR1);
+    if (isPaired) {
+      dfR2 <- getMateFile(dfR1);
+      args$reads2 <- getPathname(dfR2);
+    }
+    args$outPath <- file.path(outPath, sampleName);
+    res <- do.call(tophat2, args=args);
 
-      args$reads1 <- fnsR1[ii];
-      args$outPath <- file.path(outPath, sampleNames[ii]);
-      res <- do.call(tophat2, args=args);
+    verbose && exit(verbose);
+  } # for (ii ...)
 
-      verbose && exit(verbose);
-    } # for (ii ...)
-  }
 
-  res <- getOutputDataSet(this, verbose=less(verbose, 1));
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Get results
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  bams <- getOutputDataSet(this, verbose=less(verbose, 1));
+  verbose && print(verbose, bams);
+
+  # Sanity check
+  stopifnot(all(sapply(bams, FUN=isFile)));
+
   verbose && exit(verbose);
 
-  invisible(res);
+  bams;
 })
 
 
 ############################################################################
 # HISTORY:
+# 2013-11-01 [HB]
+# o Now process() for TopHat2Alignment should also work for single-end
+#   reads as well as paired-end reads.
 # 2013-10-31 [HB]
 # o Now utilizing tophat2().
 # o CLEANUP: Dropped non-used argument 'outputDir' from constructor.

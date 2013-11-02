@@ -341,33 +341,36 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
     return(res);
   }
 
-  # Read sequences information, if not already done
-  n <- nbrOfSeqs(this);
-  verbose && print(verbose, this);
-
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Build bowtie2 index set
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   res <- bowtie2Build(pathnameFA, prefix, ..., verbose=less(verbose, 5));
   verbose && str(verbose, res);
 
   status <- attr(res, "status");
-  status <- if (is.null(status)) status <- 0L;
+  str(status);
+  if (is.null(status)) status <- 0L;
   if (status != 0L) {
     throw("Failed to build Bowtie2 index. Return code: ", status);
   }
 
-  res <- Bowtie2IndexSet$byPrefix(prefix);
+  is <- Bowtie2IndexSet$byPrefix(prefix);
 
   # Sanity check
-  stopifnot(!is.null(res));
+  stopifnot(!is.null(is));
 
   verbose && exit(verbose);
 
-  res;
+  is;
 }) # buildBowtie2IndexSet()
 
 
 
 ############################################################################
 # HISTORY:
+# 2013-11-01
+# o Now buildBowtie2IndexSet() for FastaReferenceFile supports gzip'ed
+#   FASTA files.
 # 2013-06-27
 # o Added Rdoc comments for buildBowtie2IndexSet().
 # o BUG FIX: buildBowtie2IndexSet() for FastaReferenceFile became broken

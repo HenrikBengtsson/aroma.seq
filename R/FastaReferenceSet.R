@@ -37,12 +37,15 @@ setMethodS3("getDepth", "FastaReferenceSet", function(this, ...) {
 }, protected=TRUE);
 
 
-setMethodS3("byPath", "FastaReferenceSet", function(static, ..., pattern="[.](fa|fasta)$") {
+setMethodS3("byPath", "FastaReferenceSet", function(static, ..., pattern="[.](fa|fasta)(|[.]gz)$") {
   NextMethod("byPath", pattern=pattern);
 }, static=TRUE)
 
 
 ############################################################################
 # HISTORY:
-# 2013-08-01 Created from SamDataSet.R
+# 2013-11-01
+# o Now FastaReferenceSet$byPath() also finds gzip'ed FASTA files.
+# 2013-08-01
+# o Created from SamDataSet.R
 ############################################################################

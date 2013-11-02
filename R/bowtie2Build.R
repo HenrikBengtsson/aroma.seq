@@ -10,65 +10,112 @@
 # @synopsis
 #
 # \arguments{
-#   \item{refReads}{Vector of (FASTA) files with reference sequence}
-#   \item{bowtieRefIndexPrefix}{bowtie2 reference index to be built (partial pathname, minus the .*.bt2 suffix)}
-#   \item{optionsVec}{Vector of named options}
+#   \item{pathnameFAs}{A @character @vector of FASTA reference files.}
+#   \item{bowtieRefIndexPrefix}{A @character string specifying the bowtie2
+#     reference index to be built (partial pathname, minus the .*.bt2 suffix).}
+#   \item{optionsVec}{(optional) A named @character @vector.}
 #   \item{...}{...}
-#   \item{commandName}{Name of executable}
+#   \item{command}{The name of the external executable.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
-# @author "TT"
+# \section{Support for compressed input files}{
+#   If gzip'ed FASTA files are used, this function will temporarily decompress
+#   before passing them to the bowtie2-build external software (which only
+#   support non-compressed FASTA files).
+# }
+#
+# \section{Known issues}{
+#   The FASTA pathnames must not contain commas.
+#   If detected, this method generates an informative error.
+# }
+#
+# @author "HB,TT"
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("bowtie2Build", "default", function(refReads=NULL,  ## vector of pathnames
-                                                bowtieRefIndexPrefix=NULL, ## Index filename prefix (i.e. minus trailing .X.bt2)
-                                                optionsVec=NULL, ## vector of named options
+setMethodS3("bowtie2Build", "default", function(pathnameFAs,
+                                                bowtieRefIndexPrefix,
+                                                optionsVec=NULL,
                                                 ...,
-                                                commandName='bowtie2-build',
+                                                command="bowtie2-build",
                                                 verbose=FALSE) {
-  # Argument 'refReads'
-  if (!is.null(refReads))
-    {
-      refReads <- sapply(refReads, FUN=Arguments$getReadablePathname)
-    } else {
-      throw("Argument 'refReads' is empty; supply at least one input read file")
-    }
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Local functions
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  hasCommas <- function(pathnames, ...) {
+    (regexpr(",", pathnames, fixed=TRUE) != -1L);
+  } # hasCommas()
+
+  assertNoCommas <- function(pathnames, ...) {
+    stopifnot(!any(hasCommas(pathnames)));
+  } # assertNoCommas()
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'pathnameFAs':
+  pathnameFAs <- sapply(pathnameFAs, FUN=Arguments$getReadablePathname);
+  assertNoCommas(pathnameFAs);
 
   # Argument 'bowtieRefIndexPrefix'
-  # - check for bowtie2 reference index  ## TODO: ADD SUPPORT FOR BOWTIE1 INDICES
-  if (!is.null(bowtieRefIndexPrefix)) {
-    bowtieRefIndexPrefix <- Arguments$getWritablePathname(bowtieRefIndexPrefix);
-  } else {
-    throw("Argument bowtieRefIndexPrefix is empty; supply (prefix of) bowtie reference index")
+  bowtieRefIndexPrefix <- Arguments$getCharacter(bowtieRefIndexPrefix, length=c(1L,1L));
+  bowtieRefIndexPath <- dirname(bowtieRefIndexPrefix);
+  bowtieRefIndexPath <- Arguments$getWritablePath(bowtieRefIndexPath);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Workaround for gzip'ed FASTA files
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  isGzipped <- sapply(pathnameFAs, FUN=isGzipped);
+  if (any(isGzipped)) {
+    # Temporarily decompress gzip'ed FASTA files
+    pathnameFAs[isGzipped] <- sapply(pathnameFAs[isGzipped], FUN=gunzip, remove=FALSE, temporary=TRUE);
+    on.exit({
+      file.remove(pathnameFAs[isGzipped]);
+    }, add=TRUE);
   }
 
-  ## Combine the above into "bowtie2 arguments"
-  bowtie2Args <- c(paste(unname(refReads), collapse=","), bowtieRefIndexPrefix)   ## reference reads first, index base second
 
-  ## Add dashes as appropriate to names of "bowtie2 options"
-  bowtie2Options <- NULL
-  if (!is.null(optionsVec)) {
-    bowtie2Options <- optionsVec
-    nms <- names(bowtie2Options)
-    names(bowtie2Options) <- paste(ifelse(nchar(nms) == 1, "-", "--"), nms, sep="")
+  # Sanity check
+  assertNoCommas(pathnameFAs);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Setup call to bowtie2-build binary
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Add dashes as appropriate to names of "bowtie2 options"
+  opts <- optionsVec;
+  if (length(opts) > 0L) {
+    nms <- names(opts);
+    names(opts) <- paste(ifelse(nchar(nms) == 1, "-", "--"), nms, sep="");
   }
 
-  res <- do.call(what=systemBowtie2Build, args=list(command=commandName, args=c(bowtie2Options, bowtie2Args)))
+  # Append FASTA reference files
+  opts <- c(opts, paste(unname(pathnameFAs), collapse=","));
 
-  ## DEV
-  ## res <- do.call(what=systemBowtie2Build, args=list(command=commandName, args=c(bowtie2Options, bowtie2Args), verbose=TRUE, system2ArgsList=list(stderr=TRUE)))
+  # Append bowtie reference index prefix
+  opts <- c(opts, bowtieRefIndexPrefix);
 
-  return(res)
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Call bowtie2-build binary
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  args <- list(command=command, args=opts);
+  res <- do.call(what=systemBowtie2Build, args=args);
+
+  res;
 })
 
 ############################################################################
 # HISTORY:
-# 2013-03-08
-# o TT:  Completely rewritten to follow tophat.R template
-# 2012-09-14
-# o First real draft of "level 2" code (TAT)
-# 2012-07-18
-# o Created bowtie2-build() stub. (HB)
+# 2013-11-01 [HB]
+# o Now bowtie2Build() supports gzip'ed FASTQ.
+# 2013-03-08 [TT]
+# o Completely rewritten to follow tophat.R template.
+# 2012-09-14 [TT]
+# o First real draft of "level 2" code.
+# 2012-07-18 [HB]
+# o Created bowtie2-build() stub.
 ############################################################################

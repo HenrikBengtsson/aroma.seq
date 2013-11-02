@@ -68,7 +68,8 @@ setMethodS3("createIndexPrefix", "default", function(pathnameFA, subdir=NULL, ta
   subdir <- subdir[nchar(subdir) > 0L];
 
   # Drop *.fa and *.fasta filename extensions
-  prefix <- gsub("[.](fa|fasta)*$", "", pathnameFA, ignore.case=TRUE);
+  prefix <- gsub("[.](gz)*$", "", pathnameFA, ignore.case=TRUE);
+  prefix <- gsub("[.](fa|fasta)*$", "", prefix, ignore.case=TRUE);
   path <- getParent(prefix);
   path <- Reduce(file.path, c(path, subdir));
 

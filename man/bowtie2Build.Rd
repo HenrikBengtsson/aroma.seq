@@ -17,20 +17,32 @@
 }
 
 \usage{
-\method{bowtie2Build}{default}(refReads=NULL, bowtieRefIndexPrefix=NULL, optionsVec=NULL, ...,
-  commandName="bowtie2-build", verbose=FALSE)
+\method{bowtie2Build}{default}(pathnameFAs, bowtieRefIndexPrefix, optionsVec=NULL, ...,
+  command="bowtie2-build", verbose=FALSE)
 }
 
 \arguments{
-  \item{refReads}{Vector of (FASTA) files with reference sequence}
-  \item{bowtieRefIndexPrefix}{bowtie2 reference index to be built (partial pathname, minus the .*.bt2 suffix)}
-  \item{optionsVec}{Vector of named options}
+  \item{pathnameFAs}{A \code{\link[base]{character}} \code{\link[base]{vector}} of FASTA reference files.}
+  \item{bowtieRefIndexPrefix}{A \code{\link[base]{character}} string specifying the bowtie2
+    reference index to be built (partial pathname, minus the .*.bt2 suffix).}
+  \item{optionsVec}{(optional) A named \code{\link[base]{character}} \code{\link[base]{vector}}.}
   \item{...}{...}
-  \item{commandName}{Name of executable}
+  \item{command}{The name of the external executable.}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }
 
-\author{Taku Tokuyasu}
+\section{Support for compressed input files}{
+  If gzip'ed FASTA files are used, this function will temporarily decompress
+  before passing them to the bowtie2-build external software (which only
+  support non-compressed FASTA files).
+}
+
+\section{Known issues}{
+  The FASTA pathnames must not contain commas.
+  If detected, this method generates an informative error.
+}
+
+\author{Henrik Bengtsson, Taku Tokuyasu}
 
 
 \keyword{internal}

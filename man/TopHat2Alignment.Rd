@@ -43,13 +43,15 @@ TopHat2Alignment(..., indexSet=NULL, geneModelFile=NULL)
 \arguments{
  \item{...}{Arguments passed to \code{\link{AbstractAlignment}}.}
  \item{indexSet}{An \code{\link{Bowtie2IndexSet}}.}
- \item{geneModelFile}{Gene model (transcriptome) gtf/gff file.}
+ \item{geneModelFile}{Gene model (transcriptome) GTF/GFF3 file.}
 }
 
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{getOutputDataSet} \tab  -\cr
+ \tab \code{getSampleNames} \tab  -\cr
+ \tab \code{isDone} \tab  -\cr
  \tab \code{process} \tab  -\cr
 }
 
