@@ -4,6 +4,7 @@ Package: aroma.seq
 Version: 0.3.0 [2013-11-02]
 o Migrating to use the 'BiocParallel' package for interfacing
   with BatchJobs and other parallel backends.
+o ROBUSTNESS: Added package system test for BinnedGcNormalization.
 
 
 Version: 0.2.37 [2013-11-01]

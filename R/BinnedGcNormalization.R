@@ -221,8 +221,6 @@ setMethodS3("process", "BinnedGcNormalization", function(this, ..., verbose=FALS
   verbose && summary(verbose, gc);
   verbose && exit(verbose);
 
-  nbrOfUnits <- nbrOfUnits(unc);
-
   # Get Class object for the output files
   clazz <- getOutputFileClass(this);
 
@@ -230,18 +228,58 @@ setMethodS3("process", "BinnedGcNormalization", function(this, ..., verbose=FALS
   ext <- getOutputFileExtension(this);
 
 
-  for (ii in seq_along(ds)) {
-    df <- getFile(ds, ii);
-    name <- getFullName(df);
-    verbose && enter(verbose, sprintf("Sample %d ('%s') of %d", ii, name, length(ds)));
 
-    path <- getPath(this);
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Apply aligner to each of the FASTQ files
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  dsApply(ds, FUN=function(df, unc, gc=NULL, params=NULL, ext, path, ...., skip=TRUE, verbose=FALSE) {
+    R.utils::use("R.utils, aroma.seq");
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # Validate arguments
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # Argument 'df':
+    df <- Arguments$getInstanceOf(df, "AromaUnitTotalCnBinarySet");
+
+    # Argument 'unc':
+    unc <- Arguments$getInstanceOf(unc, "AromaUnitNucleotideCountsFile");
+    nbrOfUnits <- nbrOfUnits(unc);
+
+    # Argument 'gc':
+    if (!is.null(gc)) {
+      gc <- Arguments$getNumerics(gc, length=rep(nbrOfUnits, times=2L));
+    }
+
+    # Argument 'params':
+    if (!is.null(params)) {
+      params <- Arguments$getInstanceOf(params, "list");
+    }
+
+    # Argument 'ext':
+    ext <- Arguments$getCharacter(ext);
+
+    # Argument 'path':
+    path <- Arguments$getWritablePath(path);
+
+    # Argument 'skip':
+    skip <- Arguments$getLogical(skip);
+
+    # Argument 'verbose':
+    verbose <- Arguments$getVerbose(verbose);
+    if (verbose) {
+      pushState(verbose);
+      on.exit(popState(verbose));
+    }
+
     fullname <- getFullName(df);
+    verbose && enter(verbose, "Sample ", sQuote(fullname));
+
     filename <- sprintf("%s%s", fullname, ext);
     pathname <- Arguments$getReadablePathname(filename, path=path,
                                                          mustExist=FALSE);
     verbose && cat(verbose, "Output pathname: ", pathname);
 
+    # Already done?
     if (isFile(pathname)) {
       dfOut <- newInstance(clazz, filename=pathname);
       if (nbrOfUnits != nbrOfUnits(dfOut)) {
@@ -249,7 +287,7 @@ setMethodS3("process", "BinnedGcNormalization", function(this, ..., verbose=FALS
       }
       verbose && cat(verbose, "Skipping already existing output file.");
       verbose && exit(verbose);
-      next;
+      return(invisible(list(dfNormalized=dfOut)));
     }
 
     # Write to a temporary file
@@ -261,7 +299,18 @@ setMethodS3("process", "BinnedGcNormalization", function(this, ..., verbose=FALS
     verbose && cat(verbose, "Signals:");
     verbose && str(verbose, y);
 
+    if (!is.null(gc)) {
+      verbose && enter(verbose, "Retrieving GC content");
+      verbose && print(verbose, unc);
+      gc <- getGcContent(unc);
+      verbose && exit(verbose);
+    }
+    verbose && cat(verbose, "GC content:");
+    verbose && str(verbose, gc);
+    verbose && summary(verbose, gc);
+
     verbose && enter(verbose, "Normalizing signals (on the log scale) for GC content");
+
     ly <- log2(y);
     targetFcn <- function(...) 1;
     lyN <- normalizeGcContent(ly, gcContent=gc, targetFcn=targetFcn, .isLogged=TRUE, .returnFit=TRUE);
@@ -276,7 +325,6 @@ setMethodS3("process", "BinnedGcNormalization", function(this, ..., verbose=FALS
     verbose && enter(verbose, "Storing normalized signals");
     verbose && cat(verbose, "Pathname: ", pathname);
 
-    paramsT <- params;
     footer <- list(
       sourceDataFile=list(
         fullname=getFullName(df),
@@ -290,7 +338,7 @@ setMethodS3("process", "BinnedGcNormalization", function(this, ..., verbose=FALS
           chipType=getChipType(unc),
           checksum=getChecksum(unc)
         ),
-        params=paramsT
+        params=params
       )
     );
 
@@ -307,10 +355,10 @@ setMethodS3("process", "BinnedGcNormalization", function(this, ..., verbose=FALS
     # Renaming temporary file
     pathname <- popTemporaryFile(pathnameT, verbose=verbose);
 
-    verbose && exit(verbose); # Storing
-
     verbose && exit(verbose);
-  } # for (ii ...)
+
+    invisible(list(dfNormalized=dfOut));
+  }, unc=unc, gc=gc, params=params, ext=ext, path=getPath(this), skip=skip, verbose=verbose) # dsApply()
 
   verbose && exit(verbose);
 
