@@ -217,6 +217,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   # Setup arguments for TopHat
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   gmf <- this$geneModelFile;
+  optionsVec <- NULL;
   if (!is.null(gmf)) optionsVec <- c("G"=gmf);
 
 
@@ -230,7 +231,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
     # Validate arguments
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Argument 'dfR1':
-    dfR1 <- Arguments$getInstanceOf(dfR1, "BamDataFile");
+    dfR1 <- Arguments$getInstanceOf(dfR1, "FastqDataFile");
 
     # Argument 'isPaired':
     isPaired <- Arguments$getLogical(isPaired);
@@ -275,7 +276,9 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
     verbose && cat(verbose, "Arguments passed to TopHat:");
     verbose && str(verbose, args);
 
-    res <- do.call(tophat2, args=args, verbose=less(verbose, 1));
+    args$verbose <- less(verbose, 1);
+
+    res <- do.call(tophat2, args=args);
 
     verbose && exit(verbose);
 

@@ -113,20 +113,24 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
   # the below assertion tests will throw an error.
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Record the orginal output directory
-  outPathOrg <- outPath
+  outPathOrg <- outPath;
 
   # (1a) Use a temporary output directory without commas
-  outPath <- gsub(",", "_", outPath)
+  outPath <- gsub(",", "_", outPath);
   # Record which subdirectories already exists, so we can know which
   # are create here and hence should be deleted at the end.
-  depth <- 0L
+  depth <- 0L;
   while (!is.null(dir <- getParent(outPath, depth=depth))) {
-    if (isDirectory(dir)) break
-    depth <- depth + 1L
+    if (isDirectory(dir)) break;
+    depth <- depth + 1L;
   }
-  outPathToDelete <- getParent(outPath, depth=depth-1L)
-  outPath <- Arguments$getWritablePath(outPath)
-  assertNoCommas(outPath)
+  if (depth > 0L) {
+    outPathToDelete <- getParent(outPath, depth=depth-1L);
+  } else {
+    outPathToDelete <- NULL;
+  }
+  outPath <- Arguments$getWritablePath(outPath);
+  assertNoCommas(outPath);
 
 
   # (1b) Inside the temporary output directory, setup a temporary
@@ -188,7 +192,9 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
     if (!identical(outPathOrg, outPath)) {
       file.rename(outPath, outPathOrg)
     }
-    removeDirectory(outPathToDelete, recursive=TRUE, mustExist=FALSE)
+    if (!is.null(outPathToDelete)) {
+      removeDirectory(outPathToDelete, recursive=TRUE, mustExist=FALSE)
+    }
   }, add=TRUE)
 
   # When reaching this point, 'tophat' will not be able to tell whether
