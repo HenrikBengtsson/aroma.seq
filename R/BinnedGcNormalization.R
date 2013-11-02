@@ -109,7 +109,7 @@ setMethodS3("getGcContentFile", "BinnedGcNormalization", function(this, ...) {
 
 setMethodS3("getOutputFileExtension", "BinnedGcNormalization", function(this, ...) {
   ds <- getInputDataSet(this);
-  df <- getOneFile(this, mustExist=TRUE);
+  df <- getOneFile(ds, mustExist=TRUE);
   ext <- getFilenameExtension(df);
   sprintf(".%s", ext);
 }, protected=TRUE)
@@ -376,6 +376,9 @@ setMethodS3("getOutputFiles", "BinnedGcNormalization", function(this, ...) {
 
 ############################################################################
 # HISTORY:
+# 2013-11-02
+# o BUG FIX: getOutputFileExtension() for BinnedGcNormalization would
+#   give Error in UseMethod("getOneFile").
 # 2012-10-18
 # o Created.
 ############################################################################
