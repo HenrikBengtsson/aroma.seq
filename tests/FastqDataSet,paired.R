@@ -28,5 +28,6 @@ print(r1)
 r2 <- getMateFile(r1)
 print(r2)
 r1b <- getMateFile(r2)
-stopifnot(equals(r1b, r1))
+print(r1b)
+stopifnot(identical(getPathname(r1b), getPathname(r1)))
 
