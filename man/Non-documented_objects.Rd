@@ -373,7 +373,7 @@
 \alias{getPath.TopHat2Alignment}
 \alias{dsApply}
 \alias{getExpectedOutputPaths}
-\alias{getExpectedOutputPaths.TopHat2Alignmen}
+\alias{getExpectedOutputPaths.TopHat2Alignment}
 \alias{getSampleNames.TopHat2Alignment}
 \alias{isDone.TopHat2Alignment}
 

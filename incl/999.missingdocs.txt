@@ -207,5 +207,5 @@ getRootPath.TopHat2Alignment
 process.TopHat2Alignment
 getPath.TopHat2Alignment
 dsApply
-getExpectedOutputPaths getExpectedOutputPaths.TopHat2Alignmen
+getExpectedOutputPaths getExpectedOutputPaths.TopHat2Alignment
 getSampleNames.TopHat2Alignment isDone.TopHat2Alignment

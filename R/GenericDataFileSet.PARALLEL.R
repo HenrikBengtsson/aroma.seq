@@ -40,12 +40,22 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, FUN, ..., args=list(),
   getJobNr <- batchMap <- showStatus <- findNotSubmitted <-
       findNotRunning <- submitJobs <- findNotTerminated <- NULL;
 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Local functions
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  assertNoGlobalVariables <- function(FUN, ...) {
+    globals <- findGlobals(FUN, merge=FALSE);
+    # TO DO...
+  } # assertNoGlobalVariables()
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'FUN':
   stopifnot(is.function(FUN));
+  assertNoGlobalVariables(FUN);
+
 
   # Arguments '...':
   vargs <- list(...);

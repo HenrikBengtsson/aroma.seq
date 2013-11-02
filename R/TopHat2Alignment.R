@@ -22,7 +22,7 @@
 # }
 #
 # \section{Supported operating systems}{
-#   This method is available on Linux, OSX, and Windows [1].
+#   This method is available on Linux and OSX [1].
 # }
 #
 # @author "TT"
@@ -216,35 +216,71 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup arguments for TopHat
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  args <- list(
-    bowtieRefIndexPrefix=getIndexPrefix(is),
-    reads1=NA_character_,
-    reads2=NULL,
-    outPath=NA_character_,
-    optionsVec=character(0L)
-  );
   gmf <- this$geneModelFile;
-  if (!is.null(gmf)) args$optionsVec <- c("G"=gmf);
+  if (!is.null(gmf)) optionsVec <- c("G"=gmf);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Process sample by sample...
+  # Apply aligner to each of the FASTQ files
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  for (ii in seq_along(ds)) {
-    dfR1 <- getFile(ds, ii);
+  dsApply(ds, FUN=function(dfR1, isPaired=FALSE, indexSet, optionsVec=NULL, outPath, ...., skip=TRUE, verbose=FALSE) {
+    R.utils::use("R.utils, aroma.seq");
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # Validate arguments
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # Argument 'dfR1':
+    dfR1 <- Arguments$getInstanceOf(dfR1, "BamDataFile");
+
+    # Argument 'isPaired':
+    isPaired <- Arguments$getLogical(isPaired);
+
+    # Argument 'indexSet':
+    indexSet <- Arguments$getInstanceOf(indexSet, "Bowtie2IndexSet");
+
+    # Argument 'skip':
+    skip <- Arguments$getLogical(skip);
+
+    # Argument 'outPath':
+    outPath <- Arguments$getWritablePath(outPath);
+
+    # Argument 'verbose':
+    verbose <- Arguments$getVerbose(verbose);
+    if (verbose) {
+      pushState(verbose);
+      on.exit(popState(verbose));
+    }
+
     sampleName <- sub("_(1|R1)$", "", getFullName(dfR1));
-    verbose && enter(verbose, sprintf("Sample #%d ('%s') of %d", ii, sampleName, length(ds)));
+    verbose && enter(verbose, "Sample name ", sQuote(sampleName));
 
-    args$reads1 <- getPathname(dfR1);
+    verbose && cat(verbose, "R1 FASTQ file:");
+    verbose && print(verbose, dfR1);
+
+    args <- list(
+      bowtieRefIndexPrefix=getIndexPrefix(indexSet),
+      reads1=getPathname(dfR1),
+      reads2=NULL,
+      outPath=file.path(outPath, sampleName),
+      optionsVec=optionsVec
+    );
+
     if (isPaired) {
       dfR2 <- getMateFile(dfR1);
+      verbose && cat(verbose, "R2 FASTQ file:");
+      verbose && print(verbose, dfR2);
       args$reads2 <- getPathname(dfR2);
     }
-    args$outPath <- file.path(outPath, sampleName);
-    res <- do.call(tophat2, args=args);
+
+    verbose && cat(verbose, "Arguments passed to TopHat:");
+    verbose && str(verbose, args);
+
+    res <- do.call(tophat2, args=args, verbose=less(verbose, 1));
 
     verbose && exit(verbose);
-  } # for (ii ...)
+
+    invisible(list(res=res));
+  }, isPaired=isPaired, indexSet=is, optionsVec=optionsVec, outPath=getPath(this), skip=skip, verbose=verbose) # dsApply()
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -265,6 +301,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
 ############################################################################
 # HISTORY:
 # 2013-11-01 [HB]
+# o SPEEDUP: Parallized process() for TopHat2Alignment.
 # o Now process() for TopHat2Alignment skips already processed samples.
 # o Now process() for TopHat2Alignment should also work for single-end
 #   reads as well as paired-end reads.
