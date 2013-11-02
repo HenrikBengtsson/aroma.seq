@@ -1,13 +1,8 @@
 library("aroma.seq")
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup (writable) local data directory structure
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pathD <- system.file("exData", package="aroma.seq")
-for (dir in c("annotationData")) {
-  copyDirectory(file.path(pathD, dir), to=dir, overwrite=FALSE)
-}
+setupExampleData()
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

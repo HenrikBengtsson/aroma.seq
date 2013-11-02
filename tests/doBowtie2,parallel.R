@@ -6,13 +6,9 @@ if (fullTest) {
 
 setOption(aromaSettings, "devel/BatchJobs", TRUE)
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 # Setup (writable) local data directory structure
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pathD <- system.file("exData", package="aroma.seq")
-for (dir in c("annotationData", "fastqData")) {
-  copyDirectory(file.path(pathD, dir), to=dir, overwrite=FALSE)
-}
+setupExampleData()
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -27,7 +23,7 @@ print(fa)
 # Setup FASTQ set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 path <- file.path("fastqData", "TopHat-example", "LambdaPhage")
-fqs <- FastqDataSet$byPath(path, pattern="[.](fq|fastq)$")
+fqs <- FastqDataSet$byPath(path)
 print(fqs)
 
 

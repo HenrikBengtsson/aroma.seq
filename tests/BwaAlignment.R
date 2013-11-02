@@ -4,13 +4,8 @@ fullTest <- fullTest && isCapableOf(aroma.seq, "bwa")
 if (fullTest) {
 
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup (writable) local data directory structure
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pathD <- system.file("exData", package="aroma.seq")
-for (dir in c("annotationData", "fastqData")) {
-  copyDirectory(file.path(pathD, dir), to=dir, overwrite=FALSE)
-}
+setupExampleData()
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -25,7 +20,7 @@ print(fa)
 # Setup FASTQ set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 path <- file.path("fastqData", "TopHat-example", "LambdaPhage")
-fqs <- FastqDataSet$byPath(path, pattern="[.](fq|fastq)$")
+fqs <- FastqDataSet$byPath(path)
 print(fqs)
 
 
@@ -75,7 +70,7 @@ for (ii in seq_along(fqs)) {
   pathnameZ <- file.path(pathZ, sprintf("%s.gz", getFilename(fq)))
   if (!isFile(pathnameZ)) gzip(getPathname(fq), pathnameZ, remove=FALSE)
 }
-fqsZ <- FastqDataSet$byPath(pathZ, pattern="[.]gz$")
+fqsZ <- FastqDataSet$byPath(pathZ)
 
 # BWA with BWA 'aln' options '-n 2' and '-q 40'.
 algZ <- BwaAlignment(fqsZ, indexSet=is, n=2, q=40)

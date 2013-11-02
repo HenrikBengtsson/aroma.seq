@@ -1,20 +1,15 @@
 library("aroma.seq")
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup (writable) local data directory structure
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pathD <- system.file("exData", package="aroma.seq")
-for (dir in c("fastqData")) {
-  copyDirectory(file.path(pathD, dir), to=dir, overwrite=FALSE)
-}
+setupExampleData()
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup paired-end FASTQ set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 path <- file.path("fastqData", "TopHat-example", "LambdaPhage")
-fqs <- FastqDataSet$byPath(path, pattern="_1[.](fq|fastq)$", paired=TRUE)
+fqs <- FastqDataSet$byPath(path, paired=TRUE)
 print(fqs)
 pairs <- getFilePairs(fqs)
 print(pairs)
@@ -30,4 +25,3 @@ print(r2)
 r1b <- getMateFile(r2)
 print(r1b)
 stopifnot(identical(getPathname(r1b), getPathname(r1)))
-

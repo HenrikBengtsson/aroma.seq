@@ -19,7 +19,7 @@ print(fa)
 # Setup FASTQ set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 path <- file.path("fastqData,aroma.seq,private", "AlbertsonD_2012-SCC,AB042", "Generic")
-fqs <- FastqDataSet$byPath(path, pattern="[.](fq|fastq)$")
+fqs <- FastqDataSet$byPath(path)
 fqs <- extract(fqs, 1:2)
 print(fqs)
 

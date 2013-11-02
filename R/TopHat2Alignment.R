@@ -265,6 +265,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
 ############################################################################
 # HISTORY:
 # 2013-11-01 [HB]
+# o Now process() for TopHat2Alignment skips already processed samples.
 # o Now process() for TopHat2Alignment should also work for single-end
 #   reads as well as paired-end reads.
 # 2013-10-31 [HB]

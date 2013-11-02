@@ -8,19 +8,8 @@ if (fullTest) {
 dataSet <- "YeastTest"
 organism <- "SC"
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Create local unzipped copies of data directories
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# The directory where all example data files are
-path0 <- system.file(file.path("exData"), package="aroma.seq", mustWork=TRUE)
-
-# FASTA data
-path <- file.path("annotationData", "organisms", organism)
-if (!isDirectory(path)) copyDirectory(from=file.path(path0, path), to=path)
-
-# FASTQ data
-path <- file.path("fastqData", dataSet, organism)
-if (!isDirectory(path)) copyDirectory(from=file.path(path0, path), to=path)
+# Setup (writable) local data directory structure
+setupExampleData()
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -5,6 +5,8 @@ Version: 0.2.37 [2013-11-01]
 o Now FastaReferenceSet$byPath() also finds gzip'ed FASTA files.
 o Now buildBowtie2IndexSet() for FastaReferenceFile supports
   gzip'ed FASTA files.
+o SPEEDUP: Now process() for TopHat2Alignment skips already
+  processed samples.
 
 
 Version: 0.2.36 [2013-10-31]
