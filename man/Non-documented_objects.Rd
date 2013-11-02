@@ -372,6 +372,10 @@
 \alias{process.TopHat2Alignment}
 \alias{getPath.TopHat2Alignment}
 \alias{dsApply}
+\alias{getExpectedOutputPaths}
+\alias{getExpectedOutputPaths.TopHat2Alignmen}
+\alias{getSampleNames.TopHat2Alignment}
+\alias{isDone.TopHat2Alignment}
 
 \description{
   This page contains aliases for all "non-documented" objects that
