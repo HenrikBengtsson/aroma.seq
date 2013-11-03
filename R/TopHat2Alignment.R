@@ -35,7 +35,7 @@
 #      Nat Protoc, 2012.\cr
 # }
 #*/###########################################################################
-setConstructorS3("TopHat2Alignment", function(..., indexSet=NULL, geneModelFile=NULL) {
+setConstructorS3("TopHat2Alignment", function(..., indexSet=NULL, transcripts=NULL) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -44,16 +44,16 @@ setConstructorS3("TopHat2Alignment", function(..., indexSet=NULL, geneModelFile=
     indexSet <- Arguments$getInstanceOf(indexSet, "Bowtie2IndexSet");
   }
 
-  # Argument 'geneModelFile':
-  if (!is.null(geneModelFile)) {
-    geneModelFile <- Arguments$getReadablePathname(geneModelFile);
+  # Argument 'transcripts':
+  if (!is.null(transcripts)) {
+    transcripts <- Arguments$getInstanceOf(transcripts, "GenericDataFile");
   }
 
   # Arguments '...':
   args <- list(...);
 
   extend(AbstractAlignment(..., indexSet=indexSet), "TopHat2Alignment",
-    geneModelFile = geneModelFile
+    transcripts = transcripts
   )
 })
 
@@ -219,9 +219,9 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup arguments for TopHat
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  gmf <- this$geneModelFile;
+  transcripts <- this$transcripts;
   optionsVec <- NULL;
-  if (!is.null(gmf)) optionsVec <- c("G"=gmf);
+  if (!is.null(transcripts)) optionsVec <- c("G"=getPathname(transcripts));
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
