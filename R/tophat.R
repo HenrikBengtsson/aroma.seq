@@ -51,6 +51,9 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
                                           ...,
                                           command="tophat",
                                           verbose=FALSE) {
+  # Make sure to evaluate registered onExit() statements
+  on.exit(eval(onExit()));
+
 
   # ( Support a command line like this: "tophat <options> bowtieRefIndexPrefix reads1 reads2" )
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -69,39 +72,83 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'outPath'
-  # Here we assert that the output directory does not already exists,
-  # that it can be created, but we really don't want to create it because
-  # later the temporary directory will be renamed to it, so we delete
-  # immediately.
-  outPath <- Arguments$getWritablePath(outPath, mustNotExist=TRUE)
-  unlink(outPath)
+  outPath <- Arguments$getWritablePath(outPath, mustNotExist=TRUE);
 
   # Argument 'bowtieRefIndexPrefix'
   # (and the existence of the corresponding directory)
   bowtieRefIndexPrefix <- Arguments$getCharacter(bowtieRefIndexPrefix,
-                                                           length=c(1L,1L))
-  bowtieRefIndexPath <- dirname(bowtieRefIndexPrefix)
-  bowtieRefIndexPath <- Arguments$getReadablePath(bowtieRefIndexPath)
+                                                          length=c(1L,1L));
+  bowtieRefIndexPath <- dirname(bowtieRefIndexPrefix);
+  bowtieRefIndexName <- basename(bowtieRefIndexPrefix);
+  bowtieRefIndexPath <- Arguments$getReadablePath(bowtieRefIndexPath, absolute=TRUE);
 
   # Argument 'reads1'
-  reads1 <- Arguments$getReadablePathname(reads1)
+  reads1 <- Arguments$getReadablePathname(reads1, absolute=TRUE);
 
   # Argument 'reads2'
   if (!is.null(reads2)) {
-    reads2 <- Arguments$getReadablePathname(reads2)
+    reads2 <- Arguments$getReadablePathname(reads2, absolute=TRUE);
   }
 
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+     pushState(verbose);
+     on.exit(popState(verbose), add=TRUE);
+  }
+		 
+
+  verbose && enter(verbose, "Running tophat()");
+  verbose && cat(verbose, "R1 FASTQ files:");
+  verbose && print(verbose, getRelativePath(reads1));
+  if (!is.null(reads2)) {
+    verbose && cat(verbose, "R2 FASTQ files:");
+    verbose && print(verbose, getRelativePath(reads2));
+  }
+  verbose && cat(verbose, "Bowtie2 reference index prefix: ", bowtieRefIndexPrefix);
+  verbose && cat(verbose, "Output directory: ", outPath);
+  verbose && cat(verbose, "TopHat executable: ", command);
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Check whether gzipped FASTQ files are supported or not
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   gzipped <- any(regexpr("[.]gz$", c(reads1, reads2), ignore.case=TRUE) != -1L);
   if (gzipped) {
-    ver <- attr(findTopHat2(), "version");
+    verbose && cat(verbose, "Detected gzip'ed FASTQ files.");
+    bin <- findTopHat2();
+    verbose && str(verbose, bin);
+    ver <- attr(bin, "version");
+    verbose && cat(verbose, "TopHat version: ", ver);
     if (ver <= "1.3.0") {
       throw("Detected gzip'ed FASTQ files, which is only supported by TopHat (>= 1.3.0): ", ver);
     }
   }
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Generate output atomically by writing to a temporary directory
+  # that is renamed upon completion.
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  outPathOrg <- outPath;
+  outPath <- sprintf("%s.tmp", outPath);
+  outPath <- Arguments$getWritablePath(outPath, mustNotExist=TRUE);
+  verbose && cat(verbose, "Temporary output directory: ", outPath);
+  onExit({
+    removeDirectory(outPathOrg, recursive=FALSE, mustExist=FALSE);
+    file.rename(outPath, outPathOrg);
+  });
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # While running, let the output directory be the working directory.
+  # Make sure the working directory is restored when exiting.
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  opwd <- setwd(outPath);
+  verbose && cat(verbose, "Original working directory: ", opwd);
+  onExit({
+    verbose && cat(verbose, "Resetting working directory: ", opwd);
+    setwd(opwd);
+  });
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -112,90 +159,37 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
   # names, not in the filenames.  If the filenames have commas,
   # the below assertion tests will throw an error.
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Record the orginal output directory
-  outPathOrg <- outPath;
-
-  # (1a) Use a temporary output directory without commas
-  outPath <- gsub(",", "_", outPath);
-  # Record which subdirectories already exists, so we can know which
-  # are create here and hence should be deleted at the end.
-  depth <- 0L;
-  while (!is.null(dir <- getParent(outPath, depth=depth))) {
-    if (isDirectory(dir)) break;
-    depth <- depth + 1L;
-  }
-  if (depth > 0L) {
-    outPathToDelete <- getParent(outPath, depth=depth-1L);
-  } else {
-    outPathToDelete <- NULL;
-  }
-  outPath <- Arguments$getWritablePath(outPath);
-  assertNoCommas(outPath);
-
-
   # (1b) Inside the temporary output directory, setup a temporary
   #      input directory without commas
-  inPath <- file.path(outPath, "src")
-  inPath <- Arguments$getWritablePath(inPath)
-  assertNoCommas(inPath)
-
+  inPath <- Arguments$getWritablePath("src");
+  onExit({ removeDirectory(inPath, recursive=FALSE, mustExist=FALSE) })
 
   # (2a) Link to the bowtie2 index directory
   #      (such that tophat sees no commas)
-  link <- file.path(inPath, "refIndex")
-  bowtieRefIndexPath <- createLink(link=link, bowtieRefIndexPath)
-  # When done, make sure to remove the temporary file link
-  on.exit({
-    if (file.exists(bowtieRefIndexPath)) {
-      file.remove(bowtieRefIndexPath)
-    }
-  }, add=TRUE)
-  bowtieRefIndexPrefix <- file.path(bowtieRefIndexPath, basename(bowtieRefIndexPrefix))
-  assertNoCommas(bowtieRefIndexPrefix)
+  link <- file.path(inPath, "refIndex");
+  bowtieRefIndexPath <- createLink(link=link, bowtieRefIndexPath);
+  onExit({ file.remove(bowtieRefIndexPath) })
+  bowtieRefIndexPrefix <- file.path(bowtieRefIndexPath, basename(bowtieRefIndexPrefix));
+  assertNoCommas(bowtieRefIndexPrefix);
 
   # (3a) Link to the FASTQ 'R1'
   #      (such that tophat sees no commas)
-  link <- file.path(inPath, basename(reads1))
-  reads1 <- createLink(link=link, reads1)
-  # When done, make sure to remove the temporary file link
-  on.exit({
-    if (file.exists(reads1)) {
-      file.remove(reads1)
-    }
-  }, add=TRUE)
-  assertNoCommas(reads1)
+  link <- file.path(inPath, basename(reads1));
+  reads1 <- createLink(link=link, reads1);
+  onExit({ file.remove(reads1) })
+  assertNoCommas(reads1);
 
   # (3b) Link to the (optional) FASTQ 'R2'
   #      (such that tophat sees no commas)
   if (!is.null(reads2)) {
-    reads2 <- Arguments$getReadablePathname(reads2)
-    link <- file.path(inPath, basename(reads2))
-    reads2 <- createLink(link=link, reads2)
+    reads2 <- Arguments$getReadablePathname(reads2);
+    link <- file.path(inPath, basename(reads2));
+    reads2 <- createLink(link=link, reads2);
     # When done, make sure to remove the temporary file link
-    on.exit({
-      if (file.exists(reads2)) {
-        file.remove(reads2)
-      }
-    }, add=TRUE)
-    assertNoCommas(reads2)
+    onExit({ file.remove(reads2) })
+    assertNoCommas(reads2);
   }
 
-  # (4a) Finally, when done, make sure to remove the temporary input
-  #      directory which should be empty at this point ('recursive=FALSE')
-  on.exit({
-    removeDirectory(inPath, recursive=FALSE, mustExist=FALSE)
-  }, add=TRUE)
-
-  # (4b) ...and lastly, rename the temporary output directory to the
-  #      final one.
-  on.exit({
-    if (!identical(outPathOrg, outPath)) {
-      file.rename(outPath, outPathOrg)
-    }
-    if (!is.null(outPathToDelete)) {
-      removeDirectory(outPathToDelete, recursive=TRUE, mustExist=FALSE)
-    }
-  }, add=TRUE)
 
   # When reaching this point, 'tophat' will not be able to tell whether
   # we are using the original files or the temporary workaround ones.
@@ -217,24 +211,31 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
     names(opts) <- nms
   }
 
-  # Append the output directory
-  opts <- c(opts, "-o"=outPath)
+  # Set the output directory to be the current directory
+  opts <- c(opts, "-o"=".") 
 
   # Append the bowtie2 reference index prefix
-  opts <- c(opts, bowtieRefIndexPrefix)
+  opts <- c(opts, bowtieRefIndexPrefix);
 
   # Append the R1 FASTQ files
-  opts <- c(opts, paste(reads1, collapse=","))
+  opts <- c(opts, paste(reads1, collapse=","));
 
   # Paired-end analysis?  Then append the R2 FASTQ files
   if (!is.null(reads2)) {
-    opts <- c(opts, paste(reads2, collapse=","))
+    opts <- c(opts, paste(reads2, collapse=","));
   }
 
   # Call TopHat executable
-  args <- list(command=command, args=opts)
-  res <- do.call(what=systemTopHat, args=args)
+  verbose && enter(verbose, "Calling systemTopHat()");
+  args <- list(command=command, args=opts);
+  verbose && cat(verbose, "Arguments:");
+  verbose && str(verbose, args);
+  res <- do.call(systemTopHat, args=args);
+  verbose && cat(verbose, "Result:");
+  verbose && str(verbose, res);
+  verbose && exit(verbose);
 
+  verbose && exit(verbose);
 
   res
 }) # tophat()
@@ -251,6 +252,10 @@ setMethodS3("tophat2", "default", function(..., command="tophat2") {
 
 ############################################################################
 # HISTORY:
+# 2013-11-02 [HB]
+# o Utilizing onExit(), which is makes everything much easier.
+# o Now the working directory is set to the output directory while
+#   running TopHat.
 # 2013-10-31 [HB]
 # o ROBUSTNESS: Now tophat() does a better job in making sure all
 #   temporary directories and file links are removed regardless how

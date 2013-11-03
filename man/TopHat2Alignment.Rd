@@ -37,7 +37,7 @@ extends \emph{\link[aroma.seq]{AbstractAlignment}}\cr
 }
 
 \usage{
-TopHat2Alignment(..., indexSet=NULL, geneModelFile=NULL)
+TopHat2Alignment(..., indexSet=NULL, transcripts=NULL)
 }
 
 \arguments{
