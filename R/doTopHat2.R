@@ -1,22 +1,22 @@
 ###########################################################################/**
-# @RdocDefault doBowtie2
-# @alias doBowtie2.FastqDataSet
+# @RdocDefault doTopHat2
+# @alias doTopHat2.FastqDataSet
 #
-# @title "Read alignment using the Bowtie v2 aligner"
+# @title "Read alignment using the TopHat v2 aligner"
 #
 # \description{
 #  @get "title" based on [1].
 # }
 #
 # \usage{
-#   @usage doBowtie2
-#   @usage doBowtie2,FastqDataSet
+#   @usage doTopHat2
+#   @usage doTopHat2,FastqDataSet
 # }
 #
 # \arguments{
 #  \item{dataSet, df}{A @see "FastqDataSet".}
 #  \item{reference}{A @see "FastaReferenceFile" or a @see "Bowtie2IndexSet" specifying the genome reference to align the FASTQ reads to.}
-#  \item{...}{Additional arguments passed to @see "Bowtie2Alignment".}
+#  \item{...}{Additional arguments passed to @see "TopHat2Alignment".}
 #  \item{verbose}{See @see "Verbose".}
 # }
 #
@@ -25,19 +25,22 @@
 # }
 #
 # \references{
-#  [1] Bowtie2, John Hopkins University, 2013.
-#      \url{http://bowtie-bio.sourceforge.net/bowtie2/}
+#  [1] TopHat, University of Maryland, 2013.
+#      \url{http://http://tophat.cbcb.umd.edu/} \cr
+#  [2] Trapnell et al. \emph{Differential gene and transcript expression
+#      analysis of RNA-seq experiments with TopHat and Cufflinks}.
+#      Nat Protoc, 2012.\cr
 # }
 #
 # @author "HB"
 #
 # \seealso{
-#  For more details, see @see "Bowtie2Alignment".
+#  For more details, see @see "TopHat2Alignment".
 # }
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("doBowtie2", "FastqDataSet", function(dataSet, reference, ..., verbose=FALSE) {
+setMethodS3("doTopHat2", "FastqDataSet", function(dataSet, reference, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -56,13 +59,14 @@ setMethodS3("doBowtie2", "FastqDataSet", function(dataSet, reference, ..., verbo
   }
 
 
-  verbose && enter(verbose, "Bowtie2");
+  verbose && enter(verbose, "TopHat2");
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Checking requirements
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Bowtie2/Check requirements");
-  stopifnot(isCapableOf(aroma.seq, "bwa"));
+  verbose && enter(verbose, "TopHat2/Check requirements");
+  stopifnot(isCapableOf(aroma.seq, "tophat2"));
+  stopifnot(isCapableOf(aroma.seq, "bowtie2"));
   verbose && exit(verbose);
 
 
@@ -71,15 +75,15 @@ setMethodS3("doBowtie2", "FastqDataSet", function(dataSet, reference, ..., verbo
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Bowtie2 'aln' with options '-n 2' and '-q 40'.
+  # TopHat2
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Bowtie2/Alignment");
+  verbose && enter(verbose, "TopHat2/Alignment");
 
   # Retrieve Bowtie2 index set?
   if (inherits(reference, "Bowtie2IndexSet")) {
     is <- reference;
   } else if (inherits(reference, "FastaReferenceFile")) {
-    verbose && enter(verbose, "Bowtie2/Alignment/Retrieving index set");
+    verbose && enter(verbose, "TopHat2/Alignment/Retrieving index set");
     fa <- reference;
     verbose && print(verbose, fa);
     is <- buildBowtie2IndexSet(fa, verbose=verbose);
@@ -91,7 +95,7 @@ setMethodS3("doBowtie2", "FastqDataSet", function(dataSet, reference, ..., verbo
     # Not needed anymore
   reference <- NULL;
 
-  alg <- Bowtie2Alignment(dataSet, indexSet=is, ...);
+  alg <- TopHat2Alignment(dataSet, indexSet=is, ...);
   verbose && print(verbose, alg);
 
   bams <- process(alg, verbose=verbose);
@@ -103,16 +107,16 @@ setMethodS3("doBowtie2", "FastqDataSet", function(dataSet, reference, ..., verbo
   verbose && exit(verbose);
 
   bams;
-}) # doBowtie2()
+}) # doTopHat2()
 
 
-setMethodS3("doBowtie2", "default", function(...) {
-  throw("The \"default\" method is still not implemented. Please see help('doBowtie2').");
+setMethodS3("doTopHat2", "default", function(...) {
+  throw("The \"default\" method is still not implemented. Please see help('doTopHat2').");
 })
 
 
 ############################################################################
 # HISTORY:
-# 2013-08-22
-# o Created.
+# 2013-11-02
+# o Created from doBowtie2().
 ############################################################################

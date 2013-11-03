@@ -29,7 +29,10 @@
 #
 # \references{
 #  [1] TopHat, University of Maryland, 2013.
-#      \url{http://http://tophat.cbcb.umd.edu/}
+#      \url{http://http://tophat.cbcb.umd.edu/} \cr
+#  [2] Trapnell et al. \emph{Differential gene and transcript expression
+#      analysis of RNA-seq experiments with TopHat and Cufflinks}.
+#      Nat Protoc, 2012.\cr
 # }
 #*/###########################################################################
 setConstructorS3("TopHat2Alignment", function(..., indexSet=NULL, geneModelFile=NULL) {

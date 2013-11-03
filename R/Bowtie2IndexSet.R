@@ -21,6 +21,12 @@
 #
 # @author "HB"
 #
+# \references{
+#  [1] Trapnell et al. \emph{Differential gene and transcript expression
+#      analysis of RNA-seq experiments with TopHat and Cufflinks}.
+#      Nat Protoc, 2012.\cr
+# }
+#
 # @keyword internal
 #*/###########################################################################
 setConstructorS3("Bowtie2IndexSet", function(...) {
