@@ -34,10 +34,7 @@ print(fqs)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # TopHat2
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ta <- doTopHat2(fqs, reference=fa)
-process(ta, verbose=TRUE)
-
-bams <- getOutputDataSet(ta)
+bams <- doTopHat2(fqs, reference=fa, verbose=TRUE)
 print(bams)
 
 } # if (fullTest)
