@@ -14,7 +14,7 @@
 # \arguments{
 #  \item{...}{Arguments passed to @see "AbstractAlignment".}
 #  \item{indexSet}{An @see "Bowtie2IndexSet".}
-#  \item{geneModelFile}{Gene model (transcriptome) GTF/GFF3 file.}
+#  \item{transcripts}{Gene model (transcriptome) GTF/GFF3 file.}
 # }
 #
 # \section{Fields and Methods}{
@@ -215,19 +215,14 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   outPath <- getPath(this);
   verbose && cat(verbose, "Output directory: ", outPath);
 
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Setup arguments for TopHat
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   transcripts <- this$transcripts;
-  optionsVec <- NULL;
-  if (!is.null(transcripts)) optionsVec <- c("G"=getPathname(transcripts));
-
+  verbose && cat(verbose, "Using transcripts:");
+  verbose && print(verbose, transcripts);
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Apply aligner to each of the FASTQ files
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  dsApply(ds, FUN=function(dfR1, isPaired=FALSE, indexSet, optionsVec=NULL, outPath, ...., skip=TRUE, verbose=FALSE) {
+  dsApply(ds, FUN=function(dfR1, isPaired=FALSE, indexSet, transcripts=NULL, outPath, ...., skip=TRUE, verbose=FALSE) {
     R.utils::use("R.utils, aroma.seq");
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -258,6 +253,9 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
     sampleName <- sub("_(1|R1)$", "", getFullName(dfR1));
     verbose && enter(verbose, "Sample name ", sQuote(sampleName));
 
+    gtf <- NULL;
+    if (!is.null(transcripts)) gtf <- getPathname(transcripts);
+
     verbose && cat(verbose, "R1 FASTQ file:");
     verbose && print(verbose, dfR1);
 
@@ -266,7 +264,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
       reads1=getPathname(dfR1),
       reads2=NULL,
       outPath=file.path(outPath, sampleName),
-      optionsVec=optionsVec
+      gtf=gtf
     );
 
     if (isPaired) {
@@ -286,7 +284,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
     verbose && exit(verbose);
 
     invisible(list(res=res));
-  }, isPaired=isPaired, indexSet=is, optionsVec=optionsVec, outPath=getPath(this), skip=skip, verbose=verbose) # dsApply()
+  }, isPaired=isPaired, indexSet=is, transcripts=transcripts, outPath=getPath(this), skip=skip, verbose=verbose) # dsApply()
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

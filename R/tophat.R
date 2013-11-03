@@ -43,19 +43,10 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
-                                          reads1,
-                                          reads2=NULL,
-                                          outPath="tophat/",
-                                          optionsVec=NULL,
-                                          ...,
-                                          command="tophat",
-                                          verbose=FALSE) {
+setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1, reads2=NULL, gtf=NULL, outPath="tophat/", optionsVec=NULL, ..., command="tophat", verbose=FALSE) {
   # Make sure to evaluate registered onExit() statements
   on.exit(eval(onExit()));
 
-
-  # ( Support a command line like this: "tophat <options> bowtieRefIndexPrefix reads1 reads2" )
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Local functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -83,11 +74,19 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
   bowtieRefIndexPath <- Arguments$getReadablePath(bowtieRefIndexPath, absolute=TRUE);
 
   # Argument 'reads1'
-  reads1 <- Arguments$getReadablePathname(reads1, absolute=TRUE);
+  stopifnot(length(reads1) > 0L);
+  reads1 <- sapply(reads1, FUN=Arguments$getReadablePathname, absolute=TRUE);
 
   # Argument 'reads2'
-  if (!is.null(reads2)) {
-    reads2 <- Arguments$getReadablePathname(reads2, absolute=TRUE);
+  isPaired <- (length(reads2) > 0L);
+  if (isPaired) {
+    stopifnot(length(reads2) == length(reads1));
+    reads2 <- sapply(reads2, FUN=Arguments$getReadablePathname, absolute=TRUE);
+  }
+
+  # Argument 'gtf'
+  if (!is.null(gtf)) {
+    gtf <- Arguments$getReadablePathname(gtf, absolute=TRUE);
   }
 
   # Argument 'verbose':
@@ -100,10 +99,10 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
 
   verbose && enter(verbose, "Running tophat()");
   verbose && cat(verbose, "R1 FASTQ files:");
-  verbose && print(verbose, getRelativePath(reads1));
-  if (!is.null(reads2)) {
+  verbose && print(verbose, sapply(reads1, FUN=getRelativePath));
+  if (isPaired) {
     verbose && cat(verbose, "R2 FASTQ files:");
-    verbose && print(verbose, getRelativePath(reads2));
+    verbose && print(verbose, sapply(reads2, FUN=getRelativePath));
   }
   verbose && cat(verbose, "Bowtie2 reference index prefix: ", bowtieRefIndexPrefix);
   verbose && cat(verbose, "Output directory: ", outPath);
@@ -167,27 +166,37 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
   # (2a) Link to the bowtie2 index directory
   #      (such that tophat sees no commas)
   link <- file.path(inPath, "refIndex");
-  bowtieRefIndexPath <- createLink(link=link, bowtieRefIndexPath);
+  bowtieRefIndexPath <- createLink(link=link, target=bowtieRefIndexPath);
   onExit({ file.remove(bowtieRefIndexPath) })
   bowtieRefIndexPrefix <- file.path(bowtieRefIndexPath, basename(bowtieRefIndexPrefix));
   assertNoCommas(bowtieRefIndexPrefix);
 
+  # (2b) Link to the GTF file
+  if (!is.null(gtf)) {
+    link <- file.path(inPath, basename(gtf));
+    gtf <- createLink(link=link, target=gtf);
+    onExit({ file.remove(gtf) })
+  }
+
+
   # (3a) Link to the FASTQ 'R1'
   #      (such that tophat sees no commas)
-  link <- file.path(inPath, basename(reads1));
-  reads1 <- createLink(link=link, reads1);
+  reads1 <- sapply(reads1, FUN=function(pathname) {
+    link <- file.path(inPath, basename(pathname));
+    assertNoCommas(link);
+    createLink(link=link, target=pathname);
+  })
   onExit({ file.remove(reads1) })
-  assertNoCommas(reads1);
 
   # (3b) Link to the (optional) FASTQ 'R2'
   #      (such that tophat sees no commas)
-  if (!is.null(reads2)) {
-    reads2 <- Arguments$getReadablePathname(reads2);
-    link <- file.path(inPath, basename(reads2));
-    reads2 <- createLink(link=link, reads2);
-    # When done, make sure to remove the temporary file link
+  if (isPaired) {
+    reads2 <- sapply(reads2, FUN=function(pathname) {
+      link <- file.path(inPath, basename(pathname));
+      assertNoCommas(link);
+      createLink(link=link, target=pathname);
+    })
     onExit({ file.remove(reads2) })
-    assertNoCommas(reads2);
   }
 
 
@@ -214,6 +223,9 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
   # Set the output directory to be the current directory
   opts <- c(opts, "-o"=".") 
 
+  # GTF file, iff specified
+  opts <- c(opts, "-G"=gtf)
+
   # Append the bowtie2 reference index prefix
   opts <- c(opts, bowtieRefIndexPrefix);
 
@@ -229,7 +241,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix,
   verbose && enter(verbose, "Calling systemTopHat()");
   args <- list(command=command, args=opts);
   verbose && cat(verbose, "Arguments:");
-  verbose && str(verbose, args);
+  verbose && print(verbose, args);
   res <- do.call(systemTopHat, args=args);
   verbose && cat(verbose, "Result:");
   verbose && str(verbose, res);

@@ -22,8 +22,8 @@
 }
 
 \usage{
- \method{tophat}{default}(bowtieRefIndexPrefix, reads1, reads2=NULL, outPath="tophat/", optionsVec=NULL,
-  ..., command="tophat", verbose=FALSE)
+ \method{tophat}{default}(bowtieRefIndexPrefix, reads1, reads2=NULL, gtf=NULL, outPath="tophat/",
+  optionsVec=NULL, ..., command="tophat", verbose=FALSE)
  \method{tophat1}{default}(..., command="tophat")
  \method{tophat2}{default}(..., command="tophat2")
 }

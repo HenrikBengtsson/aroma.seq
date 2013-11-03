@@ -103,6 +103,7 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, FUN, ..., args=list(),
       argsII <- c(list(df), allArgs);
       verbose && cat(verbose, "Call arguments:");
       verbose && str(verbose, argsII);
+      argsII$verbose <- less(verbose, 1);
       res <- do.call(FUN, args=argsII);
       verbose && str(verbose, res);
 

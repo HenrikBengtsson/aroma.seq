@@ -67,6 +67,7 @@ setMethodS3("doTopHat2", "FastqDataSet", function(dataSet, reference, ..., verbo
   verbose && enter(verbose, "TopHat2/Check requirements");
   stopifnot(isCapableOf(aroma.seq, "tophat2"));
   stopifnot(isCapableOf(aroma.seq, "bowtie2"));
+  stopifnot(isCapableOf(aroma.seq, "samtools"));
   verbose && exit(verbose);
 
 
