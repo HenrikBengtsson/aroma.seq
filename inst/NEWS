@@ -5,6 +5,7 @@ Version: 0.3.0 [2013-11-02]
 o Added doTopHat2() and corresponding system test.
 o Migrating to use the 'BiocParallel' package for interfacing
   with BatchJobs and other parallel backends.
+o Now FastqDataFile|Set handles more paired filename formats.
 o SPEEDUP: Parallelized BinnedGcNormalization.
 o ROBUSTNESS: Added package system test for BinnedGcNormalization.
 o BUG FIX: normalizeGcContent() assumed that 'aroma.light' was attached.

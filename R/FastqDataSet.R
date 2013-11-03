@@ -58,12 +58,22 @@ setMethodS3("byPath", "FastqDataSet", function(static, ..., paired=FALSE, patter
   # Paired reads?
   if (isPaired(res)) {
     filenames <- basename(getPathnames(res));
-    # Keep only R1 files (and assume corresponding R2 files exist)
-    patternR1 <- gsub("^_(R1|1)(|_[0-9]+)", "", pattern);
-    patternR1 <- sprintf("_(R1|1)(|_[0-9]+)%s", patternR1);
-    idxs <- grep(patternR1, filenames, fixed=FALSE);
+    fullnames <- gsub(pattern, "", filenames);
+
+    # Several alternatives exists:
+    # (a) Does the fullnames end with _1 or _2?
+    patterns <- c("_1$", "_R1$", "_R1(|_[0-9]+)$");
+    for (pattern in patterns) {
+      idxs <- grep(pattern, fullnames, fixed=FALSE);
+      if (length(idxs) > 0L) break;
+    }
+
+    if (length(idxs) == 0L) {
+      throw("Failed to identify the R1 FASTQ files.");
+    }
+
     res <- extract(res, idxs);
-  } # for (ii ...)
+  } # if (isPaired(res))
 
   res;
 }, protected=TRUE)

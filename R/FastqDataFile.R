@@ -154,10 +154,10 @@ setMethodS3("findMateFile", "FastqDataFile", function(this, mustExist=FALSE, ...
 
   # Recognized R1/R2 filename patterns
   formats <- c(
-    "_(R%d)(_[0-9]+)",
-    "_(R%d)()",
+    "_(%d)()",
     "_(%d)(_[0-9]+)",
-    "_(%d)()"
+    "_(R%d)()",
+    "_(R%d)(_[0-9]+)"
   );
   formats <- sprintf("^(.*)%s[.]((fq|fastq)(|[.]gz))$", formats);
 
@@ -200,6 +200,8 @@ setMethodS3("getMateFile", "FastqDataFile", function(this, ...) {
 
 ############################################################################
 # HISTORY:
+# 2013-11-02
+# o Now FastqDataFile(Set) handles more paired filename formats.
 # 2013-08-24
 # o Added getMateFile() for FastqDataFile.
 # 2013-07-10
