@@ -1,6 +1,9 @@
 Package: aroma.seq
 ==================
 
+Version: 0.3.1 [2013-11-07]
+o Added samtoolsSort()
+
 Version: 0.3.0 [2013-11-02]
 o Added doTopHat2() and corresponding system test.
 o Migrating to use the 'BiocParallel' package for interfacing
