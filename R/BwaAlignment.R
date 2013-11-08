@@ -254,7 +254,7 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
       if (!isFile(pathnameBAM)) {
         sf <- SamDataFile(pathnameSAM);
         bf <- convertToBam(sf, verbose=less(verbose, 5));
-        print(pathnameBAM);
+        verbose && print(verbose, pathnameBAM);
       }
       # Sanity check
       stopifnot(isFile(pathnameBAM));

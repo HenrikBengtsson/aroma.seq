@@ -242,7 +242,7 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
       if (!isFile(pathnameBAM)) {
         sf <- SamDataFile(pathnameSAM);
         bf <- convertToBam(sf, verbose=less(verbose, 5));
-        print(pathnameBAM);
+        verbose && print(verbose, pathnameBAM);
       }
       # Sanity check
       stopifnot(isFile(pathnameBAM));
