@@ -249,11 +249,11 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
       stopifnot(isFile(pathnameSAM));
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      # (c) Generate BAM file from SAM file
+      # (c) Generates a (sorted and indexed) BAM file from SAM file
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       if (!isFile(pathnameBAM)) {
         sf <- SamDataFile(pathnameSAM);
-        bf <- convertToBamDataFile(sf, verbose=less(verbose, 5));
+        bf <- convertToBam(sf, verbose=less(verbose, 5));
         print(pathnameBAM);
       }
       # Sanity check

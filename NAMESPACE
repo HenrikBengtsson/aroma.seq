@@ -339,11 +339,11 @@ S3method("setTags", "PicardDuplicateRemoval")
 
 # SamDataFile
 S3method("as.character", "SamDataFile")
-S3method("convertToBamDataFile", "SamDataFile")
+S3method("convertToBam", "SamDataFile")
 
 # SamDataSet
 S3method("byPath", "SamDataSet")
-S3method("convertToBamDataSet", "SamDataSet")
+S3method("convertToBam", "SamDataSet")
 S3method("getDepth", "SamDataSet")
 S3method("validate", "SamDataSet")
 

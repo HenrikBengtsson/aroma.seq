@@ -189,7 +189,9 @@ writeSample writeSample.FastqDataFile
   getTags.FastqDownsampler
 
 as.character.FastqDataSet byPath.FastaReferenceSet
-byPath.FastqDataSet getDepth.FastaReferenceSet getFilePairs
+byPath.FastqDataSet
+byPath.PairedEndFastqDataSet
+ getDepth.FastaReferenceSet getFilePairs
 getFilePairs.FastqDataSet getParameters.TopHatAlignment
 isPaired.AbstractAlignment isPaired.FastqDataSet
 process.TopHatAlignment validate.FastaReferenceSet

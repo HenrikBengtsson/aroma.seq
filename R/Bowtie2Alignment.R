@@ -237,11 +237,11 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
       stopifnot(isFile(pathnameSAM));
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      # (b) Generate BAM file from SAM file
+      # (b) Generates a (sorted and indexed) BAM file from SAM file
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       if (!isFile(pathnameBAM)) {
         sf <- SamDataFile(pathnameSAM);
-        bf <- convertToBamDataFile(sf, verbose=less(verbose, 5));
+        bf <- convertToBam(sf, verbose=less(verbose, 5));
         print(pathnameBAM);
       }
       # Sanity check

@@ -49,7 +49,7 @@ SamDataSet(files=NULL, ...)
  \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{byPath} \tab  -\cr
- \tab \code{\link[aroma.seq:convertToBamDataSet.SamDataSet]{convertToBamDataSet}} \tab Converts the SAM set into a BAM set.\cr
+ \tab \code{\link[aroma.seq:convertToBam.SamDataSet]{convertToBam}} \tab Converts the SAM set into a BAM set.\cr
 }
 
 

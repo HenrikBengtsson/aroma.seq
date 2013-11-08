@@ -1,21 +1,21 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Do not modify this file since it was automatically generated from:
 % 
-%  FastqDataSet.R
+%  PairedEndFastqDataSet.R
 % 
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\name{FastqDataSet}
+\name{PairedEndFastqDataSet}
 \docType{class}
-\alias{FastqDataSet}
+\alias{PairedEndFastqDataSet}
 
 
-\title{The FastqDataSet class}
+\title{The PairedEndFastqDataSet class}
 
 \description{
  Package:  aroma.seq \cr
-\bold{Class FastqDataSet}\cr
+\bold{Class PairedEndFastqDataSet}\cr
 
 \code{\link[R.oo]{Object}}\cr
 \code{~~|}\cr
@@ -23,43 +23,36 @@
 \code{~~~~~~~|}\cr
 \code{~~~~~~~+--}\code{\link[R.filesets]{GenericDataFileSet}}\cr
 \code{~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~+--}\code{FastqDataSet}\cr
+\code{~~~~~~~~~~~~+--}\code{\link[aroma.seq]{FastqDataSet}}\cr
+\code{~~~~~~~~~~~~~~~~~|}\cr
+\code{~~~~~~~~~~~~~~~~~+--}\code{PairedEndFastqDataSet}\cr
 
 \bold{Directly known subclasses:}\cr
-\link[aroma.seq]{IlluminaFastqDataSet}, \link[aroma.seq]{PairedEndFastqDataSet}\cr
+\cr
 
-public static class \bold{FastqDataSet}\cr
-extends \link[R.filesets]{GenericDataFileSet}\cr
+public static class \bold{PairedEndFastqDataSet}\cr
+extends \link[aroma.seq]{FastqDataSet}\cr
 
 
 
- An FastqDataSet object represents a set of \code{\link{FastqDataFile}}:s.
+ An PairedEndFastqDataSet object represents a paired-end \code{\link{FastqDataSet}}.
 }
 
 \usage{
-FastqDataSet(files=NULL, ..., paired=FALSE)
+PairedEndFastqDataSet(...)
 }
 
 \arguments{
-  \item{files}{A \code{\link[base]{list}} of \code{\link{FastqDataFile}}:s.}
-  \item{...}{Arguments passed to \code{\link[R.filesets]{GenericDataFileSet}}.}
-  \item{paired}{If \code{\link[base:logical]{TRUE}}, the data set contains paired-end reads,
-    otherwise not.}
+  \item{...}{Arguments passed to \code{\link{FastqDataSet}}.}
 }
 
 \section{Fields and Methods}{
  \bold{Methods:}\cr
-\tabular{rll}{
- \tab \code{doBWA} \tab  -\cr
- \tab \code{doBowtie2} \tab  -\cr
- \tab \code{doQDNAseq} \tab  -\cr
- \tab \code{doTopHat2} \tab  -\cr
- \tab \code{getDefaultSamReadGroup} \tab  -\cr
- \tab \code{getSamReadGroup} \tab  -\cr
- \tab \code{report} \tab  -\cr
- \tab \code{setSamReadGroup} \tab  -\cr
-}
+\emph{No methods defined}.
 
+
+ \bold{Methods inherited from FastqDataSet}:\cr
+as.character, byPath, doBWA, doBowtie2, doQDNAseq, doTopHat2, getDefaultSamReadGroup, getDepth, getFilePairs, getSamReadGroup, isPaired, report, setSamReadGroup, validate
 
  \bold{Methods inherited from GenericDataFileSet}:\cr
 [, [[, anyNA, append, appendFiles, appendFullNamesTranslator, appendFullNamesTranslatorByNULL, appendFullNamesTranslatorByTabularTextFile, appendFullNamesTranslatorByTabularTextFileSet, appendFullNamesTranslatorBydata.frame, appendFullNamesTranslatorByfunction, appendFullNamesTranslatorBylist, as.character, as.list, byName, byPath, c, clearCache, clearFullNamesTranslator, clone, copyTo, equals, extract, findByName, getChecksum, getChecksumObjects, getDefaultFullName, getFile, getFileClass, getFileSize, getFiles, getFullNames, getNames, getOneFile, getPath, getPathnames, getSubdirs, gunzip, gzip, hasFile, indexOf, nbrOfFiles, resetFullNames, seq, setFullNamesTranslator, sortBy, update2, updateFullName, updateFullNames, validate, dsApply, getFullNameTranslatorSet, getParentName
@@ -71,23 +64,6 @@ appendFullNameTranslator, appendFullNameTranslatorByNULL, appendFullNameTranslat
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, gc, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, save, findRspReportTemplate, asThis
 
 
-}
-
-\section{Paired reads}{
-  There is a community/industry convention for paired-end runs:
-  "The reads are reported two FASTQ files, such that the n:th read in
-  the first file is mate-paired to the n:th read in the second file.
-  The read IDs must match." [1]
-
-  If argument \code{paired=TRUE}, the \code{files} arguments is assumed
-  to contain the "R1" files whereas the corresponding "R2" files are
-  implicit (inferred and located by matching the filenames).
-}
-
-\references{
- [1] Simon Anders,
-     \emph{High-throughput sequencing: Alignment and related topic},
-     (38 slides), EMBL Heidelberg, June 2013.\cr
 }
 
 \author{Henrik Bengtsson}

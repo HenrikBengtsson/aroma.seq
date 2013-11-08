@@ -1,8 +1,10 @@
 Package: aroma.seq
 ==================
 
-Version: 0.3.1 [2013-11-07]
-o Added samtoolsSort()
+Version: 0.3.1 [2013-11-08]
+o Added samtoolsSort() and samtoolsMpileup().
+o DOCUMENTATION: Added more help pages.
+
 
 Version: 0.3.0 [2013-11-02]
 o Added doTopHat2() and corresponding system test.

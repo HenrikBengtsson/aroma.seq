@@ -1,54 +1,4 @@
 ###########################################################################/**
-# @RdocClass SamDataFile
-#
-# @title "The abstract SamDataFile class"
-#
-# \description{
-#  @classhierarchy
-#
-#  A SamDataFile object represents a Sequence Alignment/Map (SAM) file [1].
-# }
-#
-# @synopsis
-#
-# \arguments{
-#   \item{...}{Arguments passed to @see "R.filesets::GenericDataFile".}
-# }
-#
-# \section{Fields and Methods}{
-#  @allmethods "public"
-# }
-#
-# \references{
-#  [1] The SAM Format Specification Working Group,
-#      \emph{The SAM Format Specification}, Sept 7, 2011.\cr
-# }
-#
-# \seealso{
-#   An object of this class is typically part of an
-#   @see "SamDataSet".
-# }
-#
-# @author "HB"
-#*/###########################################################################
-setConstructorS3("SamDataFile", function(...) {
-  extend(GenericDataFile(...), "SamDataFile");
-})
-
-
-setMethodS3("as.character", "SamDataFile", function(x, ...) {
-  # To please R CMD check
-  this <- x;
-
-  s <- NextMethod("as.character");
-  class <- class(s);
-
-  class(s) <- class;
-  s;
-}, protected=TRUE)
-
-
-###########################################################################/**
 # @RdocGeneric convertToBam
 # @alias convertToBam.SamDataFile
 # @alias convertToBam.SamDataSet
@@ -139,15 +89,62 @@ setMethodS3("convertToBam", "SamDataFile", function(this, path=getPath(this), sk
   verbose && exit(verbose);
 
   res;
-}) # convertToBam()
+}) # convertToBam() for SamDataFile
+
+
+
+setMethodS3("convertToBam", "SamDataSet", function(ds, path=getPath(ds), ..., verbose=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'path':
+  path <- Arguments$getWritablePath(path);
+
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
+
+  verbose && enter(verbose, "Converting SAM set to a BAM set");
+
+  verbose && cat(verbose, "SAM data set:");
+  verbose && print(verbose, ds);
+  verbose && cat(verbose, "BAM path: ", path);
+
+  # TO DO: Parallelize. /HB 2013-11-08
+  for (ii in seq_along(ds)) {
+    df <- getFile(ds, ii);
+    verbose && enter(verbose, sprintf("File #%d ('%s') of %d", ii, getName(df), length(ds)));
+    bf <- convertToBam(df, path=path, ..., verbose=less(verbose,1));
+    verbose && exit(verbose);
+  } # for (ii ...)
+
+  bs <- BamDataSet$byPath(path);
+  bs <- extract(bs, getFullNames(ds), onMissing="error");
+  verbose && print(verbose, bs);
+
+  ## TODO: Assert completeness
+
+  verbose && exit(verbose);
+
+  bs;
+}) # convertToBam() for SamDataSet
 
 
 
 ############################################################################
 # HISTORY:
 # 2013-11-08
+# o Merged source code of convertToBam() for SamDataFile and SamDataSet
+#   into the same source code file and documents as a generic function.
 # o DOCUMENTATION: Added help on convertToBam() for SamDataFile.
 # o Renamed to use convertToBam() for both SamDataFile and SamDataSet.
+# 2012-11-26
+# o ROBUSTNESS: Now convertToBamDataSet() for SamDataSet asserts that
+#   the output set is complete.
 # 2012-09-25
 # o Created from BamDataFile.R.
 ############################################################################

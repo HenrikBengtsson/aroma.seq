@@ -23,9 +23,20 @@
 # }
 #
 # \section{Paired reads}{
+#   There is a community/industry convention for paired-end runs:
+#   "The reads are reported two FASTQ files, such that the n:th read in
+#   the first file is mate-paired to the n:th read in the second file.
+#   The read IDs must match." [1]
+#
 #   If argument \code{paired=TRUE}, the \code{files} arguments is assumed
 #   to contain the "R1" files whereas the corresponding "R2" files are
 #   implicit (inferred and located by matching the filenames).
+# }
+#
+# \references{
+#  [1] Simon Anders,
+#      \emph{High-throughput sequencing: Alignment and related topic},
+#      (38 slides), EMBL Heidelberg, June 2013.\cr
 # }
 #
 # @author "HB"

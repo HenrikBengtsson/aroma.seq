@@ -95,7 +95,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1, reads2=N
      pushState(verbose);
      on.exit(popState(verbose), add=TRUE);
   }
-		 
+
 
   verbose && enter(verbose, "Running tophat()");
   verbose && cat(verbose, "R1 FASTQ files:");
@@ -129,12 +129,14 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1, reads2=N
   # that is renamed upon completion.
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   outPathOrg <- outPath;
-  outPath <- sprintf("%s.tmp", outPath);
+  outPath <- sprintf("%s.TMP", outPath);
   outPath <- Arguments$getWritablePath(outPath, mustNotExist=TRUE);
   verbose && cat(verbose, "Temporary output directory: ", outPath);
+  # At the end, assume failure, unless successful.
+  outPathFinal <- sprintf("%s.ERROR", outPath);
   onExit({
     removeDirectory(outPathOrg, recursive=FALSE, mustExist=FALSE);
-    file.rename(outPath, outPathOrg);
+    file.rename(outPath, outPathFinal);
   });
 
 
@@ -221,7 +223,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1, reads2=N
   }
 
   # Set the output directory to be the current directory
-  opts <- c(opts, "-o"=".") 
+  opts <- c(opts, "-o"=".")
 
   # GTF file, iff specified
   opts <- c(opts, "-G"=gtf)
@@ -247,6 +249,14 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1, reads2=N
   verbose && str(verbose, res);
   verbose && exit(verbose);
 
+  # Successful?
+  if (res == 0L) {
+    # If we get this far, assume it was all successful.
+    # Allow the temporary output path to be renamed to the
+    # intended output path instead of the "error" one.
+    outPathFinal <- outPathOrg;
+  }
+
   verbose && exit(verbose);
 
   res
@@ -264,6 +274,9 @@ setMethodS3("tophat2", "default", function(..., command="tophat2") {
 
 ############################################################################
 # HISTORY:
+# 2013-11-05 [HB]
+# o Now the final output directory is <sampleName>.ERROR/, if the
+#   run was not successful.
 # 2013-11-02 [HB]
 # o Utilizing onExit(), which is makes everything much easier.
 # o Now the working directory is set to the output directory while

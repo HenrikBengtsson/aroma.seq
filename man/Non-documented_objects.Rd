@@ -349,6 +349,7 @@
 \alias{as.character.FastqDataSet}
 \alias{byPath.FastaReferenceSet}
 \alias{byPath.FastqDataSet}
+\alias{byPath.PairedEndFastqDataSet}
 \alias{getDepth.FastaReferenceSet}
 \alias{getFilePairs}
 \alias{getFilePairs.FastqDataSet}

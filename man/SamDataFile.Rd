@@ -47,7 +47,7 @@ SamDataFile(...)
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{convertToBamDataFile} \tab  -\cr
+ \tab \code{convertToBam} \tab  -\cr
 }
 
 
@@ -63,8 +63,6 @@ $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCa
 
 }
 
-\author{Henrik Bengtsson}
-
 \references{
  [1] The SAM Format Specification Working Group,
      \emph{The SAM Format Specification}, Sept 7, 2011.\cr
@@ -74,4 +72,6 @@ $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCa
   An object of this class is typically part of an
   \code{\link{SamDataSet}}.
 }
+
+\author{Henrik Bengtsson}
 \keyword{classes}
