@@ -16,8 +16,7 @@ organism <- "HomoSapiens"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup FASTA reference file
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-path <- file.path("annotationData,aroma.seq,private", "organisms", organism)
-fa <- FastaReferenceFile("human_g1k_v37.fasta", path=path)
+fa <- FastaReferenceFile$byOrganism(organism, prefix="human_g1k_v37")
 print(fa)
 
 

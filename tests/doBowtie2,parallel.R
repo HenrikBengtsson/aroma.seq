@@ -17,8 +17,7 @@ organism <- "LambdaPhage"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup FASTA reference file
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-path <- file.path("annotationData", "organisms", organism)
-fa <- FastaReferenceFile("lambda_virus.fa", path=path)
+fa <- FastaReferenceFile$byOrganism(organism)
 print(fa)
 
 

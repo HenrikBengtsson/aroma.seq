@@ -92,6 +92,67 @@ setMethodS3("readSeqLengths", "FastaReferenceFile", function(this, ...) {
 }, private=TRUE)
 
 
+
+setMethodS3("findByOrganism", "FastaReferenceFile", function(static, organism, tags=NULL, pattern="[.](fa|fasta)$", ...) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'organism':
+  organism <- Arguments$getCharacter(organism);
+
+
+  args <- list(pattern=pattern);
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Search in annotationData/organisms/<organism>/
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Create the fullname
+  fullname <- paste(c(organism, tags), collapse=",");
+
+  # Extract the name and the tags
+  parts <- unlist(strsplit(fullname, split=",", fixed=TRUE));
+  organism <- parts[1L];
+  tags <- parts[-1L];
+
+  # Search for "organisms/<organism>/.*[.](fa|fasta)$" files
+  args <- list(
+    set="organisms",
+    name=organism,
+    pattern=pattern,
+    ...
+  );
+  pathname <- do.call("findAnnotationData", args=args);
+
+  # If not found, look for Windows shortcuts
+  if (is.null(pathname)) {
+    # Search for a Windows shortcut
+    args$pattern <- sprintf("%s[.]lnk$", args$pattern)
+    pathname <- do.call("findAnnotationData", args=args);
+    if (!is.null(pathname)) {
+      # ..and expand it
+      pathname <- Arguments$getReadablePathname(pathname, mustExist=FALSE);
+      if (!isFile(pathname))
+        pathname <- NULL;
+    }
+  }
+
+  pathname;
+}, static=TRUE, protected=TRUE) # findByOrganism()
+
+
+setMethodS3("byOrganism", "FastaReferenceFile", function(static, organism, ...) {
+  pathname <- findByOrganism(static, organism, ...);
+  if (length(pathname) == 0)
+    throw("Failed to located FASTA reference file for organism: ", organism);
+  res <- newInstance(static, pathname, ...);
+
+  res;
+}, static=TRUE) # byOrganism()
+
+
+
+
+
 ###########################################################################/**
 # @RdocMethod buildIndex
 #
@@ -368,6 +429,8 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
 
 ############################################################################
 # HISTORY:
+# 2013-11-09
+# o Added FastaReferenceFile$byOrganism().
 # 2013-11-01
 # o Now buildBowtie2IndexSet() for FastaReferenceFile supports gzip'ed
 #   FASTA files.
