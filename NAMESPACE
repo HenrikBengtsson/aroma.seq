@@ -233,6 +233,8 @@ S3method("tophat1", "default")
 S3method("tophat2", "default")
 
 # FastaReferenceFile
+S3method("findByOrganism", "FastaReferenceFile")
+S3method("byOrganism", "FastaReferenceFile")
 S3method("as.character", "FastaReferenceFile")
 S3method("buildBowtie2IndexSet", "FastaReferenceFile")
 S3method("buildBwaIndexSet", "FastaReferenceFile")
