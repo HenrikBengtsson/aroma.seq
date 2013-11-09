@@ -18,6 +18,8 @@ importFrom("R.oo", "trim")
 
 ## Importing generics
 importFrom("R.filesets", "byPath")
+importFrom("R.filesets", "findByName")
+importFrom("R.filesets", "byName")
 importFrom("R.filesets", "getAsteriskTags")
 importFrom("R.filesets", "getDefaultColumnNames")
 importFrom("R.filesets", "getDefaultFullName")
@@ -151,7 +153,8 @@ S3method("sort", "BamDataFile")
 S3method("validate", "BamDataFile")
 
 # BamDataSet
-S3method("byPath", "BamDataSet")
+S3method("findByName", "BamDataSet")
+S3method("byName", "BamDataSet")
 S3method("doQDNAseq", "BamDataSet")
 S3method("getChipType", "BamDataSet")
 S3method("getDepth", "BamDataSet")
@@ -266,6 +269,8 @@ S3method("writeSample", "FastqDataFile")
 # FastqDataSet
 S3method("as.character", "FastqDataSet")
 S3method("byPath", "FastqDataSet")
+S3method("findByName", "FastqDataSet")
+S3method("byName", "FastqDataSet")
 S3method("doBowtie2", "FastqDataSet")
 S3method("doBWA", "FastqDataSet")
 S3method("doQDNAseq", "FastqDataSet")

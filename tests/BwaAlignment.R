@@ -20,8 +20,7 @@ print(fa)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup FASTQ set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-path <- file.path("fastqData", dataSet, organism)
-fqs <- FastqDataSet$byPath(path)
+fqs <- FastqDataSet$byName(dataSet, organism=organism)
 print(fqs)
 
 
@@ -72,7 +71,7 @@ for (ii in seq_along(fqs)) {
   pathnameZ <- file.path(pathZ, sprintf("%s.gz", getFilename(fq)))
   if (!isFile(pathnameZ)) gzip(getPathname(fq), pathnameZ, remove=FALSE)
 }
-fqsZ <- FastqDataSet$byPath(pathZ)
+fqsZ <- FastqDataSet$byName(dataSet, tags="gz", organism=organism)
 
 # BWA with BWA 'aln' options '-n 2' and '-q 40'.
 algZ <- BwaAlignment(fqsZ, indexSet=is, n=2, q=40)

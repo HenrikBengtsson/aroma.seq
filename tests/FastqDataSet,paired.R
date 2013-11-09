@@ -11,8 +11,7 @@ organism <- "LambdaPhage"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup paired-end FASTQ set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-path <- file.path("fastqData", dataSet, organism)
-fqs <- FastqDataSet$byPath(path, paired=TRUE)
+fqs <- FastqDataSet$byName(dataSet, organism=organism, paired=TRUE)
 print(fqs)
 pairs <- getFilePairs(fqs)
 print(pairs)

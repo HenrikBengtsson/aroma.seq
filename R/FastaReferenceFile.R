@@ -93,12 +93,17 @@ setMethodS3("readSeqLengths", "FastaReferenceFile", function(this, ...) {
 
 
 
-setMethodS3("findByOrganism", "FastaReferenceFile", function(static, organism, tags=NULL, pattern="[.](fa|fasta)$", ...) {
+setMethodS3("findByOrganism", "FastaReferenceFile", function(static, organism, tags=NULL, prefix=NULL, pattern="[.](fa|fasta)$", ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'organism':
   organism <- Arguments$getCharacter(organism);
+
+  # Argument 'prefix':
+  if (!is.null(prefix)) {
+    warning("Argument 'prefix' for findByOrganism() is currently ignored, because support for it is still to be implemented: ", prefix);
+  }
 
 
   args <- list(pattern=pattern);

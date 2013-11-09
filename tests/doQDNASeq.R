@@ -20,8 +20,8 @@ print(fa)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup FASTQ set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-path <- file.path("fastqData,aroma.seq,private", dataSet, organism)
-fqs <- FastqDataSet$byPath(path)
+pathR <- "fastqData,aroma.seq,private";
+fqs <- IlluminaFastqDataSet$byName(dataSet, organism=organism, paths=pathR)
 fqs <- extract(fqs, 1:2)
 print(fqs)
 
@@ -42,10 +42,7 @@ for (ii in seq_along(cns)) {
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # QDNAseq on BAM files
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-tags <- "bwa,is,-dups";
-dataSetB <- paste(c(dataSet, tags), collapse=",")
-path <- file.path("bamData", dataSetB, organism)
-bams <- BamDataSet$byPath(path)
+bams <- BamDataSet$byName(dataSet, tags="bwa,is,-dups", organism=organism)
 print(bams)
 
 # QDNAseq on a single BAM file

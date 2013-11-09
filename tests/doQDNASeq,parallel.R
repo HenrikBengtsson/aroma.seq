@@ -23,8 +23,8 @@ print(fa)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup FASTQ set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-path <- file.path("fastqData,aroma.seq,private", dataSet, organism)
-fqs <- FastqDataSet$byPath(path)
+pathR <- "fastqData,aroma.seq,private";
+fqs <- IlluminaFastqDataSet$byName(dataSet, organism=organism, paths=pathR)
 fqs <- extract(fqs, 1:2)
 print(fqs)
 

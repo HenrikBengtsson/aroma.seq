@@ -15,8 +15,7 @@ organism <- "LambdaPhage"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup FASTQ set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-path <- file.path("fastqData", dataSet, organism)
-fqs <- FastqDataSet$byPath(path)
+fqs <- FastqDataSet$byName(dataSet, organism=organism)
 print(fqs)
 
 

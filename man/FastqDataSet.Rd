@@ -50,10 +50,12 @@ FastqDataSet(files=NULL, ..., paired=FALSE)
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
+ \tab \code{byName} \tab  -\cr
  \tab \code{doBWA} \tab  -\cr
  \tab \code{doBowtie2} \tab  -\cr
  \tab \code{doQDNAseq} \tab  -\cr
  \tab \code{doTopHat2} \tab  -\cr
+ \tab \code{findByName} \tab  -\cr
  \tab \code{getDefaultSamReadGroup} \tab  -\cr
  \tab \code{getSamReadGroup} \tab  -\cr
  \tab \code{report} \tab  -\cr

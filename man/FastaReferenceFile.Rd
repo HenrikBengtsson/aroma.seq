@@ -50,6 +50,7 @@ FastaReferenceFile(...)
  \tab \code{\link[aroma.seq:buildBowtie2IndexSet.FastaReferenceFile]{buildBowtie2IndexSet}} \tab Builds a Bowtie2 index files set.\cr
  \tab \code{\link[aroma.seq:buildBwaIndexSet.FastaReferenceFile]{buildBwaIndexSet}} \tab Builds a BWA index files set.\cr
  \tab \code{\link[aroma.seq:buildIndex.FastaReferenceFile]{buildIndex}} \tab Builds an FAI index file.\cr
+ \tab \code{byOrganism} \tab  -\cr
  \tab \code{getSeqLengths} \tab  -\cr
  \tab \code{getSeqNames} \tab  -\cr
  \tab \code{getTotalSeqLengths} \tab  -\cr

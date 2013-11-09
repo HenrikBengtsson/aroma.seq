@@ -48,8 +48,9 @@ BamDataSet(files=NULL, ...)
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{byPath} \tab  -\cr
+ \tab \code{byName} \tab  -\cr
  \tab \code{doQDNAseq} \tab  -\cr
+ \tab \code{findByName} \tab  -\cr
  \tab \code{getChipType} \tab  -\cr
  \tab \code{getPlatform} \tab  -\cr
 }

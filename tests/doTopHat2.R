@@ -21,14 +21,11 @@ setupExampleData()
 # Setup data
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Annotation data
-path <- file.path("annotationData", "organisms", organism)
-fas <- FastaReferenceSet$byPath(path)
-fa <- getFile(fas, 1)  # Presuming there is only one reference fasta file
+fa <- FastaReferenceFile$byOrganism(organism)
 print(fa)
 
 # FASTQ data
-path <- file.path("fastqData", dataSet, organism)
-fqs <- FastqDataSet$byPath(path, paired=TRUE)
+fqs <- FastqDataSet$byName(dataSet, organism=organism, paired=TRUE)
 print(fqs)
 
 

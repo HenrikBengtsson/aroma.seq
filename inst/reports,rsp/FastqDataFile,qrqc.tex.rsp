@@ -60,6 +60,7 @@ stopifnot(exists("rspArgs", mode="list"));
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Argument 'df':
 df <- Arguments$getInstanceOf(df, "FastqDataFile");
+stopifnot(isFile(df));
 
 # Argument 'dataSet':
 dataSet <- Arguments$getCharacter(dataSet);
@@ -143,7 +144,8 @@ symbolList <- list(
 <%
 hash.prop <- 0.1;
 sampleName <- getFullName(df);
-qData <- readSeqFile(getPathname(df), hash.prop=hash.prop);
+pathnameFQ <- getPathname(df);
+qData <- readSeqFile(pathnameFQ, hash.prop=hash.prop);
 nbrOfSeqs <- sum(qData@seq.lengths);
 stopifnot(nbrOfSeqs == nbrOfSeqs(df)); # Sanity check
 nbrOfUniqueSeqs <- length(qData@hash);
