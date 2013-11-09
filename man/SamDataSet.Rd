@@ -48,8 +48,10 @@ SamDataSet(files=NULL, ...)
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
+ \tab \code{byName} \tab  -\cr
  \tab \code{byPath} \tab  -\cr
  \tab \code{convertToBam} \tab  -\cr
+ \tab \code{findByName} \tab  -\cr
 }
 
 

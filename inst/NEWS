@@ -2,7 +2,7 @@ Package: aroma.seq
 ==================
 
 Version: 0.3.2 [2013-11-09]
-o Added FastqDataSet$byName() and BamDataSet$byName().
+o Added static byName() for FastqDataSet, BamDataSet and SamDataSet.
 o Added FastaReferenceFile$byOrganism().
 o Now all package system tests use byName() instead of byPath().
 o Now all input and output paths contains the organims name, e.g.

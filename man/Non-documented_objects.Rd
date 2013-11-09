@@ -386,6 +386,16 @@
 \alias{getOrganism.SamDataSet}
 \alias{skeleton}
 \alias{skeleton.AromaSeq}
+\alias{byName.BamDataSet}
+\alias{byName.SamDataSet}
+\alias{byName.FastqDataSet}
+\alias{byOrganism}
+\alias{byOrganism.FastaReferenceFile}
+\alias{findByName.BamDataSet}
+\alias{findByName.SamDataSet}
+\alias{findByName.FastqDataSet}
+\alias{findByOrganism}
+\alias{findByOrganism.FastaReferenceFile}
 
 \description{
   This page contains aliases for all "non-documented" objects that

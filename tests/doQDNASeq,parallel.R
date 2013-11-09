@@ -45,9 +45,7 @@ for (ii in seq_along(cns)) {
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # QDNAseq on BAM files
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-tags <- "bwa,is,-dups";
-dataSetB <- paste(c(dataSet, tags), collapse=",")
-path <- file.path("bamData", dataSetB, organism)
+bams <- BamDataSet$byName(dataSet, tags="bwa,is,-dups", organism=organism)
 print(bams)
 
 # QDNAseq on a single BAM file
