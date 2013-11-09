@@ -5,18 +5,19 @@
 ############################################################################
 library("aroma.seq");
 
+dataSet <- "AlbertsonD_2012-SCC";
+organism <- "HomoSapiens";
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-path <- "annotationData/organisms/Human/";
+path <- file.path("annotationData", "organisms", organism);
 filename <- "human_g1k_v37.fasta";
 fa <- FastaReferenceFile(filename, path=path);
 print(fa);
 
 # Data set
-dataSet <- "AlbertsonD_2012-SCC";
-platform <- "Generic";
-path <- file.path("fastqData", dataSet, platform);
+path <- file.path("fastqData", dataSet, organism);
 ds <- IlluminaFastqDataSet$byPath(path);
 print(ds);
 

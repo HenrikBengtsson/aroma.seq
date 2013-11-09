@@ -8,13 +8,15 @@ library("qrqc");
 library("R.rsp");
 verbose <- Arguments$getVerbose(-10, timestamp=TRUE);
 
+
+dataSet <- "LambdaVirusExample";
+organism <- "LambdaPhage";
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Data set
-dataSet <- "LambdaVirusExample";
-platform <- "Generic";
-path <- file.path("fastqData", dataSet, platform);
+path <- file.path("fastqData", dataSet, organism);
 ds <- FastqDataSet$byPath(path);
 
 # Keep only the small FASTQ files

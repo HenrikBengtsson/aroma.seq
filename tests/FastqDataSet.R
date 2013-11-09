@@ -5,10 +5,20 @@ fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 setupExampleData()
 
 
+dataSet <- "TopHat-example"
+organism <- "LambdaPhage"
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Setup FASTA reference file
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+path <- file.path("annotationData", "organisms", organism)
+fa <- FastaReferenceFile("lambda_virus.fa", path=path)
+print(fa)
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup FASTQ set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-path <- file.path("fastqData", "TopHat-example", "LambdaPhage")
+path <- file.path("fastqData", dataSet, organism)
 fqs <- FastqDataSet$byPath(path)
 print(fqs)
 for (ii in seq_along(fqs)) {
@@ -20,7 +30,8 @@ for (ii in seq_along(fqs)) {
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Gzip data set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pathZ <- file.path("fastqData", "TopHat-example,gz", "LambdaPhage")
+dataSetZ <- sprintf("%s,gz", dataSet);
+pathZ <- file.path("fastqData", dataSetZ, organism)
 for (ii in seq_along(fqs)) {
   fq <- getFile(fqs, ii)
   pathnameZ <- file.path(pathZ, sprintf("%s.gz", getFilename(fq)))

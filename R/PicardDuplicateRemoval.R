@@ -174,12 +174,12 @@ setMethodS3("getPath", "PicardDuplicateRemoval", function(this, create=TRUE, ...
   # Full name
   fullname <- getFullName(this);
 
-  # Platform
+  # Organism
   ds <- getInputDataSet(this);
-  platform <- "Generic";
+  organism <- getOrganism(ds);
 
   # The full path
-  path <- filePath(rootPath, fullname, platform);
+  path <- filePath(rootPath, fullname, organism);
 
   if (create) {
     path <- Arguments$getWritablePath(path);

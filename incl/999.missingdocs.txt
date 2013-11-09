@@ -211,3 +211,7 @@ getPath.TopHat2Alignment
 dsApply
 getExpectedOutputPaths getExpectedOutputPaths.TopHat2Alignment
 getSampleNames.TopHat2Alignment isDone.TopHat2Alignment
+getKnownOrganisms getKnownOrganisms.AromaSeq getOrganism
+getOrganism.Arguments getOrganism.BamDataSet
+getOrganism.FastqDataSet getOrganism.SamDataSet skeleton
+skeleton.AromaSeq

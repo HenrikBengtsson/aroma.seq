@@ -10,10 +10,13 @@ setOption(aromaSettings, "devel/parallel", "BiocParallel::BatchJobs")
 setupExampleData()
 
 
+dataSet <- "TopHat-example"
+organism <- "LambdaPhage"
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup FASTA reference file
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-path <- file.path("annotationData", "organisms", "LambdaPhage")
+path <- file.path("annotationData", "organisms", organism)
 fa <- FastaReferenceFile("lambda_virus.fa", path=path)
 print(fa)
 
@@ -21,7 +24,7 @@ print(fa)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup FASTQ set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-path <- file.path("fastqData", "TopHat-example", "LambdaPhage")
+path <- file.path("fastqData", dataSet, organism)
 fqs <- FastqDataSet$byPath(path)
 print(fqs)
 

@@ -17,6 +17,8 @@
  This methtod differ from \code{\link[base]{on.exit}}() in that it adds the
  option to \emph{prepend} an expression to already existing expressed,
  as an alternative to the default \emph{append}.
+
+ \emph{WARNING: This function is still under development [1,2]. /HB 2013-11-08}
 }
 
 \usage{
@@ -34,6 +36,16 @@ onExit(expr=NULL, where=c("first", "last", "replace"), ..., exits, envir=parent.
 }
 
 \author{Henrik Bengtsson}
+
+\references{
+ [1] R-devel thread 'WISHLIST: on.exit(..., add=TRUE, where="first")
+     to address common use cases', 2013-11-03.
+     \url{https://stat.ethz.ch/pipermail/r-devel/2013-November/067876.html}
+     \cr
+ [2] R-devel thread 'on.exit() & sys.on.exit(): Calling them via eval() does not	work as hoped', 2013-11-03.
+     \url{https://stat.ethz.ch/pipermail/r-devel/2013-November/067866.html}
+     \cr
+}
 
 
 \keyword{internal}

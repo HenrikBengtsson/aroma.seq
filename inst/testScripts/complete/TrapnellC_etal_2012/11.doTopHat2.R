@@ -18,7 +18,7 @@ library("aroma.seq")
 setOption(aromaSettings, "devel/parallel", "BiocParallel::BatchJobs")
 library("BatchJobs")
 
-organism <- "DROME"
+organism <- "DrosophilaMelanogaster"
 
 path <- file.path("annotationData", "organisms", organism)
 fa <- FastaReferenceFile("genome.fa", path=path)
@@ -27,7 +27,7 @@ print(fa)
 gtf <- GenericDataFile("genes.gtf", path=file.path(path, "Genes"))
 print(gtf)
 
-path <- file.path("fastqData", "GSE32038", "DROME")
+path <- file.path("fastqData", "GSE32038", organism)
 fqs <- FastqDataSet$byPath(path, paired=TRUE)
 print(fqs)
 

@@ -5,15 +5,15 @@
 # This script shows how to (1) align single-end DNAseq reads in FASTQ files
 # to the human genome (FASTA file), (2) count the aligned reads (BAM files)
 # in uniformely distributed 50kb bins (UGP file), (3) normalize the counts
-# for amount of GC-content in each bins (UNC file), and (4) finally 
-# segment the normalized DNAseq total copy-number counts using 
+# for amount of GC-content in each bins (UNC file), and (4) finally
+# segment the normalized DNAseq total copy-number counts using
 # Circular Binary Segmentation (CBS) and (5) generate an interactive
 # Chromosome Explorer report viewable in the browser.
 #
 # REQUIREMENTS:
 # fastqData/
 #  AlbertsonD_2012-SCC/
-#   Generic/
+#   HomoSapiens/
 #    <sample>_<barcode>_L[0-9]{3}_R[12]_[0-9]{3}.fastq [private data]
 #
 # annotationData/
@@ -22,7 +22,7 @@
 #    GenericHuman,50kb,HB20090503.ugp [1]
 #    GenericHuman,50kb,HB20121021.unc [1]
 #  organisms/
-#   Human/
+#   HomoSapiens/
 #    human_g1k_v37.fasta [2]
 #
 # REFERENCES:
@@ -47,12 +47,15 @@ if (!is.null(arrays)) {
 
 print(arrays)
 
+dataSet <- "AlbertsonD_2012-SCC";
+organism <- "HomoSapiens"
+
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Reference genome
-path <- "annotationData/organisms/Human/";
+path <- file.path("annotationData", "organisms", organism);
 filename <- "human_g1k_v37.fasta";
 fa <- FastaReferenceFile(filename, path=path);
 print(fa);
@@ -67,11 +70,9 @@ unc <- getAromaUncFile(ugp);
 print(unc);
 
 # FASTQ data set
-dataSet <- "AlbertsonD_2012-SCC";
 tags <- c();
 #tags <- c(tags, "AB042");
-platform <- "Generic";
-path <- file.path("fastqData", dataSet, platform);
+path <- file.path("fastqData", dataSet, organism);
 ds <- IlluminaFastqDataSet$byPath(path);
 print(ds);
 
@@ -195,19 +196,19 @@ for (kk in seq_along(chrs)) {
   posT <- gp$position[idxsT];
   totalT <- total[idxsT];
   isHetT <- isHet[idxsT];
-  
+
   verbose && printf(verbose, "Number of heterozygous SNPs: %d (out of %d)\n", sum(isHetT), length(idxsT));
-  
+
   cat("Total SNP read counts:\n");
   verbose && print(verbose, table(totalT));
-  
+
   # Only look at SNPs with 3 or more reads
   minTotal <- 3L;
   keepT <- (totalT >= minTotal);
   verbose && summary(verbose, keepT);
-  
+
   verbose && printf(verbose, "Number of heterozygous SNPs with coverage >= %d: %d (out of %d)\n", minTotal, sum(isHetT[keepT]), length(idxsT[keepT]));
-  
+
   # For each segment...
   mus <- sds <- double(nrow(segsT));
   snpCounts <- dhCounts <- integer(nrow(segsT));
@@ -233,8 +234,8 @@ for (kk in seq_along(chrs)) {
     mus[ss] <- mu;
     sds[ss] <- sd;
   } # for (ss ...)
-  
-  
+
+
   segsT$snpCounts <- snpCounts;
   segsT$dhCounts <- dhCounts;
   segsT$dhMean <- mus;

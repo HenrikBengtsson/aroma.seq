@@ -150,7 +150,7 @@ setMethodS3("doQDNAseq", "BamDataSet", function(dataSet, binWidth, ..., force=FA
   # Setup
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   rootPath <- "QDNAseqData";
-  path <- file.path(rootPath, getFullName(dataSet), "Generic");
+  path <- file.path(rootPath, getFullName(dataSet), getOrganism(dataSet));
   path <- Arguments$getWritablePath(path);
 
 

@@ -7,7 +7,7 @@ fullTest <- fullTest && isCapableOf(aroma.seq, "tophat2")
 if (fullTest) {
 
 dataSet <- "YeastTest"
-organism <- "SC"
+organism <- "SaccharomycesCerevisiae"
 
 # Setup (writable) local data directory structure
 setupExampleData()

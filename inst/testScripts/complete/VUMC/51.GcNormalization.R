@@ -5,6 +5,8 @@
 ############################################################################
 library("aroma.seq");
 
+dataSet <- "AlbertsonD_2012-Bladder_VUMC";
+organism <- "HomoSapiens";
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup
@@ -18,9 +20,7 @@ unc <- getAromaUncFile(ugp);
 print(unc);
 
 # Data set
-dataSet <- "AlbertsonD_2012-Bladder_VUMC";
-platform <- "Generic";
-path <- file.path("bamData", dataSet, platform);
+path <- file.path("bamData", dataSet, organism);
 bs <- BamDataSet$byPath(path);
 setFullNamesTranslator(bs, function(names, ...) {
   names <- gsub(".bowtie.sorted", "", names, fixed=TRUE);

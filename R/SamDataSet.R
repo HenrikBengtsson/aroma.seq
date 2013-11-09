@@ -32,6 +32,15 @@ setMethodS3("validate", "SamDataSet", function(this, ...) {
 }, protected=TRUE)
 
 
+setMethodS3("getOrganism", "SamDataSet", function(this, depth=getDepth(this)-1L, ...) {
+  path <- getPath(this);
+  path <- getParent(path, depth=depth);
+  organism <- basename(path);
+  organism <- Arguments$getCharacter(organism, length=c(1L, 1L));
+  organism;
+}, protected=TRUE);
+
+
 setMethodS3("getDepth", "SamDataSet", function(this, ...) {
   1L;
 }, protected=TRUE);
@@ -45,6 +54,8 @@ setMethodS3("byPath", "SamDataSet", function(static, ..., pattern="[.](sam|SAM)$
 
 ############################################################################
 # HISTORY:
+# 2013-11-09
+# o Added getOrganism().
 # 2012-09-25
 # o Created from BamDataSet.R.
 ############################################################################

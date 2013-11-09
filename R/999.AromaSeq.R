@@ -122,10 +122,78 @@ setMethodS3("setupTests", "AromaSeq", function(static, path="redundancyTests/", 
   path;
 })
 
+# \references{
+#   \url{http://bioconductor.org/packages/release/BiocViews.html#___AnnotationData}
+# }
+setMethodS3("getKnownOrganisms", "AromaSeq", function(static, ...) {
+  c(
+    "DrosophilaMelanogaster",
+    "EscherichiaColi",
+    "HomoSapiens",
+    "LambdaPhage",
+    "MusMusculus"
+  );
+}, protected=TRUE)
+
+
+setMethodS3("getOrganism", "Arguments", function(static, organism, ...) {
+  # Argument 'organism':
+  organism <- Arguments$getCharacter(organism, length=c(1L,1L));
+  knownOrganisms <- getKnownOrganisms(aroma.seq);
+  unknown <- organism[!is.element(organism, knownOrganisms)];
+  if (length(unknown) > 0L) {
+    throw("Unknown organism: ", organism);
+  }
+
+  organism;
+}, protected=TRUE)
+
+
+setMethodS3("skeleton", "AromaSeq", function(static, dataSet="MyDatSet", organism="HomoSapiens", ...) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'dataSet':
+  dataSet <- Arguments$getCharacter(dataSet);
+
+  # Argument 'organism':
+  knownOrganisms <- getKnownOrganisms(static);
+  organism <- Arguments$getOrganism(organism);
+
+  if (dataSet == organism) {
+    warning("Did you really mean to name the data set the same as the organism?: ", dataSet);
+  }
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # annotationData/organisms/<organism>/
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  path <- file.path("annotationData", "organisms", organism);
+  path <- Arguments$getWritablePath(path);
+  pathname <- file.path(path, "README.txt");
+  if (!isFile(pathname)) {
+    cat("Copy or link to the FASTA reference file in this directory.\n", file=pathname);
+  }
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # fastqData/<DataSet>/<organism>/
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  path <- file.path("fastqData", dataSet, organism);
+  path <- Arguments$getWritablePath(path);
+  pathname <- file.path(path, "README.txt");
+  if (!isFile(pathname)) {
+    cat("Copy or link to the FASTQ read files in this directory.\n", file=pathname);
+  }
+
+  invisible(TRUE);
+}) # skeleton()
 
 
 ############################################################################
 # HISTORY:
+# 2013-11-08
+# o Added skeleton() for AromaSeq, e.g.
+#   skeleon(aroma.seq, "MyDataSet", "HomoSapiens").
 # 2013-10-30
 # o Added 'python' to capabilities.
 # 2013-07-19

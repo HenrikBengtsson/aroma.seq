@@ -9,8 +9,8 @@
 # [1] http://aroma-project.org/data/annotationData/chipTypes/GenericHuman/
 ############################################################################
 library("aroma.seq");
-
 verbose <- Arguments$getVerbose(-10, timestamp=TRUE);
+
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup the genome annotation data
@@ -36,7 +36,7 @@ unc <- tryCatch({
 if (is.null(unc)) {
   unc <- AromaUncFile$allocateFromUgp(ugp, tags=c("HB20121021"), createdBy="Henrik Bengtsson, hb@biostat.ucsf.edu");
   verbose && print(verbose, unc);
-  
+
   unc <- importFromBSgenome(unc, db=db, verbose=verbose);
 }
 verbose && print(verbose, unc);

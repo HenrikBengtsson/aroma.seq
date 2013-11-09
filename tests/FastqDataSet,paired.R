@@ -5,10 +5,13 @@ fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 setupExampleData()
 
 
+dataSet <- "TopHat-example"
+organism <- "LambdaPhage"
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup paired-end FASTQ set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-path <- file.path("fastqData", "TopHat-example", "LambdaPhage")
+path <- file.path("fastqData", dataSet, organism)
 fqs <- FastqDataSet$byPath(path, paired=TRUE)
 print(fqs)
 pairs <- getFilePairs(fqs)

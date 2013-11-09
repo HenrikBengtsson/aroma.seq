@@ -229,6 +229,11 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, FUN, ..., args=list(),
   if (parallel == "BiocParallel::BatchJobs") {
     verbose && enter(verbose, "Processing using BiocParallel");
 
+    # WORKAROUND: Make sure 'methods' package is *attached*, not
+    # just loaded. /HB 2013-11-09
+    pkgName <- "methods";
+    require(pkgName, character.only=TRUE) || throw("Package not attached:  methods");
+
     # WORKAROUND: Allow for commas in BatchJobs-related pathnames
     oopts <- options("BatchJobs.check.posix");
     on.exit({ options(oopts) }, add=TRUE);

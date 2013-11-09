@@ -10,8 +10,8 @@ library("aroma.seq");
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Data set
 dataSet <- "AlbertsonD_2012-SCC";
-platform <- "Generic";
-path <- file.path("fastqData", dataSet, platform);
+organism <- "HomoSapiens";
+path <- file.path("fastqData", dataSet, organism);
 ds <- IlluminaFastqDataSet$byPath(path);
 print(ds);
 

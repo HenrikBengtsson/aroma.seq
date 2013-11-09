@@ -10,10 +10,13 @@ if (fullTest) {
 
 setOption(aromaSettings, "devel/parallel", "BiocParallel::BatchJobs")
 
+dataSet <- "AlbertsonD_2012-SCC,AB042"
+organism <- "HomoSapiens"
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup FASTA reference file
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-path <- file.path("annotationData,aroma.seq,private", "organisms", "Human")
+path <- file.path("annotationData,aroma.seq,private", "organisms", organism)
 fa <- FastaReferenceFile("human_g1k_v37.fasta", path=path)
 print(fa)
 
@@ -21,7 +24,7 @@ print(fa)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup FASTQ set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-path <- file.path("fastqData,aroma.seq,private", "AlbertsonD_2012-SCC,AB042", "Generic")
+path <- file.path("fastqData,aroma.seq,private", dataSet, organism)
 fqs <- FastqDataSet$byPath(path)
 fqs <- extract(fqs, 1:2)
 print(fqs)
@@ -43,8 +46,9 @@ for (ii in seq_along(cns)) {
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # QDNAseq on BAM files
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-path <- "bamData/AlbertsonD_2012-SCC,AB042,bwa,is,-dups/Generic/"
-bams <- BamDataSet$byPath(path)
+tags <- "bwa,is,-dups";
+dataSetB <- paste(c(dataSet, tags), collapse=",")
+path <- file.path("bamData", dataSetB, organism)
 print(bams)
 
 # QDNAseq on a single BAM file

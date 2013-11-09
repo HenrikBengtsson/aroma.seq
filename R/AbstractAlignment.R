@@ -207,12 +207,12 @@ setMethodS3("getPath", "AbstractAlignment", function(this, create=TRUE, ...) {
   # Full name
   fullname <- getFullName(this);
 
-  # Platform
+  # Organism
   ds <- getInputDataSet(this);
-  platform <- "Generic";
+  organism <- getOrganism(ds);
 
   # The full path
-  path <- filePath(rootPath, fullname, platform);
+  path <- filePath(rootPath, fullname, organism);
 
   if (create) {
     path <- Arguments$getWritablePath(path);
@@ -255,6 +255,8 @@ setMethodS3("process", "AbstractAlignment", abstract=TRUE);
 
 ############################################################################
 # HISTORY:
+# 2013-11-09
+# o Now getPath() for AbstractAlignment contains the organism.
 # 2013-08-24
 # o Added isPaired() for AbstractAlignment.  Made as.character() and
 #   getAsteriskTags() aware of it.

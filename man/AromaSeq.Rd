@@ -48,6 +48,7 @@ AromaSeq(...)
  \tab \code{\link[aroma.seq:capabilitiesOf.AromaSeq]{capabilitiesOf}} \tab Checks which tools are supported.\cr
  \tab \code{isCapableOf} \tab  -\cr
  \tab \code{setupTests} \tab  -\cr
+ \tab \code{skeleton} \tab  -\cr
 }
 
 

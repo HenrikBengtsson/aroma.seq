@@ -6,11 +6,13 @@ fullTest <- fullTest && require("qrqc")
 # Setup (writable) local data directory structure
 setupExampleData()
 
+dataSet <- "TopHat-example"
+organism <- "LambdaPhage"
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup FASTQ set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-path <- file.path("fastqData", "TopHat-example", "LambdaPhage")
+path <- file.path("fastqData", dataSet, organism)
 fqs <- FastqDataSet$byPath(path)
 print(fqs)
 for (ii in seq_along(fqs)) {

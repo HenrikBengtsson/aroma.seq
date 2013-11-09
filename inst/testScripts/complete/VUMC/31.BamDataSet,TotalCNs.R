@@ -9,6 +9,9 @@ library("GenomicRanges"); # GRanges()
 library("IRanges"); # IRanges()
 
 
+dataSet <- "AlbertsonD_2012-Bladder_VUMC";
+organism <- "HomoSapiens";
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -18,9 +21,7 @@ ugp <- AromaUgpFile$byChipType("GenericHuman", tags=byTag);
 print(ugp);
 
 # Data set
-dataSet <- "AlbertsonD_2012-Bladder_VUMC";
-platform <- "Generic";
-path <- file.path("bamData", dataSet, platform);
+path <- file.path("bamData", dataSet, organism);
 bs <- BamDataSet$byPath(path);
 setFullNamesTranslator(bs, function(names, ...) {
   names <- gsub(".bowtie.sorted", "", names, fixed=TRUE);
@@ -110,7 +111,7 @@ for (kk in seq(along=chrLabels)) {
     stext(side=3, pos=1, line=-1, cex=0.8, sprintf("n=%d @ %s", sum(is.finite(C)), byTag));
     stext(side=4, pos=0, cex=0.8, sprintf("nT/nN=%d/%d=%.2f", length(xT), length(xN), length(xT)/length(xN)));
   });
- 
+
   verbose && exit(verbose);
 } # for (kk ...)
 

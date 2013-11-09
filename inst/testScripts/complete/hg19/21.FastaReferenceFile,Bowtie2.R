@@ -3,10 +3,12 @@
 ############################################################################
 library("aroma.seq");
 
+organism <- "HomoSapiens";
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Indexing a reference genome
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-path <- "annotationData/organisms/Human/";
+path <- file.path("annotationData", "organisms", organism);
 filename <- "human_g1k_v37.fasta";
 fa <- FastaReferenceFile(filename, path=path);
 print(fa);

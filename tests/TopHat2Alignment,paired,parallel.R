@@ -10,7 +10,7 @@ if (fullTest) {
 setOption(aromaSettings, "devel/parallel", "BiocParallel::BatchJobs")
 
 dataSet <- "YeastTest"
-organism <- "SC"
+organism <- "SaccharomycesCerevisiae"
 
 # Setup (writable) local data directory structure
 setupExampleData()

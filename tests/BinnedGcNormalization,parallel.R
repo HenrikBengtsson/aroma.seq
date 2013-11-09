@@ -11,7 +11,7 @@
 # REQUIREMENTS:
 # fastqData/
 #  AlbertsonD_2012-SCC/
-#   Generic/
+#   HomoSapiens/
 #    <sample>_<barcode>_L[0-9]{3}_R[12]_[0-9]{3}.fastq [private data]
 #
 # annotationData/
@@ -20,7 +20,7 @@
 #    GenericHuman,50kb,HB20090503.ugp [1]
 #    GenericHuman,50kb,HB20121021.unc [1]
 #  organisms/
-#   Human/
+#   HomoSapiens/
 #    human_g1k_v37.fasta [2]
 #
 # REFERENCES:
@@ -39,10 +39,13 @@ if (fullTest) {
 
 setOption(aromaSettings, "devel/parallel", "BiocParallel")
 
+dataSet <- "AlbertsonD_2012-SCC,AB042";
+organism <- "HomoSapiens";
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup FASTA reference file
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-path <- file.path("annotationData,aroma.seq,private", "organisms", "Human")
+path <- file.path("annotationData,aroma.seq,private", "organisms", organism)
 fa <- FastaReferenceFile("human_g1k_v37.fasta", path=path)
 print(fa)
 
@@ -59,7 +62,7 @@ print(unc)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup FASTQ set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-path <- file.path("fastqData,aroma.seq,private", "AlbertsonD_2012-SCC,AB042", "Generic")
+path <- file.path("fastqData,aroma.seq,private", dataSet, organism)
 fqs <- IlluminaFastqDataSet$byPath(path)
 fqs <- extract(fqs, 1:2)
 print(fqs)

@@ -377,6 +377,15 @@
 \alias{getExpectedOutputPaths.TopHat2Alignment}
 \alias{getSampleNames.TopHat2Alignment}
 \alias{isDone.TopHat2Alignment}
+\alias{getKnownOrganisms}
+\alias{getKnownOrganisms.AromaSeq}
+\alias{getOrganism}
+\alias{getOrganism.Arguments}
+\alias{getOrganism.BamDataSet}
+\alias{getOrganism.FastqDataSet}
+\alias{getOrganism.SamDataSet}
+\alias{skeleton}
+\alias{skeleton.AromaSeq}
 
 \description{
   This page contains aliases for all "non-documented" objects that

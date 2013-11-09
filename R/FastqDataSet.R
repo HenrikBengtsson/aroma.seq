@@ -90,6 +90,15 @@ setMethodS3("byPath", "FastqDataSet", function(static, ..., paired=FALSE, patter
 }, protected=TRUE)
 
 
+setMethodS3("getOrganism", "FastqDataSet", function(this, depth=getDepth(this)-1L, ...) {
+  path <- getPath(this);
+  path <- getParent(path, depth=depth);
+  organism <- basename(path);
+  organism <- Arguments$getCharacter(organism, length=c(1L, 1L));
+  organism;
+}, protected=TRUE);
+
+
 setMethodS3("isPaired", "FastqDataSet", function(this, ...) {
   this$.paired;
 }, protected=TRUE);
@@ -116,6 +125,7 @@ setMethodS3("getFilePairs", "FastqDataSet", function(this, ...) {
 
   pairs;
 }, protected=TRUE)
+
 
 setMethodS3("validate", "FastqDataSet", function(this, ...) {
   NextMethod("validate");
@@ -150,6 +160,8 @@ setMethodS3("getSamReadGroup", "FastqDataSet", function(this, ...) {
 
 ############################################################################
 # HISTORY:
+# 2013-11-09
+# o Added getOrganism() to FastqDataSet.
 # 2013-08-24
 # o Added as.character() for FastqDataSet outputting also paired status.
 # o Added byPath() for FastqDataSet that acknowledge 'paired' argument.

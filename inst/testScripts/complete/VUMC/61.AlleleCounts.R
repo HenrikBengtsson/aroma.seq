@@ -6,11 +6,14 @@
 library("aroma.seq");
 
 
+dataSet <- "AlbertsonD_2012-SCC,bwa,is";
+organism <- "HomoSapiens";
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Annotation data
-path <- "annotationData/organisms/Human/";
+path <- file.path("annotationData", "organisms", organism);
 filename <- "human_g1k_v37.fasta";
 fa <- FastaReferenceFile(filename, path=path);
 print(fa);
@@ -20,9 +23,7 @@ ugp <- AromaUgpFile$byChipType("GenericHuman", tags=tags);
 print(ugp);
 
 # Data set
-dataSet <- "AlbertsonD_2012-SCC,bwa,is";
-platform <- "Generic";
-path <- file.path("bwaData", dataSet, platform);
+path <- file.path("bwaData", dataSet, organism);
 bs <- BamDataSet$byPath(path);
 print(bs);
 
