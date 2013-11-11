@@ -48,6 +48,13 @@ setMethodS3("as.character", "FastaReferenceFile", function(x, ...) {
 }, protected=TRUE)
 
 
+setMethodS3("getOrganism", "FastaReferenceFile", function(this, ...) {
+  path <- getPath(this);
+  organism <- basename(path);
+  organism;
+})
+
+
 setMethodS3("getSeqLengths", "FastaReferenceFile", function(this, force=FALSE, onlyIfCached=FALSE, ...) {
   seqLengths <- this$.seqLengths;
   if (force || is.null(seqLengths)) {
@@ -434,6 +441,8 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
 
 ############################################################################
 # HISTORY:
+# 2013-11-10
+# o Added getOrganism().
 # 2013-11-09
 # o Added FastaReferenceFile$byOrganism().
 # 2013-11-01

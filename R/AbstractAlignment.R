@@ -189,6 +189,11 @@ setMethodS3("getFullName", "AbstractAlignment", function(this, ...) {
   fullname;
 })
 
+setMethodS3("getOrganism", "AbstractAlignment", function(this, ...) {
+  is <- getIndexSet(this);
+  getOrganism(is);
+})
+
 
 setMethodS3("getRootPath", "AbstractAlignment", function(this, ...) {
 ##  alignName <- gsub("Alignment", "", class(this)[1], fixed=TRUE);
@@ -208,8 +213,7 @@ setMethodS3("getPath", "AbstractAlignment", function(this, create=TRUE, ...) {
   fullname <- getFullName(this);
 
   # Organism
-  ds <- getInputDataSet(this);
-  organism <- getOrganism(ds);
+  organism <- getOrganism(this);
 
   # The full path
   path <- filePath(rootPath, fullname, organism);
@@ -221,6 +225,7 @@ setMethodS3("getPath", "AbstractAlignment", function(this, create=TRUE, ...) {
   }
 
   # Verify that it is not the same as the input path
+  ds <- getInputDataSet(this);
   inPath <- getPath(ds);
   if (getAbsolutePath(path) == getAbsolutePath(inPath)) {
     throw("The generated output data path equals the input data path: ", path, " == ", inPath);

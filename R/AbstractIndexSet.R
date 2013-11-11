@@ -37,11 +37,20 @@ setMethodS3("as.character", "AbstractIndexSet", function(x, ...) {
   class <- class(s);
 
   s <- c(s, sprintf("Index prefix: %s", getIndexPrefix(this)));
+  s <- c(s, sprintf("Organism: %s", getOrganism(this)));
   s <- c(s, sprintf("Complete: %s", isComplete(this)));
 
   class(s) <- class;
   s;
 }, protected=TRUE)
+
+
+setMethodS3("getOrganism", "AbstractIndexSet", function(this, ...) {
+  path <- getPath(this);
+  path <- dirname(path);
+  organism <- basename(path);
+  organism;
+})
 
 
 setMethodS3("byPrefix", "AbstractIndexSet", function(static, prefix, ...) {
@@ -61,6 +70,8 @@ setMethodS3("isComplete", "AbstractIndexSet", abstract=TRUE);
 
 ############################################################################
 # HISTORY:
+# 2013-11-10
+# o Added getOrganism().
 # 2012-09-27
 # o Created from BwaIndexSet.R
 ############################################################################
