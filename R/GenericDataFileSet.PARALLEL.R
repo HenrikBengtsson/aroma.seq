@@ -232,7 +232,18 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, FUN, ..., args=list(),
     # WORKAROUND: Make sure 'methods' package is *attached*, not
     # just loaded. /HB 2013-11-09
     pkgName <- "methods";
-    require(pkgName, character.only=TRUE) || throw("Package not attached:  methods");
+    require(pkgName, character.only=TRUE) || throw("Package not attached: ", pkgName);
+
+    pkgName <- "BatchJobs";
+    require(pkgName, character.only=TRUE) || throw("Package not attached: ", pkgName);
+
+    conffile <- c(".BatchJobs.R", "~/.BatchJobs.R")
+    conffile <- normalizePath(conffile);
+    conffile <- conffile[file_test("-f", conffile)];
+    if (length(conffile) > 0L) {
+      conffile <- conffile[1L];
+      if (isFile(conffile)) loadConfig(conffile);
+    }
 
     # WORKAROUND: Allow for commas in BatchJobs-related pathnames
     oopts <- options("BatchJobs.check.posix");
@@ -248,7 +259,7 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, FUN, ..., args=list(),
     args <- c(list(ds, FUN=FUN), allArgs);
     verbose && cat(verbose, "Arguments passed to bplapply():");
     verbose && str(verbose, args);
-    res <- do.call(BiocParallel::bplapply, args);
+    res <- do.call(BiocParallel::bplapply, args, BPPARAM=bpParam);
     verbose && exit(verbose);
 
     verbose && exit(verbose);
