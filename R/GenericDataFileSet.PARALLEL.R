@@ -256,10 +256,10 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, FUN, ..., args=list(),
     verbose && print(verbose, bpParam);
 
     verbose && enter(verbose, "Calling bplapply()");
-    args <- c(list(ds, FUN=FUN), allArgs);
+    args <- c(list(ds, FUN=FUN), allArgs, BPPARAM=bpParam);
     verbose && cat(verbose, "Arguments passed to bplapply():");
     verbose && str(verbose, args);
-    res <- do.call(BiocParallel::bplapply, args, BPPARAM=bpParam);
+    res <- do.call(BiocParallel::bplapply, args);
     verbose && exit(verbose);
 
     verbose && exit(verbose);
