@@ -72,7 +72,7 @@ setMethodS3("as.character", "FastqDataSet", function(x, ...) {
 }, protected=TRUE)
 
 
-setMethodS3("byPath", "FastqDataSet", function(static, ..., recursive=FALSE, struct=NULL, paired=FALSE, pattern="[.](fq|fastq)(|[.]gz)$") {
+setMethodS3("byPath", "FastqDataSet", function(static, ..., recursive=FALSE, struct=NULL, paired=FALSE, pattern="[.](fq|fastq)(|[.]gz)$", verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -87,13 +87,37 @@ setMethodS3("byPath", "FastqDataSet", function(static, ..., recursive=FALSE, str
     struct <- directoryStructure(struct);
   }
 
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
+
+  verbose && enter(verbose, "Setting up ", class(static)[1L], " by path");
+  verbose && cat(verbose, "Recursive: ", recursive);
+  verbose && cat(verbose, "Filename pattern: ", pattern);
+
+  # SPEEDUP: This will make it only locate R1 FASTQ files
+  if (paired && missing(pattern)) {
+    patternT <- sprintf("(_1|_R1).*%s", pattern);
+    verbose && cat(verbose, "Adjusted filename pattern to speedup setup for paired-end data set.");
+  } else {
+    patternT <- pattern;
+  }
+  verbose && cat(verbose, "Filename pattern: ", patternT);
+
   # Assume paired-end reads
-  res <- NextMethod("byPath", recursive=recursive, pattern=pattern, paired=paired);
+  res <- NextMethod("byPath", recursive=recursive, pattern=patternT, paired=paired);
 
   # Paired reads?
   if (isPaired(res)) {
+    verbose && enter(verbose, "Adjusting for paired-end reads");
+
     filenames <- basename(getPathnames(res));
     fullnames <- gsub(pattern, "", filenames);
+    verbose && cat(verbose, "Full names: ", hpaste(fullnames));
 
     # Several alternatives exists:
     # (a) Does the fullnames end with _1 or _2?
@@ -102,13 +126,18 @@ setMethodS3("byPath", "FastqDataSet", function(static, ..., recursive=FALSE, str
       idxs <- grep(pattern, fullnames, fixed=FALSE);
       if (length(idxs) > 0L) break;
     }
+    verbose && cat(verbose, "R1 filename pattern: ", pattern);
 
     if (length(idxs) == 0L) {
       throw("Failed to identify the R1 FASTQ files.");
     }
 
     res <- extract(res, idxs);
+
+    verbose && exit(verbose);
   } # if (isPaired(res))
+
+  verbose && exit(verbose);
 
   res;
 }, protected=TRUE)

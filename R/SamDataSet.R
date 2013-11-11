@@ -27,11 +27,6 @@ setConstructorS3("SamDataSet", function(files=NULL, ...) {
 })
 
 
-setMethodS3("validate", "SamDataSet", function(this, ...) {
-  NextMethod("validate");
-}, protected=TRUE)
-
-
 setMethodS3("getOrganism", "SamDataSet", function(this, depth=getDepth(this)-1L, ...) {
   path <- getPath(this);
   path <- getParent(path, depth=depth);

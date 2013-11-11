@@ -26,12 +26,6 @@ setConstructorS3("FastaReferenceSet", function(files=NULL, ...) {
   extend(GenericDataFileSet(files=files, ...), "FastaReferenceSet");
 })
 
-
-setMethodS3("validate", "FastaReferenceSet", function(this, ...) {
-  NextMethod("validate");
-}, protected=TRUE)
-
-
 setMethodS3("getDepth", "FastaReferenceSet", function(this, ...) {
   1L;
 }, protected=TRUE);

@@ -159,7 +159,6 @@ S3method("doQDNAseq", "BamDataSet")
 S3method("getChipType", "BamDataSet")
 S3method("getDepth", "BamDataSet")
 S3method("getPlatform", "BamDataSet")
-S3method("validate", "BamDataSet")
 
 # BamIndexDataFile
 S3method("as.character", "BamIndexDataFile")
@@ -250,7 +249,6 @@ S3method("nbrOfSeqs", "FastaReferenceFile")
 # FastaReferenceSet
 S3method("byPath", "FastaReferenceSet")
 S3method("getDepth", "FastaReferenceSet")
-S3method("validate", "FastaReferenceSet")
 
 # FastqDataFile
 S3method("as.character", "FastqDataFile")
@@ -354,7 +352,6 @@ S3method("findByName", "SamDataSet")
 S3method("byName", "SamDataSet")
 S3method("convertToBam", "SamDataSet")
 S3method("getDepth", "SamDataSet")
-S3method("validate", "SamDataSet")
 
 # SamReadGroup
 S3method("as.character", "SamReadGroup")
