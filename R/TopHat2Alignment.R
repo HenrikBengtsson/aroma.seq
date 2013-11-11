@@ -119,9 +119,16 @@ setMethodS3("getExpectedOutputPaths", "TopHat2Alignment", function(this, ...) {
 }, protected=TRUE)
 
 
-setMethodS3("getOutputDataSet", "TopHat2Alignment", function(this, ...) {
-  ## Find all possible existing output data files
-  bams <- BamDataSet$byPath(path=getPath(this), pattern="accepted_hits.bam$", recursive=TRUE);
+setMethodS3("getOutputDataSet", "TopHat2Alignment", function(this, onMissing=c("drop", "NA", "error"), ...) {
+  # Argument 'onMissing':
+  onMissing <- match.arg(onMissing);
+
+
+  ds <- getInputDataSet(this);
+
+  ## Find all existing output data files
+  path <- getPath(this);
+  bams <- BamDataSet$byPath(path=path, pattern="accepted_hits.bam$", recursive=TRUE);
 
   # Special case
   if (length(bams) == 0L) {
@@ -129,22 +136,36 @@ setMethodS3("getOutputDataSet", "TopHat2Alignment", function(this, ...) {
     bams <- newInstance(bams, list(bam));
   }
 
+  ## Order according to input data set
   # Get the sample names in the found output set
   sampleNamesExpected <- getSampleNames(this);
   sampleNames <- getPathnames(bams);
   sampleNames <- basename(dirname(sampleNames));
   idxs <- match(sampleNamesExpected, sampleNames);
-  bams <- extract(bams, idxs);
+  bams <- extract(bams, idxs, onMissing="NA");
 
   # Sanity check
+  stopifnot(length(bams) == length(ds));
   stopifnot(length(bams) == length(sampleNamesExpected));
+
+  exists <- which(unlist(sapply(bams, FUN=isFile)));
+  if (length(exists) < length(ds)) {
+    if (onMissing == "error") {
+      throw("Number of entries in output data set does not match input data set: ", length(exists), " != ", length(ds));
+    } else if (onMissing == "drop") {
+      bams <- extract(bams, exists);
+    }
+  }
+
+  # Sanity check
+  stopifnot(length(bams) <= length(ds));
 
   bams;
 })
 
 
 setMethodS3("isDone", "TopHat2Alignment", function(this, ...) {
-  bams <- getOutputDataSet(this);
+  bams <- getOutputDataSet(this, onMissing="NA");
   all(sapply(bams, FUN=isFile));
 })
 
@@ -187,7 +208,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   if (force) {
     todo <- seq_along(ds);
   } else {
-    bams <- getOutputDataSet(this, verbose=less(verbose, 1));
+    bams <- getOutputDataSet(this, onMissing="NA", verbose=less(verbose, 1));
     todo <- which(!sapply(bams, FUN=isFile));
   }
   verbose && cat(verbose, "Number of samples to process: ", length(todo));
@@ -290,7 +311,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Get results
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  bams <- getOutputDataSet(this, verbose=less(verbose, 1));
+  bams <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1));
   verbose && print(verbose, bams);
 
   # Sanity check
@@ -304,6 +325,8 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
 
 ############################################################################
 # HISTORY:
+# 2013-11-11
+# o Added argument 'onMissing' to getOutputDataSet().
 # 2013-11-01 [HB]
 # o SPEEDUP: Parallized process() for TopHat2Alignment.
 # o Now process() for TopHat2Alignment skips already processed samples.

@@ -1,6 +1,12 @@
 Package: aroma.seq
 ==================
 
+Version: 0.3.4 [2013-11-11]
+o SPEEDUP: Now Bowtie2Alignment and BwaAlignment skips already processed
+  items much faster and if all are done, even quicker.
+o BUG FIX: BamDataSet$byPath() would include also SAM files.
+
+
 Version: 0.3.3 [2013-11-10]
 o Started to add support for custom directory structures.
 

@@ -54,6 +54,10 @@ setMethodS3("findByName", "BamDataSet", function(static, name, tags=NULL, organi
 }, static=TRUE)
 
 
+setMethodS3("byPath", "BamDataSet", function(static, ..., pattern="[.](bam|BAM)$") {
+  NextMethod("byPath", pattern=pattern);
+}, static=TRUE)
+
 
 setMethodS3("byName", "BamDataSet", function(static, name, tags=NULL, organism=NULL, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -140,6 +144,8 @@ setMethodS3("byName", "BamDataSet", function(static, name, tags=NULL, organism=N
 
 ############################################################################
 # HISTORY:
+# 2013-11-11
+# o BUG FIX: BamDataSet$byPath() would include also SAM files.
 # 2013-11-09
 # o Added static findByName() and byName() for BamDataSet.
 # o Added getOrganism() to BamDataSet.

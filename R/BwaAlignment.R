@@ -116,6 +116,15 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
   verbose && cat(verbose, "Input data set:");
   verbose && print(verbose, ds);
 
+  # Already done?
+  todo <- findFilesTodo(this, verbose=less(verbose, 1));
+  if (!force && length(todo) == 0L) {
+    verbose && cat(verbose, "Already done. Skipping.");
+    res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1));
+    verbose && exit(verbose);
+    return(invisible(res));
+  }
+
   is <- getIndexSet(this);
   verbose && cat(verbose, "Aligning using index set:");
   verbose && print(verbose, is);
@@ -141,7 +150,7 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Apply aligner to each of the FASTQ files
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  dsApply(ds, FUN=function(df, paired=FALSE, indexPrefix, rgSet, paramsList, path, ...., skip=TRUE, verbose=FALSE) {
+  dsApply(ds[todo], FUN=function(df, paired=FALSE, indexPrefix, rgSet, paramsList, path, ...., skip=TRUE, verbose=FALSE) {
     R.utils::use("R.utils, aroma.seq");
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -265,7 +274,7 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
     invisible(list(pathnameFQ=pathnameFQ, pathnameSAM=pathnameSAM, pathnameBAM=pathnameBAM));
   }, paired=isPaired(this), indexPrefix=indexPrefix, rgSet=rgSet, paramsList=paramsList, path=getPath(this), skip=skip, verbose=verbose) # dsApply()
 
-  res <- getOutputDataSet(this, verbose=less(verbose, 1));
+  res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1));
 
   verbose && exit(verbose);
 
@@ -276,6 +285,9 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
 
 ############################################################################
 # HISTORY:
+# 2013-11-11
+# o SPEEDUP: Now Bowtie2Alignment and BwaAlignment skips already processed
+#   items much faster and if all are done, even quicker.
 # 2013-08-31
 # o Now process() for BwaAlignment utilizes dsApply().
 # 2012-10-21

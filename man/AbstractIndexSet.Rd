@@ -50,6 +50,7 @@ AbstractIndexSet(files=NULL, ...)
 \tabular{rll}{
  \tab \code{byPrefix} \tab  -\cr
  \tab \code{getIndexPrefix} \tab  -\cr
+ \tab \code{getOrganism} \tab  -\cr
  \tab \code{isComplete} \tab  -\cr
 }
 

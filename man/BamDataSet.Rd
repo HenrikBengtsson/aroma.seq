@@ -49,6 +49,7 @@ BamDataSet(files=NULL, ...)
  \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{byName} \tab  -\cr
+ \tab \code{byPath} \tab  -\cr
  \tab \code{directoryStructure} \tab  -\cr
  \tab \code{doQDNAseq} \tab  -\cr
  \tab \code{findByName} \tab  -\cr

@@ -50,10 +50,12 @@ AbstractAlignment(dataSet=NULL, indexSet=NULL, tags="*", rgSet=NULL, ...)
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
+ \tab \code{findFilesTodo} \tab  -\cr
  \tab \code{getFullName} \tab  -\cr
  \tab \code{getIndexSet} \tab  -\cr
  \tab \code{getInputDataSet} \tab  -\cr
  \tab \code{getName} \tab  -\cr
+ \tab \code{getOrganism} \tab  -\cr
  \tab \code{getOutputDataSet} \tab  -\cr
  \tab \code{getTags} \tab  -\cr
  \tab \code{nbrOfFiles} \tab  -\cr
