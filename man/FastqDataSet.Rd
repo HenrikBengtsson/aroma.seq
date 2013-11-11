@@ -37,7 +37,7 @@ extends \link[R.filesets]{GenericDataFileSet}\cr
 }
 
 \usage{
-FastqDataSet(files=NULL, ..., paired=FALSE)
+FastqDataSet(files=NULL, ..., paired=FALSE, struct=NULL)
 }
 
 \arguments{
@@ -45,12 +45,14 @@ FastqDataSet(files=NULL, ..., paired=FALSE)
   \item{...}{Arguments passed to \code{\link[R.filesets]{GenericDataFileSet}}.}
   \item{paired}{If \code{\link[base:logical]{TRUE}}, the data set contains paired-end reads,
     otherwise not.}
+  \item{struct}{A directory structure format.}
 }
 
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{byName} \tab  -\cr
+ \tab \code{directoryStructure} \tab  -\cr
  \tab \code{doBWA} \tab  -\cr
  \tab \code{doBowtie2} \tab  -\cr
  \tab \code{doQDNAseq} \tab  -\cr
@@ -64,7 +66,7 @@ FastqDataSet(files=NULL, ..., paired=FALSE)
 
 
  \bold{Methods inherited from GenericDataFileSet}:\cr
-[, [[, anyNA, append, appendFiles, appendFullNamesTranslator, appendFullNamesTranslatorByNULL, appendFullNamesTranslatorByTabularTextFile, appendFullNamesTranslatorByTabularTextFileSet, appendFullNamesTranslatorBydata.frame, appendFullNamesTranslatorByfunction, appendFullNamesTranslatorBylist, as.character, as.list, byName, byPath, c, clearCache, clearFullNamesTranslator, clone, copyTo, equals, extract, findByName, getChecksum, getChecksumObjects, getDefaultFullName, getFile, getFileClass, getFileSize, getFiles, getFullNames, getNames, getOneFile, getPath, getPathnames, getSubdirs, gunzip, gzip, hasFile, indexOf, nbrOfFiles, resetFullNames, seq, setFullNamesTranslator, sortBy, update2, updateFullName, updateFullNames, validate, dsApply, getFullNameTranslatorSet, getParentName
+[, [[, anyNA, append, appendFiles, appendFullNamesTranslator, appendFullNamesTranslatorByNULL, appendFullNamesTranslatorByTabularTextFile, appendFullNamesTranslatorByTabularTextFileSet, appendFullNamesTranslatorBydata.frame, appendFullNamesTranslatorByfunction, appendFullNamesTranslatorBylist, as.character, as.list, byName, byPath, c, clearCache, clearFullNamesTranslator, clone, copyTo, equals, extract, findByName, getChecksum, getChecksumObjects, getDefaultFullName, getFile, getFileClass, getFileSize, getFiles, getFullNames, getNames, getOneFile, getPath, getPathnames, getSubdirs, gunzip, gzip, hasFile, indexOf, nbrOfFiles, resetFullNames, seq, setFullNamesTranslator, sortBy, update2, updateFullName, updateFullNames, validate, directoryItem, directoryItems, directoryStructure, directoryStructure<-, dsApply, updateDirectoryStructure, getFullNameTranslatorSet, getParentName
 
  \bold{Methods inherited from FullNameInterface}:\cr
 appendFullNameTranslator, appendFullNameTranslatorByNULL, appendFullNameTranslatorByTabularTextFile, appendFullNameTranslatorByTabularTextFileSet, appendFullNameTranslatorBycharacter, appendFullNameTranslatorBydata.frame, appendFullNameTranslatorByfunction, appendFullNameTranslatorBylist, clearFullNameTranslator, clearListOfFullNameTranslators, getDefaultFullName, getFullName, getFullNameTranslator, getListOfFullNameTranslators, getName, getTags, hasTag, hasTags, resetFullName, setFullName, setFullNameTranslator, setListOfFullNameTranslators, setName, setTags, updateFullName

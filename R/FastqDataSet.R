@@ -16,6 +16,7 @@
 #   \item{...}{Arguments passed to @see "R.filesets::GenericDataFileSet".}
 #   \item{paired}{If @TRUE, the data set contains paired-end reads,
 #     otherwise not.}
+#   \item{struct}{A directory structure format.}
 # }
 #
 # \section{Fields and Methods}{
@@ -41,14 +42,22 @@
 #
 # @author "HB"
 #*/###########################################################################
-setConstructorS3("FastqDataSet", function(files=NULL, ..., paired=FALSE) {
+setConstructorS3("FastqDataSet", function(files=NULL, ..., paired=FALSE, struct=NULL) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'paired':
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   paired <- Arguments$getLogical(paired);
 
-  extend(GenericDataFileSet(files=files, ...), "FastqDataSet",
+  this <- extend(GenericDataFileSet(files=files, ...), "FastqDataSet",
     .paired = paired
   );
+
+  if (!is.null(struct)) directoryStructure(this) <- struct;
+
+  this;
 })
+
+
 setMethodS3("as.character", "FastqDataSet", function(x, ...) {
   # To please R CMD check
   this <- x;
@@ -63,8 +72,23 @@ setMethodS3("as.character", "FastqDataSet", function(x, ...) {
 }, protected=TRUE)
 
 
-setMethodS3("byPath", "FastqDataSet", function(static, ..., paired=FALSE, pattern="[.](fq|fastq)(|[.]gz)$") {
-  res <- NextMethod("byPath", pattern=pattern, ..., paired=paired);
+setMethodS3("byPath", "FastqDataSet", function(static, ..., recursive=FALSE, struct=NULL, paired=FALSE, pattern="[.](fq|fastq)(|[.]gz)$") {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'paired':
+  paired <- Arguments$getLogical(paired);
+
+  # Argument 'recursive':
+  recursive <- Arguments$getLogical(recursive);
+
+  # Argument 'struct':
+  if (!is.null(struct)) {
+    struct <- directoryStructure(struct);
+  }
+
+  # Assume paired-end reads
+  res <- NextMethod("byPath", recursive=recursive, pattern=pattern, paired=paired);
 
   # Paired reads?
   if (isPaired(res)) {
@@ -129,6 +153,9 @@ setMethodS3("getFilePairs", "FastqDataSet", function(this, ...) {
 
 setMethodS3("validate", "FastqDataSet", function(this, ...) {
   NextMethod("validate");
+  if (isPaired(this)) {
+    pairs <- getFilePairs(this);
+  }
 }, protected=TRUE)
 
 
@@ -252,6 +279,9 @@ setMethodS3("byName", "FastqDataSet", function(static, name, tags=NULL, organism
 
   res;
 }, static=TRUE)
+
+
+
 
 
 ############################################################################

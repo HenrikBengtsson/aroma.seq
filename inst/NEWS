@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.3.3 [2013-11-10]
+o Started to add support for custom directory structures.
+
+
 Version: 0.3.2 [2013-11-09]
 o Added static byName() for FastqDataSet, BamDataSet and SamDataSet.
 o Added FastaReferenceFile$byOrganism().
