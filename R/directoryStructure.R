@@ -9,7 +9,6 @@
 #   pattern <- "(.*)/(.*)/(.*)/(.*)/"
 #   replacement <- c(rootpath="\\1", dataset="\\2", organism="\\3", sample="\\4")
 
-
 setMethodS3("directoryStructure", "list", function(struct, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -68,13 +67,15 @@ setMethodS3("directoryStructure", "GenericDataFileSet", function(this, default=N
   parts;
 })
 
-setMethodS3("directoryStructure<-", "GenericDataFile", function(this, value) {
+setMethodS3("directoryStructure<-", "GenericDataFile", function(this, ..., value) {
+  if (missing(value)) { args <- list(...); value <- args[[length(args)]] };
   struct <- directoryStructure(value);
   this$.directoryStructure <- struct;
   invisible(this);
 })
 
-setMethodS3("directoryStructure<-", "GenericDataFileSet", function(this, value) {
+setMethodS3("directoryStructure<-", "GenericDataFileSet", function(this, ..., value) {
+  if (missing(value)) { args <- list(...); value <- args[[length(args)]] };
   struct <- directoryStructure(value);
   this$.directoryStructure <- struct;
   # Update all files accordingly

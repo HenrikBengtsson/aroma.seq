@@ -8,6 +8,8 @@ importFrom("R.oo", "uses")
 importFrom("R.oo", "newInstance")
 importFrom("R.methodsS3", "throw")
 importFrom("R.oo", "startupMessage")
+importFrom("methods", "setOldClass")
+importFrom("methods", "setMethod")
 
 ## Importing Class:es
 importFrom("R.oo", "BasicObject")
@@ -36,6 +38,8 @@ importFrom("R.filesets", "readDataFrame")
 importFrom("R.filesets", "setTags")
 
 ## Importing functions
+importFrom("R.cache", "loadCache")
+importFrom("R.cache", "saveCache")
 importFrom("R.filesets", "extractMatrix")
 importFrom("R.filesets", "fullname")
 importFrom("R.filesets", "GenericDataFile")

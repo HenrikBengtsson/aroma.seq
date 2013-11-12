@@ -103,6 +103,231 @@ setMethodS3("smoothRawCopyNumbers", "TotalCnBinnedCounting", function(this, rawC
 }, protected=TRUE)
 
 
+
+setMethodS3("getOutputDataSet", "TotalCnBinnedCounting", function(this, onMissing=c("drop", "NA", "error"), ...) {
+  # Argument 'onMissing':
+  onMissing <- match.arg(onMissing);
+
+  # For now, utilize what's already in 'aroma.cn'
+  res <- NextMethod("getOutputDataSet", onMissing="drop", .onUnknownArgs="ignore");
+
+  # Don't return NULL
+  if (is.null(res)) {
+    clazz <- getOutputFileSetClass(this);
+    res <- newInstance(clazz, list());
+  }
+
+  # Nothing more todo?
+  if (onMissing == "drop") {
+    return(res);
+  }
+
+  ds <- getInputDataSet(this);
+  if (length(ds) == 0L) {
+    return(res);
+  }
+
+  # Special case
+  if (length(res) == 0L) {
+    className <- getFileClass(res);
+    clazz <- Class$forName(className);
+    file <- newInstance(clazz, NA_character_, mustExist=FALSE);
+    res <- newInstance(res, list(file));
+  }
+
+  ## Order according to input data set
+  fullnames <- getFullNames(ds);
+  res <- extract(res, fullnames, onMissing="NA");
+
+  # Sanity check
+  stopifnot(length(res) == length(ds));
+
+  exists <- which(unlist(sapply(res, FUN=isFile)));
+  if (length(exists) < length(ds)) {
+    if (onMissing == "error") {
+      throw("Number of entries in output data set does not match input data set: ", length(exists), " != ", length(ds));
+    } else if (onMissing == "drop") {
+      res <- extract(res, exists);
+    }
+  }
+
+  # Sanity check
+  stopifnot(length(res) <= length(ds));
+
+  res;
+})
+
+setMethodS3("findFilesTodo", "TotalCnBinnedCounting", function(this, ...) {
+  res <- getOutputDataSet(this, onMissing="NA");
+  isFile <- unlist(sapply(res, FUN=isFile), use.names=FALSE);
+  todo <- !isFile;
+  todo <- which(todo);
+  if (length(todo) > 0L) {
+    ds <- getInputDataSet(this);
+    names(todo) <- getNames(ds[todo]);
+  }
+  todo;
+})
+
+
+setMethodS3("process", "TotalCnBinnedCounting", function(this, ..., verbose=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
+
+  if (isDone(this)) {
+    dsOut <- getOutputDataSet(this);
+    return(invisible(dsOut));
+  }
+
+  verbose && enter(verbose, "Smoothing copy-number towards set of target loci");
+
+  params <- getParameters(this);
+
+  verbose && print(verbose, "Input data set:");
+  ds <- getInputDataSet(this);
+  verbose && print(verbose, ds);
+
+  verbose && enter(verbose, "Identifying all target positions");
+  targetList <- getTargetPositions(this, ...);
+  nbrOfChromosomes <- length(targetList);
+  verbose && str(verbose, targetList);
+
+  targetUgp <- params$targetUgp;
+  platform <- getPlatform(targetUgp);
+  chipType <- getChipType(targetUgp);
+  nbrOfUnits <- nbrOfUnits(targetUgp);
+  # Not needed anymore
+  targetUgp <- NULL;
+  verbose && cat(verbose, "Total number of target units:", nbrOfUnits);
+  verbose && exit(verbose);
+
+  # Get Class object for the output files
+  clazz <- getOutputFileClass(this);
+
+  # Get the filename extension for output files
+  ext <- getOutputFileExtension(this);
+
+
+  nbrOfArrays <- length(ds);
+  for (kk in seq_along(ds)) {
+    df <- getFile(ds, kk);
+    verbose && enter(verbose, sprintf("Array %d ('%s') of %d",
+                                            kk, getName(df), nbrOfArrays));
+
+    path <- getPath(this);
+    fullname <- getFullName(df);
+    filename <- sprintf("%s%s", fullname, ext);
+    pathname <- Arguments$getReadablePathname(filename, path=path,
+                                                         mustExist=FALSE);
+    verbose && cat(verbose, "Output pathname: ", pathname);
+
+    if (isFile(pathname)) {
+      dfOut <- newInstance(clazz, filename=pathname);
+      if (nbrOfUnits != nbrOfUnits(dfOut)) {
+        throw("The number of units in existing output file does not match the number of units in the output file: ", nbrOfUnits, " != ", nbrOfUnits(dfOut));
+      }
+      verbose && cat(verbose, "Skipping already existing output file.");
+      verbose && exit(verbose);
+      next;
+    }
+
+    verbose && print(verbose, df);
+
+    # Preallocate vector
+    M <- rep(as.double(NA), times=nbrOfUnits);
+
+    verbose && enter(verbose, "Reading and smoothing input data");
+    for (cc in seq_along(targetList)) {
+      target <- targetList[[cc]];
+      chromosome <- target$chromosome;
+      chrTag <- sprintf("Chr%02d", chromosome);
+
+      verbose && enter(verbose, sprintf("Chromosome %d ('%s') of %d",
+                                               cc, chrTag, nbrOfChromosomes));
+      verbose && cat(verbose, "Extracting raw CNs:");
+      rawCNs <- extractRawCopyNumbers(df, chromosome=chromosome,
+                                                  verbose=less(verbose, 10));
+      verbose && print(verbose, rawCNs);
+      verbose && summary(verbose, rawCNs);
+
+      verbose && cat(verbose, "Smoothing CNs:");
+      verbose && cat(verbose, "Target positions:");
+      verbose && str(verbose, target$xOut);
+
+      smoothCNs <- smoothRawCopyNumbers(this, rawCNs=rawCNs,
+                                        target=target, verbose=verbose);
+
+      verbose && print(verbose, smoothCNs);
+      verbose && summary(verbose, smoothCNs);
+
+      M[target$units] <- getSignals(smoothCNs);
+      verbose && exit(verbose);
+    } # for (cc ...)
+
+    verbose && cat(verbose, "Smoothed CNs across all chromosomes:");
+    verbose && str(verbose, M);
+    verbose && summary(verbose, M);
+    verbose && printf(verbose, "Missing values: %d (%.1f%%) out of %d\n",
+                   sum(is.na(M)), 100*sum(is.na(M))/nbrOfUnits, nbrOfUnits);
+    verbose && exit(verbose);
+
+    verbose && enter(verbose, "Storing smoothed data");
+    verbose && cat(verbose, "Pathname: ", pathname);
+
+    params2 <- params;
+    params2[["targetUgp"]] <- NULL;
+    footer <- list(
+      sourceDataFile=list(
+        fullname=getFullName(df),
+        platform=getPlatform(df),
+        chipType=getChipType(df),
+        checksum=getChecksum(df)
+      ), parameters=list(
+        targetUgp=list(
+          fullname=getFullName(params$targetUgp),
+          platform=getPlatform(params$targetUgp),
+          chipType=getChipType(params$targetUgp),
+          checksum=getChecksum(params$targetUgp)
+        ),
+        params=params2
+      )
+    );
+
+    # Write to a temporary file
+    pathnameT <- pushTemporaryFile(pathname, verbose=verbose);
+
+    dfOut <- clazz$allocate(filename=pathnameT, nbrOfRows=nbrOfUnits,
+                            platform=platform, chipType=chipType,
+                            footer=footer, verbose=less(verbose, 50));
+
+    dfOut[,1] <- M;
+    # Not needed anymore
+    M <- NULL;
+
+    # Renaming temporary file
+    pathname <- popTemporaryFile(pathnameT, verbose=verbose);
+
+    verbose && exit(verbose); # Storing
+
+    verbose && exit(verbose);
+  } # for (kk ...)
+
+  verbose && exit(verbose);
+
+  dsOut <- getOutputDataSet(this);
+  invisible(dsOut);
+}) # process()
+
+
+
 setMethodS3("extractRawCopyNumbers", "BamDataFile", function(this, chromosome, ..., verbose=FALSE) {
   require("GenomicRanges") || throw("Package not loaded: GenomicRanges");
 

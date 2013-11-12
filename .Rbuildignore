@@ -1,6 +1,5 @@
 ^Makefile$
 ^incl
 ^NAMESPACE,.*.txt$
-^annotationData
-^bamData
-^fastqData
+^[a-z]*Data/
+

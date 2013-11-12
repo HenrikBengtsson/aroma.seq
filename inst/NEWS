@@ -1,6 +1,12 @@
 Package: aroma.seq
 ==================
 
+Version: 0.3.5 [2013-11-12]
+o Added readSeqFile() for FastqDataFile with system tests.
+o For now FASTA files should be non-compressed in order to
+  work will all third-party tools.
+
+
 Version: 0.3.4 [2013-11-11]
 o SPEEDUP: Now Bowtie2Alignment and BwaAlignment skips already processed
   items much faster and if all are done, even quicker.

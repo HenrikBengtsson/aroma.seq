@@ -48,7 +48,11 @@ TotalCnBinnedCounting(..., .reqSetClass="BamDataSet")
 
 \section{Fields and Methods}{
  \bold{Methods:}\cr
-\emph{No methods defined}.
+\tabular{rll}{
+ \tab \code{findFilesTodo} \tab  -\cr
+ \tab \code{getOutputDataSet} \tab  -\cr
+ \tab \code{process} \tab  -\cr
+}
 
 
  \bold{Methods inherited from TotalCnSmoothing}:\cr

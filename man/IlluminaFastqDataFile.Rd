@@ -63,7 +63,7 @@ IlluminaFastqDataFile(...)
 
 
  \bold{Methods inherited from FastqDataFile}:\cr
-as.character, directoryStructure, findMateFile, getCommonSeqWidth, getDefaultFullName, getDefaultSamReadGroup, getGeometry, getMateFile, getSamReadGroup, nbrOfSeqs, report, setSamReadGroup, writeSample
+as.character, directoryStructure, findMateFile, getCommonSeqWidth, getDefaultFullName, getDefaultSamReadGroup, getGeometry, getMateFile, getSamReadGroup, nbrOfSeqs, readFASTQSummary, readSeqFile, report, setSamReadGroup, writeSample
 
  \bold{Methods inherited from GenericDataFile}:\cr
 as.character, clone, compareChecksum, copyTo, equals, fromFile, getAttribute, getAttributes, getChecksum, getCreatedOn, getDefaultFullName, getExtension, getExtensionPattern, getFileSize, getFileType, getFilename, getFilenameExtension, getLastAccessedOn, getLastModifiedOn, getOutputExtension, getPath, getPathname, gunzip, gzip, hasBeenModified, isFile, isGzipped, readChecksum, renameTo, renameToUpperCaseExt, setAttribute, setAttributes, setAttributesBy, setAttributesByTags, setExtensionPattern, testAttributes, validate, validateChecksum, writeChecksum, directoryItem, directoryItems, directoryStructure, directoryStructure<-, getDataSetName, getOrganismName, getSampleName, getParentName

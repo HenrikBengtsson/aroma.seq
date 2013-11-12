@@ -53,6 +53,7 @@ FastqDataFile(...)
  \tab \code{getGeometry} \tab  -\cr
  \tab \code{getSamReadGroup} \tab  -\cr
  \tab \code{nbrOfSeqs} \tab  -\cr
+ \tab \code{readSeqFile} \tab  -\cr
  \tab \code{report} \tab  -\cr
  \tab \code{setSamReadGroup} \tab  -\cr
 }
