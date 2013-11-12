@@ -8,7 +8,7 @@
 <%
 library("aroma.seq");
 library("qrqc");
-library("R.cache");
+readSeqFile <- aroma.seq::readSeqFile;
 stopifnot(exists("rspArgs", mode="list"));
 %>
 
@@ -102,10 +102,10 @@ setOption("devEval/args/force", figForce);
 
 <%
 require("ggplot2") || throw("Package not loaded: ggplot2");
-xnbrOpts <- theme_text(colour="grey50", size=20, hjust=1, lineheight=0.9);
-ynbrOpts <- theme_text(colour="grey50", size=20, vjust=1, lineheight=0.9);
-xlabOpts <- theme_text(colour="black", size=28, hjust=0.5);
-ylabOpts <- theme_text(colour="black", size=28, vjust=0.5, angle=90);
+xnbrOpts <- element_text(colour="grey50", size=20, hjust=1, lineheight=0.9);
+ynbrOpts <- element_text(colour="grey50", size=20, vjust=1, lineheight=0.9);
+xlabOpts <- element_text(colour="black", size=28, hjust=0.5);
+ylabOpts <- element_text(colour="black", size=28, vjust=0.5, angle=90);
 
 labList <- list(
   CT    = expression(C[T]),
@@ -142,10 +142,10 @@ symbolList <- list(
 
 \section{Data}
 <%
+seed <- 0xBEEF;
 hash.prop <- 0.1;
 sampleName <- getFullName(df);
-pathnameFQ <- getPathname(df);
-qData <- readSeqFile(pathnameFQ, hash.prop=hash.prop);
+qData <- readSeqFile(df, hash.prop=hash.prop, seed=seed);
 nbrOfSeqs <- sum(qData@seq.lengths);
 stopifnot(nbrOfSeqs == nbrOfSeqs(df)); # Sanity check
 nbrOfUniqueSeqs <- length(qData@hash);
