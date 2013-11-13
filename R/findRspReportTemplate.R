@@ -23,7 +23,7 @@ setMethodS3("findRspReportTemplate", "Object", function(this, tags=NULL, type="(
 
   # Paths to search
   paths <- sapply(paths, FUN=function(path) {
-    parts <- strsplit(path, split="::")[[1]];
+    parts <- strsplit(path, split="::", fixed=TRUE)[[1]];
     if (length(parts) > 1L) {
       path <- system.file(parts[2L], package=parts[1L], mustWork=FALSE);
     }
@@ -37,7 +37,7 @@ setMethodS3("findRspReportTemplate", "Object", function(this, tags=NULL, type="(
   }
 
   # Filename pattern to search for
-  className <- class(this)[1];
+  className <- class(this)[1L];
   fullname <- paste(c(className, tags), collapse=",");
   pattern <- sprintf("^%s.*[.]%s[.]rsp$", fullname, type);
   verbose && cat(verbose, "Filename pattern: ", pattern);
