@@ -6,8 +6,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 <%
-library("aroma.seq");
-library("qrqc");
+R.utils::use("aroma.seq");
+R.utils::use("qrqc");
 readSeqFile <- aroma.seq::readSeqFile;
 stopifnot(exists("rspArgs", mode="list"));
 %>
@@ -101,7 +101,7 @@ setOption("devEval/args/force", figForce);
 \graphicspath{{<%=figPath%>/} {../<%=figPath%>/}}
 
 <%
-require("ggplot2") || throw("Package not loaded: ggplot2");
+R.utils::use("ggplot2");
 xnbrOpts <- element_text(colour="grey50", size=20, hjust=1, lineheight=0.9);
 ynbrOpts <- element_text(colour="grey50", size=20, vjust=1, lineheight=0.9);
 xlabOpts <- element_text(colour="black", size=28, hjust=0.5);
@@ -147,7 +147,6 @@ hash.prop <- 0.1;
 sampleName <- getFullName(df);
 qData <- readSeqFile(df, hash.prop=hash.prop, seed=seed);
 nbrOfSeqs <- sum(qData@seq.lengths);
-stopifnot(nbrOfSeqs == nbrOfSeqs(df)); # Sanity check
 nbrOfUniqueSeqs <- length(qData@hash);
 seqLenRange <- qrqc:::seqLengthRange(qData);
 %>
