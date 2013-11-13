@@ -71,6 +71,15 @@ $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCa
 
 }
 
+\section{Compression}{
+ Currently, the package only supports non-compressed FASTA files.
+}
+
+\section{Filenames}{
+ Currently, FASTA files with commas in their filenames should be avoided
+ because they are not supported by Bowtie2.
+}
+
 \author{Henrik Bengtsson}
 
 \seealso{

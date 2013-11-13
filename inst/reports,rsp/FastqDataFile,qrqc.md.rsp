@@ -1,0 +1,145 @@
+<%
+R.utils::use("aroma.seq");
+R.utils::use("qrqc");
+readSeqFile <- aroma.seq::readSeqFile;
+stopifnot(exists("rspArgs", mode="list"));
+%>
+<%-------------------------------------------------------------------
+  REPORT CONFIGURATION
+-------------------------------------------------------------------%>
+<% reportBody <- function(df, dataSet, Clim=c(0,5), Blim=c(0,1), figPath="figures", ..., figForce=FALSE) { %>
+<%
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Validate arguments
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Argument 'df':
+df <- Arguments$getInstanceOf(df, "FastqDataFile");
+stopifnot(isFile(df));
+
+# Argument 'dataSet':
+dataSet <- Arguments$getCharacter(dataSet);
+
+# Argument 'figPath':
+figPath <- Arguments$getWritablePath(figPath);
+
+# Argument 'figForce':
+figForce <- Arguments$getLogical(figForce);
+%>
+
+<%
+oFigField <- setOption("devEval/args/field", "pathname");
+on.exit({ setOption("devEval/args/field", oFigField) }, add=TRUE);
+oFigPath <- setOption("devEval/args/path", figPath);
+on.exit({ setOption("devEval/args/path", oFigPath) }, add=TRUE);
+oPar <- setOption("devNew/args/par", list(lwd=2));
+on.exit({ setOption("devNew/args/par", oPar) }, add=TRUE);
+%>
+
+<%
+dataSetLbl <- sprintf("Data set: %s\\\\", toLatex(dataSet));
+%>
+
+# Quality Report on '<%=toLatex(getFilename(df))%>'
+
+<%-------------------------------------------------------------------
+  GRAPHICS SETTINGS
+-------------------------------------------------------------------%>
+<%
+setOption("devEval/args/force", figForce);
+%>
+<%
+require("ggplot2") || throw("Package not loaded: ggplot2");
+xnbrOpts <- element_text(colour="grey50", size=20, hjust=1, lineheight=0.9);
+ynbrOpts <- element_text(colour="grey50", size=20, vjust=1, lineheight=0.9);
+xlabOpts <- element_text(colour="black", size=28, hjust=0.5);
+ylabOpts <- element_text(colour="black", size=28, vjust=0.5, angle=90);
+%>
+
+## Data
+<%
+seed <- 0xBEEF;
+hash.prop <- 0.1;
+sampleName <- getFullName(df);
+qData <- readSeqFile(df, hash.prop=hash.prop, seed=seed);
+nbrOfSeqs <- sum(qData@seq.lengths);
+stopifnot(nbrOfSeqs == nbrOfSeqs(df)); # Sanity check
+nbrOfUniqueSeqs <- length(qData@hash);
+seqLenRange <- qrqc:::seqLengthRange(qData);
+%>
+Filename: <%=toLatex(getFilename(df))%>  
+File size: <%=getFileSize(df)%>  
+MD5 checksum: <%=getChecksum(df)%>  
+Number of sequences: <%=nbrOfSeqs%>  
+Number of unique sequences: <%=nbrOfUniqueSeqs%>  
+Sequence Length Range: <%=sprintf("[%d,%d]",seqLenRange[1], seqLenRange[2])%>  
+Sample size: <%=sprintf("%.3g", 100*hash.prop)%>% of all available sequences.  
+
+## Quality summaries
+
+
+### Quality score by position
+![Legend:
+   10% and 90% quantiles (grey lines),
+   25% and 75% quartiles (orange lines),
+   median (blue point),
+   mean (green dash), and
+   lowess curve fit (purple line).
+](<%=toPNG(name=sampleName, tags="qrqc_qualPlot", tags, width=640, aspectRatio=0.7, {
+   gg <- qualPlot(qData);
+   print(gg);
+})%>)
+
+
+
+### Summaries by position
+![Nucleotide frequency by position](<%=toPNG(name=sampleName, tags="qrqc_basePlot-freq", tags, width=640, aspectRatio=0.7, {
+  gg <- basePlot(qData);
+  print(gg);
+})%>)
+
+![GC proportion by position](<%=toPNG(name=sampleName, tags="qrqc_gcPlot", tags, width=640, aspectRatio=0.7, {
+  gg <- gcPlot(qData);
+  print(gg);
+})%>)
+
+![Nucleotide proportion by position](<%=toPNG(name=sampleName, tags="qrqc_basePlot-prop", tags, width=640, aspectRatio=0.7, {
+  gg <- basePlot(qData, type="proportion");
+  print(gg);
+})%>)
+
+![Sequence-length distribution](<%=toPNG(name=sampleName, tags="qrqc_seqlenPlot", tags, width=640, aspectRatio=0.7, {
+  gg <- seqlenPlot(qData);
+  print(gg);
+})%>)
+
+
+<%--
+### Most common sequences
+<% if (qData@hashed) { %>
+\begin{itemize}
+<%  tbl <- qrqc:::makeHashTable(qData); %>
+<%  for (rr in seq_len(nrow(tbl))) { %>
+ \item <%=tbl[rr,"count"]%> (<%=sprintf("%.2f", tbl[rr,"proportion of total"])%>%) sequences: [<%=nchar(as.character(tbl[rr,"sequence"]))%> bases] <%=tbl[rr,"sequence"]%>
+<%  } # for (kk ...) %>
+\end{itemize}
+<% } %>
+--%>
+
+<%-------------------------------------------------------------------
+  SESSION INFORMATION
+-------------------------------------------------------------------%>
+## Session information
+```
+<%print(sessionInfo())%>
+```
+Report template by Henrik Bengtsson.
+<% } # reportBody() %>
+
+<%=do.call("reportBody", args=rspArgs)%> 
+
+
+<%-------------------------------------------------------------------
+  HISTORY:
+  2012-12-06
+  o Created. Adopted from the HTML report of qcqr v1.13.0.
+-------------------------------------------------------------------%>

@@ -240,3 +240,4 @@ getOutputDataSet.TotalCnBinnedCounting
 getSampleName.GenericDataFile process.TotalCnBinnedCounting
 updateDirectoryStructure
 updateDirectoryStructure.GenericDataFileSet
+findRspReportTemplate.FastqDataFile

@@ -2,6 +2,8 @@ Package: aroma.seq
 ==================
 
 Version: 0.3.5 [2013-11-12]
+o SPEEDUP: Now report() for FastqDataSet defaults to HTML reports,
+  and supports parallel processing (with a package system test).
 o Added readSeqFile() for FastqDataFile with system tests.
 o For now FASTA files should be non-compressed in order to
   work will all third-party tools.

@@ -1,4 +1,4 @@
-setMethodS3("report", "FastqDataFile", function(this, dataSet, ..., flavor="qrqc", outPath=".", verbose=FALSE) {
+setMethodS3("report", "FastqDataFile", function(this, dataSet, ..., flavor="qrqc", type="md", outPath=".", verbose=FALSE) {
   require("R.rsp") || throw("Package not loaded: R.rsp");
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -25,12 +25,17 @@ setMethodS3("report", "FastqDataFile", function(this, dataSet, ..., flavor="qrqc
   verbose && cat(verbose, "Data set: ", dataSet);
   verbose && print(verbose, this);
 
-  paths <- c("reports,rsp", system.file("reports,rsp", package="aroma.seq"));
-  pathname <- findRspReportTemplate(this, tags=flavor, paths=paths);
+  # Locate report template
+  pathname <- findRspReportTemplate(this, tags=flavor, type=type);
   if (length(pathname) == 0L) {
-    throw("Failed to locate report template.");
+    throw("Failed to locate report template for this flavor and type: ", paste(c(sQuote(flavor), sQuote(type)), collapse=" & "));
   }
   verbose && cat(verbose, "Report template (source): ", pathname);
+
+  # Output path
+  outPath <- file.path(outPath, getFullName(this));
+  outPath <- Arguments$getWritablePath(outPath);
+  verbose && cat(verbose, "Report path: ", outPath);
 
   # Rename template
   filename <- basename(pathname);
@@ -75,15 +80,33 @@ setMethodS3("report", "FastqDataSet", function(this, dataSet=getFullName(this), 
 
   verbose && enter(verbose, "Generating reports");
 
-  resList <- vector("list", length=length(this));
-  for (ii in seq_along(this)) {
-    df <- getFile(this, ii);
-    name <- getFullName(df);
-    verbose && enter(verbose, sprintf("File #%d ('%s') of %d", ii, name, length(this)));
+  resList <- dsApply(this, function(df, dataSet, flavor, outPath, ..., verbose=FALSE) {
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # Validate arguments
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # Argument 'df':
+    df <- Arguments$getInstanceOf(df, "FastqDataFile");
 
-    resList[[ii]] <- report(df, dataSet=dataSet, flavor=flavor, outPath=outPath, ..., verbose=less(verbose));
-    verbose && exit(verbose);
-  } # for (ii ...)
+    # Argument 'dataSet':
+    dataSet <- Arguments$getCharacter(dataSet);
+
+    # Argument 'outPath':
+    outPath <- Arguments$getWritablePath(outPath);
+
+    # Argument 'flavor':
+    flavor <- Arguments$getCharacter(flavor);
+
+    # Argument 'verbose':
+    verbose <- Arguments$getVerbose(verbose);
+    if (verbose) {
+      pushState(verbose);
+      on.exit(popState(verbose));
+    }
+
+    res <- report(df, dataSet=dataSet, flavor=flavor, outPath=outPath, ..., verbose=less(verbose));
+
+    res;
+  }, dataSet=dataSet, flavor=flavor, outPath=outPath, verbose=verbose)
 
   verbose && exit(verbose);
 
@@ -93,6 +116,8 @@ setMethodS3("report", "FastqDataSet", function(this, dataSet=getFullName(this), 
 
 ############################################################################
 # HISTORY:
+# 2013-11-12
+# o SPEEDUP: Now report() for FastqDataSet supports parallel processing.
 # 2013-07-18
 # o BUG FIX: Incorrectly named argument ('dataSetSet').
 # 2012-12-06
