@@ -431,7 +431,7 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
   verbose && cat(verbose, "Results:");
   verbose && str(verbose, res);
   verbose && cat(verbose, "Status:");
-  verbose && str(verbose, stats);
+  verbose && str(verbose, status);
   if (status != 0L) {
     throw("Failed to build Bowtie2 index. Return code: ", status);
   }

@@ -381,7 +381,7 @@ setMethodS3("replaceAllReadGroups", "BamDataFile", function(this, rg="*", ..., v
   verbose && cat(verbose, "Results:");
   verbose && str(verbose, res);
   verbose && cat(verbose, "Status:");
-  verbose && str(verbose, stats);
+  verbose && str(verbose, status);
 
   bf <- newInstance(this, pathnameD);
   buildIndex(bf, overwrite=TRUE, verbose=less(verbose, 10));

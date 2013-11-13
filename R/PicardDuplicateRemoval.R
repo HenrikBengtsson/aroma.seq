@@ -317,7 +317,7 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
         verbose && cat(verbose, "Results:");
         verbose && str(verbose, res);
         verbose && cat(verbose, "Status:");
-        verbose && str(verbose, stats);
+        verbose && str(verbose, status);
 
         verbose && exit(verbose);
       } # if (!isFile(pathnameD))

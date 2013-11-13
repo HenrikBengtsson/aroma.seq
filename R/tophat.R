@@ -249,7 +249,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1, reads2=N
   verbose && cat(verbose, "Results:");
   verbose && str(verbose, res);
   verbose && cat(verbose, "Status:");
-  verbose && str(verbose, stats);
+  verbose && str(verbose, status);
   verbose && exit(verbose);
 
   # Successful?
