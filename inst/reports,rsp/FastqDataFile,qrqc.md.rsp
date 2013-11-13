@@ -60,18 +60,17 @@ ylabOpts <- element_text(colour="black", size=28, vjust=0.5, angle=90);
 seed <- 0xBEEF;
 hash.prop <- 0.1; # Used for hash=TRUE and/or kmer=TRUE
 sampleName <- getFullName(df);
-qData <- readSeqFile(df, hash=FALSE, hash.prop=hash.prop, seed=seed);
+qData <- readSeqFile(df, hash=FALSE, hash.prop=hash.prop, seed=seed, cache=FALSE);
+saveObject(qData, file=sprintf("%s,FASTQSummary.Rbin", sampleName));
 nbrOfSeqs <- sum(qData@seq.lengths);
-nbrOfUniqueSeqs <- length(qData@hash);
 seqLenRange <- qrqc:::seqLengthRange(qData);
 %>
 Filename: <%=toLatex(getFilename(df))%>  
-File size: <%=getFileSize(df)%>  
-MD5 checksum: <%=getChecksum(df)%>  
+File size: <%=getFileSize(df, what="units")%> (<%=getFileSize(df)%> bytes)  
+File checksum: <%=getChecksum(df)%> (md5)  
 Number of sequences: <%=nbrOfSeqs%>  
-Number of unique sequences: <%=nbrOfUniqueSeqs%>  
 Sequence Length Range: <%=sprintf("[%d,%d]",seqLenRange[1], seqLenRange[2])%>  
-Sample size: <%=sprintf("%.3g", 100*hash.prop)%>% of all available sequences.  
+K-mer sample size: <%=sprintf("%.3g", 100*hash.prop)%>% of all available sequences.  
 
 ## Quality summaries
 
@@ -110,6 +109,13 @@ Sample size: <%=sprintf("%.3g", 100*hash.prop)%>% of all available sequences.
   gg <- seqlenPlot(qData);
   print(gg);
 })%>)
+
+![Kullback-Leibler (KL) divergence between the distribution of k-mers at a particular positions (for all positions) and the distribution of k-mers across all positions.](<%=toPNG(name=sampleName, tags="qrqc_kmerKLPlot", tags, width=640, aspectRatio=0.7, {
+  gg <- kmerKLPlot(qData);
+  print(gg);
+})%>)
+
+
 
 
 <%--
