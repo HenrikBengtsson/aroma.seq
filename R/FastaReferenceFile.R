@@ -427,11 +427,11 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
   # Build bowtie2 index set
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   res <- bowtie2Build(pathnameFA, prefix, ..., verbose=less(verbose, 5));
+  status <- attr(res, "status"); if (is.null(status)) status <- 0L;
+  verbose && cat(verbose, "Results:");
   verbose && str(verbose, res);
-
-  status <- attr(res, "status");
-  str(status);
-  if (is.null(status)) status <- 0L;
+  verbose && cat(verbose, "Status:");
+  verbose && str(verbose, stats);
   if (status != 0L) {
     throw("Failed to build Bowtie2 index. Return code: ", status);
   }

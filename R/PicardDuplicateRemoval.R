@@ -313,8 +313,11 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
 
         args$verbose <- less(verbose, 20);
         res <- do.call(systemPicard, args);
-        verbose && cat(verbose, "System call results:");
-        verbose && print(verbose, res);
+        status <- attr(res, "status"); if (is.null(status)) status <- 0L;
+        verbose && cat(verbose, "Results:");
+        verbose && str(verbose, res);
+        verbose && cat(verbose, "Status:");
+        verbose && str(verbose, stats);
 
         verbose && exit(verbose);
       } # if (!isFile(pathnameD))

@@ -377,6 +377,11 @@ setMethodS3("replaceAllReadGroups", "BamDataFile", function(this, rg="*", ..., v
   args$verbose <- less(verbose, 10);
 
   res <- do.call(systemPicard, args);
+  status <- attr(res, "status"); if (is.null(status)) status <- 0L;
+  verbose && cat(verbose, "Results:");
+  verbose && str(verbose, res);
+  verbose && cat(verbose, "Status:");
+  verbose && str(verbose, stats);
 
   bf <- newInstance(this, pathnameD);
   buildIndex(bf, overwrite=TRUE, verbose=less(verbose, 10));

@@ -245,12 +245,15 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1, reads2=N
   verbose && cat(verbose, "Arguments:");
   verbose && print(verbose, args);
   res <- do.call(systemTopHat, args=args);
-  verbose && cat(verbose, "Result:");
+  status <- attr(res, "status"); if (is.null(status)) status <- 0L;
+  verbose && cat(verbose, "Results:");
   verbose && str(verbose, res);
+  verbose && cat(verbose, "Status:");
+  verbose && str(verbose, stats);
   verbose && exit(verbose);
 
   # Successful?
-  if (res == 0L) {
+  if (status == 0L) {
     # If we get this far, assume it was all successful.
     # Allow the temporary output path to be renamed to the
     # intended output path instead of the "error" one.
