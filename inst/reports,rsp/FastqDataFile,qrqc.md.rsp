@@ -58,9 +58,9 @@ ylabOpts <- element_text(colour="black", size=28, vjust=0.5, angle=90);
 ## Data
 <%
 seed <- 0xBEEF;
-hash.prop <- 0.1;
+hash.prop <- 0.1; # Used for hash=TRUE and/or kmer=TRUE
 sampleName <- getFullName(df);
-qData <- readSeqFile(df, hash.prop=hash.prop, seed=seed);
+qData <- readSeqFile(df, hash=FALSE, hash.prop=hash.prop, seed=seed);
 nbrOfSeqs <- sum(qData@seq.lengths);
 nbrOfUniqueSeqs <- length(qData@hash);
 seqLenRange <- qrqc:::seqLengthRange(qData);

@@ -25,6 +25,11 @@ if (fullTest) {
   dataB <- readSeqFile(fq, seed=0xBEEF, cache=FALSE)
   stopifnot(all.equal(dataB, dataA))
 
+  # Summarize without any sampling (hash=FALSE + kmer=FALSE)
+  dataA <- readSeqFile(fq, hash=FALSE, kmer=FALSE, cache=FALSE)
+  dataB <- readSeqFile(fq, hash=FALSE, kmer=FALSE, cache=FALSE)
+  stopifnot(all.equal(dataB, dataA))
+
   # Plotting
   data <- readSeqFile(fq, seed=0xBEEF)
   gg <- basePlot(data)
