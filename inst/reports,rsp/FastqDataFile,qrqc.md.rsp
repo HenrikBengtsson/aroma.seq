@@ -36,10 +36,10 @@ on.exit({ setOption("devNew/args/par", oPar) }, add=TRUE);
 %>
 
 <%
-dataSetLbl <- sprintf("Data set: %s\\\\", toLatex(dataSet));
+dataSetLbl <- sprintf("Data set: %s\\\\", dataSet);
 %>
 
-# Quality Report on '<%=toLatex(getFilename(df))%>'
+# Quality Report on '<%=getFilename(df)%>'
 
 <%-------------------------------------------------------------------
   GRAPHICS SETTINGS
@@ -65,7 +65,7 @@ saveObject(qData, file=sprintf("%s,FASTQSummary.Rbin", sampleName));
 nbrOfSeqs <- sum(qData@seq.lengths);
 seqLenRange <- qrqc:::seqLengthRange(qData);
 %>
-Filename: <%=toLatex(getFilename(df))%>  
+Filename: <%=getFilename(df)%>  
 File size: <%=getFileSize(df, what="units")%> (<%=getFileSize(df)%> bytes)  
 File checksum: <%=getChecksum(df)%> (md5)  
 Number of sequences: <%=nbrOfSeqs%>  
