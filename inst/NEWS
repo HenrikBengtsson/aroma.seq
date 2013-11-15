@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.3.6 [2013-11-14]
+o Added sortByPosition() for BamDataFile/BamDataSet.
+
+
 Version: 0.3.5 [2013-11-12]
 o SPEEDUP: Now report() for FastqDataSet defaults to HTML reports,
   and supports parallel processing (with a package system test).
