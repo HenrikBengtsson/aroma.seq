@@ -74,6 +74,7 @@ BamDataFile(...)
  \tab \code{readReadPositions} \tab  -\cr
  \tab \code{replaceAllReadGroups} \tab  -\cr
  \tab \code{sort} \tab  -\cr
+ \tab \code{sortByPosition} \tab  -\cr
 }
 
 

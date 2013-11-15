@@ -55,6 +55,7 @@ BamDataSet(files=NULL, ...)
  \tab \code{findByName} \tab  -\cr
  \tab \code{getChipType} \tab  -\cr
  \tab \code{getPlatform} \tab  -\cr
+ \tab \code{sortByPosition} \tab  -\cr
 }
 
 
