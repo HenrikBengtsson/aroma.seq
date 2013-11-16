@@ -162,7 +162,7 @@ setMethodS3("getName", "AromaSeqTransform", function(this, ...) {
 
 
 setMethodS3("getAsteriskTags", "AromaSeqTransform", function(this, flavor=FALSE, collapse=NULL, ...) {
-  tags <- getAcronym(this, case="upper");
+  tags <- getAcronym(this);
   if (flavor) tags <- c(tags, getFlavor(this));
   tags <- paste(tags, collapse=collapse);
   tags;
