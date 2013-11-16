@@ -4,6 +4,9 @@ Package: aroma.seq
 Version: 0.3.7 [2013-11-15]
 o SPEEDUP: Now PicardDuplicateRemoval skips already processed
   items much faster and if all are done, even quicker.
+o Now parallel processing via BiocParallel and BatchJobs is
+  automatically enabled if a .BatchJobs.R file exists in the
+  current working directory when 'aroma.seq' is attached.
 
 
 Version: 0.3.6 [2013-11-14]

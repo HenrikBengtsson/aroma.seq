@@ -7,11 +7,24 @@
 .onAttach <- function(libname, pkgname) {
   pkg <- get(pkgname, envir=getNamespace(pkgname));
 
+  msg <- c(
+    'During developing phase, install/update using:',
+    ' source("http://aroma-project.org/hbLite.R")',
+    ' hbInstall("aroma.seq", devel=TRUE)'
+  );
+
+  # Automate parallel processing via BatchJobs?
+  if (file_test("-f", ".BatchJobs.R")) {
+    setOption(aromaSettings, "devel/parallel", "BiocParallel::BatchJobs");
+    msg <- c(msg,
+      '',
+      'Parallel processing enabled (via \'./.BatchJobs.R\')'
+    );
+  }
+
   startupMessage(pkg, '\n\n',
-    '-------------------------------------------------\n',
-    ' During developing phase, install/update using:\n',
-    '   source("http://aroma-project.org/hbLite.R")\n',
-    '   hbInstall("aroma.seq", devel=TRUE)\n',
-    '-------------------------------------------------\n'
+    '-------------------- aroma.seq --------------------\n',
+    paste(c(msg, ''), collapse="\n"),
+    '---------------------------------------------------\n'
   );
 } # .onAttach()
