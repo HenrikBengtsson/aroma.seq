@@ -203,17 +203,55 @@ setMethodS3("nbrOfFiles", "PicardDuplicateRemoval", function(this, ...) {
 })
 
 
-setMethodS3("getOutputDataSet", "PicardDuplicateRemoval", function(this, ...) {
+setMethodS3("findFilesTodo", "PicardDuplicateRemoval", function(this, ...) {
+  res <- getOutputDataSet(this, onMissing="NA");
+  isFile <- unlist(sapply(res, FUN=isFile), use.names=FALSE);
+  todo <- !isFile;
+  todo <- which(todo);
+  if (length(todo) > 0L) {
+    ds <- getInputDataSet(this);
+    names(todo) <- getNames(ds[todo]);
+  }
+  todo;
+})
+
+
+setMethodS3("getOutputDataSet", "PicardDuplicateRemoval", function(this, onMissing=c("drop", "NA", "error"), ...) {
+  # Argument 'onMissing':
+  onMissing <- match.arg(onMissing);
+
+  ds <- getInputDataSet(this);
+
   ## Find all existing output data files
   path <- getPath(this);
-  res <- BamDataSet$byPath(path, ...);
+  bams <- BamDataSet$byPath(path, ...);
 
-  ## Keep only those samples that exists in the input data set
-  ds <- getInputDataSet(this);
-  res <- extract(res, getFullNames(ds), onMissing="drop");
+  # Special case
+  if (length(bams) == 0L) {
+    bam <- BamDataFile(NA_character_, mustExist=FALSE);
+    bams <- newInstance(bams, list(bam));
+  }
 
-  ## TODO: Assert completeness
-  res;
+  ## Order according to input data set
+  fullnames <- getFullNames(ds);
+  bams <- extract(bams, fullnames, onMissing="NA");
+
+  # Sanity check
+  stopifnot(length(bams) == length(ds));
+
+  exists <- which(unlist(sapply(bams, FUN=isFile)));
+  if (length(exists) < length(ds)) {
+    if (onMissing == "error") {
+      throw("Number of entries in output data set does not match input data set: ", length(exists), " != ", length(ds));
+    } else if (onMissing == "drop") {
+      bams <- extract(bams, exists);
+    }
+  }
+
+  # Sanity check
+  stopifnot(length(bams) <= length(ds));
+
+  bams;
 })
 
 
@@ -235,6 +273,19 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
   verbose && cat(verbose, "Input data set:");
   verbose && print(verbose, ds);
 
+  if (force) {
+    todo <- seq_along(ds);
+  } else {
+    todo <- findFilesTodo(this, verbose=less(verbose, 1));
+    # Already done?
+    if (length(todo) == 0L) {
+      verbose && cat(verbose, "Already done. Skipping.");
+      res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1));
+      verbose && exit(verbose);
+      return(invisible(res));
+    }
+  }
+
   nbrOfFiles <- nbrOfFiles(this);
   verbose && cat(verbose, "Number of files: ", nbrOfFiles);
 
@@ -246,7 +297,7 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Apply aligner to each of the FASTQ files
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  dsApply(ds, FUN=function(df, params, path, ...., skip=TRUE, verbose=FALSE) {
+  dsApply(ds[todo], FUN=function(df, params, path, ...., skip=TRUE, verbose=FALSE) {
     R.utils::use("R.utils, aroma.seq");
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -291,7 +342,7 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # (a) Filter via Picard
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      if (!isFile(pathnameD)) {
+      if (!skip || !isFile(pathnameD)) {
         verbose && enter(verbose, "Calling Picard MarkDuplicates");
 
         pathnameM <- gsub("[.]bam$", ",picard,MarkDuplicates,metrics.log", pathnameD);
@@ -328,9 +379,9 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
       bf <- BamDataFile(pathnameD);
       verbose && print(verbose, bf);
 
-      if (!hasIndex(bf)) {
+      if (!skip || !hasIndex(bf)) {
         verbose && enter(verbose, "Creating BAM index");
-        bfi <- buildIndex(bf, verbose=less(verbose, 10));
+        bfi <- buildIndex(bf, skip=skip, overwrite=!skip, verbose=less(verbose, 10));
         verbose && exit(verbose);
       }
     } # if (done)
@@ -338,9 +389,10 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
     verbose && exit(verbose);
 
     invisible(list(pathnameD=pathnameD, pathnameDI=pathnameDI));
-  }, params=params, path=getPath(this), skip=skip, verbose=verbose) # dsApply()
+  }, params=params, path=getPath(this), skip=!force, verbose=verbose) # dsApply()
 
-  res <- getOutputDataSet(this);
+  # At this point, all files should have been processed
+  res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1));
 
   verbose && exit(verbose);
 
@@ -351,6 +403,9 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
 
 ############################################################################
 # HISTORY:
+# 2013-11-15
+# o Added findFilesTodo().
+# o Added argument 'onMissing' to getOutputDataSet().
 # 2013-09-03
 # o Now process() for PicardDuplicateRemoval utilizes dsApply().
 # 2012-11-26

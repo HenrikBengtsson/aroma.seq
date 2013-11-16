@@ -1,6 +1,11 @@
 Package: aroma.seq
 ==================
 
+Version: 0.3.7 [2013-11-15]
+o SPEEDUP: Now PicardDuplicateRemoval skips already processed
+  items much faster and if all are done, even quicker.
+
+
 Version: 0.3.6 [2013-11-14]
 o Added sortByPosition() for BamDataFile/BamDataSet.
 
@@ -14,7 +19,7 @@ o For now FASTA files should be non-compressed in order to
 
 
 Version: 0.3.4 [2013-11-11]
-o SPEEDUP: Now Bowtie2Alignment and BwaAlignment skips already processed
+o SPEEDUP: Now Bowtie2Alignment and BwaAlignment skip already processed
   items much faster and if all are done, even quicker.
 o BUG FIX: BamDataSet$byPath() would include also SAM files.
 

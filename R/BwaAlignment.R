@@ -116,13 +116,17 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
   verbose && cat(verbose, "Input data set:");
   verbose && print(verbose, ds);
 
-  # Already done?
-  todo <- findFilesTodo(this, verbose=less(verbose, 1));
-  if (!force && length(todo) == 0L) {
-    verbose && cat(verbose, "Already done. Skipping.");
-    res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1));
-    verbose && exit(verbose);
-    return(invisible(res));
+  if (force) {
+    todo <- seq_along(ds);
+  } else {
+    todo <- findFilesTodo(this, verbose=less(verbose, 1));
+    # Already done?
+    if (length(todo) == 0L) {
+      verbose && cat(verbose, "Already done. Skipping.");
+      res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1));
+      verbose && exit(verbose);
+      return(invisible(res));
+    }
   }
 
   is <- getIndexSet(this);
