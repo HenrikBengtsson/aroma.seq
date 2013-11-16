@@ -10,7 +10,6 @@ readSeqLengths.FastaReferenceFile validate.FastqDataSet
 as.character.BamDataFile
 getFlavor
 getHeader.BamDataFile getInputDataSet
-getOutputDataSet
 getReferenceFile
 getRootPath
 getTargetLengths getTargetLengths.BamDataFile getTargetNames
@@ -25,7 +24,7 @@ validate.BamDataSet
 as.character.Bowtie2Alignment bDebugSystemBowtie2Build
 getAsteriskTags.Bowtie2Alignment getFlavor.Bowtie2Alignment
 getFullName.Bowtie2Alignment getInputDataSet.Bowtie2Alignment
-getName.Bowtie2Alignment getOutputDataSet.Bowtie2Alignment
+getName.Bowtie2Alignment 
 getPath.Bowtie2Alignment getReferenceFile.Bowtie2Alignment
 getRootPath.Bowtie2Alignment getTags.Bowtie2Alignment
 nbrOfFiles.Bowtie2Alignment
@@ -40,7 +39,7 @@ getFullName.BwaAlignment getHeader.SamDataFile getIndexPrefix
 getIndexPrefix.BwaIndexFile getIndexPrefix.BwaIndexSet
 getIndexSet getIndexSet.BwaAlignment
 getInputDataSet.BwaAlignment getName.BwaAlignment
-getOutputDataSet.BwaAlignment getPath.BwaAlignment
+ getPath.BwaAlignment
 getRootPath.BwaAlignment getTags.BwaAlignment
 getTargetLengths.SamDataFile getTargetNames.SamDataFile
 getTargets.SamDataFile getTotalTargetLength.SamDataFile
@@ -98,7 +97,6 @@ getDefaultSamReadGroup.IlluminaFastqDataFile
 getFlavor.AbstractAlignment getFullName.AbstractAlignment
 getIndexSet.AbstractAlignment getInputDataSet.AbstractAlignment
 getName.AbstractAlignment getOptionalArguments.AbstractAlignment
-getOutputDataSet.AbstractAlignment
 getParameterSets.AbstractAlignment
 getPath.AbstractAlignment
 getRootPath.AbstractAlignment getSamReadGroup
@@ -117,7 +115,6 @@ getFullName.PicardDuplicateRemoval
 getInputDataSet.PicardDuplicateRemoval
 getName.PicardDuplicateRemoval
 getOptionalArguments.PicardDuplicateRemoval
-getOutputDataSet.PicardDuplicateRemoval
 getParameterSets.PicardDuplicateRemoval
 getPath.PicardDuplicateRemoval getReadDirection
 getReadDirection.IlluminaFastqDataFile
@@ -185,7 +182,7 @@ getOutputRootPath.FastqDownsampler getSampleSize
 getSampleSize.FastqDownsampler process.FastqDownsampler
 writeSample writeSample.FastqDataFile
   as.character.FastqDownsampler getAsteriskTags.FastqDownsampler
-  getOutputDataSet.FastqDownsampler getPath.FastqDownsampler
+  getPath.FastqDownsampler
   getTags.FastqDownsampler
 
 as.character.FastqDataSet byPath.FastaReferenceSet
@@ -203,7 +200,6 @@ getBatchJobRegistryIdByMethod
 getBatchJobRegistryIdByMethod.GenericDataFileSet
 getBatchJobRegistryIdByMethod.default
 
-getOutputDataSet.TopHat2Alignment
 getParameters.TopHat2Alignment
 getRootPath.TopHat2Alignment
 process.TopHat2Alignment
@@ -231,12 +227,10 @@ directoryStructure.SamDataFile directoryStructure.SamDataSet
 directoryStructure.character directoryStructure.list
 directoryStructure<- directoryStructure<-.GenericDataFile
 directoryStructure<-.GenericDataFileSet
-findFilesTodo.AbstractAlignment
-findFilesTodo.TotalCnBinnedCounting getDataSetName
+getDataSetName
 getDataSetName.GenericDataFile getOrganism.AbstractAlignment
 getOrganism.AbstractIndexSet getOrganism.FastaReferenceFile
 getOrganismName getOrganismName.GenericDataFile
-getOutputDataSet.TotalCnBinnedCounting
 getSampleName.GenericDataFile process.TotalCnBinnedCounting
 updateDirectoryStructure
 updateDirectoryStructure.GenericDataFileSet

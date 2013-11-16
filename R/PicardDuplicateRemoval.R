@@ -6,7 +6,13 @@
 # \description{
 #  @classhierarchy
 #
-#  ...
+#  This method \emph{flags} reads that are aligned to more than one locus,
+#  which is done using Picard's 'MarkDuplicates' method [1].
+#
+#  Note that it is assumed that the input BAM files are already sorted,
+#  which also means that it can be assumed that the output BAM files
+#  are sorted.  As with all other methods that outputs BAM files,
+#  this methods index all outputted BAM files.
 # }
 #
 # @synopsis
@@ -15,11 +21,20 @@
 #  \item{dataSet}{An @see "BamDataSet".}
 #  \item{tags}{Additional tags for the output data sets.}
 #  \item{ASSUME_SORTED, VALIDATION_STRINGENCY, ...}{
-#    Additional Picard MarkDuplicates arguments.}
+#    Additional arguments passed to Picard MarkDuplicates.}
 # }
 #
 # \section{Fields and Methods}{
 #  @allmethods "public"
+# }
+#
+# \section{Benchmarking}{
+#  As a very rough guideline, a 1.0GB BAM file takes
+#  about 10-15 minutes to process using this method.
+# }
+#
+# \references{
+#  [1] Picard, \url{http://picard.sourceforge.net/}\cr
 # }
 #
 # @author "HB"
@@ -203,58 +218,6 @@ setMethodS3("nbrOfFiles", "PicardDuplicateRemoval", function(this, ...) {
 })
 
 
-setMethodS3("findFilesTodo", "PicardDuplicateRemoval", function(this, ...) {
-  res <- getOutputDataSet(this, onMissing="NA");
-  isFile <- unlist(sapply(res, FUN=isFile), use.names=FALSE);
-  todo <- !isFile;
-  todo <- which(todo);
-  if (length(todo) > 0L) {
-    ds <- getInputDataSet(this);
-    names(todo) <- getNames(ds[todo]);
-  }
-  todo;
-})
-
-
-setMethodS3("getOutputDataSet", "PicardDuplicateRemoval", function(this, onMissing=c("drop", "NA", "error"), ...) {
-  # Argument 'onMissing':
-  onMissing <- match.arg(onMissing);
-
-  ds <- getInputDataSet(this);
-
-  ## Find all existing output data files
-  path <- getPath(this);
-  bams <- BamDataSet$byPath(path, ...);
-
-  # Special case
-  if (length(bams) == 0L) {
-    bam <- BamDataFile(NA_character_, mustExist=FALSE);
-    bams <- newInstance(bams, list(bam));
-  }
-
-  ## Order according to input data set
-  fullnames <- getFullNames(ds);
-  bams <- extract(bams, fullnames, onMissing="NA");
-
-  # Sanity check
-  stopifnot(length(bams) == length(ds));
-
-  exists <- which(unlist(sapply(bams, FUN=isFile)));
-  if (length(exists) < length(ds)) {
-    if (onMissing == "error") {
-      throw("Number of entries in output data set does not match input data set: ", length(exists), " != ", length(ds));
-    } else if (onMissing == "drop") {
-      bams <- extract(bams, exists);
-    }
-  }
-
-  # Sanity check
-  stopifnot(length(bams) <= length(ds));
-
-  bams;
-})
-
-
 
 setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, force=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -404,7 +367,6 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
 ############################################################################
 # HISTORY:
 # 2013-11-15
-# o Added findFilesTodo().
 # o Added argument 'onMissing' to getOutputDataSet().
 # 2013-09-03
 # o Now process() for PicardDuplicateRemoval utilizes dsApply().

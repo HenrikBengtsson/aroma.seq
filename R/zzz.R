@@ -14,7 +14,7 @@
   );
 
   # Automate parallel processing via BatchJobs?
-  if (file_test("-f", ".BatchJobs.R")) {
+  if (utils::file_test("-f", ".BatchJobs.R")) {
     setOption(aromaSettings, "devel/parallel", "BiocParallel::BatchJobs");
     msg <- c(msg,
       '',

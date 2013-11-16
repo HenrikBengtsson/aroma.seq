@@ -36,7 +36,6 @@
 \alias{getFlavor}
 \alias{getHeader.BamDataFile}
 \alias{getInputDataSet}
-\alias{getOutputDataSet}
 \alias{getReferenceFile}
 \alias{getRootPath}
 \alias{getTargetLengths}
@@ -67,7 +66,6 @@
 \alias{getFullName.Bowtie2Alignment}
 \alias{getInputDataSet.Bowtie2Alignment}
 \alias{getName.Bowtie2Alignment}
-\alias{getOutputDataSet.Bowtie2Alignment}
 \alias{getPath.Bowtie2Alignment}
 \alias{getReferenceFile.Bowtie2Alignment}
 \alias{getRootPath.Bowtie2Alignment}
@@ -93,7 +91,6 @@
 \alias{getIndexSet.BwaAlignment}
 \alias{getInputDataSet.BwaAlignment}
 \alias{getName.BwaAlignment}
-\alias{getOutputDataSet.BwaAlignment}
 \alias{getPath.BwaAlignment}
 \alias{getRootPath.BwaAlignment}
 \alias{getTags.BwaAlignment}
@@ -206,7 +203,6 @@
 \alias{getInputDataSet.AbstractAlignment}
 \alias{getName.AbstractAlignment}
 \alias{getOptionalArguments.AbstractAlignment}
-\alias{getOutputDataSet.AbstractAlignment}
 \alias{getParameterSets.AbstractAlignment}
 \alias{getPath.AbstractAlignment}
 \alias{getRootPath.AbstractAlignment}
@@ -235,7 +231,6 @@
 \alias{getInputDataSet.PicardDuplicateRemoval}
 \alias{getName.PicardDuplicateRemoval}
 \alias{getOptionalArguments.PicardDuplicateRemoval}
-\alias{getOutputDataSet.PicardDuplicateRemoval}
 \alias{getParameterSets.PicardDuplicateRemoval}
 \alias{getPath.PicardDuplicateRemoval}
 \alias{getReadDirection}
@@ -343,7 +338,6 @@
 \alias{writeSample.FastqDataFile}
 \alias{as.character.FastqDownsampler}
 \alias{getAsteriskTags.FastqDownsampler}
-\alias{getOutputDataSet.FastqDownsampler}
 \alias{getPath.FastqDownsampler}
 \alias{getTags.FastqDownsampler}
 \alias{as.character.FastqDataSet}
@@ -367,7 +361,6 @@
 \alias{getBatchJobRegistryIdByMethod}
 \alias{getBatchJobRegistryIdByMethod.GenericDataFileSet}
 \alias{getBatchJobRegistryIdByMethod.default}
-\alias{getOutputDataSet.TopHat2Alignment}
 \alias{getParameters.TopHat2Alignment}
 \alias{getRootPath.TopHat2Alignment}
 \alias{process.TopHat2Alignment}
@@ -418,8 +411,6 @@
 \alias{directoryStructure<-}
 \alias{directoryStructure<-.GenericDataFile}
 \alias{directoryStructure<-.GenericDataFileSet}
-\alias{findFilesTodo.AbstractAlignment}
-\alias{findFilesTodo.TotalCnBinnedCounting}
 \alias{getDataSetName}
 \alias{getDataSetName.GenericDataFile}
 \alias{getOrganism.AbstractAlignment}
@@ -427,7 +418,6 @@
 \alias{getOrganism.FastaReferenceFile}
 \alias{getOrganismName}
 \alias{getOrganismName.GenericDataFile}
-\alias{getOutputDataSet.TotalCnBinnedCounting}
 \alias{getSampleName.GenericDataFile}
 \alias{process.TotalCnBinnedCounting}
 \alias{updateDirectoryStructure}

@@ -241,67 +241,12 @@ setMethodS3("nbrOfFiles", "AbstractAlignment", function(this, ...) {
 })
 
 
-setMethodS3("getOutputDataSet", "AbstractAlignment", function(this, onMissing=c("drop", "NA", "error"), ...) {
-  # Argument 'onMissing':
-  onMissing <- match.arg(onMissing);
-
-
-  ds <- getInputDataSet(this);
-
-  ## Find all existing output data files
-  path <- getPath(this);
-  bams <- BamDataSet$byPath(path, ...);
-
-  # Special case
-  if (length(bams) == 0L) {
-    bam <- BamDataFile(NA_character_, mustExist=FALSE);
-    bams <- newInstance(bams, list(bam));
-  }
-
-  ## Order according to input data set
-  fullnames <- getFullNames(ds);
-  bams <- extract(bams, fullnames, onMissing="NA");
-
-  # Sanity check
-  stopifnot(length(bams) == length(ds));
-
-  exists <- which(unlist(sapply(bams, FUN=isFile)));
-  if (length(exists) < length(ds)) {
-    if (onMissing == "error") {
-      throw("Number of entries in output data set does not match input data set: ", length(exists), " != ", length(ds));
-    } else if (onMissing == "drop") {
-      bams <- extract(bams, exists);
-    }
-  }
-
-  # Sanity check
-  stopifnot(length(bams) <= length(ds));
-
-  bams;
-})
-
-
-setMethodS3("findFilesTodo", "AbstractAlignment", function(this, ...) {
-  res <- getOutputDataSet(this, onMissing="NA");
-  isFile <- unlist(sapply(res, FUN=isFile), use.names=FALSE);
-  todo <- !isFile;
-  todo <- which(todo);
-  if (length(todo) > 0L) {
-    ds <- getInputDataSet(this);
-    names(todo) <- getNames(ds[todo]);
-  }
-  todo;
-})
-
 
 setMethodS3("process", "AbstractAlignment", abstract=TRUE);
 
 
 ############################################################################
 # HISTORY:
-# 2013-11-11
-# o Added findFilesTodo().
-# o Added argument 'onMissing' to getOutputDataSet().
 # 2013-11-09
 # o Now getPath() for AbstractAlignment contains the organism.
 # 2013-08-24
@@ -309,9 +254,6 @@ setMethodS3("process", "AbstractAlignment", abstract=TRUE);
 #   getAsteriskTags() aware of it.
 # 2013-07-18
 # o Now getRootPath() for AbstractAlignment returns "bamData".
-# 2012-11-26
-# o BUG FIX: getOutputDataSet() would return a data set with "missing"
-#   files, if not complete.  Now it only returns the existing files.
 # 2012-10-01
 # o Created; extracted from BwaAlignment.R.
 ############################################################################

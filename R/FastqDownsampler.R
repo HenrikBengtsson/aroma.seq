@@ -140,18 +140,6 @@ setMethodS3("getPath", "FastqDownsampler", function(this, ...) {
 
 
 
-setMethodS3("getOutputDataSet", "FastqDownsampler", function(this, ...) {
-  ds <- getInputDataSet(this);
-  path <- getPath(this);
-  res <- byPath(ds, path, ...);
-  names <- getFullNames(ds);
-  idxs <- indexOf(res, names);
-  res <- extract(res, idxs, onMissing="NA");
-  res;
-}, protected=TRUE)
-
-
-
 setMethodS3("process", "FastqDownsampler", function(this, ..., force=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
