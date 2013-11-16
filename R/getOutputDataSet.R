@@ -109,10 +109,12 @@ setMethodS3("getOutputDataSet", "TopHat2Alignment", function(this, onMissing=c("
 
   ## Order according to input data set
   # Get the sample names in the found output set
-  sampleNamesExpected <- getSampleNames(this);
-  sampleNames <- getPathnames(bams);
-  sampleNames <- basename(dirname(sampleNames));
-  idxs <- match(sampleNamesExpected, sampleNames);
+  sampleNames <- getSampleNames(this);
+  sampleNamesB <- getPathnames(bams);
+  # Workaround: getPathnames() returns NULL, not character(0L), when empty
+  if (length(sampleNamesB) == 0L) sampleNamesB <- character(0L);
+  sampleNamesB <- basename(dirname(sampleNamesB));
+  idxs <- match(sampleNames, sampleNamesB);
   bams <- extract(bams, idxs, onMissing=onMissing);
 
   bams;
