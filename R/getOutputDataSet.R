@@ -12,13 +12,20 @@
 #   @get "title".
 # }
 #
-# @synopsis
+# \usage{
+#  @usage getOutputDataSet,AbstractAlignment
+#  @usage getOutputDataSet,FastqDownsampler
+#  @usage getOutputDataSet,PicardDuplicateRemoval
+#  @usage getOutputDataSet,TopHat2Alignment
+#  @usage getOutputDataSet,TotalCnBinnedCounting
+# }
 #
 # \arguments{
 #  \item{onMissing}{A @character string specifying how non-processed files
 #   should be returned.
 #   If \code{"drop"}, they are ignored and not part of the returned
 #   data set.
+#   If \code{"dropall"}, @NULL is returned unless all files are processed.
 #   If \code{"NA"}, they are represented as a "missing" file.
 #   If \code{"error"}, they are not accepted and an exception is thrown.
 #  }
@@ -27,7 +34,9 @@
 #
 # \value{
 #   Returns the output data set containing the same number of files as
-#   the input data set, except in the case where \code{onMissing="drop"}.
+#   the input data set, except in the case where argument \code{onMissing}
+#   is \code{"drop"} or \code{"dropall"} and one or more files is not
+#   processed.
 # }
 #
 # \seealso{
@@ -43,48 +52,28 @@ setMethodS3("getOutputDataSet", "AbstractAlignment", function(this, onMissing=c(
   onMissing <- match.arg(onMissing);
 
 
-  ds <- getInputDataSet(this);
-
   ## Find all existing output data files
   path <- getPath(this);
   bams <- BamDataSet$byPath(path, ...);
 
-  # Special case
-  if (length(bams) == 0L) {
-    bam <- BamDataFile(NA_character_, mustExist=FALSE);
-    bams <- newInstance(bams, list(bam));
-  }
-
   ## Order according to input data set
+  ds <- getInputDataSet(this);
   fullnames <- getFullNames(ds);
-  bams <- extract(bams, fullnames, onMissing="NA");
-
-  # Sanity check
-  stopifnot(length(bams) == length(ds));
-
-  exists <- which(unlist(sapply(bams, FUN=isFile)));
-  if (length(exists) < length(ds)) {
-    if (onMissing == "error") {
-      throw("Number of entries in output data set does not match input data set: ", length(exists), " != ", length(ds));
-    } else if (onMissing == "drop") {
-      bams <- extract(bams, exists);
-    }
-  }
-
-  # Sanity check
-  stopifnot(length(bams) <= length(ds));
+  bams <- extract(bams, fullnames, onMissing=onMissing);
 
   bams;
 }) # getOutputDataSet() for AbstractAlignment
 
 
 setMethodS3("getOutputDataSet", "FastqDownsampler", function(this, ...) {
+  ## Find all existing output data files
   ds <- getInputDataSet(this);
   path <- getPath(this);
   res <- byPath(ds, path, ...);
-  names <- getFullNames(ds);
-  idxs <- indexOf(res, names);
-  res <- extract(res, idxs, onMissing="NA");
+
+  ## Order according to input data set
+  fullnames <- getFullNames(ds);
+  res <- extract(res, fullnames, onMissing="NA");
   res;
 }, protected=TRUE) # getOutputDataSet() for FastqDownsampler
 
@@ -94,36 +83,15 @@ setMethodS3("getOutputDataSet", "PicardDuplicateRemoval", function(this, onMissi
   # Argument 'onMissing':
   onMissing <- match.arg(onMissing);
 
-  ds <- getInputDataSet(this);
 
   ## Find all existing output data files
+  ds <- getInputDataSet(this);
   path <- getPath(this);
-  bams <- BamDataSet$byPath(path, ...);
-
-  # Special case
-  if (length(bams) == 0L) {
-    bam <- BamDataFile(NA_character_, mustExist=FALSE);
-    bams <- newInstance(bams, list(bam));
-  }
+  bams <- byPath(ds, path, ...);
 
   ## Order according to input data set
   fullnames <- getFullNames(ds);
-  bams <- extract(bams, fullnames, onMissing="NA");
-
-  # Sanity check
-  stopifnot(length(bams) == length(ds));
-
-  exists <- which(unlist(sapply(bams, FUN=isFile)));
-  if (length(exists) < length(ds)) {
-    if (onMissing == "error") {
-      throw("Number of entries in output data set does not match input data set: ", length(exists), " != ", length(ds));
-    } else if (onMissing == "drop") {
-      bams <- extract(bams, exists);
-    }
-  }
-
-  # Sanity check
-  stopifnot(length(bams) <= length(ds));
+  bams <- extract(bams, fullnames, onMissing=onMissing);
 
   bams;
 }) # getOutputDataSet() for PicardDuplicateRemoval
@@ -133,18 +101,9 @@ setMethodS3("getOutputDataSet", "TopHat2Alignment", function(this, onMissing=c("
   # Argument 'onMissing':
   onMissing <- match.arg(onMissing);
 
-
-  ds <- getInputDataSet(this);
-
   ## Find all existing output data files
   path <- getPath(this);
   bams <- BamDataSet$byPath(path=path, pattern="accepted_hits.bam$", recursive=TRUE);
-
-  # Special case
-  if (length(bams) == 0L) {
-    bam <- BamDataFile(NA_character_, mustExist=FALSE);
-    bams <- newInstance(bams, list(bam));
-  }
 
   ## Order according to input data set
   # Get the sample names in the found output set
@@ -152,23 +111,7 @@ setMethodS3("getOutputDataSet", "TopHat2Alignment", function(this, onMissing=c("
   sampleNames <- getPathnames(bams);
   sampleNames <- basename(dirname(sampleNames));
   idxs <- match(sampleNamesExpected, sampleNames);
-  bams <- extract(bams, idxs, onMissing="NA");
-
-  # Sanity check
-  stopifnot(length(bams) == length(ds));
-  stopifnot(length(bams) == length(sampleNamesExpected));
-
-  exists <- which(unlist(sapply(bams, FUN=isFile)));
-  if (length(exists) < length(ds)) {
-    if (onMissing == "error") {
-      throw("Number of entries in output data set does not match input data set: ", length(exists), " != ", length(ds));
-    } else if (onMissing == "drop") {
-      bams <- extract(bams, exists);
-    }
-  }
-
-  # Sanity check
-  stopifnot(length(bams) <= length(ds));
+  bams <- extract(bams, idxs, onMissing=onMissing);
 
   bams;
 }) # getOutputDataSet() for TopHat2Alignment
@@ -188,42 +131,10 @@ setMethodS3("getOutputDataSet", "TotalCnBinnedCounting", function(this, onMissin
     res <- newInstance(clazz, list());
   }
 
-  # Nothing more todo?
-  if (onMissing == "drop") {
-    return(res);
-  }
-
+  # Order according to input data set
   ds <- getInputDataSet(this);
-  if (length(ds) == 0L) {
-    return(res);
-  }
-
-  # Special case
-  if (length(res) == 0L) {
-    className <- getFileClass(res);
-    clazz <- Class$forName(className);
-    file <- newInstance(clazz, NA_character_, mustExist=FALSE);
-    res <- newInstance(res, list(file));
-  }
-
-  ## Order according to input data set
   fullnames <- getFullNames(ds);
-  res <- extract(res, fullnames, onMissing="NA");
-
-  # Sanity check
-  stopifnot(length(res) == length(ds));
-
-  exists <- which(unlist(sapply(res, FUN=isFile)));
-  if (length(exists) < length(ds)) {
-    if (onMissing == "error") {
-      throw("Number of entries in output data set does not match input data set: ", length(exists), " != ", length(ds));
-    } else if (onMissing == "drop") {
-      res <- extract(res, exists);
-    }
-  }
-
-  # Sanity check
-  stopifnot(length(res) <= length(ds));
+  res <- extract(res, fullnames, onMissing=onMissing);
 
   res;
 }) # getOutputDataSet() for TotalCnBinnedCounting
@@ -232,6 +143,10 @@ setMethodS3("getOutputDataSet", "TotalCnBinnedCounting", function(this, onMissin
 ############################################################################
 # HISTORY:
 # 2013-11-15
+# o CLEANUP: The different getOutputDataSet() methods no longer have to
+#   workaround the special case where the output data set is empty. They
+#   also don't have to handle argument 'onMissing'.  All this is now taken
+#   care of by extract() for GenericDataFileSet in R.filesets (>= 2.3.3).
 # o Extracted all findFilesTodo() methods and document them under the
 #   same generic function.
 # o Added argument 'onMissing' to getOutputDataSet() for

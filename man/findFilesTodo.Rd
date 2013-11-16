@@ -20,7 +20,9 @@
 }
 
 \usage{
-findFilesTodo(...)
+ \method{findFilesTodo}{AbstractAlignment}(this, ...)
+ \method{findFilesTodo}{PicardDuplicateRemoval}(this, ...)
+ \method{findFilesTodo}{TotalCnBinnedCounting}(this, ...)
 }
 
 \arguments{

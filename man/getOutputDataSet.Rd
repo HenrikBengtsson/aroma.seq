@@ -22,7 +22,11 @@
 }
 
 \usage{
-getOutputDataSet(...)
+ \method{getOutputDataSet}{AbstractAlignment}(this, onMissing=c("drop", "NA", "error"), ...)
+ \method{getOutputDataSet}{FastqDownsampler}(this, ...)
+ \method{getOutputDataSet}{PicardDuplicateRemoval}(this, onMissing=c("drop", "NA", "error"), ...)
+ \method{getOutputDataSet}{TopHat2Alignment}(this, onMissing=c("drop", "NA", "error"), ...)
+ \method{getOutputDataSet}{TotalCnBinnedCounting}(this, onMissing=c("drop", "NA", "error"), ...)
 }
 
 \arguments{
@@ -30,6 +34,7 @@ getOutputDataSet(...)
   should be returned.
   If \code{"drop"}, they are ignored and not part of the returned
   data set.
+  If \code{"dropall"}, \code{\link[base]{NULL}} is returned unless all files are processed.
   If \code{"NA"}, they are represented as a "missing" file.
   If \code{"error"}, they are not accepted and an exception is thrown.
  }
@@ -38,7 +43,9 @@ getOutputDataSet(...)
 
 \value{
   Returns the output data set containing the same number of files as
-  the input data set, except in the case where \code{onMissing="drop"}.
+  the input data set, except in the case where argument \code{onMissing}
+  is \code{"drop"} or \code{"dropall"} and one or more files is not
+  processed.
 }
 
 \seealso{

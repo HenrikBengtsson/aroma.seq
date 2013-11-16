@@ -10,7 +10,11 @@
 #   @get "title".
 # }
 #
-# @synopsis
+# \usage{
+#  @usage findFilesTodo,AbstractAlignment
+#  @usage findFilesTodo,PicardDuplicateRemoval
+#  @usage findFilesTodo,TotalCnBinnedCounting
+# }
 #
 # \arguments{
 #  \item{...}{Not used.}
