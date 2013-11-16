@@ -69,7 +69,8 @@ setMethodS3("getIndexSet", "AbstractAlignment", function(this, ...) {
   this$.indexSet;
 }, protected=TRUE)
 
-setMethodS3("getAcronym", "AbstractAlignment", function(this, case=c("upper", "lower"), ...) {
+# This methods use lower case by default, e.g. bwa and bowtie2.
+setMethodS3("getAcronym", "AbstractAlignment", function(this, case=c("lower", "upper"), ...) {
   # Argument 'case':
   case <- match.arg(case);
 
