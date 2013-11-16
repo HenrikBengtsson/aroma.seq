@@ -235,8 +235,8 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, FUN, ..., args=list(),
     require(pkgName, character.only=TRUE) || throw("Package not attached: ", pkgName);
 
     # WORKAROUND: Make sure to load BatchJobs config files
-    pkgName <- "BatchJobs";
-    require(pkgName, character.only=TRUE) || throw("Package not attached: ", pkgName);
+    require("BatchJobs", character.only=TRUE) || throw("Package not attached: BatchJobs");
+
     conffile <- c(".BatchJobs.R", "~/.BatchJobs.R")
     conffile <- normalizePath(conffile, mustWork=FALSE);
     conffile <- conffile[file_test("-f", conffile)];
