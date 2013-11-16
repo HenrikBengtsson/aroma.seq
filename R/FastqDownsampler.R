@@ -15,8 +15,7 @@
 #  \item{dataSet}{An @see "FastqDataSet".}
 #  \item{subset}{An @integer specifying the total number of reads to sample,
 #    or a @double specifying the fraction of total number of reads to sample.}
-#  \item{tags}{Tags for the output data set.}
-#  \item{...}{Not used.}
+#  \item{...}{Additional arguments passed to @see "AromaSeqTransform".}
 # }
 #
 # \section{Fields and Methods}{
@@ -29,7 +28,7 @@
 #
 # @author "HB"
 #*/###########################################################################
-setConstructorS3("FastqDownsampler", function(dataSet=NULL, subset=1e6, tags="*", ...) {
+setConstructorS3("FastqDownsampler", function(dataSet=NULL, subset=1e6, ...) {
   # Validate arguments
   if (!is.null(dataSet)) {
     # Argument 'dataSet':
@@ -49,38 +48,17 @@ setConstructorS3("FastqDownsampler", function(dataSet=NULL, subset=1e6, tags="*"
     }
   } # if (!is.null(dataSet))
 
-  # Arguments '...':
-  args <- list(...);
-
-  # TODO: Turn into one of the Transformer classes
-  extend(Object(), c("FastqDownsampler"),
-    .ds = dataSet,
-    .subset = subset,
-    .tags = tags
+  extend(AromaSeqTransform(dataSet=dataSet, ...), "FastqDownsampler",
+    .subset = subset
   );
 })
 
 
 setMethodS3("as.character", "FastqDownsampler", function(x, ...) {
-  # To please R CMD check
-  this <- x;
-
-  s <- sprintf("%s:", class(this)[1]);
-
-  ds <- getInputDataSet(this);
-  s <- c(s, "Input data set:");
-  s <- c(s, as.character(ds));
-
-  s <- c(s, sprintf("Output path: %s", getPath(this)));
-  s <- c(s, sprintf("Added tags: %s", getTags(this, collapse=TRUE)));
-
-  # Algorithm parameters
-  s <- c(s, sprintf("Sample size: %s", getSampleSize(this)));
-
-  class(s) <- "GenericSummary";
+  s <- NextMethod("as.character");
+  s <- c(s, sprintf("Sample size: %s", getSampleSize(x)));
   s;
 }, protected=TRUE)
-
 
 
 setMethodS3("getSampleSize", "FastqDownsampler", function(this, df, ...) {
@@ -95,49 +73,14 @@ setMethodS3("getSampleSize", "FastqDownsampler", function(this, df, ...) {
 }, protected=TRUE);
 
 
-setMethodS3("getInputDataSet", "FastqDownsampler", function(this, ...) {
-  this$.ds;
-}, protected=TRUE)
-
-
-setMethodS3("getOutputRootPath", "FastqDownsampler", function(this, ...) {
-  "fastqData";
-}, protected=TRUE);
-
-
 setMethodS3("getAsteriskTags", "FastqDownsampler", function(this, ...) {
   sprintf("n=%g", this$.subset);
 }, protected=TRUE);
 
 
-setMethodS3("getTags", "FastqDownsampler", function(this, collapse=FALSE, ...) {
-  tags <- this$.tags;
-  if (is.null(tags)) return(tags);
-  tags <- unlist(strsplit(tags, split=",", fixed=TRUE));
-  tags[tags == "*"] <- getAsteriskTags(this);
-  if (collapse) {
-    tags <- paste(tags, collapse=",");
-  }
-  tags;
+setMethodS3("getRootPath", "FastqDownsampler", function(this, ...) {
+  "fastqData";
 }, protected=TRUE);
-
-
-setMethodS3("getPath", "FastqDownsampler", function(this, ...) {
-  rootPath <- getOutputRootPath(this);
-  ds <- getInputDataSet(this);
-
-  # Output dataset name
-  fullname <- getFullName(ds);
-  tags <- getTags(this, collapse=TRUE);
-  fullname <- paste(c(fullname, tags), collapse=",");
-
-  chipType <- basename(getPath(ds));
-  path <- file.path(rootPath, fullname, chipType);
-
-  path <- Arguments$getWritablePath(path);
-  path;
-}, protected=TRUE)
-
 
 
 setMethodS3("process", "FastqDownsampler", function(this, ..., force=FALSE, verbose=FALSE) {
@@ -232,6 +175,8 @@ setMethodS3("process", "FastqDownsampler", function(this, ..., force=FALSE, verb
 
 ############################################################################
 # HISTORY:
+# 2013-11-16
+# o CLEANUP: Dropped several methods now taken care of by super class.
 # 2013-09-12
 # o Now process() for FastqDownsampler utilizes dsApply().
 # o CLEANUP: Improved previous "mockup" code of FastqDownsampler.

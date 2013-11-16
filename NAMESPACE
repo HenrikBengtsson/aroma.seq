@@ -79,22 +79,13 @@ exportPattern("^[^\\.]")
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # AbstractAlignment
 S3method("as.character", "AbstractAlignment")
+S3method("getAcronym", "AbstractAlignment")
 S3method("getAsteriskTags", "AbstractAlignment")
-S3method("getFlavor", "AbstractAlignment")
-S3method("getFullName", "AbstractAlignment")
 S3method("getIndexSet", "AbstractAlignment")
-S3method("getInputDataSet", "AbstractAlignment")
-S3method("getName", "AbstractAlignment")
-S3method("getOptionalArguments", "AbstractAlignment")
+S3method("getOrganism", "AbstractAlignment")
 S3method("getOutputDataSet", "AbstractAlignment")
-S3method("getParameterSets", "AbstractAlignment")
-S3method("getPath", "AbstractAlignment")
 S3method("getRootPath", "AbstractAlignment")
-S3method("getTags", "AbstractAlignment")
 S3method("isPaired", "AbstractAlignment")
-S3method("nbrOfFiles", "AbstractAlignment")
-S3method("process", "AbstractAlignment")
-S3method("setTags", "AbstractAlignment")
 
 # AbstractIndexFile
 S3method("as.character", "AbstractIndexFile")
@@ -104,12 +95,39 @@ S3method("getIndexPrefix", "AbstractIndexFile")
 S3method("as.character", "AbstractIndexSet")
 S3method("byPrefix", "AbstractIndexSet")
 S3method("getIndexPrefix", "AbstractIndexSet")
+S3method("getOrganism", "AbstractIndexSet")
 S3method("isComplete", "AbstractIndexSet")
+
+# Arguments
+S3method("getOrganism", "Arguments")
 
 # AromaSeq
 S3method("capabilitiesOf", "AromaSeq")
+S3method("getKnownOrganisms", "AromaSeq")
 S3method("isCapableOf", "AromaSeq")
 S3method("setupTests", "AromaSeq")
+S3method("skeleton", "AromaSeq")
+
+# AromaSeqTransform
+S3method("as.character", "AromaSeqTransform")
+S3method("findFilesTodo", "AromaSeqTransform")
+S3method("getAcronym", "AromaSeqTransform")
+S3method("getAsteriskTags", "AromaSeqTransform")
+S3method("getFlavor", "AromaSeqTransform")
+S3method("getFullName", "AromaSeqTransform")
+S3method("getInputDataSet", "AromaSeqTransform")
+S3method("getName", "AromaSeqTransform")
+S3method("getOptionalArguments", "AromaSeqTransform")
+S3method("getOrganism", "AromaSeqTransform")
+S3method("getOutputDataSet", "AromaSeqTransform")
+S3method("getParameters", "AromaSeqTransform")
+S3method("getPath", "AromaSeqTransform")
+S3method("getRootPath", "AromaSeqTransform")
+S3method("getTags", "AromaSeqTransform")
+S3method("isDone", "AromaSeqTransform")
+S3method("length", "AromaSeqTransform")
+S3method("process", "AromaSeqTransform")
+S3method("setTags", "AromaSeqTransform")
 
 # AromaUgpFile
 S3method("anyDuplicated", "AromaUgpFile")
@@ -127,6 +145,7 @@ S3method("importFromBSgenome", "AromaUnitNucleotideCountsFile")
 # BamDataFile
 S3method("as.character", "BamDataFile")
 S3method("buildIndex", "BamDataFile")
+S3method("directoryStructure", "BamDataFile")
 S3method("doQDNAseq", "BamDataFile")
 S3method("extractRawCopyNumbers", "BamDataFile")
 S3method("extractReadStartPositions", "BamDataFile")
@@ -154,15 +173,20 @@ S3method("readDataFrame", "BamDataFile")
 S3method("readReadPositions", "BamDataFile")
 S3method("replaceAllReadGroups", "BamDataFile")
 S3method("sort", "BamDataFile")
+S3method("sortByPosition", "BamDataFile")
 S3method("validate", "BamDataFile")
 
 # BamDataSet
-S3method("findByName", "BamDataSet")
 S3method("byName", "BamDataSet")
+S3method("byPath", "BamDataSet")
+S3method("directoryStructure", "BamDataSet")
 S3method("doQDNAseq", "BamDataSet")
+S3method("findByName", "BamDataSet")
 S3method("getChipType", "BamDataSet")
 S3method("getDepth", "BamDataSet")
+S3method("getOrganism", "BamDataSet")
 S3method("getPlatform", "BamDataSet")
+S3method("sortByPosition", "BamDataSet")
 
 # BamIndexDataFile
 S3method("as.character", "BamIndexDataFile")
@@ -176,13 +200,11 @@ S3method("getOutputFileClass", "BinnedGcNormalization")
 S3method("getOutputFileExtension", "BinnedGcNormalization")
 S3method("getOutputFiles", "BinnedGcNormalization")
 S3method("getOutputFileSetClass", "BinnedGcNormalization")
-S3method("getParameters", "BinnedGcNormalization")
 S3method("getPath", "BinnedGcNormalization")
 S3method("getRootPath", "BinnedGcNormalization")
 S3method("process", "BinnedGcNormalization")
 
 # Bowtie2Alignment
-S3method("getParameters", "Bowtie2Alignment")
 S3method("process", "Bowtie2Alignment")
 
 # Bowtie2IndexFile
@@ -200,6 +222,10 @@ S3method("process", "BwaAlignment")
 # BwaIndexSet
 S3method("isComplete", "BwaIndexSet")
 
+# character
+S3method("directoryItems", "character")
+S3method("directoryStructure", "character")
+
 # default
 S3method(".getBatchJobRegistry", "default")
 S3method(".getBatchJobRegistryId", "default")
@@ -216,9 +242,12 @@ S3method("cufflinks", "default")
 S3method("doBowtie2", "default")
 S3method("doBWA", "default")
 S3method("doQDNAseq", "default")
+S3method("doTopHat2", "default")
 S3method("findCmd", "default")
 S3method("findCmdv", "default")
 S3method("htseqCount", "default")
+S3method("samtoolsMpileup", "default")
+S3method("samtoolsSort", "default")
 S3method("samtoolsView", "default")
 S3method("systemBowtie2", "default")
 S3method("systemBowtie2Build", "default")
@@ -239,12 +268,13 @@ S3method("tophat1", "default")
 S3method("tophat2", "default")
 
 # FastaReferenceFile
-S3method("findByOrganism", "FastaReferenceFile")
-S3method("byOrganism", "FastaReferenceFile")
 S3method("as.character", "FastaReferenceFile")
 S3method("buildBowtie2IndexSet", "FastaReferenceFile")
 S3method("buildBwaIndexSet", "FastaReferenceFile")
 S3method("buildIndex", "FastaReferenceFile")
+S3method("byOrganism", "FastaReferenceFile")
+S3method("findByOrganism", "FastaReferenceFile")
+S3method("getOrganism", "FastaReferenceFile")
 S3method("getSeqLengths", "FastaReferenceFile")
 S3method("getSeqNames", "FastaReferenceFile")
 S3method("getTotalSeqLengths", "FastaReferenceFile")
@@ -256,7 +286,9 @@ S3method("getDepth", "FastaReferenceSet")
 
 # FastqDataFile
 S3method("as.character", "FastqDataFile")
+S3method("directoryStructure", "FastqDataFile")
 S3method("findMateFile", "FastqDataFile")
+S3method("findRspReportTemplate", "FastqDataFile")
 S3method("getCommonSeqWidth", "FastqDataFile")
 S3method("getDefaultFullName", "FastqDataFile")
 S3method("getDefaultSamReadGroup", "FastqDataFile")
@@ -264,21 +296,26 @@ S3method("getGeometry", "FastqDataFile")
 S3method("getMateFile", "FastqDataFile")
 S3method("getSamReadGroup", "FastqDataFile")
 S3method("nbrOfSeqs", "FastqDataFile")
+S3method("readFASTQSummary", "FastqDataFile")
+S3method("readSeqFile", "FastqDataFile")
 S3method("report", "FastqDataFile")
 S3method("setSamReadGroup", "FastqDataFile")
 S3method("writeSample", "FastqDataFile")
 
 # FastqDataSet
 S3method("as.character", "FastqDataSet")
-S3method("byPath", "FastqDataSet")
-S3method("findByName", "FastqDataSet")
 S3method("byName", "FastqDataSet")
+S3method("byPath", "FastqDataSet")
+S3method("directoryStructure", "FastqDataSet")
 S3method("doBowtie2", "FastqDataSet")
 S3method("doBWA", "FastqDataSet")
 S3method("doQDNAseq", "FastqDataSet")
+S3method("doTopHat2", "FastqDataSet")
+S3method("findByName", "FastqDataSet")
 S3method("getDefaultSamReadGroup", "FastqDataSet")
 S3method("getDepth", "FastqDataSet")
 S3method("getFilePairs", "FastqDataSet")
+S3method("getOrganism", "FastqDataSet")
 S3method("getSamReadGroup", "FastqDataSet")
 S3method("isPaired", "FastqDataSet")
 S3method("report", "FastqDataSet")
@@ -288,12 +325,9 @@ S3method("validate", "FastqDataSet")
 # FastqDownsampler
 S3method("as.character", "FastqDownsampler")
 S3method("getAsteriskTags", "FastqDownsampler")
-S3method("getInputDataSet", "FastqDownsampler")
+S3method("getRootPath", "FastqDownsampler")
 S3method("getOutputDataSet", "FastqDownsampler")
-S3method("getOutputRootPath", "FastqDownsampler")
-S3method("getPath", "FastqDownsampler")
 S3method("getSampleSize", "FastqDownsampler")
-S3method("getTags", "FastqDownsampler")
 S3method("process", "FastqDownsampler")
 
 # GatkAlleleCounting
@@ -306,9 +340,23 @@ S3method("getRootPath", "GatkAlleleCounting")
 S3method("process", "GatkAlleleCounting")
 S3method("readGatkCountFile", "GatkAlleleCounting")
 
+# GenericDataFile
+S3method("directoryItem", "GenericDataFile")
+S3method("directoryItems", "GenericDataFile")
+S3method("directoryStructure", "GenericDataFile")
+S3method("directoryStructure<-", "GenericDataFile")
+S3method("getDataSetName", "GenericDataFile")
+S3method("getOrganismName", "GenericDataFile")
+S3method("getSampleName", "GenericDataFile")
+
 # GenericDataFileSet
 S3method(".getBatchJobRegistryId", "GenericDataFileSet")
+S3method("directoryItem", "GenericDataFileSet")
+S3method("directoryItems", "GenericDataFileSet")
+S3method("directoryStructure", "GenericDataFileSet")
+S3method("directoryStructure<-", "GenericDataFileSet")
 S3method("dsApply", "GenericDataFileSet")
+S3method("updateDirectoryStructure", "GenericDataFileSet")
 
 # IlluminaFastqDataFile
 S3method("getBarcodeSequence", "IlluminaFastqDataFile")
@@ -323,39 +371,37 @@ S3method("getPlatformUnit", "IlluminaFastqDataFile")
 S3method("getReadDirection", "IlluminaFastqDataFile")
 S3method("getSampleName", "IlluminaFastqDataFile")
 
+# list
+S3method("directoryStructure", "list")
+
 # MaskedDNAString
 S3method("binTabulate", "MaskedDNAString")
 
 # Object
 S3method("findRspReportTemplate", "Object")
 
+# PairedEndFastqDataSet
+S3method("byPath", "PairedEndFastqDataSet")
+
 # PicardDuplicateRemoval
-S3method("as.character", "PicardDuplicateRemoval")
 S3method("getAsteriskTags", "PicardDuplicateRemoval")
-S3method("getFlavor", "PicardDuplicateRemoval")
-S3method("getFullName", "PicardDuplicateRemoval")
-S3method("getInputDataSet", "PicardDuplicateRemoval")
-S3method("getName", "PicardDuplicateRemoval")
-S3method("getOptionalArguments", "PicardDuplicateRemoval")
 S3method("getOutputDataSet", "PicardDuplicateRemoval")
-S3method("getParameters", "PicardDuplicateRemoval")
-S3method("getPath", "PicardDuplicateRemoval")
 S3method("getRootPath", "PicardDuplicateRemoval")
-S3method("getTags", "PicardDuplicateRemoval")
-S3method("nbrOfFiles", "PicardDuplicateRemoval")
 S3method("process", "PicardDuplicateRemoval")
-S3method("setTags", "PicardDuplicateRemoval")
 
 # SamDataFile
 S3method("as.character", "SamDataFile")
 S3method("convertToBam", "SamDataFile")
+S3method("directoryStructure", "SamDataFile")
 
 # SamDataSet
-S3method("byPath", "SamDataSet")
-S3method("findByName", "SamDataSet")
 S3method("byName", "SamDataSet")
+S3method("byPath", "SamDataSet")
 S3method("convertToBam", "SamDataSet")
+S3method("directoryStructure", "SamDataSet")
+S3method("findByName", "SamDataSet")
 S3method("getDepth", "SamDataSet")
+S3method("getOrganism", "SamDataSet")
 
 # SamReadGroup
 S3method("as.character", "SamReadGroup")
@@ -375,14 +421,17 @@ S3method("merge", "SamReadGroup")
 S3method("validate", "SamReadGroup")
 
 # TopHat2Alignment
+S3method("getExpectedOutputPaths", "TopHat2Alignment")
 S3method("getOutputDataSet", "TopHat2Alignment")
-S3method("getParameters", "TopHat2Alignment")
-S3method("getPath", "TopHat2Alignment")
 S3method("getRootPath", "TopHat2Alignment")
+S3method("getSampleNames", "TopHat2Alignment")
 S3method("process", "TopHat2Alignment")
 
 # TotalCnBinnedCounting
+S3method("findFilesTodo", "TotalCnBinnedCounting")
 S3method("getExpectedOutputFullnames", "TotalCnBinnedCounting")
+S3method("getOutputDataSet", "TotalCnBinnedCounting")
 S3method("getOutputFileExtension", "TotalCnBinnedCounting")
 S3method("getOutputFileSetClass", "TotalCnBinnedCounting")
+S3method("process", "TotalCnBinnedCounting")
 S3method("smoothRawCopyNumbers", "TotalCnBinnedCounting")

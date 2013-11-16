@@ -9,6 +9,7 @@
 \name{getOutputDataSet}
 \alias{getOutputDataSet}
 
+\alias{getOutputDataSet.AromaSeqTransform}
 \alias{getOutputDataSet.AbstractAlignment}
 \alias{getOutputDataSet.FastqDownsampler}
 \alias{getOutputDataSet.PicardDuplicateRemoval}
@@ -22,6 +23,7 @@
 }
 
 \usage{
+ \method{getOutputDataSet}{AromaSeqTransform}(...)
  \method{getOutputDataSet}{AbstractAlignment}(this, onMissing=c("drop", "NA", "error"), ...)
  \method{getOutputDataSet}{FastqDownsampler}(this, ...)
  \method{getOutputDataSet}{PicardDuplicateRemoval}(this, onMissing=c("drop", "NA", "error"), ...)

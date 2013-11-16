@@ -1,6 +1,11 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.0 [2013-11-16]
+o CLEANUP: Added AromaSeqTransform class that now several method
+  classes extends.
+
+
 Version: 0.3.7 [2013-11-15]
 o SPEEDUP: Now PicardDuplicateRemoval skips already processed
   items much faster and if all are done, even quicker.

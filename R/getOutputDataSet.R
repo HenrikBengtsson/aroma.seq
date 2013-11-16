@@ -1,5 +1,6 @@
 ###########################################################################/**
 # @RdocGeneric getOutputDataSet
+# @alias getOutputDataSet.AromaSeqTransform
 # @alias getOutputDataSet.AbstractAlignment
 # @alias getOutputDataSet.FastqDownsampler
 # @alias getOutputDataSet.PicardDuplicateRemoval
@@ -13,6 +14,7 @@
 # }
 #
 # \usage{
+#  @usage getOutputDataSet,AromaSeqTransform
 #  @usage getOutputDataSet,AbstractAlignment
 #  @usage getOutputDataSet,FastqDownsampler
 #  @usage getOutputDataSet,PicardDuplicateRemoval

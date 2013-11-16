@@ -44,12 +44,6 @@ setMethodS3("as.character", "BinnedGcNormalization", function(x, ...) {
 
 
 
-setMethodS3("getParameters", "BinnedGcNormalization", function(this, ...) {
-  params <- NextMethod("getParameters");
-  params;
-}, protected=TRUE)
-
-
 setMethodS3("getAsteriskTags", "BinnedGcNormalization", function(this, collapse=NULL, ...) {
   tags <- NextMethod("getAsteriskTags", collapse=NULL);
 

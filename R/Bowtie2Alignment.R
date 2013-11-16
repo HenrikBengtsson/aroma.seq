@@ -44,13 +44,6 @@ setConstructorS3("Bowtie2Alignment", function(..., indexSet=NULL) {
 })
 
 
-setMethodS3("getParameters", "Bowtie2Alignment", function(this, ...) {
-  params <- NextMethod("getParameters");
-  params <- c(params, getOptionalArguments(this, ...));
-  params;
-}, protected=TRUE)
-
-
 ###########################################################################/**
 # @RdocMethod process
 #
@@ -280,6 +273,8 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 
 ############################################################################
 # HISTORY:
+# 2013-11-16
+# o CLEANUP: Dropped getParameters() now taken care of by super class.
 # 2013-11-11
 # o SPEEDUP: Now Bowtie2Alignment and BwaAlignment skips already processed
 #   items much faster and if all are done, even quicker.

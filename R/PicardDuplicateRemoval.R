@@ -19,8 +19,8 @@
 #
 # \arguments{
 #  \item{dataSet}{An @see "BamDataSet".}
-#  \item{tags}{Additional tags for the output data sets.}
-#  \item{ASSUME_SORTED, VALIDATION_STRINGENCY, ...}{
+#  \item{...}{Additional arguments passed to @see "AromaSeqTransform".}
+#  \item{ASSUME_SORTED, VALIDATION_STRINGENCY}{
 #    Additional arguments passed to Picard MarkDuplicates.}
 # }
 #
@@ -39,134 +39,21 @@
 #
 # @author "HB"
 #*/###########################################################################
-setConstructorS3("PicardDuplicateRemoval", function(dataSet=NULL, tags="*", ASSUME_SORTED=TRUE, VALIDATION_STRINGENCY="SILENT", ...) {
+setConstructorS3("PicardDuplicateRemoval", function(dataSet=NULL, ..., ASSUME_SORTED=TRUE, VALIDATION_STRINGENCY="SILENT") {
   # Validate arguments
   if (!is.null(dataSet)) {
     # Argument 'dataSet':
     dataSet <- Arguments$getInstanceOf(dataSet, "BamDataSet");
   } # if (!is.null(dataSet))
 
-  # Arguments '...':
-  args <- list(
-    ASSUME_SORTED=ASSUME_SORTED,
-    VALIDATION_STRINGENCY=VALIDATION_STRINGENCY,
-    ...
-  );
-
-
-  this <- extend(Object(), c("PicardDuplicateRemoval", uses("ParametersInterface")),
-    .ds = dataSet,
-    .tags = tags,
-    .args = args
-  );
-
-  setTags(this, tags);
-
-  this;
+  extend(AromaSeqTransform(dataSet, ASSUME_SORTED=ASSUME_SORTED, VALIDATION_STRINGENCY=VALIDATION_STRINGENCY, ...), "PicardDuplicateRemoval");
 })
-
-
-setMethodS3("as.character", "PicardDuplicateRemoval", function(x, ...) {
-  # To please R CMD check
-  this <- x;
-
-  s <- sprintf("%s:", class(this)[1]);
-
-  ds <- getInputDataSet(this);
-  s <- c(s, "Input data set:");
-  s <- c(s, as.character(ds));
-
-  # Additional arguments
-  s <- c(s, sprintf("Picard arguments: %s", getParametersAsString(this)));
-
-  class(s) <- "GenericSummary";
-  s;
-}, protected=TRUE)
-
-
-setMethodS3("getInputDataSet", "PicardDuplicateRemoval", function(this, ...) {
-  this$.ds;
-})
-
-setMethodS3("getOptionalArguments", "PicardDuplicateRemoval", function(this, ...) {
-  this$.args;
-}, protected=TRUE)
-
-
-setMethodS3("getParameters", "PicardDuplicateRemoval", function(this, ...) {
-  params <- NextMethod("getParameters");
-  params <- c(params, getOptionalArguments(this));
-  params;
-}, protected=TRUE)
 
 
 setMethodS3("getAsteriskTags", "PicardDuplicateRemoval", function(this, collapse=NULL, ...) {
-  tags <- c("-dups");
-
-  if (!is.null(collapse)) {
-    tags <- paste(tags, collapse=collapse);
-  }
-
-  tags;
+  "-dups";
 }, protected=TRUE)
 
-
-setMethodS3("getName", "PicardDuplicateRemoval", function(this, ...) {
-  ds <- getInputDataSet(this);
-  getName(ds);
-}, protected=TRUE)
-
-
-setMethodS3("getFlavor", "PicardDuplicateRemoval", function(this, ...) {
-  this$.flavor;
-}, protected=TRUE)
-
-
-setMethodS3("getTags", "PicardDuplicateRemoval", function(this, collapse=NULL, ...) {
-  # "Pass down" tags from input data set
-  ds <- getInputDataSet(this);
-  tags <- getTags(ds, collapse=collapse);
-
-  # Get class-specific tags
-  tags <- c(tags, this$.tags);
-
-  # Update default tags
-  tags[tags == "*"] <- getAsteriskTags(this, collapse=",");
-
-  # Collapsed or split?
-  if (!is.null(collapse)) {
-    tags <- paste(tags, collapse=collapse);
-  } else {
-    tags <- unlist(strsplit(tags, split=","));
-  }
-
-  if (length(tags) == 0) {
-    tags <- NULL;
-  }
-
-  tags;
-}, protected=TRUE)
-
-
-setMethodS3("setTags", "PicardDuplicateRemoval", function(this, tags="*", ...) {
-  # Argument 'tags':
-  if (!is.null(tags)) {
-    tags <- Arguments$getCharacters(tags);
-    tags <- trim(unlist(strsplit(tags, split=",")));
-    tags <- tags[nchar(tags) > 0];
-  }
-
-  this$.tags <- tags;
-}, protected=TRUE)
-
-
-setMethodS3("getFullName", "PicardDuplicateRemoval", function(this, ...) {
-  name <- getName(this);
-  tags <- getTags(this);
-  fullname <- paste(c(name, tags), collapse=",");
-  fullname <- gsub("[,]$", "", fullname);
-  fullname;
-})
 
 
 setMethodS3("getRootPath", "PicardDuplicateRemoval", function(this, ...) {
@@ -175,47 +62,9 @@ setMethodS3("getRootPath", "PicardDuplicateRemoval", function(this, ...) {
   path <- getPath(ds);
   path <- getParent(path, depth=2L);
   # Sanity check
-  stopifnot(regexpr("Data$", path) != -1);
+  stopifnot(regexpr("Data$", path) != -1L);
   path;
 }, protected=TRUE)
-
-
-setMethodS3("getPath", "PicardDuplicateRemoval", function(this, create=TRUE, ...) {
-  # Create the (sub-)directory tree for the data set
-
-  # Root path
-  rootPath <- getRootPath(this);
-
-  # Full name
-  fullname <- getFullName(this);
-
-  # Organism
-  ds <- getInputDataSet(this);
-  organism <- getOrganism(ds);
-
-  # The full path
-  path <- filePath(rootPath, fullname, organism);
-
-  if (create) {
-    path <- Arguments$getWritablePath(path);
-  } else {
-    path <- Arguments$getReadablePath(path, mustExist=FALSE);
-  }
-
-  # Verify that it is not the same as the input path
-  inPath <- getPath(ds);
-  if (getAbsolutePath(path) == getAbsolutePath(inPath)) {
-    throw("The generated output data path equals the input data path: ", path, " == ", inPath);
-  }
-
-  path;
-}, protected=TRUE)
-
-
-setMethodS3("nbrOfFiles", "PicardDuplicateRemoval", function(this, ...) {
-  ds <- getInputDataSet(this);
-  length(ds);
-})
 
 
 
@@ -249,7 +98,7 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
     }
   }
 
-  nbrOfFiles <- nbrOfFiles(this);
+  nbrOfFiles <- length(this);
   verbose && cat(verbose, "Number of files: ", nbrOfFiles);
 
   params <- getParameters(this);
@@ -366,6 +215,8 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
 
 ############################################################################
 # HISTORY:
+# 2013-11-16
+# o CLEANUP: Dropped several methods now taken care of by super class.
 # 2013-11-15
 # o Added argument 'onMissing' to getOutputDataSet().
 # 2013-09-03

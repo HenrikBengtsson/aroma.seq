@@ -9,8 +9,7 @@
 \name{findFilesTodo}
 \alias{findFilesTodo}
 
-\alias{findFilesTodo.AbstractAlignment}
-\alias{findFilesTodo.PicardDuplicateRemoval}
+\alias{findFilesTodo.AromaSeqTransform}
 \alias{findFilesTodo.TotalCnBinnedCounting}
 
 \title{Identifies which files are not yet processed}
@@ -20,8 +19,7 @@
 }
 
 \usage{
- \method{findFilesTodo}{AbstractAlignment}(this, ...)
- \method{findFilesTodo}{PicardDuplicateRemoval}(this, ...)
+ \method{findFilesTodo}{AromaSeqTransform}(this, ...)
  \method{findFilesTodo}{TotalCnBinnedCounting}(this, ...)
 }
 

@@ -423,6 +423,26 @@
 \alias{updateDirectoryStructure}
 \alias{updateDirectoryStructure.GenericDataFileSet}
 \alias{findRspReportTemplate.FastqDataFile}
+\alias{as.character.AromaSeqTransform}
+\alias{getAcronym}
+\alias{getAcronym.AbstractAlignment}
+\alias{getAcronym.AromaSeqTransform}
+\alias{getAsteriskTags.AromaSeqTransform}
+\alias{getFlavor.AromaSeqTransform}
+\alias{getFullName.AromaSeqTransform}
+\alias{getInputDataSet.AromaSeqTransform}
+\alias{getName.AromaSeqTransform}
+\alias{getOptionalArguments.AromaSeqTransform}
+\alias{getOrganism.AromaSeqTransform}
+\alias{getPath.AromaSeqTransform}
+\alias{getRootPath.AromaSeqTransform}
+\alias{getTags.AromaSeqTransform}
+\alias{length.AromaSeqTransform}
+\alias{process.AromaSeqTransform}
+\alias{setTags.AromaSeqTransform}
+\alias{getParameters.AromaSeqTransform}
+\alias{isDone.AromaSeqTransform}
+\alias{getRootPath.FastqDownsampler}
 
 \description{
   This page contains aliases for all "non-documented" objects that

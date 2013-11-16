@@ -21,13 +21,15 @@
 \code{~~|}\cr
 \code{~~+--}\code{\link[aroma.core]{ParametersInterface}}\cr
 \code{~~~~~~~|}\cr
-\code{~~~~~~~+--}\emph{\code{AbstractAlignment}}\cr
+\code{~~~~~~~+--}\code{\link[aroma.seq]{AromaSeqTransform}}\cr
+\code{~~~~~~~~~~~~|}\cr
+\code{~~~~~~~~~~~~+--}\emph{\code{AbstractAlignment}}\cr
 
 \bold{Directly known subclasses:}\cr
 \link[aroma.seq]{Bowtie2Alignment}, \link[aroma.seq]{BwaAlignment}, \link[aroma.seq]{TopHat2Alignment}\cr
 
 public abstract static class \bold{AbstractAlignment}\cr
-extends \link[aroma.core]{ParametersInterface}\cr
+extends \emph{\link[aroma.seq]{AromaSeqTransform}}\cr
 
 
 
@@ -35,7 +37,7 @@ extends \link[aroma.core]{ParametersInterface}\cr
 }
 
 \usage{
-AbstractAlignment(dataSet=NULL, indexSet=NULL, tags="*", rgSet=NULL, ...)
+AbstractAlignment(dataSet=NULL, indexSet=NULL, rgSet=NULL, ...)
 }
 
 \arguments{
@@ -50,19 +52,12 @@ AbstractAlignment(dataSet=NULL, indexSet=NULL, tags="*", rgSet=NULL, ...)
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{findFilesTodo} \tab  -\cr
- \tab \code{getFullName} \tab  -\cr
- \tab \code{getIndexSet} \tab  -\cr
- \tab \code{getInputDataSet} \tab  -\cr
- \tab \code{getName} \tab  -\cr
- \tab \code{getOrganism} \tab  -\cr
  \tab \code{getOutputDataSet} \tab  -\cr
- \tab \code{getTags} \tab  -\cr
- \tab \code{nbrOfFiles} \tab  -\cr
- \tab \code{process} \tab  -\cr
- \tab \code{setTags} \tab  -\cr
 }
 
+
+ \bold{Methods inherited from AromaSeqTransform}:\cr
+as.character, findFilesTodo, getAcronym, getAsteriskTags, getFlavor, getFullName, getInputDataSet, getName, getOptionalArguments, getOrganism, getOutputDataSet, getParameters, getPath, getRootPath, getTags, isDone, length, process, setTags
 
  \bold{Methods inherited from ParametersInterface}:\cr
 getParameterSets, getParameters, getParametersAsString

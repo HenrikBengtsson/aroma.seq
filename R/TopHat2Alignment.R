@@ -58,48 +58,8 @@ setConstructorS3("TopHat2Alignment", function(..., indexSet=NULL, transcripts=NU
 })
 
 
-
-setMethodS3("getParameters", "TopHat2Alignment", function(this, ...) {
-  params <- NextMethod("getParameters");
-  params <- c(params, getOptionalArguments(this, ...));
-  params;
-}, protected=TRUE)
-
-
 setMethodS3("getRootPath", "TopHat2Alignment", function(this, ...) {
   "tophat2Data";
-}, protected=TRUE)
-
-
-setMethodS3("getPath", "TopHat2Alignment", function(this, create=TRUE, ...) {
-  # Create the (sub-)directory tree for the data set
-
-  # Root path
-  rootPath <- getRootPath(this);
-
-  # Full name
-  fullname <- getFullName(this)
-
-  # Organism
-  ds <- getInputDataSet(this);
-  organism <- getOrganism(ds);
-
-  # The full path
-  path <- filePath(rootPath, fullname, organism);
-
-  if (create) {
-    path <- Arguments$getWritablePath(path);
-  } else {
-    path <- Arguments$getReadablePath(path, mustExist=FALSE);
-  }
-
-  # Verify that it is not the same as the input path
-  inPath <- getPath(ds);
-  if (getAbsolutePath(path) == getAbsolutePath(inPath)) {
-    throw("The generated output data path equals the input data path: ", path, " == ", inPath);
-  }
-
-  path;
 }, protected=TRUE)
 
 
@@ -109,7 +69,6 @@ setMethodS3("getSampleNames", "TopHat2Alignment", function(this, ...) {
   sampleNames;
 })
 
-
 setMethodS3("getExpectedOutputPaths", "TopHat2Alignment", function(this, ...) {
   # Find all available output directories
   path <- getPath(this);
@@ -117,13 +76,6 @@ setMethodS3("getExpectedOutputPaths", "TopHat2Alignment", function(this, ...) {
   paths <- file.path(path, sampleNames);
   paths;
 }, protected=TRUE)
-
-
-
-setMethodS3("isDone", "TopHat2Alignment", function(this, ...) {
-  bams <- getOutputDataSet(this, onMissing="NA");
-  all(sapply(bams, FUN=isFile));
-})
 
 
 setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=FALSE, verbose=FALSE) {
@@ -281,6 +233,8 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
 
 ############################################################################
 # HISTORY:
+# 2013-11-16 [HB]
+# o CLEANUP: Dropped several methods now taken care of by super class.
 # 2013-11-01 [HB]
 # o SPEEDUP: Parallized process() for TopHat2Alignment.
 # o Now process() for TopHat2Alignment skips already processed samples.

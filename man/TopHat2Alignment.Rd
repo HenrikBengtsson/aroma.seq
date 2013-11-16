@@ -21,9 +21,11 @@
 \code{~~|}\cr
 \code{~~+--}\code{\link[aroma.core]{ParametersInterface}}\cr
 \code{~~~~~~~|}\cr
-\code{~~~~~~~+--}\code{\link[aroma.seq]{AbstractAlignment}}\cr
+\code{~~~~~~~+--}\code{\link[aroma.seq]{AromaSeqTransform}}\cr
 \code{~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~+--}\code{TopHat2Alignment}\cr
+\code{~~~~~~~~~~~~+--}\code{\link[aroma.seq]{AbstractAlignment}}\cr
+\code{~~~~~~~~~~~~~~~~~|}\cr
+\code{~~~~~~~~~~~~~~~~~+--}\code{TopHat2Alignment}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
@@ -51,13 +53,15 @@ TopHat2Alignment(..., indexSet=NULL, transcripts=NULL)
 \tabular{rll}{
  \tab \code{getOutputDataSet} \tab  -\cr
  \tab \code{getSampleNames} \tab  -\cr
- \tab \code{isDone} \tab  -\cr
  \tab \code{process} \tab  -\cr
 }
 
 
  \bold{Methods inherited from AbstractAlignment}:\cr
-as.character, findFilesTodo, getAsteriskTags, getFlavor, getFullName, getIndexSet, getInputDataSet, getName, getOptionalArguments, getOrganism, getOutputDataSet, getParameterSets, getPath, getRootPath, getTags, isPaired, nbrOfFiles, process, setTags
+as.character, getAcronym, getAsteriskTags, getIndexSet, getOrganism, getOutputDataSet, getRootPath, isPaired
+
+ \bold{Methods inherited from AromaSeqTransform}:\cr
+as.character, findFilesTodo, getAcronym, getAsteriskTags, getFlavor, getFullName, getInputDataSet, getName, getOptionalArguments, getOrganism, getOutputDataSet, getParameters, getPath, getRootPath, getTags, isDone, length, process, setTags
 
  \bold{Methods inherited from ParametersInterface}:\cr
 getParameterSets, getParameters, getParametersAsString

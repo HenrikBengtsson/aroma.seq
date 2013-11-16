@@ -21,13 +21,15 @@
 \code{~~|}\cr
 \code{~~+--}\code{\link[aroma.core]{ParametersInterface}}\cr
 \code{~~~~~~~|}\cr
-\code{~~~~~~~+--}\code{PicardDuplicateRemoval}\cr
+\code{~~~~~~~+--}\code{\link[aroma.seq]{AromaSeqTransform}}\cr
+\code{~~~~~~~~~~~~|}\cr
+\code{~~~~~~~~~~~~+--}\code{PicardDuplicateRemoval}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
 
 public static class \bold{PicardDuplicateRemoval}\cr
-extends \link[aroma.core]{ParametersInterface}\cr
+extends \emph{\link[aroma.seq]{AromaSeqTransform}}\cr
 
 
 
@@ -41,28 +43,27 @@ extends \link[aroma.core]{ParametersInterface}\cr
 }
 
 \usage{
-PicardDuplicateRemoval(dataSet=NULL, tags="*", ASSUME_SORTED=TRUE,
-  VALIDATION_STRINGENCY="SILENT", ...)
+PicardDuplicateRemoval(dataSet=NULL, ..., ASSUME_SORTED=TRUE,
+  VALIDATION_STRINGENCY="SILENT")
 }
 
 \arguments{
  \item{dataSet}{An \code{\link{BamDataSet}}.}
- \item{tags}{Additional tags for the output data sets.}
- \item{ASSUME_SORTED, VALIDATION_STRINGENCY, ...}{
+ \item{...}{Additional arguments passed to \code{\link{AromaSeqTransform}}.}
+ \item{ASSUME_SORTED, VALIDATION_STRINGENCY}{
    Additional arguments passed to Picard MarkDuplicates.}
 }
 
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{findFilesTodo} \tab  -\cr
- \tab \code{getFullName} \tab  -\cr
- \tab \code{getInputDataSet} \tab  -\cr
  \tab \code{getOutputDataSet} \tab  -\cr
- \tab \code{nbrOfFiles} \tab  -\cr
  \tab \code{process} \tab  -\cr
 }
 
+
+ \bold{Methods inherited from AromaSeqTransform}:\cr
+as.character, findFilesTodo, getAcronym, getAsteriskTags, getFlavor, getFullName, getInputDataSet, getName, getOptionalArguments, getOrganism, getOutputDataSet, getParameters, getPath, getRootPath, getTags, isDone, length, process, setTags
 
  \bold{Methods inherited from ParametersInterface}:\cr
 getParameterSets, getParameters, getParametersAsString
