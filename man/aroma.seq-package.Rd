@@ -15,7 +15,7 @@
 
 
 \description{
-  [STUB ONLY/DON'T INSTALL] Methods for performing common sequence analysis.  Most of the actual analysis is performed by external software, which this package provides transparent wrappers for.
+  Simple, flexible and distributed processing of very large-scale HT-Seq data - available at the R prompt. [VERY EARLY VERSION/STUB]
 }
 
 \section{Requirements}{
@@ -43,7 +43,8 @@
 
 \section{How to cite this package}{
  Bengtsson H, Olshen A and Tokuyasu T (2013).
-\emph{aroma.seq: Sequence analysis in the Aroma Framework}.
+\emph{aroma.seq: High-throughput sequence (HT-Seq) analysis in the Aroma
+framework}.
 R package version 0.4.0.
 }
 
