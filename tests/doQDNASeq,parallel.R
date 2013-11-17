@@ -24,7 +24,9 @@ print(fa)
 # Setup FASTQ set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pathR <- "fastqData,aroma.seq,private";
-fqs <- IlluminaFastqDataSet$byName(dataSet, organism=organism, paths=pathR)
+##fqs <- IlluminaFastqDataSet$byName(dataSet, organism=organism, paths=pathR)
+path <- IlluminaFastqDataSet$findByName(dataSet, organism=organism, paths=pathR)
+fqs <- IlluminaFastqDataSet$byPath(path)
 fqs <- extract(fqs, 1:2)
 print(fqs)
 
@@ -35,11 +37,8 @@ print(fqs)
 cns <- doQDNAseq(fqs, reference=fa, binWidth=100, tags=c("*", "parallel"), verbose=-20)
 print(cns)
 
-# Display individual BAM files
-for (ii in seq_along(cns)) {
-  cn <- getFile(cns, ii)
-  print(cn)
-}
+# Display individual output files
+for (ii in seq_along(cns)) print(cns[[ii]])
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
