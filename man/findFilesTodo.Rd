@@ -19,7 +19,7 @@
 }
 
 \usage{
- \method{findFilesTodo}{AromaSeqTransform}(this, ...)
+ \method{findFilesTodo}{AromaSeqTransform}(this, force=FALSE, ...)
  \method{findFilesTodo}{TotalCnBinnedCounting}(this, ...)
 }
 

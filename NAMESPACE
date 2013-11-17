@@ -325,8 +325,8 @@ S3method("validate", "FastqDataSet")
 # FastqDownsampler
 S3method("as.character", "FastqDownsampler")
 S3method("getAsteriskTags", "FastqDownsampler")
-S3method("getRootPath", "FastqDownsampler")
 S3method("getOutputDataSet", "FastqDownsampler")
+S3method("getRootPath", "FastqDownsampler")
 S3method("getSampleSize", "FastqDownsampler")
 S3method("process", "FastqDownsampler")
 
@@ -388,6 +388,12 @@ S3method("getAsteriskTags", "PicardDuplicateRemoval")
 S3method("getOutputDataSet", "PicardDuplicateRemoval")
 S3method("getRootPath", "PicardDuplicateRemoval")
 S3method("process", "PicardDuplicateRemoval")
+
+# QDNAseqEstimation
+S3method("getAsteriskTags", "QDNAseqEstimation")
+S3method("getOutputDataSet", "QDNAseqEstimation")
+S3method("getRootPath", "QDNAseqEstimation")
+S3method("process", "QDNAseqEstimation")
 
 # SamDataFile
 S3method("as.character", "SamDataFile")

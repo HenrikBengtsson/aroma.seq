@@ -246,3 +246,7 @@ length.AromaSeqTransform process.AromaSeqTransform
 setTags.AromaSeqTransform
 getParameters.AromaSeqTransform isDone.AromaSeqTransform
 getRootPath.FastqDownsampler
+getAsteriskTags.QDNAseqEstimation
+getOutputDataSet.QDNAseqEstimation getRootPath.QDNAseqEstimation
+process.QDNAseqEstimation
+getBinWidth getBinWidth.QDNAseqEstimation

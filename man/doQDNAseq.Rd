@@ -24,9 +24,9 @@
 
 \usage{
   \method{doQDNAseq}{FastqDataSet}(dataSet, binWidth, reference, ..., verbose=FALSE)
-  \method{doQDNAseq}{BamDataSet}(dataSet, binWidth, ..., force=FALSE, verbose=FALSE)
+  \method{doQDNAseq}{BamDataSet}(dataSet, ..., force=FALSE, verbose=FALSE)
   \method{doQDNAseq}{BamDataFile}(df, binWidth, log=TRUE, mappability=50, blacklist=0, residual=2, bases=0, ...,
-  force=FALSE, verbose=FALSE)
+  path=".", force=FALSE, verbose=FALSE)
 }
 
 \arguments{
@@ -42,7 +42,8 @@
 }
 
 \value{
-  Returns a \code{\link[QDNAseq]{QDNAseqReadCounts}} object.
+  Returns a \code{\link[R.filesets]{GenericDataFileSet}} containing
+  \code{\link[QDNAseq]{QDNAseqReadCounts}} objects.
 }
 
 \references{

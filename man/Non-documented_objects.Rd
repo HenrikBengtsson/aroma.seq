@@ -443,6 +443,12 @@
 \alias{getParameters.AromaSeqTransform}
 \alias{isDone.AromaSeqTransform}
 \alias{getRootPath.FastqDownsampler}
+\alias{getAsteriskTags.QDNAseqEstimation}
+\alias{getOutputDataSet.QDNAseqEstimation}
+\alias{getRootPath.QDNAseqEstimation}
+\alias{process.QDNAseqEstimation}
+\alias{getBinWidth}
+\alias{getBinWidth.QDNAseqEstimation}
 
 \description{
   This page contains aliases for all "non-documented" objects that

@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.1 [2013-11-16]
+o Added QDNAseqEstimation, which is utilized by doQDNAseq() methods.
+
+
 Version: 0.4.0 [2013-11-16]
 o CLEANUP: Added AromaSeqTransform class that now several method
   classes extends.

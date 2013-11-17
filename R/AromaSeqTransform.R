@@ -88,11 +88,18 @@ setMethodS3("getInputDataSet", "AromaSeqTransform", function(this, ...) {
 
 setMethodS3("getOutputDataSet", "AromaSeqTransform", abstract=TRUE, protected=TRUE)
 
-setMethodS3("findFilesTodo", "AromaSeqTransform", function(this, ...) {
+setMethodS3("findFilesTodo", "AromaSeqTransform", function(this, force=FALSE, ...) {
+  # Argument 'force':
+  force <- Arguments$getLogical(force);
+
   res <- getOutputDataSet(this, onMissing="NA");
-  isFile <- unlist(sapply(res, FUN=isFile), use.names=FALSE);
-  todo <- !isFile;
-  todo <- which(todo);
+  if (force) {
+    todo <- seq_along(res);
+  } else {
+    isFile <- unlist(sapply(res, FUN=isFile), use.names=FALSE);
+    todo <- !isFile;
+    todo <- which(todo);
+  }
   if (length(todo) > 0L) {
     ds <- getInputDataSet(this);
     names(todo) <- getNames(ds[todo]);
@@ -179,6 +186,7 @@ setMethodS3("getTags", "AromaSeqTransform", function(this, collapse=NULL, ...) {
 
   # Update default tags
   tags[tags == "*"] <- getAsteriskTags(this, collapse=",");
+  tags <- tags[nchar(tags) > 0L];
 
   # Collapsed or split?
   if (!is.null(collapse)) {

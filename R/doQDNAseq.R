@@ -32,7 +32,8 @@
 # }
 #
 # \value{
-#   Returns a @see "QDNAseq::QDNAseqReadCounts" object.
+#   Returns a @see "R.filesets::GenericDataFileSet" containing
+#   @see "QDNAseq::QDNAseqReadCounts" objects.
 # }
 #
 # \references{
@@ -43,11 +44,8 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("doQDNAseq", "BamDataFile", function(df, binWidth, log=TRUE, mappability=50, blacklist=0, residual=2, bases=0, ..., force=FALSE, verbose=FALSE) {
-  require("Biobase") || throw("Package not loaded: Biobase"); # combine()
-  pkgName <- "QDNAseq";
-  require(pkgName, character.only=TRUE) || throw("Package not loaded: QDNAseq");
-  stopifnot(packageVersion("QDNAseq") >= "0.5.6");
+setMethodS3("doQDNAseq", "BamDataFile", function(df, binWidth, log=TRUE, mappability=50, blacklist=0, residual=2, bases=0, ..., path=".", force=FALSE, verbose=FALSE) {
+  R.utils::use("QDNAseq (>= 0.5.8)");
   getBinAnnotations <- binReadCounts <- correctBins <- normalizeBins <- NULL;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -61,6 +59,12 @@ setMethodS3("doQDNAseq", "BamDataFile", function(df, binWidth, log=TRUE, mappabi
     binWidth <- Arguments$getInteger(binWidth, range=c(0.1, 10e3));
   }
 
+  # Argument 'path':
+  path <- Arguments$getWritablePath(path);
+
+  # Argument 'force':
+  force <- Arguments$getLogical(force);
+
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
   if (verbose) {
@@ -71,6 +75,27 @@ setMethodS3("doQDNAseq", "BamDataFile", function(df, binWidth, log=TRUE, mappabi
 
   verbose && enter(verbose, "QDNAseq");
   verbose && print(verbose, df);
+
+  # Output pathname
+  filename <- sprintf("%s.RData", getFullName(df));
+  pathname <- Arguments$getReadablePathname(filename, path=path, mustExist=FALSE);
+  verbose && cat(verbose, "Output pathname: ", pathname);
+
+  # Already done?
+  isDone <- (!force && isFile(pathname));
+  if (isDone) {
+    verbose && cat(verbose, "Already processed. Skipping.");
+    df <- GenericDataFile(pathname);
+    verbose && exit(verbose);
+    return(df);
+  }
+
+
+  # Disable 'QDNAseq' messages?
+  if (!as.logical(verbose)) {
+    oopts <- options("QDNAseq::verbose"=FALSE);
+    on.exit(options(oopts), add=TRUE);
+  }
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -88,10 +113,10 @@ setMethodS3("doQDNAseq", "BamDataFile", function(df, binWidth, log=TRUE, mappabi
   # Processing
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "QDNAseq/Reading and binning data");
-  pathname <- getPathname(df);
-  data <- binReadCounts(bins, bamfiles=pathname, cache=TRUE, force=force);
+  pathnameBAM <- getPathname(df);
+  data <- binReadCounts(bins, bamfiles=pathnameBAM, cache=TRUE, force=force);
   verbose && print(verbose, data);
-  bins <- NULL;
+  bins <- pathnameBAM <- NULL;
   verbose && exit(verbose);
 
   verbose && enter(verbose, "QDNAseq/Correcting bin counts for GC content and mappability");
@@ -106,31 +131,26 @@ setMethodS3("doQDNAseq", "BamDataFile", function(df, binWidth, log=TRUE, mappabi
   dataC <- NULL;
   verbose && exit(verbose);
 
+  verbose && enter(verbose, "QDNAseq/Saving");
+  verbose && cat(verbose, "Output pathname: ", pathname);
+  saveObject(dataN, file=pathname);
   verbose && exit(verbose);
 
-  dataN;
+  df <- GenericDataFile(pathname);
+
+  verbose && exit(verbose);
+
+  df;
 }) # doQDNAseq()
 
 
 
 
 
-setMethodS3("doQDNAseq", "BamDataSet", function(dataSet, binWidth, ..., force=FALSE, verbose=FALSE) {
-  pkgName <- "QDNAseq";
-  require(pkgName, character.only=TRUE) || throw("Package not loaded: QDNAseq");
-  getBinAnnotations <- NULL;
-
+setMethodS3("doQDNAseq", "BamDataSet", function(dataSet, ..., force=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Argument 'binWidth':
-  bins <- NULL;
-  if (inherits(binWidth, "AnnotatedDataFrame")) {
-    bins <- binWidth;
-  } else {
-    binWidth <- Arguments$getInteger(binWidth, range=c(0.1, 10e3));
-  }
-
   # Argument 'force':
   force <- Arguments$getLogical(force);
 
@@ -143,85 +163,22 @@ setMethodS3("doQDNAseq", "BamDataSet", function(dataSet, binWidth, ..., force=FA
 
 
   verbose && enter(verbose, "QDNAseq");
-  verbose && print(verbose, dataSet);
 
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Setup
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  rootPath <- "QDNAseqData";
-  path <- file.path(rootPath, getFullName(dataSet), getOrganism(dataSet));
-  path <- Arguments$getWritablePath(path);
-
-
-  if (is.null(bins)) {
-    verbose && enter(verbose, "QDNAseq/Retrieve QDNAseq bin annotation");
-    bins <- getBinAnnotations(binWidth);
-    verbose && print(verbose, bins);
-    verbose && exit(verbose);
-  }
-
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Process each sample
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  dsApply(dataSet, FUN=function(df, bins, ..., path, force=FALSE, verbose=FALSE) {
-    R.utils::use("R.utils, aroma.seq");
-
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Validate arguments
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Argument 'df':
-    df <- Arguments$getInstanceOf(df, "BamDataFile");
-
-    # Argument 'path':
-    path <- Arguments$getWritablePath(path);
-
-    # Argument 'force':
-    force <- Arguments$getLogical(force);
-
-    # Argument 'verbose':
-    verbose <- Arguments$getVerbose(verbose);
-    if (verbose) {
-      pushState(verbose);
-      on.exit(popState(verbose));
-    }
-
-    verbose && enter(verbose, "QDNAseq of one sample");
-
-    filename <- sprintf("%s.RData", getFullName(df));
-    pathname <- Arguments$getReadablePathname(filename, path=path, mustExist=FALSE);
-    done <- (!force && isFile(pathname));
-    if (done) {
-      verbose && cat(verbose, "Already processed. Skipping.");
-    } else {
-      dataN <- doQDNAseq(df, binWidth=bins, ..., verbose=less(verbose,1));
-      verbose && print(verbose, dataN);
-      saveObject(dataN, file=pathname);
-    } # if (done)
-
-    verbose && exit(verbose);
-
-    invisible(list(pathname=pathname));
-  }, bins=bins, path=path, force=force, verbose=verbose) # dsApply()
-
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Collect results
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  ds <- GenericDataFileSet$byPath(path, pattern="[.]RData$");
-  ds <- extract(ds, indexOf(ds, getNames(dataSet)));
-  verbose && print(verbose, ds);
+  verbose && enter(verbose, "QDNAseq/copy number estimation");
+  qe <- QDNAseqEstimation(dataSet, ...);
+  verbose && print(verbose, qe);
+  cns <- process(qe, force=force, verbose=verbose);
+  verbose && print(verbose, cns);
+  verbose && exit(verbose);
 
   verbose && exit(verbose);
 
-  ds;
+  cns;
 }) # doQDNAseq()
 
 
 setMethodS3("doQDNAseq", "FastqDataSet", function(dataSet, binWidth, reference, ..., verbose=FALSE) {
-  pkgName <- "QDNAseq";
-  require(pkgName, character.only=TRUE) || throw("Package not loaded: QDNAseq");
+  R.utils::use("QDNAseq (>= 0.5.8)");
   getBinAnnotations <- NULL;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -266,6 +223,13 @@ setMethodS3("doQDNAseq", "FastqDataSet", function(dataSet, binWidth, reference, 
   verbose && exit(verbose);
 
   verbose && exit(verbose);
+
+
+  # Disable 'QDNAseq' messages?
+  if (!as.logical(verbose)) {
+    oopts <- options("QDNAseq::verbose"=FALSE);
+    on.exit(options(oopts), add=TRUE);
+  }
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -327,6 +291,8 @@ setMethodS3("doQDNAseq", "default", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2013-11-16
+# o CLEANUP: Now doQDNAseq() for BamDataSet utilized QDNAseqEstimation.
 # 2013-10-31
 # o Updated capitalization to reflect the updated 'QDNAseq' package name.
 # 2013-08-31
