@@ -85,6 +85,7 @@ if (isCapableOf(aroma.seq, "picard")) {
   # Without IGNORE="MISSING_READ_GROUP" we get an
   # error on 'Read groups is empty'
   validate(bam, IGNORE="MISSING_READ_GROUP")
+  validate(bam, onError="warning")
 }
 
 

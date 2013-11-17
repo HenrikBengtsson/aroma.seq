@@ -60,10 +60,12 @@ print(sams)
 if (isCapableOf(aroma.seq, "picard")) {
   # Without IGNORE="MISSING_READ_GROUP" below,
   # we get error 'Read groups is empty'
-  bam <- bams[[1]]
-  validate(bam, IGNORE="MISSING_READ_GROUP")
   sam <- sams[[1]]
+  bam <- bams[[1]]
   validate(sam, IGNORE="MISSING_READ_GROUP")
+  validate(sam, onError="warning")
+  validate(bam, IGNORE="MISSING_READ_GROUP")
+  validate(bam, onError="warning")
 }
 
 
