@@ -13,7 +13,7 @@ organism <- "HomoSapiens"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup FASTA reference file
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-fa <- FastaReferenceFile$byOrganism(organism) ## , prefix="human_g1k_v37")
+fa <- FastaReferenceFile$byOrganism(organism, prefix="human_g1k_v37")
 print(fa)
 
 
