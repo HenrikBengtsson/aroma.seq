@@ -55,7 +55,8 @@ setMethodS3("getOrganism", "AbstractIndexSet", function(this, ...) {
 
 setMethodS3("byPrefix", "AbstractIndexSet", function(static, prefix, ...) {
   path <- getParent(prefix);
-  byPath(static, path=path, ...);
+  pattern <- sprintf("%s", basename(prefix));
+  byPath(static, path=path, pattern=pattern, ...);
 }, static=TRUE)
 
 
@@ -70,6 +71,10 @@ setMethodS3("isComplete", "AbstractIndexSet", abstract=TRUE);
 
 ############################################################################
 # HISTORY:
+# 2013-11-17
+# o BUG FIX: BwaIndexSet$byPrefix(prefix) would find any BWA index set
+#   in directory dirname(prefix) without matching filenames of the set
+#   to basename(prefix).
 # 2013-11-10
 # o Added getOrganism().
 # 2012-09-27

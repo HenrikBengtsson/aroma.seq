@@ -118,7 +118,7 @@ setMethodS3("findByOrganism", "FastaReferenceFile", function(static, organism, t
 
   # Argument 'prefix':
   if (!is.null(prefix)) {
-    warning("Argument 'prefix' for findByOrganism() is currently ignored, because support for it is still to be implemented: ", prefix);
+    prefix <- Arguments$getRegularExpression(prefix);
   }
 
 
@@ -136,10 +136,12 @@ setMethodS3("findByOrganism", "FastaReferenceFile", function(static, organism, t
   tags <- parts[-1L];
 
   # Search for "organisms/<organism>/.*[.](fa|fasta)$" files
+  patternS <- pattern;
+  if (!is.null(prefix)) patternS <- sprintf("%s.*%s", prefix, patternS);
   args <- list(
     set="organisms",
     name=organism,
-    pattern=pattern,
+    pattern=patternS,
     ...
   );
   pathname <- do.call("findAnnotationData", args=args);
@@ -165,8 +167,7 @@ setMethodS3("byOrganism", "FastaReferenceFile", function(static, organism, ...) 
   pathname <- findByOrganism(static, organism, ...);
   if (length(pathname) == 0)
     throw("Failed to located FASTA reference file for organism: ", organism);
-  res <- newInstance(static, pathname, ...);
-
+  res <- newInstance(static, pathname);
   res;
 }, static=TRUE) # byOrganism()
 
@@ -450,6 +451,8 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
 
 ############################################################################
 # HISTORY:
+# 2013-11-17
+# o Added argument 'prefix' to findByOrganism() for FastaReferenceFile.
 # 2013-11-10
 # o Added getOrganism().
 # 2013-11-09
