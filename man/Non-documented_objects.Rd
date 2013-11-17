@@ -308,7 +308,6 @@
 \alias{process.GatkAlleleCounting}
 \alias{readGatkCountFile}
 \alias{readGatkCountFile.GatkAlleleCounting}
-\alias{validate.BamDataFile}
 \alias{writeBedDataFile}
 \alias{writeBedDataFile.AromaUgpFile}
 \alias{getDefaultColumnNames.AromaUnitNucleotideCountsFile}
@@ -449,6 +448,8 @@
 \alias{process.QDNAseqEstimation}
 \alias{getBinWidth}
 \alias{getBinWidth.QDNAseqEstimation}
+\alias{picardValidateSamFile}
+\alias{picardValidateSamFile.default}
 
 \description{
   This page contains aliases for all "non-documented" objects that

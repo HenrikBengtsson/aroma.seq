@@ -3,6 +3,9 @@ Package: aroma.seq
 
 Version: 0.4.1 [2013-11-16]
 o Added QDNAseqEstimation, which is utilized by doQDNAseq() methods.
+o Added validate() for both Sam- and BamDataFile:s, and corresponding
+  system tests based on BWA and Bowtie2 aligned SAM/BAM files.
+o Added low-level picardValidateSamFile().
 
 
 Version: 0.4.0 [2013-11-16]

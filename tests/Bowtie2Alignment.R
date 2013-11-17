@@ -78,6 +78,18 @@ for (ii in seq_along(bams)) {
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Validate
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+if (isCapableOf(aroma.seq, "picard")) {
+  bam <- bams[[1]]
+  # Without IGNORE="MISSING_READ_GROUP" we get an
+  # error on 'Read groups is empty'
+  validate(bam, IGNORE="MISSING_READ_GROUP")
+}
+
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Remove duplicated reads using Picard
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 if (isCapableOf(aroma.seq, "picard")) {

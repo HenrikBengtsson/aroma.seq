@@ -49,6 +49,7 @@ SamDataFile(...)
 \tabular{rll}{
  \tab \code{convertToBam} \tab  -\cr
  \tab \code{directoryStructure} \tab  -\cr
+ \tab \code{validate} \tab  -\cr
 }
 
 

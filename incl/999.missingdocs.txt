@@ -162,7 +162,7 @@ GatkAlleleCounting anyDuplicated.AromaUgpFile
 getParameters.GatkAlleleCounting getPath.GatkAlleleCounting
 getRootPath.GatkAlleleCounting process.GatkAlleleCounting
 readGatkCountFile readGatkCountFile.GatkAlleleCounting
-validate.BamDataFile writeBedDataFile
+writeBedDataFile
 writeBedDataFile.AromaUgpFile
 getDefaultColumnNames.AromaUnitNucleotideCountsFile
 getCombineBy getCombineBy.GatkAlleleCounting
@@ -250,3 +250,5 @@ getAsteriskTags.QDNAseqEstimation
 getOutputDataSet.QDNAseqEstimation getRootPath.QDNAseqEstimation
 process.QDNAseqEstimation
 getBinWidth getBinWidth.QDNAseqEstimation
+picardValidateSamFile
+picardValidateSamFile.default

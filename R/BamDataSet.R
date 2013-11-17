@@ -141,7 +141,6 @@ setMethodS3("byName", "BamDataSet", function(static, name, tags=NULL, organism=N
 }, static=TRUE)
 
 
-
 ############################################################################
 # HISTORY:
 # 2013-11-11

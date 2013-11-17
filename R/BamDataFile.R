@@ -485,7 +485,38 @@ setMethodS3("readReadPositions", "BamDataFile", function(this, ..., flag=scanBam
 }) # readReadPositions()
 
 
-setMethodS3("validate", "BamDataFile", function(this, method=c("picard"), ..., skip=TRUE, overwrite=!skip, verbose=FALSE) {
+###########################################################################/**
+# @RdocMethod validate
+# @alias validate.SamDataFile
+#
+# @title "Validates a BAM (or SAM) file"
+#
+# \description{
+#   @get "title".
+# }
+#
+# @synopsis
+#
+# \arguments{
+#  \item{method}{A @character string specifying which validation method to use.}
+#  \item{...}{Additional arguments passed to the internal validation method.}
+#  \item{verbose}{See @see "R.utils::Verbose".}
+# }
+#
+# \value{
+#   Returns (invisibly) what the internal validation method returns,
+#   or throws an exception if an error is detected.
+# }
+#
+# \seealso{
+#   Internally \code{picardValidateSamFile()} is used.
+# }
+#
+# @author "HB"
+#
+# @keyword internal
+#*/###########################################################################
+setMethodS3("validate", "BamDataFile", function(this, method=c("picard"), ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -499,43 +530,17 @@ setMethodS3("validate", "BamDataFile", function(this, method=c("picard"), ..., s
     on.exit(popState(verbose));
   }
 
-  verbose && enter(verbose, sprintf("Validating %s", class(this)[1]));
+  verbose && enter(verbose, sprintf("Validating %s", class(this)[1L]));
   verbose && cat(verbose, "Validation method: ", method);
 
-  pathname <- getPathname(this);
-  verbose && cat(verbose, "Pathname: ", pathname);
-
-  pathnameR <- sprintf("%s.log", getPathname(this));
-  pathnameR <- Arguments$getWritablePathname(pathnameR, mustNotExist=FALSE);
-  verbose && cat(verbose, "Log pathname: ", pathnameR);
-
   if (method == "picard") {
-    if (skip && isFile(pathnameR)) {
-    } else if (overwrite || !isFile(pathnameR)) {
-      res <- systemPicard("ValidateSamFile", INPUT=pathname, stdout=pathnameR, stderr=pathnameR);
-    }
-
-    # Parse output
-    bfr <- readLines(pathnameR);
-    for (type in c("WARNING", "ERROR")) {
-      pattern <- sprintf("^%s: ", type);
-      values <- grep(pattern, bfr, value=TRUE);
-      if (length(values) == 0L) next;
-
-      verbose && print(verbose, values);
-      msgs <- gsub(pattern, "", values);
-      msgs <- paste(msgs, collapse="\n");
-      if (type == "WARNING") {
-        warning(msgs);
-      } else if (type == "ERROR") {
-        throw(msgs);
-      }
-    } # for (type ...)
+    stopifnot(isCapableOf(aroma.seq, "picard"));
+    res <- picardValidateSamFile(getPathname(this), ..., verbose=verbose);
   }
 
   verbose && exit(verbose);
 
-  invisible(TRUE);
+  invisible(res);
 }, protected=TRUE)
 
 

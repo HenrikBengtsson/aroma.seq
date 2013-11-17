@@ -49,6 +49,27 @@ for (ii in seq_along(bams)) {
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# A side-effect of BWA is for now that SAM data files are also created
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+sams <- SamDataSet$byPath(getPath(bams))
+print(sams)
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Validate
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+if (isCapableOf(aroma.seq, "picard")) {
+  # Without IGNORE="MISSING_READ_GROUP" below,
+  # we get error 'Read groups is empty'
+  bam <- bams[[1]]
+  validate(bam, IGNORE="MISSING_READ_GROUP")
+  sam <- sams[[1]]
+  validate(sam, IGNORE="MISSING_READ_GROUP")
+}
+
+
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Remove duplicated reads using Picard
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 if (isCapableOf(aroma.seq, "picard")) {

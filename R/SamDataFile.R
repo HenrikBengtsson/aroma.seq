@@ -39,17 +39,18 @@ setConstructorS3("SamDataFile", function(...) {
 setMethodS3("as.character", "SamDataFile", function(x, ...) {
   # To please R CMD check
   this <- x;
-
   s <- NextMethod("as.character");
-  class <- class(s);
-
-  class(s) <- class;
   s;
 }, protected=TRUE)
 
 
+setMethodS3("validate", "SamDataFile", validate.BamDataFile)
+
+
 ############################################################################
 # HISTORY:
+# 2013-11-16
+# o Added validate() for SamDataFile.
 # 2013-11-08
 # o DOCUMENTATION: Added help on convertToBam() for SamDataFile.
 # o Renamed to use convertToBam() for both SamDataFile and SamDataSet.
