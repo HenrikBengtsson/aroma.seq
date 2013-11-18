@@ -30,17 +30,11 @@ setConstructorS3("AbstractIndexSet", function(files=NULL, ...) {
 
 
 setMethodS3("as.character", "AbstractIndexSet", function(x, ...) {
-  # To please R CMD check
   this <- x;
-
   s <- NextMethod("as.character");
-  class <- class(s);
-
   s <- c(s, sprintf("Index prefix: %s", getIndexPrefix(this)));
   s <- c(s, sprintf("Organism: %s", getOrganism(this)));
   s <- c(s, sprintf("Complete: %s", isComplete(this)));
-
-  class(s) <- class;
   s;
 }, protected=TRUE)
 

@@ -59,15 +59,9 @@ setConstructorS3("FastqDataSet", function(files=NULL, ..., paired=FALSE, struct=
 
 
 setMethodS3("as.character", "FastqDataSet", function(x, ...) {
-  # To please R CMD check
   this <- x;
-
   s <- NextMethod("as.character");
-  class <- class(s);
-
   s <- c(s, sprintf("Is paired: %s", isPaired(this)));
-
-  class(s) <- class;
   s;
 }, protected=TRUE)
 

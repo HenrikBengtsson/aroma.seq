@@ -34,11 +34,9 @@ setConstructorS3("BinnedGcNormalization", function(dataSet=NULL, ..., .reqSetCla
 setMethodS3("as.character", "BinnedGcNormalization", function(x, ...) {
   this <- x;
   s <- NextMethod("as.character");
-  clazz <- class(s);
   unc <- getGcContentFile(this);
 ##  s <- c(s, "GcContentFile:");
   s <- c(s, as.character(unc));
-  class(s) <- clazz;
   s;
 }, protected=TRUE)
 

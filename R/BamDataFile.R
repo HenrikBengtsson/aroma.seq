@@ -37,11 +37,9 @@ setConstructorS3("BamDataFile", function(...) {
 
 
 setMethodS3("as.character", "BamDataFile", function(x, ...) {
-  # To please R CMD check
   this <- x;
 
   s <- NextMethod("as.character");
-  class <- class(s);
 
   s <- c(s, sprintf("Has index file (*.bai): %s", hasIndex(this)));
   s <- c(s, sprintf("Is sorted: %s", isSorted(this)));
@@ -59,7 +57,6 @@ setMethodS3("as.character", "BamDataFile", function(x, ...) {
     s <- c(s, sprintf("Number of unmapped reads: %d (%.1f%%) out of %d", counts[["unmapped"]], 100*counts[["unmapped"]]/total, total));
   }
 
-  class(s) <- class;
   s;
 }, protected=TRUE)
 

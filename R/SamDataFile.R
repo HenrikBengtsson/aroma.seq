@@ -37,7 +37,6 @@ setConstructorS3("SamDataFile", function(...) {
 
 
 setMethodS3("as.character", "SamDataFile", function(x, ...) {
-  # To please R CMD check
   this <- x;
   s <- NextMethod("as.character");
   s;

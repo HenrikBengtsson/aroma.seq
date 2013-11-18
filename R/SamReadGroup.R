@@ -95,13 +95,10 @@ setConstructorS3("SamReadGroup", function(id=NULL, sample=NULL, library=NULL, pl
 
 
 setMethodS3("as.character", "SamReadGroup", function(x, ...) {
-  # To please R CMD check
   this <- x;
-
   s <- sprintf("%s:", class(this)[1]);
   s <- c(s, asString(this, fmtstr=" %s:%s", ...));
-  class(s) <- c("GenericSummary", class(s));
-  s;
+  GenericSummary(s);
 }, protected=TRUE)
 
 

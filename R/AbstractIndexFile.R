@@ -37,15 +37,8 @@ setConstructorS3("AbstractIndexFile", function(...) {
 })
 
 setMethodS3("as.character", "AbstractIndexFile", function(x, ...) {
-  # To please R CMD check
-  this <- x;
-
   s <- NextMethod("as.character");
-  class <- class(s);
-
-  s <- c(s, sprintf("Index prefix: %s", getIndexPrefix(this)));
-
-  class(s) <- class;
+  s <- c(s, sprintf("Index prefix: %s", getIndexPrefix(x)));
   s;
 }, protected=TRUE)
 

@@ -37,17 +37,11 @@ setConstructorS3("FastqDataFile", function(...) {
 
 
 setMethodS3("as.character", "FastqDataFile", function(x, ...) {
-  # To please R CMD check
   this <- x;
-
   s <- NextMethod("as.character");
-  class <- class(s);
-
   n <- nbrOfSeqs(this);
   s <- c(s, sprintf("Number of sequences: %s", n));
   s <- c(s, sprintf("Common width of sequences: %d", getCommonSeqWidth(this)));
-
-  class(s) <- class;
   s;
 }, protected=TRUE)
 
