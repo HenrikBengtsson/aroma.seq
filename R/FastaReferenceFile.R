@@ -320,14 +320,18 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method, ...
 
   # Sanity check
   if (method == "is") {
+    verbose && enter(verbose, "Asserting that index can be build with method 'is'");
     size <- getFileSize(this);
+    verbose && printf(verbose, "FASTA filesize: %.f bytes\n", size);
     maxNbrOfBases <- 2e9;
     if (size > maxNbrOfBases) {
       nbrOfBases <- getTotalSeqLengths(this);
+      verbose && printf(verbose, "Number of bases in FASTA reference: %.f\n", nbrOfBases);
       if (nbrOfBases > maxNbrOfBases) {
-        throw(sprintf("Cannot build BWA index with method 'is'.  There are too many bases in FASTA file (%s): %.0f > %.0f", sQuote(pathnameFA), nbrOfBases, maxNbrOfBases));
+        throw(sprintf("Cannot build BWA index with method 'is' (consider using 'bwtsw' instead).  There are too many bases in FASTA file (%s): %.0f > %.0f", sQuote(pathnameFA), nbrOfBases, maxNbrOfBases));
       }
     }
+    verbose && exit(verbose);
   }
 
   # The index prefix
