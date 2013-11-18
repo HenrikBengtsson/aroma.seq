@@ -18,7 +18,7 @@
 }
 
 \usage{
-\method{bwaIndex}{default}(pathnameFA, indexPrefix="*", method, ..., verbose=FALSE)
+\method{bwaIndex}{default}(pathnameFA, indexPrefix="*", method=c("bwtsw", "is"), ..., verbose=FALSE)
 }
 
 \arguments{

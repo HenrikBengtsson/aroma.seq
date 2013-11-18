@@ -17,7 +17,7 @@
 }
 
 \usage{
-\method{bwaIndexPrefix}{default}(pathnameFA, method=c("is", "bwtsw"), subdir="bwa", tags="*", ...)
+\method{bwaIndexPrefix}{default}(pathnameFA, method=c("bwtsw", "is"), subdir="bwa", tags="*", ...)
 }
 
 \arguments{

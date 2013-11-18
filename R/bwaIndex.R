@@ -28,7 +28,7 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("bwaIndex", "default", function(pathnameFA, indexPrefix="*", method, ..., verbose=FALSE) {
+setMethodS3("bwaIndex", "default", function(pathnameFA, indexPrefix="*", method=c("bwtsw", "is"), ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

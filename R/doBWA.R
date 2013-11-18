@@ -84,7 +84,7 @@ setMethodS3("doBWA", "FastqDataSet", function(dataSet, reference, ..., verbose=F
     verbose && enter(verbose, "BWA/Alignment/Retrieving index set");
     fa <- reference;
     verbose && print(verbose, fa);
-    is <- buildBwaIndexSet(fa, method="is", verbose=verbose);
+    is <- buildBwaIndexSet(fa, verbose=verbose);
     verbose && print(verbose, is);
     verbose && exit(verbose);
     # Not needed anymore
@@ -115,6 +115,8 @@ setMethodS3("doBWA", "default", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2013-11-17
+# o Now doBWA() builds BWA indices using method 'bwtsw' (was 'is').
 # 2013-08-22
 # o Created.
 ############################################################################

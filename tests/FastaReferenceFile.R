@@ -25,8 +25,18 @@ print(fai)
 # Build BWA index file
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 if (fullTest && isCapableOf(aroma.seq, "bwa")) {
-  is <- buildBwaIndexSet(fa, method="is", verbose=-10)
+  is <- buildBwaIndexSet(fa, verbose=-10)
   print(is)
+
+  # Assert that both ways to build the BWA index generates
+  # the exact same set of indices.
+  isA <- buildBwaIndexSet(fa, method="is", verbose=-10)
+  print(isA)
+  isB <- buildBwaIndexSet(fa, method="bwtsw", verbose=-10)
+  print(isB)
+  checksumA <- sapply(isA, FUN=getChecksum)
+  checksumB <- sapply(isB, FUN=getChecksum)
+  stopifnot(identical(checksumA, checksumB))
 }
 
 

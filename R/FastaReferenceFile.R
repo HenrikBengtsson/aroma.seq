@@ -248,8 +248,10 @@ setMethodS3("buildIndex", "FastaReferenceFile", function(this, ..., skip=TRUE, v
 # @synopsis
 #
 # \arguments{
-#  \item{method}{A @character string specifying the algorithm to use,
-#     cf. @see "bwaIndexPrefix"}
+#  \item{method}{A @character string specifying the algorithm to use for
+#     building the index set. All methods gives identical results [1].
+#     The default is such that it can handle also large genomes, including
+#     the human genome.}
 #  \item{...}{Additional arguments passed to @see "bwaIndex".}
 #  \item{skip}{If @TRUE, the index files are not rebuilt if already available.}
 #  \item{verbose}{See @see "R.utils::Verbose".}
@@ -264,17 +266,19 @@ setMethodS3("buildIndex", "FastaReferenceFile", function(this, ..., skip=TRUE, v
 # }
 #
 # \references{
-#  [1] Edwards Bioinformatics Lab,
+#  [1] Thread \emph{bwa index option bwtsw}, SEQanswers, 2010-07-13.
+#      \url{http://seqanswers.com/forums/showthread.php?t=5921}\cr
+#  [2] Edwards Bioinformatics Lab,
 #      \emph{How to create a database for BWA and BWA-SW}, 2013.
 #      \url{http://edwards.sdsu.edu/research/index.php/robert/282-how-to-create-a-database-for-bwa-and-bwa-sw} \cr
-#  [2] Henrik Bengtsson, \emph{bwa index -a is: Details on database 2GB limit?},
+#  [3] Henrik Bengtsson, \emph{bwa index -a is: Details on database 2GB limit?},
 #      bwa-help thread on 2013-11-18.
 #      \url{https://sourceforge.net/mailarchive/message.php?msg_id=31649355}\cr
 # }
 #
 # @author
 #*/###########################################################################
-setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method, ..., skip=TRUE, verbose=FALSE) {
+setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method=c("bwtsw", "is"), ..., skip=TRUE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Local functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -296,9 +300,7 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method, ...
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'method':
-#  method <- Arguments$getCharacter(method);
-  choices <- eval(formals(bwaIndexPrefix.default)$method);
-  method <- match.arg(method, choices=choices);
+  method <- match.arg(method);
 
   # Argument 'skip':
   skip <- Arguments$getLogical(skip);
