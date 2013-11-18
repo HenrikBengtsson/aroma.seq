@@ -245,7 +245,8 @@ setMethodS3("readHeader", "BamDataFile", function(this, ...) {
 #       CAPILLARY, HELICOS, ILLUMINA, IONTORRENT, LS454, PACBIO, and SOLID.
 #   LB: Library.
 #
-#   Note that tools such as GATK (Broad Institute) requires RG:s.
+#   Note that tools such as GATK (Broad Institute) requires read groups
+#   'ID' and 'SM'. [3].
 # }
 #
 # \references{
@@ -253,6 +254,10 @@ setMethodS3("readHeader", "BamDataFile", function(this, ...) {
 #      \emph{The SAM Format Specification}, Sept 7, 2011.\cr
 #  [2] "What is '@RG ID' versus '@RG SM'"
 #      \url{http://seqanswers.com/forums/showthread.php?t=9784}\cr
+#  [3] Geraldine van der Auwera,
+#      \emph{Collected FAQs about BAM files},
+#      The Broad Institute, Aug 2012.
+#      \url{http://gatkforums.broadinstitute.org/discussion/1317/collected-faqs-about-bam-files}\cr
 # }
 setMethodS3("getReadGroups", "BamDataFile", function(this, ...) {
   hdr <- getHeader(this, ...);
