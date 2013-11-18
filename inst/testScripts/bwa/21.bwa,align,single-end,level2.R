@@ -1,5 +1,5 @@
 ############################################################################
-# 
+#
 ############################################################################
 library("aroma.seq");
 
@@ -9,10 +9,10 @@ library("aroma.seq");
 path <- "annotationData/organisms/LambdaPhage";
 filename <- "lambda_virus.fa";
 pathnameFA <- Arguments$getReadablePathname(filename, path=path);
-res <- bwaIndex(pathnameFA, method="is");
+res <- bwaIndex(pathnameFA, method="bwtsw");
 print(res);
 
-prefix <- bwaIndexPrefix(pathnameFA, method="is");
+prefix <- bwaIndexPrefix(pathnameFA, method="bwtsw");
 print(prefix);
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

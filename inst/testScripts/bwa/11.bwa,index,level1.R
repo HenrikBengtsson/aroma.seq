@@ -16,7 +16,7 @@ printf("BWA executable: %s\n", pathname);
 path <- "annotationData/organisms/LambdaPhage";
 pathnameFA <- file.path(path, "lambda_virus.fa");
 pathnameFA <- Arguments$getReadablePathname(pathnameFA);
-prefix <- bwaIndexPrefix(pathnameFA, method="is");
+prefix <- bwaIndexPrefix(pathnameFA, method="bwtsw");
 prefix <- Arguments$getWritablePathname(prefix) ## TAT addition; skip the mustNotExist=T
 res <- systemBWA("index", a="is", p=prefix, pathnameFA, verbose=TRUE);
 print(res);

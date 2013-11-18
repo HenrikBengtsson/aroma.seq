@@ -24,7 +24,7 @@ print(ds);
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Build BWA index set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-is <- buildBwaIndexSet(fa, method="is", verbose=-10);
+is <- buildBwaIndexSet(fa, verbose=-10);
 print(is);
 
 

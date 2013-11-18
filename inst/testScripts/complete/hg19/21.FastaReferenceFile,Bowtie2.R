@@ -17,7 +17,7 @@ print(fa);
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Build BWA index set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-is <- buildBowtie2IndexSet(fa, method="is", verbose=-10);
+is <- buildBowtie2IndexSet(fa, verbose=-10);
 print(is);
 
 

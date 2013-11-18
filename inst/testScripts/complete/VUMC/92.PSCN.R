@@ -92,7 +92,7 @@ print(arraysTag);
 # Single-end alignment
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Build BWA index set (iff missing)
-is <- buildBwaIndexSet(fa, method="is", verbose=verbose);
+is <- buildBwaIndexSet(fa, verbose=verbose);
 print(is);
 
 # In addition to SAM read group data inferred from the Illumina FASTQ
