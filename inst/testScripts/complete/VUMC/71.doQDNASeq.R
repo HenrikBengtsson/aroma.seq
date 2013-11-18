@@ -26,7 +26,7 @@ ds <- extract(ds, 1:min(3, length(ds)));
 
 # In addition to SAM read group data inferred from the Illumina FASTQ
 # files, manual set the library information for the whole data set.
-setSamReadGroup(ds, SamReadGroup(LB="MPS-034", ID=1L));
+setSamReadGroup(ds, SamReadGroup(LB="MPS-034"));
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
