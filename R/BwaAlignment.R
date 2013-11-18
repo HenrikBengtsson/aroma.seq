@@ -42,6 +42,15 @@ setConstructorS3("BwaAlignment", function(..., indexSet=NULL) {
 })
 
 
+setMethodS3("getAsteriskTags", "BwaAlignment", function(this, collapse=NULL, ...) {
+  tags <- NextMethod("getAsteriskTags", collapse=NULL);
+  # Drop BWA index 'method' tag, e.g. 'is' or 'bwtsw'
+  idx <- which(tags == "bwa") + 1L;
+  if (is.element(tags[idx], c("is", "bwtsw"))) tags <- tags[-idx];
+  paste(tags, collapse=collapse);
+})
+
+
 setMethodS3("getParameterSets", "BwaAlignment", function(this, ...) {
   paramsList <- NextMethod("getParameterSets");
   paramsList$aln <- getOptionalArguments(this, ...);
@@ -306,6 +315,10 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
 ############################################################################
 # HISTORY:
 # 2013-11-17
+# o CLEANUP: Now getAsteriskTags() for BwaAlignment no longer includes
+#   the 'method' tag, e.g. now 'bwa' when it used to be 'bwa,is'.  This
+#   is because the 'method' tags only indicates *how* the BWA index was
+#   build, not what it outputs (same regardless of method).
 # o If read group ID is missing, process() for BwaAlignment sets it to
 #   be the same as the fullname of the filename.  Same for SM.
 # 2013-11-11

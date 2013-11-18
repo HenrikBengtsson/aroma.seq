@@ -84,14 +84,19 @@ setMethodS3("getAcronym", "AbstractAlignment", function(this, case=c("lower", "u
   name;
 }, protected=TRUE)
 
+
 setMethodS3("getAsteriskTags", "AbstractAlignment", function(this, collapse=NULL, ...) {
   tags <- NextMethod("getAsteriskTags");
+
+  # Tags when paired-end reads are used
   if (isPaired(this)) tags <- c(tags, "paired");
+
+  # Tags for the index set
   is <- getIndexSet(this);
   tags <- c(tags, getTags(is, collapse=NULL));
+
   tags <- unique(tags);
-  tags <- paste(tags, collapse=collapse);
-  tags;
+  paste(tags, collapse=collapse);
 }, protected=TRUE)
 
 
