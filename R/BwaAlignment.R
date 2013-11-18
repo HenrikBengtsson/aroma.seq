@@ -78,16 +78,31 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Local functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  asBwaParameter <- function(rg, ...) {
+  asBwaParameter <- function(rg, default=list(), ...) {
     if (isEmpty(rg)) {
       return(NULL);
     }
 
+    if (!hasSample(rg)) {
+      sm <- default$SM;
+      if (is.null(sm)) {
+        throw("No default value for required read group 'SM' is specified.");
+      }
+      rg$SM <- sm;
+    }
+
     # Validate
     if (!hasID(rg)) {
-      msg <- sprintf("BWA 'samse/sampe' requires that the SAM read group has an ID. Will use default ID=1: %s", paste(as.character(rg), collapse=", "));
+      id <- default$ID;
+      if (!is.null(id)) {
+        msg <- "Using default ID that was specified";
+      } else {
+        id <- rg$SM;
+        msg <- "No default ID was specified, so will that of the SM read group";
+      }
+      msg <- sprintf("BWA 'samse/sampe' requires that the SAM read group has an ID. %s, i.e. ID=%s: %s", msg, id, paste(as.character(rg), collapse=", "));
       warning(msg);
-      rg$ID <- 1L;
+      rg$ID <- id;
     }
 
     rgArg <- asString(rg, fmtstr="%s:%s", collapse="\t");
@@ -240,7 +255,8 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
         verbose && cat(verbose, "Writing SAM Read Groups:");
         verbose && print(verbose, rgII);
         verbose && cat(verbose, "BWA 'samse' parameter:");
-        rgArg <- asBwaParameter(rgII);
+        fullname <- getFullName(df);
+        rgArg <- asBwaParameter(rgII, default=list(ID=fullname, SM=fullname));
         verbose && print(verbose, rgArg);
 
         args <- list(pathnameSAI=pathnameSAI, pathnameFQ=pathnameFQ,
@@ -289,6 +305,9 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
 
 ############################################################################
 # HISTORY:
+# 2013-11-17
+# o If read group ID is missing, process() for BwaAlignment sets it to
+#   be the same as the fullname of the filename.  Same for SM.
 # 2013-11-11
 # o SPEEDUP: Now Bowtie2Alignment and BwaAlignment skips already processed
 #   items much faster and if all are done, even quicker.

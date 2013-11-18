@@ -9,8 +9,12 @@ o The default method for building BWA indices is now 'bwtsw', because
   contrary to the previous default ('is'), the new one supports larger
   genomes as well (such as the human genome) and will always work.  It
   is useful to understand that regardless of choice, the generated
-  index sets are always identical across building methods.  There is 
+  index sets are always identical across building methods.  There is
   a package system test asserting this fact.
+o ROBUSTNESS: If read group ID is missing, process() for BwaAlignment
+  sets it to be the same as the fullname of the filename.  Same for
+  the SM read group.  This as the advantage of aligned BAM files are
+  more likely to be mergable afterward.
 o ROBUSTNESS: Now buildBwaIndexSet(..., method="is") checks for maximum
   size of reference genome (2GB) and gives an informative error if the
   FASTA file is greater.
