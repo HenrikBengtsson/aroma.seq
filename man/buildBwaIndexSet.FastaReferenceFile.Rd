@@ -37,6 +37,15 @@
   Internally, \code{\link{bwaIndex}}() is used.
 }
 
+\references{
+ [1] Edwards Bioinformatics Lab,
+     \emph{How to create a database for BWA and BWA-SW}, 2013.
+     \url{http://edwards.sdsu.edu/research/index.php/robert/282-how-to-create-a-database-for-bwa-and-bwa-sw} \cr
+ [2] Henrik Bengtsson, \emph{bwa index -a is: Details on database 2GB limit?},
+     bwa-help thread on 2013-11-18.
+     \url{https://sourceforge.net/mailarchive/message.php?msg_id=31649355}\cr
+}
+
 \author{Henrik Bengtsson}
 \keyword{internal}
 \keyword{methods}

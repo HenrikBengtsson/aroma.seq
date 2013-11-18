@@ -263,6 +263,15 @@ setMethodS3("buildIndex", "FastaReferenceFile", function(this, ..., skip=TRUE, v
 #   Internally, @see "bwaIndex" is used.
 # }
 #
+# \references{
+#  [1] Edwards Bioinformatics Lab,
+#      \emph{How to create a database for BWA and BWA-SW}, 2013.
+#      \url{http://edwards.sdsu.edu/research/index.php/robert/282-how-to-create-a-database-for-bwa-and-bwa-sw} \cr
+#  [2] Henrik Bengtsson, \emph{bwa index -a is: Details on database 2GB limit?},
+#      bwa-help thread on 2013-11-18.
+#      \url{https://sourceforge.net/mailarchive/message.php?msg_id=31649355}\cr
+# }
+#
 # @author
 #*/###########################################################################
 setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method, ..., skip=TRUE, verbose=FALSE) {
@@ -308,6 +317,18 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method, ...
   pathnameFA <- getPathname(this);
   verbose && cat(verbose, "FASTA reference file to be indexed: ", pathnameFA);
   verbose && cat(verbose, "Algorithm: ", method);
+
+  # Sanity check
+  if (method == "is") {
+    size <- getFileSize(this);
+    maxNbrOfBases <- 2e9;
+    if (size > maxNbrOfBases) {
+      nbrOfBases <- getTotalSeqLengths(this);
+      if (nbrOfBases > maxNbrOfBases) {
+        throw(sprintf("Cannot build BWA index with method 'is'.  There are too many bases in FASTA file (%s): %.0f > %.0f", sQuote(pathnameFA), nbrOfBases, maxNbrOfBases));
+      }
+    }
+  }
 
   # The index prefix
   prefix <- bwaIndexPrefix(pathnameFA, method=method, ...);
@@ -452,6 +473,9 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
 ############################################################################
 # HISTORY:
 # 2013-11-17
+# o Now buildBwaIndexSet(..., method="is") checks for maximum size of
+#   reference genome (2GB) and gives an informative error if the FASTA
+#   file is greater.
 # o Added argument 'prefix' to findByOrganism() for FastaReferenceFile.
 # 2013-11-10
 # o Added getOrganism().

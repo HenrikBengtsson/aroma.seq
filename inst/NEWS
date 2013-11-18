@@ -1,10 +1,13 @@
 Package: aroma.seq
 ==================
 
-Version: 0.4.2 [2013-11-17]
-o Added support for FastaReferenceFile$byOrganism(..., prefix), 
+Version: 0.4.2 [2013-11-18]
+o Added support for FastaReferenceFile$byOrganism(..., prefix),
   making it possible to distinguish between multiple FASTA files
   for the same organism.
+o ROBUSTNESS: Now buildBwaIndexSet(..., method="is") checks for maximum
+  size of reference genome (2GB) and gives an informative error if the
+  FASTA file is greater.
 o BUG FIX: BwaIndexSet$byPrefix(prefix) would find any BWA index set
   in directory dirname(prefix) without matching filenames of the set
   to basename(prefix).
