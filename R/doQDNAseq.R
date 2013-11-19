@@ -138,7 +138,7 @@ setMethodS3("doQDNAseq", "BamDataFile", function(df, binWidth, residual=TRUE, bl
   argsC <- args[intersect(keys, keysC)];
   verbose && cat(verbose, "Arguments:");
   verbose && str(verbose, argsC);
-  dataC <- do.call(correctBins, args=c(list(data), argsC));
+  dataC <- do.call(correctBins, args=c(list(dataF), argsC));
   verbose && print(verbose, dataC);
   dataF <- NULL;
   verbose && exit(verbose);
@@ -148,7 +148,7 @@ setMethodS3("doQDNAseq", "BamDataFile", function(df, binWidth, residual=TRUE, bl
   argsN <- args[intersect(keys, keysN)];
   verbose && cat(verbose, "Arguments:");
   verbose && str(verbose, argsN);
-  dataN <- do.call(normalizeBins, args=c(list(data), argsN));
+  dataN <- do.call(normalizeBins, args=c(list(dataC), argsN));
   verbose && print(verbose, dataN);
   dataC <- NULL;
   verbose && exit(verbose);
