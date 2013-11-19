@@ -45,7 +45,7 @@
 #*/###########################################################################
 setMethodS3("doQDNAseq", "BamDataFile", function(df, binWidth, residual=TRUE, blacklist=TRUE, mappability=NA, bases=NA, filterAllosomes=TRUE, ..., path=".", force=FALSE, verbose=FALSE) {
   R.utils::use("QDNAseq (>= 0.5.8)");
-  getBinAnnotations <- binReadCounts <- correctBins <- normalizeBins <- NULL;
+  getBinAnnotations <- binReadCounts <- applyFilters <- correctBins <- normalizeBins <- NULL;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
