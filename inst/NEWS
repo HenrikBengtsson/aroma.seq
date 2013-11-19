@@ -1,6 +1,15 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.3 [2013-11-18]
+o CLEANUP/REDUNDANCY: Now doQDNAseq() for BamDataFile passes only the
+  subset of arguments part of '...' that apply to each of the internal
+  QDNAseq steps.  This means that doQDNAseq() no longer have to
+  replicate the arguments of the QDNAseq package.
+o BUG FIX/REPRODUCIBILITY: doQDNAseq() for BamDataFile forgot to
+  apply the pre-filtering step that is part of QDNAseq.
+
+
 Version: 0.4.2 [2013-11-17]
 o Added support for FastaReferenceFile$byOrganism(..., prefix),
   making it possible to distinguish between multiple FASTA files
@@ -12,8 +21,8 @@ o ROBUSTNESS: If read group ID is missing, process() for BwaAlignment
   sets it to be the same as the fullname of the filename.  Same for
   the SM read group.  This as the advantage of aligned BAM files are
   more likely to be mergable afterward.
-o ROBUSTNESS: The default method for building BWA indices is now 'bwtsw', 
-  because contrary to the previous default ('is'), the new one supports 
+o ROBUSTNESS: The default method for building BWA indices is now 'bwtsw',
+  because contrary to the previous default ('is'), the new one supports
   larger genomes as well (such as the human genome) and will always work.
   It is useful to understand that regardless of choice, the generated
   index sets are always identical across building methods.  There is

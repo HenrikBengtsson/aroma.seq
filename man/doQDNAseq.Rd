@@ -25,8 +25,8 @@
 \usage{
   \method{doQDNAseq}{FastqDataSet}(dataSet, binWidth, reference, ..., verbose=FALSE)
   \method{doQDNAseq}{BamDataSet}(dataSet, ..., force=FALSE, verbose=FALSE)
-  \method{doQDNAseq}{BamDataFile}(df, binWidth, log=TRUE, mappability=50, blacklist=0, residual=2, bases=0, ...,
-  path=".", force=FALSE, verbose=FALSE)
+  \method{doQDNAseq}{BamDataFile}(df, binWidth, residual=TRUE, blacklist=TRUE, mappability=NA, bases=NA,
+  filterAllosomes=TRUE, ..., path=".", force=FALSE, verbose=FALSE)
 }
 
 \arguments{
@@ -34,9 +34,8 @@
  \item{binWidth}{A positive \code{\link[base]{numeric}} specifying the bin width (in units of kbp).
    Alternatively, a \code{\link[Biobase]{AnnotatedDataFrame}} specifying the bins.}
  \item{reference}{A \code{\link{FastaReferenceFile}} or a \code{\link{BwaIndexSet}} specifying the genome reference to align the FASTQ reads to.}
- \item{log}{If \code{\link[base:logical]{TRUE}}, the copy numbers are calculated on the log2 scale.}
- \item{mappability, blacklist, residual, bases}{Post-filter arguments.}
- \item{...}{Ignored, or passed to \code{doQDNAseq()}.}
+ \item{...}{Additional arguments passed to \code{\link[QDNAseq]{applyFilters}},
+   \code{\link[QDNAseq]{correctBins}} and \code{\link[QDNAseq]{normalizeBins}}.}
  \item{force}{If \code{\link[base:logical]{TRUE}}, cached results are ignored.}
  \item{verbose}{See \code{\link{Verbose}}.}
 }

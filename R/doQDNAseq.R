@@ -24,9 +24,8 @@
 #  \item{binWidth}{A positive @numeric specifying the bin width (in units of kbp).
 #    Alternatively, a @see "Biobase::AnnotatedDataFrame" specifying the bins.}
 #  \item{reference}{A @see "FastaReferenceFile" or a @see "BwaIndexSet" specifying the genome reference to align the FASTQ reads to.}
-#  \item{log}{If @TRUE, the copy numbers are calculated on the log2 scale.}
-#  \item{mappability, blacklist, residual, bases}{Post-filter arguments.}
-#  \item{...}{Ignored, or passed to \code{doQDNAseq()}.}
+#  \item{...}{Additional arguments passed to @see "QDNAseq::applyFilters",
+#    @see "QDNAseq::correctBins" and @see "QDNAseq::normalizeBins".}
 #  \item{force}{If @TRUE, cached results are ignored.}
 #  \item{verbose}{See @see "Verbose".}
 # }
@@ -44,7 +43,7 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("doQDNAseq", "BamDataFile", function(df, binWidth, log=TRUE, mappability=50, blacklist=0, residual=2, bases=0, ..., path=".", force=FALSE, verbose=FALSE) {
+setMethodS3("doQDNAseq", "BamDataFile", function(df, binWidth, residual=TRUE, blacklist=TRUE, mappability=NA, bases=NA, filterAllosomes=TRUE, ..., path=".", force=FALSE, verbose=FALSE) {
   R.utils::use("QDNAseq (>= 0.5.8)");
   getBinAnnotations <- binReadCounts <- correctBins <- normalizeBins <- NULL;
 
@@ -98,6 +97,9 @@ setMethodS3("doQDNAseq", "BamDataFile", function(df, binWidth, log=TRUE, mappabi
   }
 
 
+  args <- list(...);
+  keys <- names(args);
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -119,14 +121,32 @@ setMethodS3("doQDNAseq", "BamDataFile", function(df, binWidth, log=TRUE, mappabi
   bins <- pathnameBAM <- NULL;
   verbose && exit(verbose);
 
-  verbose && enter(verbose, "QDNAseq/Correcting bin counts for GC content and mappability");
-  dataC <- correctBins(data);
-  verbose && print(verbose, dataC);
+  verbose && enter(verbose, "QDNAseq/Filtering out bins based on a priori filters");
+  keysF <- setdiff(names(formals(applyFilters)), c("object", "force", "..."))
+  argsF <- args[intersect(keys, keysF)]
+  verbose && cat(verbose, "Arguments:");
+  verbose && str(verbose, argsF);
+  dataF <- do.call(applyFilters, args=c(list(data), argsF));
+  verbose && print(verbose, dataF);
   data <- NULL;
   verbose && exit(verbose);
 
+  verbose && enter(verbose, "QDNAseq/Correcting bin counts for GC content and mappability");
+  keysC <- setdiff(names(formals(correctBins)), c("object", "force", "..."))
+  argsC <- args[intersect(keys, keysC)];
+  verbose && cat(verbose, "Arguments:");
+  verbose && str(verbose, argsC);
+  dataC <- do.call(correctBins, args=c(list(data), argsC));
+  verbose && print(verbose, dataC);
+  dataF <- NULL;
+  verbose && exit(verbose);
+
   verbose && enter(verbose, "QDNAseq/Normalization bin copy numbers");
-  dataN <- normalizeBins(dataC, logTransform=log);
+  keysN <- setdiff(names(formals(normalizeBins)), c("object", "force", "..."))
+  argsN <- args[intersect(keys, keysN)];
+  verbose && cat(verbose, "Arguments:");
+  verbose && str(verbose, argsN);
+  dataN <- do.call(normalizeBins, args=c(list(data), argsN));
   verbose && print(verbose, dataN);
   dataC <- NULL;
   verbose && exit(verbose);
@@ -291,6 +311,13 @@ setMethodS3("doQDNAseq", "default", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2013-11-18
+# o CLEANUP/REDUNDANCY: Now doQDNAseq() for BamDataFile passes only the
+#   subset of arguments part of '...' that apply to each of the internal
+#   QDNAseq steps.  This means that doQDNAseq() no longer have to
+#   replicate the arguments of the QDNAseq package.
+# o REPRODUCIBILITY: doQDNAseq() for BamDataFile forgot to apply the
+#   pre-filtering of QDNAseq.
 # 2013-11-16
 # o CLEANUP: Now doQDNAseq() for BamDataSet utilized QDNAseqEstimation.
 # 2013-10-31
