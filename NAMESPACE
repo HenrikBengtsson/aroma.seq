@@ -10,13 +10,18 @@ importFrom("R.methodsS3", "throw")
 importFrom("R.oo", "startupMessage")
 importFrom("methods", "setOldClass")
 importFrom("methods", "setMethod")
+importFrom("R.oo", "getDate")
+importFrom("R.oo", "getVersion")
+importFrom("R.oo", "trim")
 
 ## Importing Class:es
 importFrom("R.oo", "BasicObject")
 importFrom("R.oo", "Object")
-importFrom("R.oo", "getDate")
-importFrom("R.oo", "getVersion")
-importFrom("R.oo", "trim")
+importFrom("R.filesets", "GenericDataFile")
+importFrom("R.filesets", "GenericDataFileSet")
+importFrom("R.filesets", "RdsFile")
+importFrom("R.filesets", "RdsFileSet")
+importFrom("R.filesets", "TabularTextFile")
 
 ## Importing generics
 importFrom("R.filesets", "byPath")
@@ -42,8 +47,6 @@ importFrom("R.cache", "loadCache")
 importFrom("R.cache", "saveCache")
 importFrom("R.filesets", "extractMatrix")
 importFrom("R.filesets", "fullname")
-importFrom("R.filesets", "GenericDataFile")
-importFrom("R.filesets", "GenericDataFileSet")
 importFrom("R.filesets", "getChecksum") ## Multi-sources: R.filesets, R.cache
 importFrom("R.filesets", "getFile") ## Multi-sources: R.filesets, R.rsp
 importFrom("R.filesets", "getFileClass")
@@ -57,7 +60,6 @@ importFrom("R.filesets", "getPathnames")
 importFrom("R.filesets", "indexOf")
 importFrom("R.filesets", "readLines") ## Multi-sources: R.filesets, base
 importFrom("R.filesets", "setAttributesByTags")
-importFrom("R.filesets", "TabularTextFile")
 
 
 import("R.utils")

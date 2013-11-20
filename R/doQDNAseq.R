@@ -31,7 +31,7 @@
 # }
 #
 # \value{
-#   Returns a @see "R.filesets::GenericDataFileSet" containing
+#   Returns a @see "R.filesets::RdsFileSet" containing
 #   @see "QDNAseq::QDNAseqReadCounts" objects.
 # }
 #
@@ -78,7 +78,7 @@ setMethodS3("doQDNAseq", "BamDataFile", function(df, binWidth, residual=TRUE, bl
   verbose && print(verbose, df);
 
   # Output pathname
-  filename <- sprintf("%s.RData", getFullName(df));
+  filename <- sprintf("%s.rds", getFullName(df));
   pathname <- Arguments$getReadablePathname(filename, path=path, mustExist=FALSE);
   verbose && cat(verbose, "Output pathname: ", pathname);
 
@@ -86,7 +86,7 @@ setMethodS3("doQDNAseq", "BamDataFile", function(df, binWidth, residual=TRUE, bl
   isDone <- (!force && isFile(pathname));
   if (isDone) {
     verbose && cat(verbose, "Already processed. Skipping.");
-    df <- GenericDataFile(pathname);
+    df <- RdsFile(pathname);
     verbose && exit(verbose);
     return(df);
   }
@@ -155,10 +155,10 @@ setMethodS3("doQDNAseq", "BamDataFile", function(df, binWidth, residual=TRUE, bl
 
   verbose && enter(verbose, "QDNAseq/Saving");
   verbose && cat(verbose, "Output pathname: ", pathname);
-  saveObject(dataN, file=pathname);
+  saveRDS(dataN, file=pathname);
   verbose && exit(verbose);
 
-  df <- GenericDataFile(pathname);
+  df <- RdsFile(pathname);
 
   verbose && exit(verbose);
 
@@ -313,6 +313,8 @@ setMethodS3("doQDNAseq", "default", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2013-11-20
+# o Now doQDNAseq() for BamDataFile saves RDS files.
 # 2013-11-18
 # o CLEANUP/REDUNDANCY: Now doQDNAseq() for BamDataFile passes only the
 #   subset of arguments part of '...' that apply to each of the internal

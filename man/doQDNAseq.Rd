@@ -41,7 +41,7 @@
 }
 
 \value{
-  Returns a \code{\link[R.filesets]{GenericDataFileSet}} containing
+  Returns a \code{\link[R.filesets]{RdsFileSet}} containing
   \code{\link[QDNAseq]{QDNAseqReadCounts}} objects.
 }
 

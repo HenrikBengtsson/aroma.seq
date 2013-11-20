@@ -116,7 +116,7 @@ setMethodS3("getFirstSequenceInfo", "IlluminaFastqDataFile", function(this, forc
     ff <- FastqFile(pathnameFQ);
     on.exit(close(ff));
 
-    # Really inefficient way to find the first sequence information.
+   #  Really inefficient way to find the first sequence information.
     # /HB 2013-11-19
     rfq <- readFastq(ff);
 

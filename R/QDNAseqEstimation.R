@@ -87,7 +87,7 @@ setMethodS3("getRootPath", "QDNAseqEstimation", function(this, ...) {
 setMethodS3("getOutputDataSet", "QDNAseqEstimation", function(this, ...) {
   ## Find all existing output data files
   path <- getPath(this);
-  res <- GenericDataFileSet$byPath(path, pattern="[.]RData$");
+  res <- RdsFileSet$byPath(path);
   ## Order according to input data set
   ds <- getInputDataSet(this);
   fullnames <- getFullNames(ds);
