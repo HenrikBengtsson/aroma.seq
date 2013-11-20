@@ -162,6 +162,10 @@ setMethodS3("byOrganism", "FastaReferenceFile", function(static, organism, ...) 
   if (length(pathname) == 0)
     throw("Failed to located FASTA reference file for organism: ", organism);
   res <- newInstance(static, pathname);
+  organismR <- getOrganism(res);
+  if (organismR != organism) {
+    throw(sprintf("The located %s (%s) specifies an organism different from the requested one: %s != %s", class(res)[1L], getPathname(res), sQuote(organismR), sQuote(organism)));
+  }
   res;
 }, static=TRUE) # byOrganism()
 
@@ -472,6 +476,9 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
 
 ############################################################################
 # HISTORY:
+# 2013-11-19
+# o ROBUSTNESS: Now FastaReferenceFile$byOrganism() asserts that the 
+#   returned FASTA file specifies the requested organism.
 # 2013-11-17
 # o Now buildBwaIndexSet(..., method="is") checks for maximum size of
 #   reference genome (2GB) and gives an informative error if the FASTA

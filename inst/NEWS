@@ -1,6 +1,13 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.4 [2013-11-19]
+o Now getSampleName() for IlluminaFastqDataFile gives a more informative
+  error message if the fullname does not match the expected pattern.
+o ROBUSTNESS: Now FastaReferenceFile$byOrganism() asserts that the 
+  returned FASTA file specifies the requested organism.
+
+
 Version: 0.4.3 [2013-11-18]
 o CLEANUP/REDUNDANCY: Now doQDNAseq() for BamDataFile passes only the
   subset of arguments part of '...' that apply to each of the internal

@@ -55,7 +55,9 @@ setMethodS3("getSampleName", "IlluminaFastqDataFile", function(this, ...) {
     # AD HOC patch for observing ATGNCA when expected ATGTCA. /HB 2012-10-01
     barcode <- gsub("N", ".", barcode, fixed=TRUE);
     pattern <- sprintf("_%s_L[0-9]+_R[0-9](_[0-9]+)$", barcode);
-    stopifnot(regexpr(pattern, name) != -1);
+    if (regexpr(pattern, name) != -1L) {
+      throw(sprintf("The fullname (%s) of the %s with version %s does not patch the expected pattern (%s): %s", sQuote(name), class(this)[1L], sQuote(ver), sQuote(pattern), getPathname(this)));
+    }
     name <- gsub(pattern, "", name);
   } else {
     warning("Unknown Illumina FASTQ file version. Using fullname as sample name: ", name);
@@ -162,6 +164,9 @@ setMethodS3("getDefaultSamReadGroup", "IlluminaFastqDataFile", function(this, ..
 
 ############################################################################
 # HISTORY:
+# 2013-11-19
+# o Now getSampleName() for IlluminaFastqDataFile gives a more informative
+#   error message if the fullname does not match the expected pattern.
 # 2012-10-16
 # o BUG FIX: getSampleName() did not handle trailing indices, e.g. _002.
 # 2012-10-02
