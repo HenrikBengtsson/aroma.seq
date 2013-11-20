@@ -115,10 +115,14 @@ setMethodS3("getFirstSequenceInfo", "IlluminaFastqDataFile", function(this, forc
     pathnameFQ <- getPathname(this);
     ff <- FastqFile(pathnameFQ);
     on.exit(close(ff));
+
+    # Really inefficient way to find the first sequence information.
+    # /HB 2013-11-19
     rfq <- readFastq(ff);
 
     id <- id(rfq)[1L];
     info <- as.character(id);
+    rfq <- NULL; # Not needed anymore
 
     patternA <- "^([^:]+):([0-9]+):([^:]+):([0-9]+):([0-9]+):([0-9]+):([0-9]+)";
     patternB <- " ([^:]+):([^:]+):([0-9]+):([^:]+)$";
