@@ -55,8 +55,8 @@ setMethodS3("getSampleName", "IlluminaFastqDataFile", function(this, ...) {
     # AD HOC patch for observing ATGNCA when expected ATGTCA. /HB 2012-10-01
     barcode <- gsub("N", ".", barcode, fixed=TRUE);
     pattern <- sprintf("_%s_L[0-9]+_R[0-9](_[0-9]+)$", barcode);
-    if (regexpr(pattern, name) != -1L) {
-      throw(sprintf("The fullname (%s) of the %s with version %s does not patch the expected pattern (%s): %s", sQuote(name), class(this)[1L], sQuote(ver), sQuote(pattern), getPathname(this)));
+    if (regexpr(pattern, name) == -1L) {
+      throw(sprintf("The fullname (%s) of the %s with version %s does not match the expected pattern (%s): %s", sQuote(name), class(this)[1L], sQuote(ver), sQuote(pattern), getPathname(this)));
     }
     name <- gsub(pattern, "", name);
   } else {
