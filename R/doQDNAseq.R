@@ -118,7 +118,7 @@ setMethodS3("doQDNAseq", "BamDataFile", function(df, binWidth, residual=TRUE, bl
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "QDNAseq/Reading and binning data");
   pathnameBAM <- getPathname(df);
-  data <- binReadCounts(bins, bamfiles=pathnameBAM, cache=TRUE, force=force);
+  data <- binReadCounts(bins, bamfiles=pathnameBAM, cache=FALSE, force=TRUE);
   verbose && print(verbose, data);
   bins <- pathnameBAM <- NULL;
   verbose && exit(verbose);
@@ -314,6 +314,7 @@ setMethodS3("doQDNAseq", "default", function(...) {
 ############################################################################
 # HISTORY:
 # 2013-11-20
+# o Now doQDNAseq() for BamDataFile no-longer caches raw bin counts.
 # o Now doQDNAseq() for BamDataFile saves RDS files.
 # 2013-11-18
 # o CLEANUP/REDUNDANCY: Now doQDNAseq() for BamDataFile passes only the
