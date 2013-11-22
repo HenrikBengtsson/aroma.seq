@@ -1,6 +1,12 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.6 [2013-11-21]
+o CLEANUP: bwaIndexPrefix() no longer adds a "methods" tags (i.e.
+  'bwtsw' or 'is'), because the generated index files are identical
+  regardless of method used.
+
+
 Version: 0.4.5 [2013-11-20]
 o Now doQDNAseq() for BamDataFile and QDNAseqEstimation output RDS files.
 

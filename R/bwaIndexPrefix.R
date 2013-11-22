@@ -11,7 +11,6 @@
 #
 # \arguments{
 #   \item{pathnameFA}{The FASTA file.}
-#   \item{method}{The BWA algorithm used for generating the index set.}
 #   \item{subdir}{The subdirectory relative to the FASTA file where to put
 #     the BWA index files.}
 #   \item{tags}{Tags added to the directory of the index set.}
@@ -20,7 +19,7 @@
 #
 # \examples{
 #   pathnameFA <- "annotationData/organisms/LambdaPhage/lambda_virus.fa"
-#   prefix <- bwaIndexPrefix(pathnameFA, method="is")
+#   prefix <- bwaIndexPrefix(pathnameFA)
 #   print(prefix)
 # }
 #
@@ -28,13 +27,17 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("bwaIndexPrefix", "default", function(pathnameFA, method=c("bwtsw", "is"), subdir="bwa", tags="*", ...) {
-  createIndexPrefix(pathnameFA, subdir=subdir, tags=tags, asteriskTags=method, ...);
+setMethodS3("bwaIndexPrefix", "default", function(pathnameFA, subdir="bwa", tags="*", ...) {
+  createIndexPrefix(pathnameFA, subdir=subdir, tags=tags, ...);
 }) # bwaIndexPrefix()
 
 
 ############################################################################
 # HISTORY:
+# 2013-11-21
+# o CLEANUP: bwaIndexPrefix() no longer adds a "methods" tags (i.e.
+#   'bwtsw' or 'is'), because the generated index files are identical
+#   regardless of method used.
 # 2013-11-18
 # o The default method for bwaIndexPrefix() is now 'bwtsw' (was 'is').
 # 2012-09-25

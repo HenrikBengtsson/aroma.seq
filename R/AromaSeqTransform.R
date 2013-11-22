@@ -184,8 +184,11 @@ setMethodS3("getTags", "AromaSeqTransform", function(this, collapse=NULL, ...) {
   # Get class-specific tags
   tags <- c(tags, this$.tags);
 
-  # Update default tags
-  tags[tags == "*"] <- getAsteriskTags(this, collapse=",");
+  # Update default (aka "asterisk") tags
+  asteriskTags <- getAsteriskTags(this);
+  if (!is.null(asteriskTags)) {
+    tags[tags == "*"] <- paste(asteriskTags, collapse=",");
+  }
   tags <- tags[nchar(tags) > 0L];
 
   # Collapsed or split?

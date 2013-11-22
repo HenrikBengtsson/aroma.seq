@@ -335,7 +335,7 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method=c("b
   }
 
   # The index prefix
-  prefix <- bwaIndexPrefix(pathnameFA, method=method, ...);
+  prefix <- bwaIndexPrefix(pathnameFA, ...);
   verbose && cat(verbose, "Prefix for index files: ", prefix);
 
   # Locate existing index files
@@ -477,7 +477,7 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
 ############################################################################
 # HISTORY:
 # 2013-11-19
-# o ROBUSTNESS: Now FastaReferenceFile$byOrganism() asserts that the 
+# o ROBUSTNESS: Now FastaReferenceFile$byOrganism() asserts that the
 #   returned FASTA file specifies the requested organism.
 # 2013-11-17
 # o Now buildBwaIndexSet(..., method="is") checks for maximum size of
