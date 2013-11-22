@@ -188,11 +188,13 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
     verbose && cat(verbose, "R1 FASTQ file:");
     verbose && print(verbose, dfR1);
 
+    # Final sample-specific output directory
+    outPathS <- file.path(outPath, sampleName);
     args <- list(
       bowtieRefIndexPrefix=getIndexPrefix(indexSet),
       reads1=getPathname(dfR1),
       reads2=NULL,
-      outPath=file.path(outPath, sampleName),
+      outPath=outPathS,
       gtf=gtf
     );
 
@@ -208,7 +210,24 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
 
     args$verbose <- less(verbose, 1);
 
+    # BEGIN: Atomic output
+    # Write to temporary output directory
+    args$outPathS <- sprintf("%s.tmp", args$outPathS);
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # (a) Align reads using TopHat2
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     res <- do.call(tophat2, args=args);
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # (b) Generates BAM index file (assuming the BAM file is sorted)
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    pathnameBAM <- file.path(args$outPathS, "accepted_hits.bam");
+    pathnameBAI <- indexBam(pathnameBAM);
+
+    # Rename from temporary to final directory
+    file.rename(args$outPathS, outPathS);
+    # END: Atomic output
 
     verbose && exit(verbose);
 
@@ -233,6 +252,11 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
 
 ############################################################################
 # HISTORY:
+# 2013-11-21 [HB]
+# o Now process() for TopHat2Alignment generates an index file for
+#   accepted_hits.bam.  This will also assert the assumption that
+#   TopHat2 outputs sorted BAM files, because if not indexing will
+#   fail and an error will be generated.
 # 2013-11-16 [HB]
 # o CLEANUP: Dropped several methods now taken care of by super class.
 # 2013-11-01 [HB]

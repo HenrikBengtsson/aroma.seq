@@ -2,6 +2,10 @@ Package: aroma.seq
 ==================
 
 Version: 0.4.6 [2013-11-21]
+o Now process() for TopHat2Alignment generates an index file for
+  accepted_hits.bam.  This will also assert the assumption that
+  TopHat2 outputs sorted BAM files, because if not indexing will
+  fail and an error will be generated.
 o CLEANUP: bwaIndexPrefix() no longer adds a "methods" tags (i.e.
   'bwtsw' or 'is'), because the generated index files are identical
   regardless of method used.
