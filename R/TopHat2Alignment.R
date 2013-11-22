@@ -214,17 +214,17 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
     # BEGIN: ATOMIC OUTPUT
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Write to temporary output directory
-    args$outPathS <- sprintf("%s.tmp", args$outPathS);
+    args$outPath <- sprintf("%s.tmp", args$outPath);
 
     # (a) Align reads using TopHat2
     res <- do.call(tophat2, args=args);
 
     # (b) Generates BAM index file (assuming the BAM file is sorted)
-    pathnameBAM <- file.path(args$outPathS, "accepted_hits.bam");
+    pathnameBAM <- file.path(args$outPath, "accepted_hits.bam");
     pathnameBAI <- indexBam(pathnameBAM);
 
     # Rename from temporary to final directory
-    file.rename(args$outPathS, outPathS);
+    file.rename(args$outPath, outPathS);
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # END: ATOMIC OUTPUT
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
