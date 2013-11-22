@@ -152,7 +152,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   # Apply aligner to each of the FASTQ files
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   dsApply(ds, FUN=function(dfR1, isPaired=FALSE, indexSet, transcripts=NULL, outPath, ...., skip=TRUE, verbose=FALSE) {
-    R.utils::use("R.utils, aroma.seq");
+    R.utils::use("R.utils, aroma.seq, Rsamtools");
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Validate arguments
@@ -210,24 +210,24 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
 
     args$verbose <- less(verbose, 1);
 
-    # BEGIN: Atomic output
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # BEGIN: ATOMIC OUTPUT
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Write to temporary output directory
     args$outPathS <- sprintf("%s.tmp", args$outPathS);
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # (a) Align reads using TopHat2
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     res <- do.call(tophat2, args=args);
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # (b) Generates BAM index file (assuming the BAM file is sorted)
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     pathnameBAM <- file.path(args$outPathS, "accepted_hits.bam");
     pathnameBAI <- indexBam(pathnameBAM);
 
     # Rename from temporary to final directory
     file.rename(args$outPathS, outPathS);
-    # END: Atomic output
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # END: ATOMIC OUTPUT
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
     verbose && exit(verbose);
 
