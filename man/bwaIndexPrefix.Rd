@@ -17,12 +17,11 @@
 }
 
 \usage{
-\method{bwaIndexPrefix}{default}(pathnameFA, method=c("bwtsw", "is"), subdir="bwa", tags="*", ...)
+\method{bwaIndexPrefix}{default}(pathnameFA, subdir="bwa", tags="*", ...)
 }
 
 \arguments{
   \item{pathnameFA}{The FASTA file.}
-  \item{method}{The BWA algorithm used for generating the index set.}
   \item{subdir}{The subdirectory relative to the FASTA file where to put
     the BWA index files.}
   \item{tags}{Tags added to the directory of the index set.}
@@ -31,7 +30,7 @@
 
 \examples{
   pathnameFA <- "annotationData/organisms/LambdaPhage/lambda_virus.fa"
-  prefix <- bwaIndexPrefix(pathnameFA, method="is")
+  prefix <- bwaIndexPrefix(pathnameFA)
   print(prefix)
 }
 

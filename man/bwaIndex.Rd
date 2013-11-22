@@ -18,14 +18,12 @@
 }
 
 \usage{
-\method{bwaIndex}{default}(pathnameFA, indexPrefix="*", method=c("bwtsw", "is"), ..., verbose=FALSE)
+\method{bwaIndex}{default}(pathnameFA, indexPrefix="*", ..., verbose=FALSE)
 }
 
 \arguments{
   \item{pathnameFA}{The FASTA file to be indexed.}
   \item{indexPrefix}{The prefix for the generated index files.}
-  \item{method}{Additional arguments passed to \code{\link{bwaIndexPrefix}}().
-    Required if \code{indexPrefix == "*"}.}
   \item{...}{Additional arguments specifying BWA 'index' switches
     passed to \code{\link{systemBWA}}().}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}

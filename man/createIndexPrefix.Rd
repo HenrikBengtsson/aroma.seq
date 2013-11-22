@@ -33,7 +33,7 @@
   pathnameFA <- "annotationData/organisms/LambdaPhage/lambda_virus.fa"
   prefix <- createIndexPrefix(pathnameFA)
   print(prefix)
-  prefix <- createIndexPrefix(pathnameFA, tags="*,foo", asteriskTags="is")
+  prefix <- createIndexPrefix(pathnameFA, tags="*,foo")
   print(prefix)
 }
 
