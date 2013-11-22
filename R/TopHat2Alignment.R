@@ -205,26 +205,29 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
       args$reads2 <- getPathname(dfR2);
     }
 
-    verbose && cat(verbose, "Arguments passed to TopHat:");
-    verbose && str(verbose, args);
-
-    args$verbose <- less(verbose, 1);
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # BEGIN: ATOMIC OUTPUT
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Write to temporary output directory
     args$outPath <- sprintf("%s.tmp", args$outPath);
+    verbose && cat(verbose, "Temporary output directory: ", args$outPath);
 
     # (a) Align reads using TopHat2
+    verbose && cat(verbose, "Arguments passed to TopHat:");
+    verbose && str(verbose, args);
+    args$verbose <- less(verbose, 1);
     res <- do.call(tophat2, args=args);
 
     # (b) Generates BAM index file (assuming the BAM file is sorted)
     pathnameBAM <- file.path(args$outPath, "accepted_hits.bam");
+    verbose && cat(verbose, "BAM file: ", pathnameBAM);
     pathnameBAI <- indexBam(pathnameBAM);
+    verbose && cat(verbose, "BAM index file: ", pathnameBAI);
 
     # Rename from temporary to final directory
     file.rename(args$outPath, outPathS);
+    verbose && cat(verbose, "Final output directory: ", outPathS);
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # END: ATOMIC OUTPUT
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

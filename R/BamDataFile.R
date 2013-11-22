@@ -83,6 +83,7 @@ setMethodS3("buildIndex", "BamDataFile", function(this, ..., skip=!overwrite, ov
 setMethodS3("getIndexFile", "BamDataFile", function(this, ...) {
   pathname <- getPathname(this);
   pathnameBAI <- sprintf("%s.bai", pathname);
+  pathnameBAI <- Arguments$getReadablePathname(pathnameBAI, mustExist=FALSE);
   if (!isFile(pathnameBAI)) {
     return(NULL);
   }
