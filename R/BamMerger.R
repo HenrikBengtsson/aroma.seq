@@ -247,12 +247,20 @@ setMethodS3("process", "BamMerger", function(this, ..., skip=TRUE, force=FALSE, 
       pathname <- pathnames[1L];
       copyFile(pathname, pathnameBAMT, overwrite=force);
 
-      # Index file
-      verbose && enter(verbose, "Indexing BAM file");
-      pathnameBAIT <- indexBam(pathnameBAMT);
-      verbose && cat(verbose, "Generated index file: ", pathnameBAIT);
-      file.rename(pathnameBAIT, pathnameBAI);
-      verbose && exit(verbose);
+      # Copy existing index file or create index from scratch?
+      bam <- BamDataFile(pathname);
+      bai <- getIndexFile(bam);
+      if (!is.null(bai)) {
+        verbose && enter(verbose, "Copying existing BAM index file");
+        copyFile(getPathname(bai), pathnameBAIT, overwrite=force);
+        verbose && exit(verbose);
+      } else {
+        verbose && enter(verbose, "Indexing BAM file");
+        pathnameBAIT <- indexBam(pathnameBAMT);
+        verbose && cat(verbose, "Generated index file: ", pathnameBAIT);
+        file.rename(pathnameBAIT, pathnameBAI);
+        verbose && exit(verbose);
+      }
 
       verbose && exit(verbose);
     } else {
