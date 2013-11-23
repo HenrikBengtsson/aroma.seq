@@ -450,6 +450,16 @@
 \alias{getBinWidth.QDNAseqEstimation}
 \alias{picardValidateSamFile}
 \alias{picardValidateSamFile.default}
+\alias{getAsteriskTags.BamMerger}
+\alias{getGroups}
+\alias{getGroups.BamMerger}
+\alias{getOutputDataSet.BamMerger}
+\alias{getRootPath.SamTransform}
+\alias{nbrOfGroups}
+\alias{nbrOfGroups.BamMerger}
+\alias{process.BamMerger}
+\alias{validateGroups}
+\alias{validateGroups.BamMerger}
 
 \description{
   This page contains aliases for all "non-documented" objects that

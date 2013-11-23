@@ -11,6 +11,9 @@
 # @synopsis
 #
 # \arguments{
+#  \item{IDXS}{A (named) @list, where each element contains a @vector data set indices.}
+#  \item{DROP}{If @TRUE, an single-index element is passed to \code{FUN} as a file
+#    instead of as a @list containing a single file.}
 #  \item{FUN}{A @function.}
 #  \item{...}{Arguments passed to \code{FUN}.}
 #  \item{args}{(optional) A @list of additional arguments
@@ -36,7 +39,7 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("dsApply", "GenericDataFileSet", function(ds, FUN, ..., args=list(), skip=FALSE, verbose=FALSE, .parallel=c("none", "BatchJobs", "BiocParallel::BatchJobs"), .control=list(dW=1.0)) {
+setMethodS3("dsApply", "GenericDataFileSet", function(ds, IDXS=NULL, DROP=is.null(IDXS), FUN, ..., args=list(), skip=FALSE, verbose=FALSE, .parallel=c("none", "BatchJobs", "BiocParallel::BatchJobs"), .control=list(dW=1.0)) {
   # To please R CMD check (because BatchJobs is just "suggested")
   getJobNr <- batchMap <- showStatus <- findNotSubmitted <-
       findNotRunning <- submitJobs <- findNotTerminated <- NULL;
@@ -53,6 +56,23 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, FUN, ..., args=list(),
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'DROP':
+  DROP <- Arguments$getLogical(DROP);
+
+  # Argument 'IDXS':
+  if (is.null(IDXS)) {
+    IDXS <- seq_along(ds);
+    names(IDXS) <- getNames(ds);
+    IDXS <- as.list(IDXS);
+  } else if (is.list(IDXS)) {
+    max <- length(ds);
+    for (idxs in IDXS) {
+      idxs <- Arguments$getIndices(idxs, max=max);
+    }
+  } else {
+    throw("Invalid argument 'IDXS': ", class(IDXS)[1L]);
+  }
+
   # Argument 'FUN':
   stopifnot(is.function(FUN));
   assertNoGlobalVariables(FUN);
@@ -86,6 +106,39 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, FUN, ..., args=list(),
   verbose && cat(verbose, "Mechanism for parallel processing: ", parallel);
   verbose && print(verbose, ds);
 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Sets of files to be processed
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  verbose && cat(verbose, "Number of subsets to be processed: ", length(IDXS));
+  verbose && str(verbose, head(IDXS));
+
+  # Drop only if all index groups have exactly one file
+  if (DROP) {
+    ns <- sapply(IDXS, FUN=length);
+    DROP <- all(ns == 1L);
+  }
+
+  # Still drop?
+  if (DROP) {
+    sets <- lapply(IDXS, FUN=function(idx) ds[[idx]]);
+  } else {
+    sets <- vector("list", length=length(IDXS));
+    for (gg in seq_along(IDXS)) {
+      idxs <- IDXS[[gg]];
+      set <- as.list(ds[idxs]);
+      name <- names(IDXS)[gg];
+      if (!is.null(name)) names(set)[1L] <- name;
+      sets[[gg]] <- set;
+    } # for (gg ...)
+  }
+  names(sets) <- names(IDXS);
+  if (is.null(names(sets))) {
+    names(sets) <- sprintf("<Group #%d>", seq_along(sets));
+  }
+  verbose && str(verbose, head(sets));
+  IDXS <- NULL; # Not needed anymore
+
+
   # The additional set of arguments passed in each function call
   vargs <- c(vargs, args);
   allArgs <- c(vargs, skip=skip, verbose=verbose);
@@ -96,22 +149,23 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, FUN, ..., args=list(),
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   res <- NULL;
   if (parallel == "none") {
-    for (ii in seq_along(ds)) {
-      df <- ds[[ii]];
-      verbose && enter(verbose, sprintf("Item #%d ('%s') of %d", ii, getName(df), length(ds)));
-
-      argsII <- c(list(df), allArgs);
+    for (gg in seq_along(sets)) {
+      name <- names(sets)[gg];
+      verbose && enter(verbose, sprintf("Group #%d ('%s') of %d", gg, name, length(sets)));
+      set <- sets[[gg]];
+      verbose && print(verbose, set);
+      argsGG <- c(list(set), allArgs);
       verbose && cat(verbose, "Call arguments:");
-      verbose && str(verbose, argsII);
-      argsII$verbose <- less(verbose, 1);
-      res <- do.call(FUN, args=argsII);
+      verbose && str(verbose, argsGG);
+      argsGG$verbose <- less(verbose, 1);
+      res <- do.call(FUN, args=argsGG);
       verbose && str(verbose, res);
 
       # Not needed anymore
-      df <- argsII <- res <- NULL;
+      idxs <- set <- argsGG <- res <- NULL;
 
       verbose && exit(verbose);
-    } # for (ii ...)
+    } # for (gg ...)
   } # if (parallel == "none")
 
 
@@ -148,7 +202,7 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, FUN, ..., args=list(),
 ##        options("BatchJobs.check.posix"=FALSE);
 ##        FUN(...);
 ##      } # FUNx()
-      ids <- batchMap(reg, fun=FUN, as.list(ds), more.args=allArgs);
+      ids <- batchMap(reg, fun=FUN, sets, more.args=allArgs);
       verbose && cat(verbose, "Job IDs added:");
       verbose && str(verbose, ids);
       verbose && print(verbose, reg);
@@ -256,7 +310,7 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, FUN, ..., args=list(),
     verbose && print(verbose, bpParam);
 
     verbose && enter(verbose, "Calling bplapply()");
-    args <- c(list(ds, FUN=FUN), allArgs, BPPARAM=bpParam);
+    args <- c(list(sets, FUN=FUN), allArgs, BPPARAM=bpParam);
     verbose && cat(verbose, "Arguments passed to bplapply():");
     verbose && str(verbose, args);
     res <- do.call(BiocParallel::bplapply, args);
@@ -369,6 +423,9 @@ setMethodS3(".getBatchJobRegistry", "default", function(..., skip=TRUE) {
 
 ############################################################################
 # HISTORY:
+# 2013-11-22
+# o Added argument 'IDXS' to dsApply() allowing to process not only
+#   individuals files but also lists of individuals files.
 # 2013-11-02
 # o Adding support for distributed processing via 'BiocParallel'.
 # 2013-11-01

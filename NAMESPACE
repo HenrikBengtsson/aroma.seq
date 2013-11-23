@@ -172,6 +172,7 @@ S3method("nbrOfSeqs", "BamDataFile")
 S3method("nbrOfTargets", "BamDataFile")
 S3method("nbrOfUnmappedReads", "BamDataFile")
 S3method("readDataFrame", "BamDataFile")
+S3method("readHeader", "BamDataFile")
 S3method("readReadPositions", "BamDataFile")
 S3method("replaceAllReadGroups", "BamDataFile")
 S3method("sort", "BamDataFile")
@@ -192,6 +193,14 @@ S3method("sortByPosition", "BamDataSet")
 
 # BamIndexDataFile
 S3method("as.character", "BamIndexDataFile")
+
+# BamMerger
+S3method("getAsteriskTags", "BamMerger")
+S3method("getGroups", "BamMerger")
+S3method("getOutputDataSet", "BamMerger")
+S3method("nbrOfGroups", "BamMerger")
+S3method("process", "BamMerger")
+S3method("validateGroups", "BamMerger")
 
 # BinnedGcNormalization
 S3method("as.character", "BinnedGcNormalization")
@@ -218,6 +227,7 @@ S3method("getSummary", "Bowtie2IndexSet")
 S3method("isComplete", "Bowtie2IndexSet")
 
 # BwaAlignment
+S3method("getAsteriskTags", "BwaAlignment")
 S3method("getParameterSets", "BwaAlignment")
 S3method("process", "BwaAlignment")
 
@@ -248,6 +258,8 @@ S3method("doTopHat2", "default")
 S3method("findCmd", "default")
 S3method("findCmdv", "default")
 S3method("htseqCount", "default")
+S3method("normalizeGcContent", "default")
+S3method("picardValidateSamFile", "default")
 S3method("samtoolsMpileup", "default")
 S3method("samtoolsSort", "default")
 S3method("samtoolsView", "default")
@@ -281,6 +293,7 @@ S3method("getSeqLengths", "FastaReferenceFile")
 S3method("getSeqNames", "FastaReferenceFile")
 S3method("getTotalSeqLengths", "FastaReferenceFile")
 S3method("nbrOfSeqs", "FastaReferenceFile")
+S3method("readSeqLengths", "FastaReferenceFile")
 
 # FastaReferenceSet
 S3method("byPath", "FastaReferenceSet")
@@ -299,6 +312,7 @@ S3method("getMateFile", "FastqDataFile")
 S3method("getSamReadGroup", "FastqDataFile")
 S3method("nbrOfSeqs", "FastqDataFile")
 S3method("readFASTQSummary", "FastqDataFile")
+S3method("readGeometry", "FastqDataFile")
 S3method("readSeqFile", "FastqDataFile")
 S3method("report", "FastqDataFile")
 S3method("setSamReadGroup", "FastqDataFile")
@@ -388,11 +402,11 @@ S3method("byPath", "PairedEndFastqDataSet")
 # PicardDuplicateRemoval
 S3method("getAsteriskTags", "PicardDuplicateRemoval")
 S3method("getOutputDataSet", "PicardDuplicateRemoval")
-S3method("getRootPath", "PicardDuplicateRemoval")
 S3method("process", "PicardDuplicateRemoval")
 
 # QDNAseqEstimation
 S3method("getAsteriskTags", "QDNAseqEstimation")
+S3method("getBinWidth", "QDNAseqEstimation")
 S3method("getOutputDataSet", "QDNAseqEstimation")
 S3method("getRootPath", "QDNAseqEstimation")
 S3method("process", "QDNAseqEstimation")
@@ -401,6 +415,7 @@ S3method("process", "QDNAseqEstimation")
 S3method("as.character", "SamDataFile")
 S3method("convertToBam", "SamDataFile")
 S3method("directoryStructure", "SamDataFile")
+S3method("validate", "SamDataFile")
 
 # SamDataSet
 S3method("byName", "SamDataSet")
@@ -427,6 +442,9 @@ S3method("hasSequencingCenter", "SamReadGroup")
 S3method("isEmpty", "SamReadGroup")
 S3method("merge", "SamReadGroup")
 S3method("validate", "SamReadGroup")
+
+# SamTransform
+S3method("getRootPath", "SamTransform")
 
 # TopHat2Alignment
 S3method("getExpectedOutputPaths", "TopHat2Alignment")

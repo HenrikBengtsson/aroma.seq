@@ -1,5 +1,6 @@
 library("aroma.seq")
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
+fullTest <- fullTest && (Sys.getenv("_R_CHECK_BUGGY_") != "")
 fullTest <- fullTest && isPackageInstalled("ShortRead")
 if (fullTest) {
 

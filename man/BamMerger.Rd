@@ -1,21 +1,21 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Do not modify this file since it was automatically generated from:
 % 
-%  PicardDuplicateRemoval.R
+%  BamMerger.R
 % 
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\name{PicardDuplicateRemoval}
+\name{BamMerger}
 \docType{class}
-\alias{PicardDuplicateRemoval}
+\alias{BamMerger}
 
 
-\title{The PicardDuplicateRemoval class}
+\title{The BamMerger class}
 
 \description{
  Package:  aroma.seq \cr
-\bold{Class PicardDuplicateRemoval}\cr
+\bold{Class BamMerger}\cr
 
 \code{\link[R.oo]{Object}}\cr
 \code{~~|}\cr
@@ -25,39 +25,38 @@
 \code{~~~~~~~~~~~~|}\cr
 \code{~~~~~~~~~~~~+--}\code{\link[aroma.seq]{SamTransform}}\cr
 \code{~~~~~~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~~~~~~+--}\code{PicardDuplicateRemoval}\cr
+\code{~~~~~~~~~~~~~~~~~+--}\code{BamMerger}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
 
-public static class \bold{PicardDuplicateRemoval}\cr
+public static class \bold{BamMerger}\cr
 extends \emph{\link[aroma.seq]{SamTransform}}\cr
 
 
 
- This method \emph{flags} reads that are aligned to more than one locus,
- which is done using Picard's 'MarkDuplicates' method [1].
-
- Note that it is assumed that the input BAM files are already sorted,
- which also means that it can be assumed that the output BAM files
- are sorted.  As with all other methods that outputs BAM files,
- this methods index all outputted BAM files.
+ A BamMerger takes a \code{\link{BamDataSet}} as input and merges subsets of
+ \code{\link{BamDataFile}}:s into single ones.  How the grouping is done, can
+ be controlled by a parameter.
 }
 
 \usage{
-PicardDuplicateRemoval(..., ASSUME_SORTED=TRUE, VALIDATION_STRINGENCY="SILENT")
+BamMerger(dataSet=NULL, groupBy=NULL, ...)
 }
 
 \arguments{
- \item{...}{Arguments passed to \code{\link{AromaSeqTransform}}.}
- \item{ASSUME_SORTED, VALIDATION_STRINGENCY}{
-   Additional arguments passed to Picard MarkDuplicates.}
+ \item{dataSet}{An \code{\link{BamDataSet}}.}
+ \item{groupBy}{A \code{\link[base]{character}} string or an explicit named \code{\link[base]{list}},
+  specifying which BAM files should be merged together.}
+ \item{...}{Not used.}
 }
 
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
+ \tab \code{getGroups} \tab  -\cr
  \tab \code{getOutputDataSet} \tab  -\cr
+ \tab \code{nbrOfGroups} \tab  -\cr
  \tab \code{process} \tab  -\cr
 }
 
@@ -77,14 +76,14 @@ $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCa
 
 }
 
-\section{Benchmarking}{
- As a very rough guideline, a 1.0GB BAM file takes
- about 10-15 minutes to process using this method.
-}
-
-\references{
- [1] Picard, \url{http://picard.sourceforge.net/}\cr
+\section{Supported operating systems}{
+  This method is available on Linux, OSX, and Windows [1].
 }
 
 \author{Henrik Bengtsson}
+
+\seealso{
+  Internally \code{\link[Rsamtools]{mergeBam}} is used for merging, sorting,
+  and indexing.
+}
 \keyword{classes}

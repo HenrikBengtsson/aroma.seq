@@ -252,3 +252,8 @@ process.QDNAseqEstimation
 getBinWidth getBinWidth.QDNAseqEstimation
 picardValidateSamFile
 picardValidateSamFile.default
+getAsteriskTags.BamMerger getGroups
+getGroups.BamMerger getOutputDataSet.BamMerger
+getRootPath.SamTransform nbrOfGroups nbrOfGroups.BamMerger
+process.BamMerger validateGroups validateGroups.BamMerger
+

@@ -1,21 +1,21 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Do not modify this file since it was automatically generated from:
 % 
-%  PicardDuplicateRemoval.R
+%  SamTransform.R
 % 
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\name{PicardDuplicateRemoval}
+\name{SamTransform}
 \docType{class}
-\alias{PicardDuplicateRemoval}
+\alias{SamTransform}
 
 
-\title{The PicardDuplicateRemoval class}
+\title{The SamTransform class}
 
 \description{
  Package:  aroma.seq \cr
-\bold{Class PicardDuplicateRemoval}\cr
+\bold{Class SamTransform}\cr
 
 \code{\link[R.oo]{Object}}\cr
 \code{~~|}\cr
@@ -23,47 +23,34 @@
 \code{~~~~~~~|}\cr
 \code{~~~~~~~+--}\code{\link[aroma.seq]{AromaSeqTransform}}\cr
 \code{~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~+--}\code{\link[aroma.seq]{SamTransform}}\cr
-\code{~~~~~~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~~~~~~+--}\code{PicardDuplicateRemoval}\cr
+\code{~~~~~~~~~~~~+--}\emph{\code{SamTransform}}\cr
 
 \bold{Directly known subclasses:}\cr
-\cr
+\link[aroma.seq]{BamMerger}, \link[aroma.seq]{PicardDuplicateRemoval}\cr
 
-public static class \bold{PicardDuplicateRemoval}\cr
-extends \emph{\link[aroma.seq]{SamTransform}}\cr
+public abstract static class \bold{SamTransform}\cr
+extends \emph{\link[aroma.seq]{AromaSeqTransform}}\cr
 
 
 
- This method \emph{flags} reads that are aligned to more than one locus,
- which is done using Picard's 'MarkDuplicates' method [1].
-
- Note that it is assumed that the input BAM files are already sorted,
- which also means that it can be assumed that the output BAM files
- are sorted.  As with all other methods that outputs BAM files,
- this methods index all outputted BAM files.
+ A SamTransform is an \code{\link{AromaSeqTransform}} that takes
+ \code{\link{BamDataSet}}:s (or \code{\link{SamDataSet}}:s) as input.
 }
 
 \usage{
-PicardDuplicateRemoval(..., ASSUME_SORTED=TRUE, VALIDATION_STRINGENCY="SILENT")
+SamTransform(..., .className="BamDataSet")
 }
 
 \arguments{
  \item{...}{Arguments passed to \code{\link{AromaSeqTransform}}.}
- \item{ASSUME_SORTED, VALIDATION_STRINGENCY}{
-   Additional arguments passed to Picard MarkDuplicates.}
+ \item{.className}{A \code{\link[base]{character}} string specifying what class
+  of data sets to accept.}
 }
 
 \section{Fields and Methods}{
  \bold{Methods:}\cr
-\tabular{rll}{
- \tab \code{getOutputDataSet} \tab  -\cr
- \tab \code{process} \tab  -\cr
-}
+\emph{No methods defined}.
 
-
- \bold{Methods inherited from SamTransform}:\cr
-getRootPath
 
  \bold{Methods inherited from AromaSeqTransform}:\cr
 as.character, findFilesTodo, getAcronym, getAsteriskTags, getFlavor, getFullName, getInputDataSet, getName, getOptionalArguments, getOrganism, getOutputDataSet, getParameters, getPath, getRootPath, getTags, isDone, length, process, setTags
@@ -77,14 +64,8 @@ $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCa
 
 }
 
-\section{Benchmarking}{
- As a very rough guideline, a 1.0GB BAM file takes
- about 10-15 minutes to process using this method.
-}
-
-\references{
- [1] Picard, \url{http://picard.sourceforge.net/}\cr
-}
-
 \author{Henrik Bengtsson}
+
+
 \keyword{classes}
+\keyword{internal}

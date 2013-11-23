@@ -1,6 +1,14 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.7 [2013-11-22]
+o Added BamMerger and a system test.
+o Now all AromaSeqTransform classes displays the output path
+  by default when printed.
+o Added argument 'IDXS' to dsApply() allowing to process not only
+  individuals files but also lists of individuals files.
+
+
 Version: 0.4.6 [2013-11-21]
 o Now process() for TopHat2Alignment generates an index file for
   accepted_hits.bam.  This will also assert the assumption that

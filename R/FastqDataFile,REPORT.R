@@ -80,7 +80,7 @@ setMethodS3("report", "FastqDataSet", function(this, dataSet=getFullName(this), 
 
   verbose && enter(verbose, "Generating reports");
 
-  resList <- dsApply(this, function(df, dataSet, flavor, outPath, ..., verbose=FALSE) {
+  resList <- dsApply(this, FUN=function(df, dataSet, flavor, outPath, ..., verbose=FALSE) {
     R.utils::use("R.utils, aroma.seq");
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

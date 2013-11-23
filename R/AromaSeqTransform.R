@@ -15,7 +15,9 @@
 #  \item{dataSet}{An @see "GenericDataFileSet".}
 #  \item{tags}{Tags appended to the output data sets.}
 #  \item{flavor}{An optional @character string.}
-#  \item{...}{Additional arguments.}
+#  \item{...}{Additional named parameters to be recorded.}
+#  \item{.className}{A @character string specifying what class of
+#   data sets to accept.}
 # }
 #
 # \section{Fields and Methods}{
@@ -26,11 +28,11 @@
 #
 # @keyword internal
 #*/###########################################################################
-setConstructorS3("AromaSeqTransform", function(dataSet=NULL, tags="*", flavor=NULL, ...) {
+setConstructorS3("AromaSeqTransform", function(dataSet=NULL, tags="*", flavor=NULL, ..., .className="GenericDataFileSet") {
   # Validate arguments
   if (!is.null(dataSet)) {
     # Argument 'dataSet':
-    dataSet <- Arguments$getInstanceOf(dataSet, "GenericDataFileSet");
+    dataSet <- Arguments$getInstanceOf(dataSet, .className);
 
     # Argument 'flavor':
     flavor <- Arguments$getCharacter(flavor, length=c(0L,1L));
@@ -61,6 +63,7 @@ setMethodS3("as.character", "AromaSeqTransform", function(x, ...) {
   s <- c(s, sprintf("Acronym: %s", getAcronym(this)));
   s <- c(s, sprintf("Flavor: %s", getFlavor(this)));
   s <- c(s, sprintf("Number of items to process: %s", length(this)));
+  s <- c(s, sprintf("Output path: %s", getPath(this, create=FALSE)));
 
   ds <- getInputDataSet(this);
   s <- c(s, "Input data set:");
@@ -278,6 +281,8 @@ setMethodS3("process", "AromaSeqTransform", abstract=TRUE)
 
 ############################################################################
 # HISTORY:
+# 2013-11-22
+# o Added argument '.className' to the AromaSeqTransform constructor.
 # 2013-11-16
 # o Created.
 ############################################################################

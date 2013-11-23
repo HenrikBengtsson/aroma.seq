@@ -18,8 +18,7 @@
 # @synopsis
 #
 # \arguments{
-#  \item{dataSet}{An @see "BamDataSet".}
-#  \item{...}{Additional arguments passed to @see "AromaSeqTransform".}
+#  \item{...}{Arguments passed to @see "AromaSeqTransform".}
 #  \item{ASSUME_SORTED, VALIDATION_STRINGENCY}{
 #    Additional arguments passed to Picard MarkDuplicates.}
 # }
@@ -39,31 +38,13 @@
 #
 # @author "HB"
 #*/###########################################################################
-setConstructorS3("PicardDuplicateRemoval", function(dataSet=NULL, ..., ASSUME_SORTED=TRUE, VALIDATION_STRINGENCY="SILENT") {
-  # Validate arguments
-  if (!is.null(dataSet)) {
-    # Argument 'dataSet':
-    dataSet <- Arguments$getInstanceOf(dataSet, "BamDataSet");
-  } # if (!is.null(dataSet))
-
-  extend(AromaSeqTransform(dataSet, ASSUME_SORTED=ASSUME_SORTED, VALIDATION_STRINGENCY=VALIDATION_STRINGENCY, ...), "PicardDuplicateRemoval");
+setConstructorS3("PicardDuplicateRemoval", function(..., ASSUME_SORTED=TRUE, VALIDATION_STRINGENCY="SILENT") {
+  extend(SamTransform(..., ASSUME_SORTED=ASSUME_SORTED, VALIDATION_STRINGENCY=VALIDATION_STRINGENCY), "PicardDuplicateRemoval");
 })
 
 
 setMethodS3("getAsteriskTags", "PicardDuplicateRemoval", function(this, collapse=NULL, ...) {
   "-dups";
-}, protected=TRUE)
-
-
-
-setMethodS3("getRootPath", "PicardDuplicateRemoval", function(this, ...) {
-  # Use same root path as input data set
-  ds <- getInputDataSet(this);
-  path <- getPath(ds);
-  path <- getParent(path, depth=2L);
-  # Sanity check
-  stopifnot(regexpr("Data$", path) != -1L);
-  path;
 }, protected=TRUE)
 
 
@@ -215,6 +196,8 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
 
 ############################################################################
 # HISTORY:
+# 2013-11-22
+# o Now PicardDuplicateRemoval extends SamTransform.
 # 2013-11-16
 # o CLEANUP: Dropped several methods now taken care of by super class.
 # 2013-11-15
