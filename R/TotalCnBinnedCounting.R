@@ -105,10 +105,13 @@ setMethodS3("smoothRawCopyNumbers", "TotalCnBinnedCounting", function(this, rawC
 
 
 
-setMethodS3("process", "TotalCnBinnedCounting", function(this, ..., verbose=FALSE) {
+setMethodS3("process", "TotalCnBinnedCounting", function(this, ..., force=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'force':
+  force <- Arguments$getLogical(force); 
+
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
   if (verbose) {
@@ -117,18 +120,28 @@ setMethodS3("process", "TotalCnBinnedCounting", function(this, ..., verbose=FALS
   }
 
 
-  if (isDone(this)) {
-    dsOut <- getOutputDataSet(this);
-    return(invisible(dsOut));
-  }
-
   verbose && enter(verbose, "Smoothing copy-number towards set of target loci");
 
-  params <- getParameters(this);
-
-  verbose && print(verbose, "Input data set:");
   ds <- getInputDataSet(this);
+  verbose && cat(verbose, "Input data set:");
   verbose && print(verbose, ds);
+
+  if (force) {
+    todo <- seq_along(ds);
+  } else {
+    todo <- findFilesTodo(this, verbose=less(verbose, 1));
+    # Already done?
+    if (length(todo) == 0L) {
+      verbose && cat(verbose, "Already done. Skipping.");
+      res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1));
+      verbose && exit(verbose);
+      return(invisible(res));
+    }
+  } 
+
+  params <- getParameters(this);
+  verbose && cat(verbose, "Method parameters:");
+  verbose && str(verbose, params); 
 
   verbose && enter(verbose, "Identifying all target positions");
   targetList <- getTargetPositions(this, ...);
@@ -139,9 +152,20 @@ setMethodS3("process", "TotalCnBinnedCounting", function(this, ..., verbose=FALS
   platform <- getPlatform(targetUgp);
   chipType <- getChipType(targetUgp);
   nbrOfUnits <- nbrOfUnits(targetUgp);
+  params$targetUgp <- NULL;
+  parameters <- list(
+    targetUgp=list(
+      fullname=getFullName(targetUgp),
+      platform=getPlatform(targetUgp),
+      chipType=getChipType(targetUgp),
+      nbrOfUnits=nbrOfUnits(targetUgp),
+      checksum=getChecksum(targetUgp)
+    ),
+    params=params
+  )
   # Not needed anymore
-  targetUgp <- NULL;
-  verbose && cat(verbose, "Total number of target units:", nbrOfUnits);
+  targetUgp <- params <- NULL;
+  verbose && cat(verbose, "Total number of target units: ", nbrOfUnits);
   verbose && exit(verbose);
 
   # Get Class object for the output files
@@ -150,21 +174,63 @@ setMethodS3("process", "TotalCnBinnedCounting", function(this, ..., verbose=FALS
   # Get the filename extension for output files
   ext <- getOutputFileExtension(this);
 
+  # Output directory
+  path <- getPath(this);
+  verbose && cat(verbose, "Number of items to be processed: ", length(todo));
 
-  nbrOfArrays <- length(ds);
-  for (kk in seq_along(ds)) {
-    df <- getFile(ds, kk);
-    verbose && enter(verbose, sprintf("Array %d ('%s') of %d",
-                                            kk, getName(df), nbrOfArrays));
 
-    path <- getPath(this);
+  # Input arguments:
+  # df: [BamDataFile]
+  # targetList: [list]
+  # parameters: [list]
+  # clazz: [Class]
+  # ext: [characterer]
+  # force: [logical]
+  # verbose: [Verbose]
+  dsApply(ds[todo], FUN=function(df, targetList, parameters, clazz, ext, force=FALSE, verbose=FALSE, ...) {
+    R.utils::use("R.oo, R.utils, aroma.seq")
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # Validate arguments
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # Argument 'df':
+    df <- Arguments$getInstanceOf(df, "BamDataFile");
+
+    # Argument 'targetList':
+    targetList <- Arguments$getInstanceOf(targetList, "list");
+
+    # Argument 'parameters':
+    parameters <- Arguments$getInstanceOf(parameters, "list");
+
+    # Argument 'clazz':
+    clazz <- Arguments$getInstanceOf(clazz, "Class");
+
+    # Argument 'ext':
+    ext <- Arguments$getCharacter(ext);
+
+    # Argument 'force':
+    force <- Arguments$getLogical(force); 
+  
+    # Argument 'verbose':
+    verbose <- Arguments$getVerbose(verbose);
+    if (verbose) {
+      pushState(verbose);
+      on.exit(popState(verbose));
+    }
+
+    args <- list(...);
+    str(args);
+
+    verbose && enter(verbose, sprintf("Item '%s'", getName(df)));
+
     fullname <- getFullName(df);
     filename <- sprintf("%s%s", fullname, ext);
     pathname <- Arguments$getReadablePathname(filename, path=path,
                                                          mustExist=FALSE);
     verbose && cat(verbose, "Output pathname: ", pathname);
 
-    if (isFile(pathname)) {
+    nbrOfUnits <- parameters$targetUgp$nbrOfUnits;
+    if (!force && isFile(pathname)) {
       dfOut <- newInstance(clazz, filename=pathname);
       if (nbrOfUnits != nbrOfUnits(dfOut)) {
         throw("The number of units in existing output file does not match the number of units in the output file: ", nbrOfUnits, " != ", nbrOfUnits(dfOut));
@@ -177,7 +243,7 @@ setMethodS3("process", "TotalCnBinnedCounting", function(this, ..., verbose=FALS
     verbose && print(verbose, df);
 
     # Preallocate vector
-    M <- rep(as.double(NA), times=nbrOfUnits);
+    M <- rep(NA_real_, times=nbrOfUnits);
 
     verbose && enter(verbose, "Reading and smoothing input data");
     for (cc in seq_along(targetList)) {
@@ -199,11 +265,13 @@ setMethodS3("process", "TotalCnBinnedCounting", function(this, ..., verbose=FALS
 
       smoothCNs <- smoothRawCopyNumbers(this, rawCNs=rawCNs,
                                         target=target, verbose=verbose);
-
+      rawCNs <- NULL; # Not needed anymore
       verbose && print(verbose, smoothCNs);
       verbose && summary(verbose, smoothCNs);
 
       M[target$units] <- getSignals(smoothCNs);
+
+      target <- smoothCNs <- NULL; # Not needed anymore
       verbose && exit(verbose);
     } # for (cc ...)
 
@@ -217,47 +285,47 @@ setMethodS3("process", "TotalCnBinnedCounting", function(this, ..., verbose=FALS
     verbose && enter(verbose, "Storing smoothed data");
     verbose && cat(verbose, "Pathname: ", pathname);
 
-    params2 <- params;
-    params2[["targetUgp"]] <- NULL;
     footer <- list(
       sourceDataFile=list(
         fullname=getFullName(df),
         platform=getPlatform(df),
         chipType=getChipType(df),
         checksum=getChecksum(df)
-      ), parameters=list(
-        targetUgp=list(
-          fullname=getFullName(params$targetUgp),
-          platform=getPlatform(params$targetUgp),
-          chipType=getChipType(params$targetUgp),
-          checksum=getChecksum(params$targetUgp)
-        ),
-        params=params2
-      )
+      ),
+      parameters=parameters
     );
 
     # Write to a temporary file
     pathnameT <- pushTemporaryFile(pathname, verbose=verbose);
 
     dfOut <- clazz$allocate(filename=pathnameT, nbrOfRows=nbrOfUnits,
-                            platform=platform, chipType=chipType,
+                            platform=parameters$targetUgp$platform,
+                            chipType=parameters$targetUgp$chipType,
                             footer=footer, verbose=less(verbose, 50));
 
-    dfOut[,1] <- M;
+    dfOut[,1L] <- M;
     # Not needed anymore
-    M <- NULL;
+    M <- footer <- NULL;
 
     # Renaming temporary file
     pathname <- popTemporaryFile(pathnameT, verbose=verbose);
 
     verbose && exit(verbose); # Storing
 
+    # Sanity check
+    dfOut <- newInstance(clazz, filename=pathname);
+    if (nbrOfUnits != nbrOfUnits(dfOut)) {
+      throw("The number of units in existing output file does not match the number of units in the output file: ", nbrOfUnits, " != ", nbrOfUnits(dfOut));
+    }
+
     verbose && exit(verbose);
-  } # for (kk ...)
+
+    invisible(dfOut);
+  }, targetList=targetList, parameters=parameters, clazz=clazz, ext=ext, force=force, verbose=verbose);
 
   verbose && exit(verbose);
 
-  dsOut <- getOutputDataSet(this);
+  dsOut <- getOutputDataSet(this, onMissing="error");
   invisible(dsOut);
 }) # process()
 
