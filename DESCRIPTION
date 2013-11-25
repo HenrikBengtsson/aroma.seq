@@ -1,7 +1,7 @@
 Package: aroma.seq
 Version: 0.4.8
 Depends: R (>= 3.0.2), R.utils (>= 1.28.4), R.filesets (>= 2.3.5), aroma.core (>= 2.11.0), BiocParallel (>= 0.4.1)
-Imports: methods, R.methodsS3 (>= 1.5.2), R.oo (>= 1.15.8), R.cache (>= 0.9.0)
+Imports: methods, R.methodsS3 (>= 1.5.2), R.oo (>= 1.15.8), R.cache (>= 0.9.0), matrixStats (>= 0.8.12)
 Suggests: Biobase (>= 2.22.0), Biostrings (>= 2.30.0), ShortRead (>= 1.20.0), Rsamtools (>= 1.14.1), aroma.light (>= 1.32.0), aroma.cn (>= 1.5.0), GenomicRanges (>= 1.14.1), R.devices (>= 2.7.2), R.rsp (>= 0.9.28), markdown (>= 0.6.3), qrqc (>= 1.16.0), BatchJobs (>= 1.1-1135)
 Date: 2013-11-24
 Title: High-throughput sequence (HT-Seq) analysis in the Aroma framework

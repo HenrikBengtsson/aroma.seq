@@ -91,7 +91,7 @@ setMethodS3("smoothRawCopyNumbers", "TotalCnBinnedCounting", function(this, rawC
   verbose && cat(verbose, "Calling binCounts() with arguments:");
   verbose && str(verbose, args);
   args$verbose <- less(verbose, 20);
-  yS <- do.call(matrixStats::binCounts, args=args);
+  yS <- do.call(binCounts, args=args);
   verbose && cat(verbose, "Bin counts:");
   verbose && str(verbose, yS);
 
@@ -110,7 +110,7 @@ setMethodS3("process", "TotalCnBinnedCounting", function(this, ..., force=FALSE,
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'force':
-  force <- Arguments$getLogical(force); 
+  force <- Arguments$getLogical(force);
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -137,11 +137,11 @@ setMethodS3("process", "TotalCnBinnedCounting", function(this, ..., force=FALSE,
       verbose && exit(verbose);
       return(invisible(res));
     }
-  } 
+  }
 
   params <- getParameters(this);
   verbose && cat(verbose, "Method parameters:");
-  verbose && str(verbose, params); 
+  verbose && str(verbose, params);
 
   verbose && enter(verbose, "Identifying all target positions");
   targetList <- getTargetPositions(this, ...);
@@ -209,8 +209,8 @@ setMethodS3("process", "TotalCnBinnedCounting", function(this, ..., force=FALSE,
     ext <- Arguments$getCharacter(ext);
 
     # Argument 'force':
-    force <- Arguments$getLogical(force); 
-  
+    force <- Arguments$getLogical(force);
+
     # Argument 'verbose':
     verbose <- Arguments$getVerbose(verbose);
     if (verbose) {

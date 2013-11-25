@@ -43,6 +43,7 @@ importFrom("R.filesets", "readDataFrame")
 importFrom("R.filesets", "setTags")
 
 ## Importing functions
+importFrom("matrixStats", "binCounts")
 importFrom("R.cache", "loadCache")
 importFrom("R.cache", "saveCache")
 importFrom("R.filesets", "extractMatrix")
