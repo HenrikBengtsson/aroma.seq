@@ -84,14 +84,14 @@ setMethodS3("smoothRawCopyNumbers", "TotalCnBinnedCounting", function(this, rawC
   args <- c(list(), params, list(x=x, bx=bx), ...);
 
   # Keep only known arguments
-  knownArguments <- names(formals(binCounts.default));
+  knownArguments <- names(formals(matrixStats::binCounts.default));
   keep <- is.element(names(args), knownArguments);
   args <- args[keep];
 
   verbose && cat(verbose, "Calling binCounts() with arguments:");
   verbose && str(verbose, args);
   args$verbose <- less(verbose, 20);
-  yS <- do.call("binCounts", args=args);
+  yS <- do.call(matrixStats::binCounts, args=args);
   verbose && cat(verbose, "Bin counts:");
   verbose && str(verbose, yS);
 
@@ -395,6 +395,9 @@ setMethodS3("getFilenameExtension", "BamDataFile", function(this, ...) {
 
 ############################################################################
 # HISTORY:
+# 2013-11-24
+# o BUG FIX: smoothRawCopyNumbers() for TotalCnBinnedCounting assumed
+#   that the 'matrixStats' package was loaded.
 # 2012-10-11
 # o Created from TotalCnBinnedSmoothing.R.
 ############################################################################

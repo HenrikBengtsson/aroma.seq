@@ -1,6 +1,12 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.8 [2013-11-24]
+o SPEEDUP: Parallelized TotalCnBinnedCounting.
+o BUG FIX: smoothRawCopyNumbers() for TotalCnBinnedCounting
+  assumed that the 'matrixStats' package was loaded.
+
+
 Version: 0.4.7 [2013-11-22]
 o Added BamMerger and a system test.
 o Now all AromaSeqTransform classes displays the output path
