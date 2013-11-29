@@ -17,17 +17,17 @@
 }
 
 \usage{
-\method{htseqCount}{default}(inFile, gfFile, outFile=NULL, optionsVec=c(s = "no", a = "10"), ...,
+\method{htseqCount}{default}(pathnameS, pathnameD=NULL, gff, optionsVec=c(`-s` = "no", `-a` = "10"), ...,
   command="htseq-count", verbose=FALSE)
 }
 
 \arguments{
-  \item{command}{Name of executable}
-  \item{inFile}{input file containing aligned reads, sorted by *name* if paired end; .sam and .bam supported}
-  \item{gfFile}{gene feature file, in gff format}
-  \item{outFile}{name of file to receive htseq-count output}
-  \item{optionsVec}{Vector of named options to pass to htseq-count}
+  \item{pathnameS}{source file containing aligned reads; .sam and .bam supported}
+  \item{pathnameD}{(Optional) destination file to receive htseq-count output; use pathnameS with .count extension when NULL}
+  \item{gff}{gene feature file, in gff format}
+  \item{optionsVec}{Vector of named options to htseq-count}
   \item{...}{(Not used)}
+  \item{command}{Name of executable}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }
 

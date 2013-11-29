@@ -1,9 +1,9 @@
 ###########################################################################/**
-# @RdocGeneric sortByPosition
-# @alias sortByPosition.BamDataFile
-# @alias sortByPosition.BamDataSet
+# @RdocGeneric sortByName
+# @alias sortByName.BamDataFile
+# @alias sortByName.BamDataSet
 #
-# @title "Produce sorted and indexed BAM file(s) from BAM file(s)"
+# @title "Produce sorted and indexed BAM file(s) from BAM file(s); this method will likely be superseded shortly by a SamTransform method"
 #
 # \description{
 #   @get "title".
@@ -33,7 +33,7 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("sortByPosition", "BamDataFile", function(this, pathD=getPath(this), bIndex=TRUE, suffix=".sorted",
+setMethodS3("sortByName", "BamDataFile", function(this, pathD=getPath(this), bIndex=TRUE, suffix=".byName",
                                                       skip=!overwrite, overwrite=FALSE, verbose=FALSE, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -108,19 +108,22 @@ setMethodS3("sortByPosition", "BamDataFile", function(this, pathD=getPath(this),
   verbose && print(verbose, res);
   verbose && exit(verbose);
   res;
-}) # sortByPosition() for BamDataFile
+}) # sortByName() for BamDataFile
 
 
-setMethodS3("sortByPosition", "BamDataSet", function(ds, path=getPath(ds), suffix=".sorted", ..., verbose=FALSE) {
+setMethodS3("sortByName", "BamDataSet", function(ds, path=getPath(ds), tag='byName', suffix=".byName", ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'path':
   path <- Arguments$getWritablePath(path);
-  
-  # Argument 'suffix'
-  stopifnot(is.character(suffix))  ## Should test if single string, and return informative error msg
-  
+
+  # Argument 'tag':
+  stopifnot(is.character(tag))
+
+  # Argument 'suffix'; this is required for extract() at end to work
+  stopifnot(is.character(suffix))
+
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
   if (verbose) {
@@ -138,7 +141,7 @@ setMethodS3("sortByPosition", "BamDataSet", function(ds, path=getPath(ds), suffi
   for (ii in seq_along(ds)) {
     df <- getFile(ds, ii);
     verbose && enter(verbose, sprintf("File #%d ('%s') of %d", ii, getName(df), length(ds)));
-    bf <- sortByPosition(df, path=path, suffix=suffix, ..., verbose=less(verbose,1));
+    bf <- sortByName(df, path=path, ..., verbose=less(verbose,1));
     verbose && exit(verbose);
   } # for (ii ...)
   
@@ -151,7 +154,7 @@ setMethodS3("sortByPosition", "BamDataSet", function(ds, path=getPath(ds), suffi
   verbose && exit(verbose);
   
   bs;
-}) # sortByPosition() for BamDataSet
+}) # sortByName() for BamDataSet
 
 
 

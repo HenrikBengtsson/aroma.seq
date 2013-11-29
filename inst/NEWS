@@ -1,6 +1,11 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.9 [2013-11-29]
+o Reworked htseqCount() w/ modified signature, internal sam/bam sorting
+  by name.
+
+
 Version: 0.4.8 [2013-11-24]
 o SPEEDUP: Parallelized TotalCnBinnedCounting.
 o BUG FIX: smoothRawCopyNumbers() for TotalCnBinnedCounting

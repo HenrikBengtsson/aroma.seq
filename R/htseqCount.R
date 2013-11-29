@@ -10,12 +10,12 @@
 # @synopsis
 #
 # \arguments{
-#   \item{command}{Name of executable}
-#   \item{inFile}{input file containing aligned reads, sorted by *name* if paired end; .sam and .bam supported}
-#   \item{gfFile}{gene feature file, in gff format}
-#   \item{outFile}{name of file to receive htseq-count output}
-#   \item{optionsVec}{Vector of named options to pass to htseq-count}
+#   \item{pathnameS}{source file containing aligned reads; .sam and .bam supported}
+#   \item{pathnameD}{(Optional) destination file to receive htseq-count output; use pathnameS with .count extension when NULL}
+#   \item{gff}{gene feature file, in gff format}
+#   \item{optionsVec}{Vector of named options to htseq-count}
 #   \item{...}{(Not used)}
+#   \item{command}{Name of executable}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
@@ -23,52 +23,75 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("htseqCount", "default", function(inFile,
-                                              gfFile,
-                                              outFile=NULL,
-                                              optionsVec=c(s='no', a='10'),  ## Anders et al default
+setMethodS3("htseqCount", "default", function(pathnameS,
+                                              pathnameD=NULL,
+                                              gff,
+                                              optionsVec=c('-s'='no', '-a'='10'),  ## Anders et al default
                                               ...,
                                               command='htseq-count',
                                               verbose=FALSE) {
-
-  ## ( Support a call like this: "htseq-count -s no -a 10 lib_sn.sam gfFile > countFile")
-
-  # Argument 'inFile'
-  inFile <- Arguments$getReadablePathname(inFile);
-
-  # Assign 'samFile' = actual input filename, with support for .bam input
-  if (regexpr(".*[.]sam$", inFile, ignore.case=TRUE) != -1) {
-    samFile <- inFile
-  } else if (regexpr(".*[.]bam$", inFile, ignore.case=TRUE) != -1) {
-    samFile <- sub("[.]bam$", ".sam", inFile, ignore.case=TRUE)
-    samFile <- Arguments$getWritablePathname(samFile, mustNotExist=TRUE)
-    samtoolsView(pathname=inFile, pathnameD=samFile)
-    on.exit({
-      file.remove(samFile)
-    }, add=TRUE)
-  } else {
-    throw("Unknown file extension: ", inFile);
+  
+  ## ( Support a call like this: "htseq-count -s no -a 10 lib_sn.sam gff > countFile")
+  
+  # Argument 'pathnameS'
+  pathnameS <- Arguments$getReadablePathname(pathnameS);
+  
+  # Argument 'pathnameD'
+  if (is.null(pathnameD)) {
+    pathnameD <- sub("[.](bam|sam)$", ".count", pathnameS, ignore.case=TRUE)
+    if (pathnameD==pathnameS) { # should not happen
+      pathnameD <- paste(pathnameS, ".count", sep="")
+    }
   }
+  stopifnot(pathnameD!=pathnameS)
+  pathnameD <- Arguments$getWritablePathname(pathnameD, mustNotExist=TRUE);
 
-  # Argument 'gfFile'
-  gfFile <- Arguments$getReadablePathname(gfFile);
-
-  # Argument 'outFile'
-  outFile <- Arguments$getWritablePathname(outFile);
-
-  htseqArgs <- c(samFile, gfFile)
-  htseqArgs <- c(htseqArgs, " > ", outFile)
-
-  ## Add dashes as appropriate to names of "htseq options"
+  # Argument 'gff'
+  gff <- Arguments$getReadablePathname(gff);
+  
+  ########
+  # This methods uses somewhat convoluted sam / bam manipulations:
+  # (sam input > ) bam input > sorted bam > sorted sam > htseq-count
+  ########
+  
+  # Create/setup bam input for sorting
+  if (regexpr(".*[.]sam$", pathnameS, ignore.case=TRUE) != -1) {  # match .sam
+    inBam <- sub("[.]sam$", ".InTmp.bam", pathnameS, ignore.case=TRUE)
+    inBam <- Arguments$getWritablePathname(inBam, mustNotExist=TRUE)
+    samtoolsView(pathnameS, inBam)
+    on.exit({
+      file.remove(inBam)
+    }, add=TRUE)
+  } else if (regexpr(".*[.]bam$", pathnameS, ignore.case=TRUE) != -1) {  # match .bam
+    inBam <- pathnameS
+  } else {
+    throw("Not a known (.bam/.sam) file extension: ", pathnameS);
+  }
+  
+  # Sort input bam by name
+  inBamS <- sub("[.]bam$", ",ByNameTmp.bam", inBam)
+  inBamS <- Arguments$getWritablePathname(inBamS, mustNotExist=TRUE)
+  sortBam(inBam, sub("[.]bam$", "", inBamS), byQname=TRUE)
+  
+  # Convert sorted bam to sam (needed by htseq-count)
+  inSamS <- sub("[.]bam$", ".sam", inBamS)
+  inSamS <- Arguments$getWritablePathname(inSamS)
+  samtoolsView(inBamS, inSamS)
+  on.exit({
+    file.remove(inBamS, inSamS)
+  }, add=TRUE)
+  
+  htseqArgs <- c(inSamS, gff)
+  htseqArgs <- c(htseqArgs, " > ", pathnameD)
   htseqOptions <- NULL
   if (!is.null(optionsVec)) {
     htseqOptions <- optionsVec
-    nms <- names(htseqOptions)
-    names(htseqOptions) <- paste(ifelse(nchar(nms) == 1, "-", "--"), nms, sep="")
+    # Deprecate this (dashes now required to be added by the user)
+    # nms <- names(htseqOptions); names(htseqOptions) <- paste(ifelse(nchar(nms) == 1, "-", "--"), nms, sep="")
   }
-
+  
   res <- do.call(what=systemHTSeqCount, args=list(command=command, args=c(htseqOptions, htseqArgs)))
-
+  
   return(res)
 })
 

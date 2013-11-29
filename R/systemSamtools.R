@@ -103,6 +103,8 @@ setMethodS3("systemSamtools", "default", function(command, ..., .fake=FALSE, ver
   } else {
     res <- "<fake run>";
   }
+
+  browser()
   verbose && exit(verbose);
 
   verbose && exit(verbose);
