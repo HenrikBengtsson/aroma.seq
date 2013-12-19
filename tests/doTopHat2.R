@@ -5,16 +5,11 @@ fullTest <- fullTest && isCapableOf(aroma.seq, "samtools")
 fullTest <- fullTest && isCapableOf(aroma.seq, "tophat2")
 if (fullTest) {
 
-
 # Setup (writable) local data directory structure
 setupExampleData()
-
 
 dataSet <- "YeastTest"
 organism <- "SaccharomycesCerevisiae"
-
-# Setup (writable) local data directory structure
-setupExampleData()
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
