@@ -46,8 +46,10 @@ setMethodS3("getFileVersion", "IlluminaFastqDataFile", function(this, ...) {
 
 
 setMethodS3("getSampleName", "IlluminaFastqDataFile", function(this, ...) {
-  name <- getFullName(this, ...);
+  # Get the default sample name
+  name <- NextMethod("getSampleName");
 
+  # Trim it?
   ver <- getFileVersion(this);
   if (is.na(ver)) ver <- "<gzipped; unknown>";
   if (ver == "Casava_v1.4") {
@@ -113,12 +115,17 @@ setMethodS3("getFirstSequenceInfo", "IlluminaFastqDataFile", function(this, forc
 
   if (force || is.null(info)) {
     pathnameFQ <- getPathname(this);
-    ff <- FastqFile(pathnameFQ);
-    on.exit(close(ff));
 
-   #  Really inefficient way to find the first sequence information.
-    # /HB 2013-11-19
-    rfq <- readFastq(ff);
+    ##  Really inefficient way to find the first sequence information.
+    ## /HB 2013-11-19
+    ## ff <- FastqFile(pathnameFQ);
+    ## on.exit(close(ff));
+    ## rfq <- readFastq(ff);
+
+    fqs <- FastqSampler(pathnameFQ, n=1L, ordered=TRUE)
+    on.exit(if (!is.null(fqs)) close(fqs));
+    rfq <- yield(fqs);
+    close(fqs); fqs <- NULL;
 
     id <- id(rfq)[1L];
     info <- as.character(id);
@@ -168,6 +175,9 @@ setMethodS3("getDefaultSamReadGroup", "IlluminaFastqDataFile", function(this, ..
 
 ############################################################################
 # HISTORY:
+# 2013-12-21
+# o SPEEDUP: Now getFirstSequenceInfo() for IlluminaFastqDataFile only
+#   parses one read (it used to read all of the FASTQ file).
 # 2013-11-19
 # o Now getSampleName() for IlluminaFastqDataFile gives a more informative
 #   error message if the fullname does not match the expected pattern.

@@ -1,6 +1,11 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.10 [2013-12-21]
+o SPEEDUP: Now getFirstSequenceInfo() for IlluminaFastqDataFile only
+  parses one read (it used to read all of the FASTQ file).
+
+
 Version: 0.4.9 [2013-11-29]
 o Reworked htseqCount() w/ modified signature, internal sam/bam sorting
   by name.
