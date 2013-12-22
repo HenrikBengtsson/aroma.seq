@@ -82,8 +82,8 @@ setMethodS3("readGeometry", "FastqDataFile", function(this, ...) {
     return(c(NA_integer_, NA_integer_));
   }
   pathname <- getPathname(this);
-  geo <- Biostrings::fastq.geometry(pathname);
-  geo;
+  geometry <- memoizedCall2(this, function(this, ...) Biostrings::fastq.geometry(pathname));
+  geometry;
 }, private=TRUE)
 
 

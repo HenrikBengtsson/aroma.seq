@@ -460,6 +460,16 @@
 \alias{process.BamMerger}
 \alias{validateGroups}
 \alias{validateGroups.BamMerger}
+\alias{loadCacheFile}
+\alias{loadCacheFile.GenericDataFile}
+\alias{loadCacheFileItem}
+\alias{loadCacheFileItem.GenericDataFile}
+\alias{memoizedCall2}
+\alias{memoizedCall2.GenericDataFile}
+\alias{saveCacheFile}
+\alias{saveCacheFile.GenericDataFile}
+\alias{saveCacheFileItem}
+\alias{saveCacheFileItem.GenericDataFile}
 
 \description{
   This page contains aliases for all "non-documented" objects that

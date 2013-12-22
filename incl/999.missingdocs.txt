@@ -257,3 +257,8 @@ getGroups.BamMerger getOutputDataSet.BamMerger
 getRootPath.SamTransform nbrOfGroups nbrOfGroups.BamMerger
 process.BamMerger validateGroups validateGroups.BamMerger
 
+loadCacheFile loadCacheFile.GenericDataFile loadCacheFileItem
+loadCacheFileItem.GenericDataFile memoizedCall2
+memoizedCall2.GenericDataFile saveCacheFile
+saveCacheFile.GenericDataFile saveCacheFileItem
+saveCacheFileItem.GenericDataFile
