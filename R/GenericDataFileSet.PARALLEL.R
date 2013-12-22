@@ -431,7 +431,8 @@ setMethodS3(".getBatchJobRegistry", "default", function(..., skip=TRUE) {
 # 2013-11-01
 # o Made the code more generic.
 # 2013-09-28
-# o ROBUSTNESS: Now .getBatchJobRegistryId() adds process ID ("pid") and#   a timestamp to the registry path to make it even more unique.
+# o ROBUSTNESS: Now .getBatchJobRegistryId() adds process ID ("pid") and
+#   a timestamp to the registry path to make it even more unique.
 # o BUG FIX: dsApply() for GenericDataFileSet when executed via the
 #   'BatchJobs' methods would not allow commas in the work directory
 #   among other directories.
