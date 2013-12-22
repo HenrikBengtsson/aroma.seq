@@ -47,7 +47,15 @@ setMethodS3("getFileVersion", "IlluminaFastqDataFile", function(this, ...) {
 
 setMethodS3("getSampleName", "IlluminaFastqDataFile", function(this, ...) {
   # Get the default sample name
+  default <- getFullName(this);
+
+  # Get the "struct-inferred" sample name, if any
   name <- NextMethod("getSampleName");
+
+  # Nothing more to do?
+  if (name != default) {
+    return(name);
+  }
 
   # Trim it?
   ver <- getFileVersion(this);
