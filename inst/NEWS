@@ -1,6 +1,13 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.11 [2014-01-04]
+o CONSISTENCY: Now dsApply() for GenericDataFileSet returns a named
+  vector with names corresponding to the names of the processed file
+  items.  Added an example to the help for dsApply() and a package
+  system test.
+
+
 Version: 0.4.10 [2013-12-21]
 o SPEEDUP: Now getFirstSequenceInfo() for IlluminaFastqDataFile only
   parses one read (it used to read all of the FASTQ file).

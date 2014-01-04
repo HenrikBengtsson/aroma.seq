@@ -27,8 +27,10 @@
 # }
 #
 # \value{
-#   Returns nothing.
+#   Returns a named @list.
 # }
+#
+# @examples "../incl/GenericDataFileSet.dsApply.Rex"
 #
 # \seealso{
 #   The \pkg{BiocParallel} and \pkg{BatchJobs} packages is utilized
@@ -149,6 +151,10 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, IDXS=NULL, DROP=is.nul
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   res <- NULL;
   if (parallel == "none") {
+    # Allocate result list
+    res <- vector("list", length=length(sets));
+    names(res) <- names(sets);
+
     for (gg in seq_along(sets)) {
       name <- names(sets)[gg];
       verbose && enter(verbose, sprintf("Group #%d ('%s') of %d", gg, name, length(sets)));
@@ -158,11 +164,14 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, IDXS=NULL, DROP=is.nul
       verbose && cat(verbose, "Call arguments:");
       verbose && str(verbose, argsGG);
       argsGG$verbose <- less(verbose, 1);
-      res <- do.call(FUN, args=argsGG);
-      verbose && str(verbose, res);
+      resGG <- do.call(FUN, args=argsGG);
+      verbose && str(verbose, resGG);
+
+      # Record
+      res[[gg]] <- resGG;
 
       # Not needed anymore
-      idxs <- set <- argsGG <- res <- NULL;
+      idxs <- set <- argsGG <- resGG <- NULL;
 
       verbose && exit(verbose);
     } # for (gg ...)
@@ -314,6 +323,7 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, IDXS=NULL, DROP=is.nul
     verbose && cat(verbose, "Arguments passed to bplapply():");
     verbose && str(verbose, args);
     res <- do.call(BiocParallel::bplapply, args);
+    names(res) <- names(sets);
     verbose && exit(verbose);
 
     verbose && exit(verbose);
@@ -321,7 +331,7 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, IDXS=NULL, DROP=is.nul
 
   verbose && exit(verbose);
 
-  invisible(res);
+  res;
 }, protected=TRUE) # dsApply()
 
 
@@ -423,6 +433,9 @@ setMethodS3(".getBatchJobRegistry", "default", function(..., skip=TRUE) {
 
 ############################################################################
 # HISTORY:
+# 2014-01-04
+# o CONSISTENCY: Now dsApply() returns a named vector with names
+#   corresponding to the names of the processed file items.
 # 2013-11-22
 # o Added argument 'IDXS' to dsApply() allowing to process not only
 #   individuals files but also lists of individuals files.
