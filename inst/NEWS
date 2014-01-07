@@ -1,6 +1,13 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.12 [2014-01-07]
+o BUG FIX: Now readGeometry() for FastqDataFile returns missing values
+  for non-existing files.  Used to give an error.
+o Now getFilePairs() for FastqDataSet returns NA files (was R1) in
+  case mate file R2 could not be found.
+
+
 Version: 0.4.11 [2014-01-04]
 o CONSISTENCY: Now dsApply() for GenericDataFileSet returns a named
   vector with names corresponding to the names of the processed file

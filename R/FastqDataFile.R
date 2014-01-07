@@ -76,10 +76,16 @@ setMethodS3("getGeometry", "FastqDataFile", function(this, force=FALSE, ...) {
   geometry;
 })
 
+
 setMethodS3("readGeometry", "FastqDataFile", function(this, ...) {
+  naValue <- c(NA_integer_, NA_integer_);
+
+  # Nothing to do?
+  if (!isFile(this)) return(naValue);
+
   # TO DO: Support gzipped files. /HB 2013-06-20
   if (isGzipped(this)) {
-    return(c(NA_integer_, NA_integer_));
+    return(naValue);
   }
   pathname <- getPathname(this);
   geometry <- memoizedCall2(this, function(this, ...) Biostrings::fastq.geometry(pathname));
@@ -194,6 +200,9 @@ setMethodS3("getMateFile", "FastqDataFile", function(this, ...) {
 
 ############################################################################
 # HISTORY:
+# 2014-01-07
+# o Now readGeometry() for FastqDataFile returns missing values for
+#   non-existing files.
 # 2013-11-02
 # o Now FastqDataFile(Set) handles more paired filename formats.
 # 2013-08-24

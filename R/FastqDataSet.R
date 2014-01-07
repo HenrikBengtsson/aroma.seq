@@ -164,7 +164,7 @@ setMethodS3("getFilePairs", "FastqDataSet", function(this, ...) {
     if (isFile(r1)) {
       r2 <- getMateFile(r1);
     } else {
-      r2 <- r1;
+      r2 <- newInstance(r1, NA, mustExist=FALSE);
     }
     pairs[ii,1L] <- list(r1);
     pairs[ii,2L] <- list(r2);
@@ -309,6 +309,9 @@ setMethodS3("byName", "FastqDataSet", function(static, name, tags=NULL, organism
 
 ############################################################################
 # HISTORY:
+# 2014-01-07
+# o Now getFilePairs() for FastqDataSet returns NA files (was R1) in
+#   case mate file R2 could not be found.
 # 2013-11-09
 # o Added static findByName() and byName() for FastqDataSet.
 # o Added getOrganism() to FastqDataSet.
