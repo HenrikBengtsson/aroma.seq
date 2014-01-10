@@ -24,8 +24,8 @@
 #*/###########################################################################
 setMethodS3("samtoolsMpileup", "default", function(refFile, bamFile, pathnameD="mpileup.out", ..., verbose=FALSE) {
 
-  # support a call like this:  system(paste("samtools mpileup -uf", RefFile, BamFile, ">tmp1.out"))
-  
+  # Support a call like this:  system(paste("samtools mpileup -uf", RefFile, BamFile, ">tmp1.out"))
+  # NB from samtools mpileup help:  'Assuming diploid individuals.'  
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments

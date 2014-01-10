@@ -47,6 +47,7 @@ setMethodS3("doTopHat2", "FastqDataSet", function(dataSet, reference, ..., verbo
   # Argument 'reference':
   if (inherits(reference, "FastaReferenceFile")) {
   } else if (inherits(reference, "BwaIndexSet")) {
+  } else if (inherits(reference, "Bowtie2IndexSet")) {
   } else {
     throw("Argument 'reference' should either be of class 'FastaReferenceFile' or 'BwaIndexSet': ", class(reference)[1L]);
   }
