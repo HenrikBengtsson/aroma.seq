@@ -13,6 +13,8 @@
 #
 # \arguments{
 #  \item{...}{Arguments passed to @see "AbstractAlignment".}
+#  \item{groupBy}{A @character string or an explicit named @list,
+#   specifying which input files should be processed together.}
 #  \item{indexSet}{An @see "Bowtie2IndexSet".}
 #  \item{transcripts}{Gene model (transcriptome) GTF/GFF3 file.}
 # }
@@ -35,10 +37,20 @@
 #      Nat Protoc, 2012.\cr
 # }
 #*/###########################################################################
-setConstructorS3("TopHat2Alignment", function(..., indexSet=NULL, transcripts=NULL) {
+setConstructorS3("TopHat2Alignment", function(..., groupBy=NULL, indexSet=NULL, transcripts=NULL) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'groupBy':
+  if (is.null(groupBy)) {
+  } else if (is.character(groupBy)) {
+    groupBy <- match.arg(groupBy, choices=c("name"));
+  } else if (is.list(groupBy)) {
+    # Validated below
+  } else {
+    throw("Invalid argument 'groupBy': ", mode(groupBy));
+  }
+
   # Argument 'indexSet':
   if (!is.null(indexSet)) {
     indexSet <- Arguments$getInstanceOf(indexSet, "Bowtie2IndexSet");
@@ -52,15 +64,95 @@ setConstructorS3("TopHat2Alignment", function(..., indexSet=NULL, transcripts=NU
   # Arguments '...':
   args <- list(...);
 
-  extend(AbstractAlignment(..., indexSet=indexSet), "TopHat2Alignment",
-    transcripts = transcripts
-  )
+  this <- extend(AbstractAlignment(..., indexSet=indexSet), "TopHat2Alignment",
+    transcripts = transcripts,
+    groupBy = groupBy
+  );
+
+  # Argument 'groupBy':
+  if (is.list(groupBy)) {
+    validateGroups(this, groups=groupBy);
+  }
+
+  this;
 })
 
 
 setMethodS3("getRootPath", "TopHat2Alignment", function(this, ...) {
   "tophat2Data";
 }, protected=TRUE)
+
+
+
+setMethodS3("validateGroups", "TopHat2Alignment", function(this, groups, ...) {
+  # Input data set
+  ds <- getInputDataSet(this);
+  nbrOfFiles <- length(ds);
+
+  # Sanity checks
+  idxs <- unlist(groups, use.names=FALSE);
+  idxs <- Arguments$getIndices(idxs, max=nbrOfFiles);
+  if (length(idxs) < nbrOfFiles) {
+    throw("One or more input FASTQ files is not part of any group.");
+  } else if (length(idxs) > nbrOfFiles) {
+    throw("One or more input FASTQ files is part of more than one group.");
+  }
+
+  if (is.null(names(groups))) {
+    throw("The list of groups does not have names.");
+  }
+
+  invisible(groups);
+}, protected=TRUE)
+
+
+setMethodS3("getGroups", "TopHat2Alignment", function(this, ...) {
+  ds <- getInputDataSet(this);
+
+  groups <- this$groupBy;
+  if (is.null(groups)) {
+    groups <- as.list(seq_along(ds));
+    names(groups) <- getFullNames(ds);
+  } else if (is.character(groups)) {
+    if (groups == "byName") {
+      names <- getFullNames(ds);
+      unames <- unique(names);
+      idxs <- match(names, unames);
+      names(idxs) <- names;
+      groups <- tapply(idxs, INDEX=idxs, FUN=list);
+      names(groups) <- unames;
+    }
+  }
+  # Sanity check
+  stopifnot(is.list(groups));
+
+  # Range check
+  max <- length(ds);
+  groups <- lapply(groups, FUN=Arguments$getIndices, max=max);
+
+  # Names
+  if (is.null(names(groups))) {
+    names(groups) <- sprintf("Group_%d", seq_along(groups));
+  }
+
+  groups;
+}, protected=TRUE) # getGroups()
+
+
+setMethodS3("nbrOfGroups", "TopHat2Alignment", function(this, ...) {
+  length(getGroups(this));
+})
+
+
+setMethodS3("getOutputDataSet", "TopHat2Alignment", function(this, onMissing=c("drop", "NA", "error"), ...) {
+  onMissing <- match.arg(onMissing);
+  path <- getPath(this);
+  bams <- BamDataSet$byPath(path, ...);
+  groups  <- getGroups(this);
+  fullnames <- names(groups);
+  bams <- extract(bams, fullnames, onMissing=onMissing);
+  bams
+})
 
 
 setMethodS3("getSampleNames", "TopHat2Alignment", function(this, ...) {
@@ -82,11 +174,15 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Test for non-compatible bowtie2 and tophat2 versions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  stopifnot(isCapableOf(aroma.seq, "tophat2"));
+  stopifnot(isCapableOf(aroma.seq, "bowtie2"));
   verT <- attr(findTopHat2(), "version");
   verB <- attr(findBowtie2(), "version");
-  bad <- (verT == "2.0.3" && verB == "2.1.0");
-  if (bad) {
-    throw(sprintf("Detected incompatible software installations. TopHat2 v%s is known to not work with Bowtie2 v%s.", verT, verB))
+  if (!is.null(verT) && !is.null(verB)) {
+    bad <- (verT == "2.0.3" && verB == "2.1.0");
+    if (bad) {
+      throw(sprintf("Detected incompatible software installations. TopHat2 v%s is known to not work with Bowtie2 v%s.", verT, verB))
+    }
   }
   verT <- verB <- NULL;
 
@@ -111,15 +207,30 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   verbose && print(verbose, ds);
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Identify samples to be processed
+  # Get groups of items to be processed at the same time
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  verbose && enter(verbose, "Grouping input data set");
+  groups <- getGroups(this);
+  verbose && printf(verbose, "Merging into %d groups: %s\n", length(groups), hpaste(names(groups)));
+  verbose && str(verbose, head(groups));
+  verbose && cat(verbose, "Number of items per groups:");
+  ns <- sapply(groups, FUN=length);
+  t <- table(ns);
+  names(t) <- sprintf("n=%s", names(t));
+  verbose && print(verbose, t);
+  verbose && exit(verbose);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Identify groups to be processed
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (force) {
-    todo <- seq_along(ds);
+    todo <- seq_along(groups);
   } else {
     bams <- getOutputDataSet(this, onMissing="NA", verbose=less(verbose, 1));
     todo <- which(!sapply(bams, FUN=isFile));
   }
-  verbose && cat(verbose, "Number of samples to process: ", length(todo));
+  verbose && cat(verbose, "Number of groups to process: ", length(todo));
 
   # Already done?
   if (!force && length(todo) == 0L) {
@@ -128,11 +239,6 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
     verbose && exit(verbose);
     return(bams);
   }
-
-  # The subset to be processed
-  ds <- extract(ds, todo);
-  verbose && cat(verbose, "Input data set (to be processed):");
-  verbose && print(verbose, ds);
 
   isPaired <- isPaired(ds);
   verbose && cat(verbose, "Paired-end analysis: ", isPaired);
@@ -148,17 +254,23 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   verbose && cat(verbose, "Using transcripts:");
   verbose && print(verbose, transcripts);
 
+  verbose && cat(verbose, "Number of files: ", length(ds));
+  verbose && cat(verbose, "Number of groups: ", length(groups));
+
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Apply aligner to each of the FASTQ files
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  dsApply(ds, FUN=function(dfR1, isPaired=FALSE, indexSet, transcripts=NULL, outPath, ...., skip=TRUE, verbose=FALSE) {
+  dsApply(ds, IDXS=groups[todo], DROP=FALSE, FUN=function(dfListR1, isPaired=FALSE, indexSet, transcripts=NULL, outPath, ...., skip=TRUE, verbose=FALSE) {
     R.utils::use("R.utils, aroma.seq, Rsamtools");
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Validate arguments
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Argument 'dfR1':
-    dfR1 <- Arguments$getInstanceOf(dfR1, "FastqDataFile");
+    # Argument 'dfListR1':
+    dfListR1 <- Arguments$getInstanceOf(dfListR1, "list");
+    dfListR1 <- Arguments$getVector(dfListR1, length=c(1,Inf));
+    dfListR1 <- lapply(dfListR1, FUN=Arguments$getInstanceOf, "FastqDataFile");
 
     # Argument 'isPaired':
     isPaired <- Arguments$getLogical(isPaired);
@@ -179,30 +291,30 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
       on.exit(popState(verbose));
     }
 
-    sampleName <- sub("_(1|R1)$", "", getFullName(dfR1));
+    sampleName <- sub("_(1|R1)$", "", getFullName(dfListR1[[1L]]));
     verbose && enter(verbose, "Sample name ", sQuote(sampleName));
 
     gtf <- NULL;
     if (!is.null(transcripts)) gtf <- getPathname(transcripts);
 
-    verbose && cat(verbose, "R1 FASTQ file:");
-    verbose && print(verbose, dfR1);
+    reads1 <- sapply(dfListR1, FUN=getPathname);
+    verbose && printf(verbose, "R1 FASTQ files: [%d] %s\n", length(reads1), hpaste(sQuote(reads1)));
 
     # Final sample-specific output directory
     outPathS <- file.path(outPath, sampleName);
     args <- list(
       bowtieRefIndexPrefix=getIndexPrefix(indexSet),
-      reads1=getPathname(dfR1),
+      reads1=reads1,
       reads2=NULL,
       outPath=outPathS,
       gtf=gtf
     );
 
     if (isPaired) {
-      dfR2 <- getMateFile(dfR1);
-      verbose && cat(verbose, "R2 FASTQ file:");
-      verbose && print(verbose, dfR2);
-      args$reads2 <- getPathname(dfR2);
+      dfListR2 <- lapply(dfListR1, FUN=getMateFile);
+      reads2 <- sapply(dfListR2, FUN=getPathname);
+      verbose && printf(verbose, "R2 FASTQ files: [%d] %s\n", length(reads2), hpaste(sQuote(reads2)));
+      args$reads2 <- reads2;
     }
 
 

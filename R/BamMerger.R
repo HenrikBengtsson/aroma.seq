@@ -16,7 +16,7 @@
 # \arguments{
 #  \item{dataSet}{An @see "BamDataSet".}
 #  \item{groupBy}{A @character string or an explicit named @list,
-#   specifying which BAM files should be merged together.}
+#   specifying which input files should be processed together.}
 #  \item{...}{Not used.}
 # }
 #
@@ -200,7 +200,6 @@ setMethodS3("process", "BamMerger", function(this, ..., skip=TRUE, force=FALSE, 
     # Validate arguments
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Argument 'dfList':
-    stopifnot(is.list(dfList));
     stopifnot(is.list(dfList));
 
     # Argument 'force':

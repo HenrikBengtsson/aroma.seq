@@ -131,9 +131,11 @@ findExternal <- function(mustExist=TRUE, command, version=NULL, versionPattern=N
     res <- .findCache(name=command, version=version);
     if (!is.null(res)) {
       pathname <- res$path;
-      verbose && cat(verbose, "Found cached result.");
-      verbose && exit(verbose);
-      return(pathname);
+      if (!is.null(pathname)) {
+        verbose && cat(verbose, "Found cached result.");
+        verbose && exit(verbose);
+        return(pathname);
+      }
     }
   }
 

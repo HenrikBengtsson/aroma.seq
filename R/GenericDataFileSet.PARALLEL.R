@@ -12,8 +12,9 @@
 #
 # \arguments{
 #  \item{IDXS}{A (named) @list, where each element contains a @vector data set indices.}
-#  \item{DROP}{If @TRUE, an single-index element is passed to \code{FUN} as a file
-#    instead of as a @list containing a single file.}
+#  \item{DROP}{If @FALSE, the first argument passed to \code{FUN} is always a @list of files.
+#    If @TRUE, an single-index element is passed to \code{FUN} as a file instead of
+#    as a @list containing a single file.}
 #  \item{FUN}{A @function.}
 #  \item{...}{Arguments passed to \code{FUN}.}
 #  \item{args}{(optional) A @list of additional arguments

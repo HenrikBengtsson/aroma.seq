@@ -1,6 +1,11 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.13 [2014-01-09]
+o Added argument 'groupBy' to TopHat2Alignment, which can be used to
+  specify which FASTQ files should be processed together.
+
+
 Version: 0.4.12 [2014-01-07]
 o BUG FIX: Now readGeometry() for FastqDataFile returns missing values
   for non-existing files.  Used to give an error.

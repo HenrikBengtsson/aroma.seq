@@ -114,7 +114,8 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1, reads2=N
   gzipped <- any(regexpr("[.]gz$", c(reads1, reads2), ignore.case=TRUE) != -1L);
   if (gzipped) {
     verbose && cat(verbose, "Detected gzip'ed FASTQ files.");
-    bin <- findTopHat2();
+    bin <- findTopHat(command);
+    if (is.null(bin)) throw("TopHat executable not available.");
     verbose && str(verbose, bin);
     ver <- attr(bin, "version");
     verbose && cat(verbose, "TopHat version: ", ver);

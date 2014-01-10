@@ -39,11 +39,13 @@ extends \emph{\link[aroma.seq]{AbstractAlignment}}\cr
 }
 
 \usage{
-TopHat2Alignment(..., indexSet=NULL, transcripts=NULL)
+TopHat2Alignment(..., groupBy=NULL, indexSet=NULL, transcripts=NULL)
 }
 
 \arguments{
  \item{...}{Arguments passed to \code{\link{AbstractAlignment}}.}
+ \item{groupBy}{A \code{\link[base]{character}} string or an explicit named \code{\link[base]{list}},
+  specifying which input files should be processed together.}
  \item{indexSet}{An \code{\link{Bowtie2IndexSet}}.}
  \item{transcripts}{Gene model (transcriptome) GTF/GFF3 file.}
 }
@@ -53,6 +55,7 @@ TopHat2Alignment(..., indexSet=NULL, transcripts=NULL)
 \tabular{rll}{
  \tab \code{getOutputDataSet} \tab  -\cr
  \tab \code{getSampleNames} \tab  -\cr
+ \tab \code{nbrOfGroups} \tab  -\cr
  \tab \code{process} \tab  -\cr
 }
 

@@ -2,8 +2,6 @@ library("aroma.seq")
 
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 fullTest <- fullTest && isCapableOf(aroma.seq, "bowtie2")
-fullTest <- fullTest && isCapableOf(aroma.seq, "samtools")
-fullTest <- fullTest && isCapableOf(aroma.seq, "tophat2")
 if (fullTest) {
 
 dataSet <- "YeastTest"
@@ -33,6 +31,11 @@ print(is)
 
 # Align input reads using TopHat
 ta <- TopHat2Alignment(dataSet=fqs, indexSet=is)
+print(ta)
+
+fullTest <- fullTest && isCapableOf(aroma.seq, "samtools")
+fullTest <- fullTest && isCapableOf(aroma.seq, "tophat2")
+if (fullTest) {
 process(ta, verbose=TRUE)
 
 bams <- getOutputDataSet(ta)
@@ -40,5 +43,6 @@ print(bams)
 
 # Sanity checks
 stopifnot(length(bams) == length(fqs))
+} # if (fullTest)
 
 } # if (fullTest)

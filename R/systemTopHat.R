@@ -44,8 +44,7 @@ setMethodS3("systemTopHat", "default", function(commandName="tophat",
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Locate executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # bin <- findCmd(commandName, verbose=less(verbose, 50));
-  bin <- Sys.which("tophat")
+  bin <- findTopHat(commandName);
   verbose && cat(verbose, "Executable: ", bin);
 
   verbose && cat(verbose, "Arguments passed to system2():");
@@ -72,7 +71,7 @@ setMethodS3("systemTopHat", "default", function(commandName="tophat",
   callArgs <- list(command=bin, args=paste(names(dotArgs$args), dotArgs$args, sep=" "))
   ## BUG:  This has unacceptable dependence on tophat() call using 'args' as the name for dotArgs
   callArgs <- c(callArgs, system2ArgsList)
-  
+
   verbose && str(verbose, callArgs);
   if (!.fake) {
     res <- do.call(what=base::system2, args=callArgs);

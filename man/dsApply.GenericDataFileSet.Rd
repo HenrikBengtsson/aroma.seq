@@ -26,8 +26,9 @@
 
 \arguments{
  \item{IDXS}{A (named) \code{\link[base]{list}}, where each element contains a \code{\link[base]{vector}} data set indices.}
- \item{DROP}{If \code{\link[base:logical]{TRUE}}, an single-index element is passed to \code{FUN} as a file
-   instead of as a \code{\link[base]{list}} containing a single file.}
+ \item{DROP}{If \code{\link[base:logical]{FALSE}}, the first argument passed to \code{FUN} is always a \code{\link[base]{list}} of files.
+   If \code{\link[base:logical]{TRUE}}, an single-index element is passed to \code{FUN} as a file instead of
+   as a \code{\link[base]{list}} containing a single file.}
  \item{FUN}{A \code{\link[base]{function}}.}
  \item{...}{Arguments passed to \code{FUN}.}
  \item{args}{(optional) A \code{\link[base]{list}} of additional arguments
