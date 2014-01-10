@@ -114,11 +114,11 @@ setMethodS3("getGroups", "TopHat2Alignment", function(this, ...) {
     groups <- as.list(seq_along(ds));
     names(groups) <- getFullNames(ds);
   } else if (is.character(groups)) {
-    if (groups == "byName") {
-      names <- getFullNames(ds);
+    if (groups == "name") {
+      names <- getNames(ds);
       unames <- unique(names);
       idxs <- match(names, unames);
-      names(idxs) <- names;
+      names(idxs) <- getFullNames(ds);
       groups <- tapply(idxs, INDEX=idxs, FUN=list);
       names(groups) <- unames;
     }
@@ -367,6 +367,8 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
 
 ############################################################################
 # HISTORY:
+# 2014-01-09 [HB]
+# o Added support for argument 'groupBy' to TopHat2Alignment.
 # 2013-11-21 [HB]
 # o Now process() for TopHat2Alignment generates an index file for
 #   accepted_hits.bam.  This will also assert the assumption that
