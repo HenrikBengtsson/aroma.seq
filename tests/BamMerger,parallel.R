@@ -18,6 +18,7 @@ print(bams)
 bams <- setFullNamesTranslator(bams, function(names, ...) {
   sprintf("SampleA,%s", names)
 })
+print(getFullNames(bams))
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setting up BamMerger:s
