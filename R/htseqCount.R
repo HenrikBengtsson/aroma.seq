@@ -32,7 +32,20 @@ setMethodS3("htseqCount", "default", function(pathnameS,
                                               verbose=FALSE) {
   
   ## ( Support a call like this: "htseq-count -s no -a 10 lib_sn.sam gff > countFile")
-  
+
+  R.utils::use("Rsamtools")
+
+  # BACKWARD COMPATIBILITY: Add asSam(), iff missing.
+  if (packageVersion("Rsamtools") < "1.15.14") {
+    asSam <- function(file, destination, ...) {
+      file <- Arguments$getReadablePathname(file)
+      fileD <- sprintf("%s.sam", destination)
+      fileD <- Arguments$getWritablePathname(fileD)
+      samtoolsView(file, fileD)
+      fileD
+    } # asSam()
+  }
+
   # Argument 'pathnameS'
   pathnameS <- Arguments$getReadablePathname(pathnameS);
   
@@ -58,7 +71,7 @@ setMethodS3("htseqCount", "default", function(pathnameS,
   if (regexpr(".*[.]sam$", pathnameS, ignore.case=TRUE) != -1) {  # match .sam
     inBam <- sub("[.]sam$", ".InTmp.bam", pathnameS, ignore.case=TRUE)
     inBam <- Arguments$getWritablePathname(inBam, mustNotExist=TRUE)
-    samtoolsView(pathnameS, inBam)
+    asSam(pathnameS, inBam)
     on.exit({
       file.remove(inBam)
     }, add=TRUE)
@@ -98,6 +111,10 @@ setMethodS3("htseqCount", "default", function(pathnameS,
 
 ############################################################################
 # HISTORY:
+# 2013-12-16
+# o TT:  local asSam() added (needed for Rsamtools < 1.15.14)
+# 2013-11-29
+# o TT:  Internal sort-by-name added
 # 2013-05-31
 # o TT:  Created
 ############################################################################
