@@ -50,8 +50,6 @@ process(ta, verbose=TRUE)
 bams <- getOutputDataSet(ta)
 print(bams)
 
-# Sanity checks
-stopifnot(length(bams) == length(fqs))
 } # if (fullTest)
 
 } # if (fullTest)
