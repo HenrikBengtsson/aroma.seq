@@ -146,10 +146,7 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, IDXS=NULL, DROP=is.nul
   for (gg in seq_along(sets)) {
     set <- sets[[gg]];
     name <- names(sets)[gg];
-    set <- lapply(set, FUN=function(df) {
-      attr(df, "name") <- name;
-      df;
-    });
+    attr(set, "name") <- name;
     sets[[gg]] <- set;
   }
 

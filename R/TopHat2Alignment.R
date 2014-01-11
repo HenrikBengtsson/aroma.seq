@@ -299,7 +299,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
 
 
     # Get the group name
-    sampleName <- attr(dfListR1[[1L]], "name", exact=TRUE);
+    sampleName <- attr(dfListR1, "name", exact=TRUE);
     verbose && str(verbose, sampleName);
     if (is.null(sampleName)) sampleName <- sub("_(1|R1)$", "", getFullName(dfListR1[[1L]]));
     verbose && enter(verbose, "Sample name ", sQuote(sampleName));
