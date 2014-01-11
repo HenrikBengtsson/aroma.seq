@@ -21,6 +21,6 @@ print(fqs)
 # Generate QC report
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 if (fullTest) {
-  reports <- report(fqs, verbose=-10)
-  print(reports)
+  html <- report(fqs, verbose=-10)
+  print(html)
 }
