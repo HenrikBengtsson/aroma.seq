@@ -141,6 +141,13 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, IDXS=NULL, DROP=is.nul
   verbose && str(verbose, head(sets));
   IDXS <- NULL; # Not needed anymore
 
+  # Set attribute 'groupName' for each element.  This is used to pass
+  # the group name to FUN().
+  for (gg in seq_along(sets)) {
+    set <- sets[[gg]];
+    attr(set, "name") <- names(sets)[gg];
+    sets[[gg]] <- set;
+  }
 
   # The additional set of arguments passed in each function call
   vargs <- c(vargs, args);

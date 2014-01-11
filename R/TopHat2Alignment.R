@@ -292,7 +292,12 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
       on.exit(popState(verbose));
     }
 
-    sampleName <- sub("_(1|R1)$", "", getFullName(dfListR1[[1L]]));
+
+    # Get the group name
+    sampleName <- attr(dfListR1, "name");
+    if (is.null(sampleName)) {
+      sampleName <- sub("_(1|R1)$", "", getFullName(dfListR1[[1L]]));
+    }
     verbose && enter(verbose, "Sample name ", sQuote(sampleName));
 
     gtf <- NULL;
