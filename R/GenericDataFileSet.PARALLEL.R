@@ -145,7 +145,11 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, IDXS=NULL, DROP=is.nul
   # the group name to FUN().
   for (gg in seq_along(sets)) {
     set <- sets[[gg]];
-    attr(set, "name") <- names(sets)[gg];
+    name <- names(sets)[gg];
+    set <- lapply(set, FUN=function(df) {
+      attr(df, "name") <- name;
+      df;
+    });
     sets[[gg]] <- set;
   }
 

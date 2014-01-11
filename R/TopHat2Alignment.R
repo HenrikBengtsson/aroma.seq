@@ -146,8 +146,13 @@ setMethodS3("nbrOfGroups", "TopHat2Alignment", function(this, ...) {
 
 setMethodS3("getOutputDataSet", "TopHat2Alignment", function(this, onMissing=c("drop", "NA", "error"), ...) {
   onMissing <- match.arg(onMissing);
-  path <- getPath(this);
-  bams <- BamDataSet$byPath(path, ...);
+  # AD HOC for now because we are dealing with subdirectories
+  # being sample names. /HB 2014-01-10
+  paths <- getExpectedOutputPaths(this);
+  pathnames <- file.path(paths, "accepted_hits.bam");
+  bfList <- lapply(pathnames, FUN=BamDataFile, mustExist=FALSE);
+  bams <- BamDataSet(bfList);
+  bams <- setFullNamesTranslator(bams, function(names, file, ...) basename(getPath(file)));
   groups  <- getGroups(this);
   fullnames <- names(groups);
   bams <- extract(bams, fullnames, onMissing=onMissing);
@@ -294,10 +299,9 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
 
 
     # Get the group name
-    sampleName <- attr(dfListR1, "name");
-    if (is.null(sampleName)) {
-      sampleName <- sub("_(1|R1)$", "", getFullName(dfListR1[[1L]]));
-    }
+    sampleName <- attr(dfListR1[[1L]], "name", exact=TRUE);
+    verbose && str(verbose, sampleName);
+    if (is.null(sampleName)) sampleName <- sub("_(1|R1)$", "", getFullName(dfListR1[[1L]]));
     verbose && enter(verbose, "Sample name ", sQuote(sampleName));
 
     gtf <- NULL;
@@ -374,6 +378,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
 ############################################################################
 # HISTORY:
 # 2014-01-10 [HB]
+# o BUG FIX: Forgot to update getOutputDataSet() too.
 # o BUG FIX: Forgot to update getSampleNames() for TopHat2Alignment
 #   such that it reflects any grouping of the input data set.
 # 2014-01-09 [HB]

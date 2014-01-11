@@ -9,19 +9,9 @@ verbose && cat(verbose, "This will *not* remove annotation data or raw data sets
 
 # Root directories to be removed, iff existing
 paths <- c(
-  "probeData/",
-  "plmData/",
-  "qcData/",
-  "firmaData/",
+  "bamData/",
+  "gatkData/",
   "cbsData/",
-  "gladData/",
-  "haarData/",
-  "totalAndFracBData/",
-  "totalAndFracBData,txt/",
-  "oligoData/",
-  "crlmmData/",
-  "Data/",
-  "rawCnData/",
   "smoothCnData/",
   "reports/",
   "figures/"
