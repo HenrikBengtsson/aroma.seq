@@ -108,17 +108,20 @@ setMethodS3("validateGroups", "TopHat2Alignment", function(this, groups, ...) {
 
 setMethodS3("getGroups", "TopHat2Alignment", function(this, ...) {
   ds <- getInputDataSet(this);
+  fullnames <- getFullNames(ds);
+  # FIXME: Dropping "R1" suffix should really be done by the data set/files.
+  fullnames <- sub("_(1|R1)$", "", fullnames);
 
   groups <- this$groupBy;
   if (is.null(groups)) {
     groups <- as.list(seq_along(ds));
-    names(groups) <- getFullNames(ds);
+    names(groups) <- fullnames;
   } else if (is.character(groups)) {
     if (groups == "name") {
       names <- getNames(ds);
       unames <- unique(names);
       idxs <- match(names, unames);
-      names(idxs) <- getFullNames(ds);
+      names(idxs) <- fullnames;
       groups <- tapply(idxs, INDEX=idxs, FUN=list);
       names(groups) <- unames;
     }
@@ -163,7 +166,6 @@ setMethodS3("getOutputDataSet", "TopHat2Alignment", function(this, onMissing=c("
 setMethodS3("getSampleNames", "TopHat2Alignment", function(this, ...) {
   groups <- getGroups(this);
   names <- names(groups);
-  names <- sub("_(1|R1)$", "", names);
   names;
 })
 
