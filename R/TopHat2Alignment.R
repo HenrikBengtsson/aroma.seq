@@ -156,9 +156,10 @@ setMethodS3("getOutputDataSet", "TopHat2Alignment", function(this, onMissing=c("
 
 
 setMethodS3("getSampleNames", "TopHat2Alignment", function(this, ...) {
-  ds <- getInputDataSet(this);
-  sampleNames <- sub("_(1|R1)$", "", getFullNames(ds));
-  sampleNames;
+  groups <- getGroups(this);
+  names <- names(groups);
+  names <- sub("_(1|R1)$", "", names);
+  names;
 })
 
 setMethodS3("getExpectedOutputPaths", "TopHat2Alignment", function(this, ...) {
@@ -367,6 +368,9 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
 
 ############################################################################
 # HISTORY:
+# 2014-01-10 [HB]
+# o BUG FIX: Forgot to update getSampleNames() for TopHat2Alignment
+#   such that it reflects any grouping of the input data set.
 # 2014-01-09 [HB]
 # o Added support for argument 'groupBy' to TopHat2Alignment.
 # 2013-11-21 [HB]
