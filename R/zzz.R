@@ -13,13 +13,15 @@
     ' hbInstall("aroma.seq", devel=TRUE)'
   );
 
-  # Automate parallel processing via BatchJobs?
-  if (utils::file_test("-f", ".BatchJobs.R")) {
-    setOption(aromaSettings, "devel/parallel", "BiocParallel::BatchJobs");
-    msg <- c(msg,
-      '',
-      'Parallel processing enabled (via \'./.BatchJobs.R\')'
-    );
+  # Enable automate parallel processing via BatchJobs?
+  if (queryRCmdCheck() != "notRunning") {
+    if (utils::file_test("-f", ".BatchJobs.R")) {
+      setOption(aromaSettings, "devel/parallel", "BiocParallel::BatchJobs");
+      msg <- c(msg,
+        '',
+        'Parallel processing enabled (via \'./.BatchJobs.R\')'
+      );
+    }
   }
 
   startupMessage(pkg, '\n\n',
