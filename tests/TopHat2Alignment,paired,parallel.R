@@ -36,7 +36,7 @@ print(is)
 
 # Align input reads using TopHat
 ta <- TopHat2Alignment(dataSet=fqs, indexSet=is, tags=c("*", "parallel"))
-process(ta, verbose=TRUE)
+process(ta, verbose=-100)
 
 bams <- getOutputDataSet(ta)
 print(bams)

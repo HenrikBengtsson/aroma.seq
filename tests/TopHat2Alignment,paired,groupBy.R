@@ -45,7 +45,7 @@ print(ta)
 fullTest <- fullTest && isCapableOf(aroma.seq, "samtools")
 fullTest <- fullTest && isCapableOf(aroma.seq, "tophat2")
 if (fullTest) {
-process(ta, verbose=TRUE)
+process(ta, verbose=-100)
 
 bams <- getOutputDataSet(ta)
 print(bams)
