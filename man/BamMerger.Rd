@@ -47,7 +47,7 @@ BamMerger(dataSet=NULL, groupBy=NULL, ...)
 \arguments{
  \item{dataSet}{An \code{\link{BamDataSet}}.}
  \item{groupBy}{A \code{\link[base]{character}} string or an explicit named \code{\link[base]{list}},
-  specifying which BAM files should be merged together.}
+  specifying which input files should be processed together.}
  \item{...}{Not used.}
 }
 

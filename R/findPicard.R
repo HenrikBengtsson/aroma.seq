@@ -61,7 +61,7 @@ findPicard <- function(mustExist=TRUE, ..., verbose=FALSE) {
   if (path == "") path <- NULL;
 
   if (!is.null(path) && isDirectory(path)) {
-    path <- Arguments$getReadablePath(path);
+    path <- Arguments$getReadablePath(path, mustWork=FALSE);
     verbose && cat(verbose, "Located directory: ", path);
 
     # Validating

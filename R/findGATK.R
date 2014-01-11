@@ -67,7 +67,7 @@ findGATK <- function(mustExist=TRUE, ..., verbose=FALSE) {
     return(FALSE);
   }
 
-  path <- Arguments$getReadablePath(path);
+  path <- Arguments$getReadablePath(path, mustWork=FALSE);
   verbose && cat(verbose, "Located directory: ", path);
 
   # Get main GATK jar file
