@@ -1,5 +1,9 @@
 ^Makefile$
 ^incl
 ^NAMESPACE,.*.txt$
-^.*Data$
+^annotationData$
+^fastqData$
+^bamData$
+^bwaData$
+^tophat2Data$
 

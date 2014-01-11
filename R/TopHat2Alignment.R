@@ -276,7 +276,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
     # Argument 'dfListR1':
     dfListR1 <- Arguments$getInstanceOf(dfListR1, "list");
     dfListR1 <- Arguments$getVector(dfListR1, length=c(1,Inf));
-    dfListR1 <- lapply(dfListR1, FUN=Arguments$getInstanceOf, "FastqDataFile");
+    lapply(dfListR1, FUN=Arguments$getInstanceOf, "FastqDataFile");
 
     # Argument 'isPaired':
     isPaired <- Arguments$getLogical(isPaired);
@@ -300,9 +300,8 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
 
     # Get the group name
     sampleName <- attr(dfListR1, "name", exact=TRUE);
-    verbose && str(verbose, sampleName);
-    if (is.null(sampleName)) sampleName <- sub("_(1|R1)$", "", getFullName(dfListR1[[1L]]));
     verbose && enter(verbose, "Sample name ", sQuote(sampleName));
+    stopifnot(length(sampleName) == 1L);
 
     gtf <- NULL;
     if (!is.null(transcripts)) gtf <- getPathname(transcripts);
