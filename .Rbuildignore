@@ -1,5 +1,5 @@
 ^Makefile$
 ^incl
 ^NAMESPACE,.*.txt$
-^[a-z]*Data
+^.*Data$
 
