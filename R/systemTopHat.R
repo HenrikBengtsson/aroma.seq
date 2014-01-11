@@ -44,7 +44,7 @@ setMethodS3("systemTopHat", "default", function(commandName="tophat",
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Locate executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  bin <- findTopHat(commandName);
+  bin <- findTopHat(command=commandName);
   verbose && cat(verbose, "Executable: ", bin);
 
   verbose && cat(verbose, "Arguments passed to system2():");
