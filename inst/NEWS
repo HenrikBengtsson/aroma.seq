@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.14 [2014-01-13]
+o Bumped up package dependencies to reflect the real code requirements.
+
+
 Version: 0.4.13 [2014-01-09]
 o Added argument 'groupBy' to TopHat2Alignment, which can be used to
   specify which FASTQ files should be processed together.
