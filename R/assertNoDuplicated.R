@@ -4,7 +4,7 @@ assertNoDuplicated <- function(x, .name=NULL, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument '.name':
   if (is.null(.name)) {
-    .name <- as.character(deparse(substitute(filename)));
+    .name <- as.character(deparse(substitute(x)));
   }
 
   # Argument 'x':
