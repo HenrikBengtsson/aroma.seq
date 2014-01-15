@@ -473,6 +473,7 @@
 \alias{getGroups.TopHat2Alignment}
 \alias{nbrOfGroups.TopHat2Alignment}
 \alias{validateGroups.TopHat2Alignment}
+\alias{assertNoDuplicated}
 
 \description{
   This page contains aliases for all "non-documented" objects that

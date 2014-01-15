@@ -56,7 +56,8 @@ setMethodS3("bowtie2Build", "default", function(pathnameFAs,
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'pathnameFAs':
-  pathnameFAs <- sapply(pathnameFAs, FUN=Arguments$getReadablePathname);
+  pathnameFAs <- Arguments$getReadablePathnames(pathnameFAs);
+  assertNoDuplicated(pathnameFAs);
   assertNoCommas(pathnameFAs);
 
   # Argument 'bowtieRefIndexPrefix'
@@ -106,10 +107,13 @@ setMethodS3("bowtie2Build", "default", function(pathnameFAs,
   res <- do.call(what=systemBowtie2Build, args=args);
 
   res;
-})
+}) # bowtie2Build()
 
 ############################################################################
 # HISTORY:
+# 2014-01-14 [HB]
+# o ROBUSTNESS: Now bowtie2Build() tests for duplicated entries in
+#   'pathnameFAs' and gives an informative errors message if detected.
 # 2013-11-01 [HB]
 # o Now bowtie2Build() supports gzip'ed FASTQ.
 # 2013-03-08 [TT]

@@ -37,8 +37,9 @@ setMethodS3("cuffdiff", "default", function(transcriptsGtf, ## e.g. from TopHat?
   transcriptsGtf <- Arguments$getReadablePathname(transcriptsGtf)
 
   # Argument 'bams'
-  bams <- sapply(bams, FUN=Arguments$getReadablePathname)
-  if (length(bams) < 2) {
+  bams <- Arguments$getReadablePathnames(bams)
+  assertNoDuplicated(bams);
+  if (length(bams) < 2L) {
     throw("'bams' argument too short; need at least two sam/bam files")
   }
 
@@ -50,7 +51,7 @@ setMethodS3("cuffdiff", "default", function(transcriptsGtf, ## e.g. from TopHat?
   ## - Cf. usage:   cuffdiff [options] <transcripts.gtf> <sample1_hits.sam> <sample2_hits.sam> [... sampleN_hits.sam]
 
   ## Construct cuffdiff 'arguments' (as opposed to 'options')
-  cuffdiffArgs <- c(transcriptsGtf, as.vector(bams))
+  cuffdiffArgs <- c(transcriptsGtf, bams)
 
   if (FALSE) {  ## TAT: Superseded by more complex version below; do we need the extra checks?
     ## Add dashes as appropriate for cuffdiff options
@@ -86,5 +87,15 @@ setMethodS3("cuffdiff", "default", function(transcriptsGtf, ## e.g. from TopHat?
   ArgsList <- c(ArgsList, dotArgs)
 
   res <- do.call(what=systemCuffdiff, args=ArgsList)
-  return(res)
-})
+
+  res
+}) # cuffdiff()
+
+############################################################################
+# HISTORY:
+# 2014-01-14 [HB]
+# o ROBUSTNESS: Now cuffdiff() tests for duplicated entries in 'bams'
+#   and gives an informative errors message if detected.
+# 2013-??-?? [TT]
+# o Created.
+############################################################################

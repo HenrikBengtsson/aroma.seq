@@ -75,13 +75,16 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1, reads2=N
 
   # Argument 'reads1'
   stopifnot(length(reads1) > 0L);
-  reads1 <- sapply(reads1, FUN=Arguments$getReadablePathname, absolute=TRUE);
+  reads1 <- Arguments$getReadablePathnames(reads1, absolute=TRUE);
+  assertNoDuplicated(reads1);
+
 
   # Argument 'reads2'
   isPaired <- (length(reads2) > 0L);
   if (isPaired) {
     stopifnot(length(reads2) == length(reads1));
-    reads2 <- sapply(reads2, FUN=Arguments$getReadablePathname, absolute=TRUE);
+    reads2 <- Arguments$getReadablePathnames(reads2, absolute=TRUE);
+    assertNoDuplicated(reads2);
   }
 
   # Argument 'gtf'
@@ -278,6 +281,9 @@ setMethodS3("tophat2", "default", function(..., command="tophat2") {
 
 ############################################################################
 # HISTORY:
+# 2014-01-14 [HB]
+# o ROBUSTNESS: Now tophat() tests for duplicated entries in 'reads1'
+#   and 'reads2' and gives an informative errors message if detected.
 # 2013-11-05 [HB]
 # o Now the final output directory is <sampleName>.ERROR/, if the
 #   run was not successful.

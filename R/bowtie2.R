@@ -58,16 +58,19 @@ setMethodS3("bowtie2", "default", function(bowtieRefIndexPrefix=NULL, ##  ## Ind
   }
   # Argument 'reads1' and 'reads2'
   if (!is.null(reads1)) {
-    reads1 <- sapply(reads1, FUN=Arguments$getReadablePathname)
+    reads1 <- Arguments$getReadablePathnames(reads1);
+    assertNoDuplicated(reads1);
     if (!is.null(reads2)) {
-      reads2 <- sapply(reads2, FUN=Arguments$getReadablePathname)
+      reads2 <- Arguments$getReadablePathnames(reads2);
+      assertNoDuplicated(reads2);
     } else {
       throw("Argument 'reads2' is empty; supply reads2 when using reads1 (or just supply readsU)")
     }
   }
   # Argument 'readsU'
   if (!is.null(readsU)) {
-    readsU <- sapply(readsU, FUN=Arguments$getReadablePathname)
+    readsU <- Arguments$getReadablePathnames(readsU);
+    assertNoDuplicated(readsU);
   }
 
   # Argument 'samFile'
@@ -99,11 +102,15 @@ setMethodS3("bowtie2", "default", function(bowtieRefIndexPrefix=NULL, ##  ## Ind
 
   res <- do.call(what=systemBowtie2, args=list(command=commandName, args=c(bowtie2Options, bowtie2Args)))
 
-  return(res)
-})
+  res
+}) # bowtie2()
+
 
 ############################################################################
 # HISTORY:
+# 2014-01-14 [HB]
+# o ROBUSTNESS: Now bowtie2() tests for duplicated entries in 'reads1'
+#   and 'reads2' and gives an informative errors message if detected.
 # 2013-03-08
 # o TT:  Completely rewritten to follow tophat template
 # 2012-07-11

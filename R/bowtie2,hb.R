@@ -4,12 +4,14 @@ bowtie2_hb <- function(pathnameFQ, indexPrefix, pathnameSAM, ..., gzAllowed=NA, 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'pathnameFQ':
   pathnameFQ <- Arguments$getReadablePathnames(pathnameFQ, length=1:2);
+  assertNoDuplicated(pathnameFQ);
 
   # Argument 'indexPrefix':
   indexPrefix <- Arguments$getCharacter(indexPrefix);
 
   # Argument 'pathnameSAM':
   pathnameSAM <- Arguments$getWritablePathname(pathnameSAM);
+  assertNoDuplicated(pathnameSAM);
 
 
 
@@ -97,6 +99,9 @@ bowtie2_hb <- function(pathnameFQ, indexPrefix, pathnameSAM, ..., gzAllowed=NA, 
 
 ############################################################################
 # HISTORY:
+# 2014-01-14 [HB]
+# o ROBUSTNESS: Now bowtie2() tests for duplicated entries in 'reads1'
+#   and 'reads2' and gives an informative errors message if detected.
 # 2013-08-24
 # o Now bowtie2() will do paired-end alignment if length(pathnameFQ) == 2.
 # 2013-08-23

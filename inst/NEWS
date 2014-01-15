@@ -1,6 +1,12 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.15 [2014-01-14]
+o ROBUSTNESS: Now low-level methods that take a vector of pathnames
+  as input tests assert that there are no duplicated pathnames, e.g.
+  bowtie2(), cuffdiff(), and tophat().
+
+
 Version: 0.4.14 [2014-01-13]
 o Bumped up package dependencies to reflect the real code requirements.
 

@@ -30,8 +30,9 @@ setMethodS3("cufflinks", "default", function(bams=NULL,  ## vector of pathnames
   ## ( Support a call like this: "cufflinks <options> bams" )
 
   # Argument 'bams'
-  bams <- sapply(bams, FUN=Arguments$getReadablePathname)
-  cufflinksArgs <- as.vector(bams)  ##  (DEV: UNLIST BETTER?)
+  bams <- Arguments$getReadablePathnames(bams)
+  assertNoDuplicated(bams);
+  cufflinksArgs <- bams
 
   ## Add dashes as appropriate to names of "cufflinks options"
   cufflinksOptions <- optionsVec
@@ -40,8 +41,14 @@ setMethodS3("cufflinks", "default", function(bams=NULL,  ## vector of pathnames
 
   res <- do.call(what=systemCufflinks, args=list(commandName=commandName, args=c(cufflinksOptions, cufflinksArgs)))
 
-  return(res)
-})
+  res
+}) # cufflinks()
 
-
-
+############################################################################
+# HISTORY:
+# 2014-01-14 [HB]
+# o ROBUSTNESS: Now cuffdiff() tests for duplicated entries in 'bams'
+#   and gives an informative errors message if detected.
+# 2013-??-?? [TT]
+# o Created.
+############################################################################
