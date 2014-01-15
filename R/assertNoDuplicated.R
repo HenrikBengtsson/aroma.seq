@@ -8,7 +8,7 @@ assertNoDuplicated <- function(x, .name=NULL, ...) {
   }
 
   # Argument 'x':
-  x <- Arguments$getVectors(x, .name=.name);
+  x <- Arguments$getVector(x, .name=.name);
 
   # Nothing todo?
   if (length(x) == 1L) return(x);
