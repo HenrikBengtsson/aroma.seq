@@ -14,7 +14,7 @@
   );
 
   # Enable automate parallel processing via BatchJobs?
-  if (queryRCmdCheck() != "notRunning") {
+  if (queryRCmdCheck() == "notRunning") {
     if (utils::file_test("-f", ".BatchJobs.R")) {
       setOption(aromaSettings, "devel/parallel", "BiocParallel::BatchJobs");
       msg <- c(msg,
