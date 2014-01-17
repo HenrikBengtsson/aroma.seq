@@ -2,6 +2,8 @@ Package: aroma.seq
 ==================
 
 Version: 0.4.17 [2014-01-16]
+o CLEANUP: Now BamMerger and TopHat2Alignment implements the new
+  FileGroupsInterface.
 o ROBUSTNESS: Now getGroups() of BamMerger and TopHat2Alignment assert
   that the file indices identified for each group/sample is unique.
 o ROBUSTNESS: Update test data set such that it possible to test

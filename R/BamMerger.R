@@ -47,7 +47,7 @@ setConstructorS3("BamMerger", function(dataSet=NULL, groupBy=NULL, ...) {
     }
   }
 
-  this <- extend(SamTransform(dataSet, groupBy=groupBy, ...), "BamMerger");
+  this <- extend(SamTransform(dataSet, groupBy=groupBy, ...), c("BamMerger", uses("FileGroupsInterface")));
 
   # Argument 'groupBy':
   if (is.list(groupBy)) {
@@ -57,71 +57,6 @@ setConstructorS3("BamMerger", function(dataSet=NULL, groupBy=NULL, ...) {
   this;
 })
 
-
-setMethodS3("validateGroups", "BamMerger", function(this, groups, ...) {
-  # Input data set
-  ds <- getInputDataSet(this);
-  nbrOfFiles <- length(ds);
-
-  # Sanity checks
-  idxs <- unlist(groups, use.names=FALSE);
-  idxs <- Arguments$getIndices(idxs, max=nbrOfFiles);
-  if (length(idxs) < nbrOfFiles) {
-    throw("One or more input BAM files is not part of any group.");
-  } else if (length(idxs) > nbrOfFiles) {
-    throw("One or more input BAM files is part of more than one group.");
-  }
-
-  if (is.null(names(groups))) {
-    throw("The list of groups does not have names.");
-  }
-
-  invisible(groups);
-}, protected=TRUE)
-
-
-setMethodS3("getGroups", "BamMerger", function(this, ...) {
-  ds <- getInputDataSet(this);
-  params <- getParameters(this);
-  groupBy <- params$groupBy;
-  if (is.character(groupBy)) {
-    if (groupBy == "name") {
-      names <- getNames(ds);
-      namesU <- unique(names);
-      groups <- lapply(namesU, FUN=function(name) which(names == name));
-    }
-  }
-
-  # Sanity checks
-  validateGroups(this, groups);
-
-  # Add index names, iff missing
-  names <- getFullNames(ds);
-  groups <- lapply(groups, FUN=function(idxs) {
-    if (is.null(names(idxs))) {
-      names(idxs) <- names[idxs];
-    }
-    idxs;
-  })
-
-  # Range and uniqueness check
-  max <- length(ds);
-  for (gg in seq_along(groups)) {
-    idxs <- groups[[gg]];
-    idxs <- Arguments$getIndices(idxs, max=max);
-    dups <- duplicated(idxs);
-    if (any(dups)) {
-      throw(sprintf("Detected duplicated file indices in group %s: %s", names(groups)[gg], hpaste(idxs[dups])));
-    }
-  } # for (gg ...)
-
-  groups;
-})
-
-
-setMethodS3("nbrOfGroups", "BamMerger", function(this, ...) {
-  length(getGroups(this));
-})
 
 setMethodS3("getAsteriskTags", "BamMerger", function(this, ...) {
   # The 'groupBy' tag
@@ -147,8 +82,7 @@ setMethodS3("getOutputDataSet", "BamMerger", function(this, onMissing=c("drop", 
   bams <- BamDataSet$byPath(path, ...);
 
   ## Order according to grouped input data set
-  groups <- getGroups(this);
-  names <- names(groups);
+  names <- getGroupNames(this);
   bams <- extract(bams, names, onMissing=onMissing);
 
   bams;
@@ -306,9 +240,35 @@ setMethodS3("process", "BamMerger", function(this, ..., skip=TRUE, force=FALSE, 
 
 
 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# TO DROP
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+setMethodS3("validateGroups", "BamMerger", function(this, groups, ...) {
+  # Input data set
+  ds <- getInputDataSet(this);
+  nbrOfFiles <- length(ds);
+
+  # Sanity checks
+  idxs <- unlist(groups, use.names=FALSE);
+  idxs <- Arguments$getIndices(idxs, max=nbrOfFiles);
+  if (length(idxs) < nbrOfFiles) {
+    throw("One or more input BAM files is not part of any group.");
+  } else if (length(idxs) > nbrOfFiles) {
+    throw("One or more input BAM files is part of more than one group.");
+  }
+
+  if (is.null(names(groups))) {
+    throw("The list of groups does not have names.");
+  }
+
+  invisible(groups);
+}, protected=TRUE)
+
+
 ############################################################################
 # HISTORY:
 # 2014-01-16 [HB]
+# o CLEANUP: Now BamMerger implements new FileGroupsInterface.
 # o ROBUSTNESS: Now getGroups() of BamMerger assert that the
 #   file indices identified for each group/sample is unique.
 # 2013-11-22

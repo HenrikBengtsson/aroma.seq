@@ -64,9 +64,8 @@ setConstructorS3("TopHat2Alignment", function(..., groupBy=NULL, indexSet=NULL, 
   # Arguments '...':
   args <- list(...);
 
-  this <- extend(AbstractAlignment(..., indexSet=indexSet), "TopHat2Alignment",
-    transcripts = transcripts,
-    groupBy = groupBy
+  this <- extend(AbstractAlignment(..., indexSet=indexSet, groupBy=groupBy), c("TopHat2Alignment", uses("FileGroupsInterface")),
+    transcripts = transcripts
   );
 
   # Argument 'groupBy':
@@ -83,88 +82,9 @@ setMethodS3("getRootPath", "TopHat2Alignment", function(this, ...) {
 }, protected=TRUE)
 
 
-
-setMethodS3("validateGroups", "TopHat2Alignment", function(this, groups, ...) {
-  # Input data set
-  ds <- getInputDataSet(this);
-  nbrOfFiles <- length(ds);
-
-  # Sanity checks
-  idxs <- unlist(groups, use.names=FALSE);
-  idxs <- Arguments$getIndices(idxs, max=nbrOfFiles);
-  if (length(idxs) < nbrOfFiles) {
-    throw("One or more input FASTQ files is not part of any group.");
-  } else if (length(idxs) > nbrOfFiles) {
-    throw("One or more input FASTQ files is part of more than one group.");
-  }
-
-  if (is.null(names(groups))) {
-    throw("The list of groups does not have names.");
-  }
-
-  invisible(groups);
-}, protected=TRUE)
-
-
-setMethodS3("getGroups", "TopHat2Alignment", function(this, ...) {
-  ds <- getInputDataSet(this);
-  fullnames <- getFullNames(ds);
-  # FIXME: Dropping "R1" suffix should really be done by the data set/files.
-  fullnames <- sub("_(1|R1)$", "", fullnames);
-
-  groups <- this$groupBy;
-  if (is.null(groups)) {
-    groups <- as.list(seq_along(ds));
-    names(groups) <- fullnames;
-  } else if (is.character(groups)) {
-    if (groups == "name") {
-      names <- getNames(ds);
-      namesU <- unique(names);
-      groups <- lapply(namesU, FUN=function(name) which(names == name));
-      names(groups) <- namesU;
-    }
-  }
-  # Sanity check
-  stopifnot(is.list(groups));
-
-  # Names
-  if (is.null(names(groups))) {
-    names(groups) <- sprintf("Group_%d", seq_along(groups));
-  }
-
-  # Add index names, iff missing
-  names <- getFullNames(ds);
-  groups <- lapply(groups, FUN=function(idxs) {
-    if (is.null(names(idxs))) {
-      names(idxs) <- names[idxs];
-    }
-    idxs;
-  })
-
-  # Range and uniqueness check
-  max <- length(ds);
-  for (gg in seq_along(groups)) {
-    idxs <- groups[[gg]];
-    idxs <- Arguments$getIndices(idxs, max=max);
-    dups <- duplicated(idxs);
-    if (any(dups)) {
-      throw(sprintf("Detected duplicated file indices in group %s: %s", names(groups)[gg], hpaste(idxs[dups])));
-    }
-  } # for (gg ...)
-
-  groups;
-}, protected=TRUE) # getGroups()
-
-
-setMethodS3("nbrOfGroups", "TopHat2Alignment", function(this, ...) {
-  length(getGroups(this));
-})
-
 setMethodS3("getSampleNames", "TopHat2Alignment", function(this, ...) {
-  groups <- getGroups(this);
-  names <- names(groups);
-  names;
-})
+  getGroupNames(this, ...);
+}, protected=TRUE)
 
 setMethodS3("getExpectedOutputPaths", "TopHat2Alignment", function(this, ...) {
   # Find all available output directories
@@ -373,9 +293,37 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
 })
 
 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# TO DROP
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+setMethodS3("validateGroups", "TopHat2Alignment", function(this, groups, ...) {
+  # Input data set
+  ds <- getInputDataSet(this);
+  nbrOfFiles <- length(ds);
+
+  # Sanity checks
+  idxs <- unlist(groups, use.names=FALSE);
+  idxs <- Arguments$getIndices(idxs, max=nbrOfFiles);
+  if (length(idxs) < nbrOfFiles) {
+    throw("One or more input FASTQ files is not part of any group.");
+  } else if (length(idxs) > nbrOfFiles) {
+    throw("One or more input FASTQ files is part of more than one group.");
+  }
+
+  if (is.null(names(groups))) {
+    throw("The list of groups does not have names.");
+  }
+
+  invisible(groups);
+}, protected=TRUE)
+
+
+
+
 ############################################################################
 # HISTORY:
 # 2014-01-16 [HB]
+# o CLEANUP: Now TopHat2Alignment implements new FileGroupsInterface.
 # o BUG FIX: getGroups() of TopHat2Alignment would not generate the
 #   correct sets of indices.
 # o ROBUSTNESS: Now getGroups() of TopHat2Alignment assert that the

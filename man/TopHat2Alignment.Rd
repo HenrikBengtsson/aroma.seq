@@ -25,13 +25,15 @@
 \code{~~~~~~~~~~~~|}\cr
 \code{~~~~~~~~~~~~+--}\code{\link[aroma.seq]{AbstractAlignment}}\cr
 \code{~~~~~~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~~~~~~+--}\code{TopHat2Alignment}\cr
+\code{~~~~~~~~~~~~~~~~~+--}\code{\link[aroma.seq]{FileGroupsInterface}}\cr
+\code{~~~~~~~~~~~~~~~~~~~~~~|}\cr
+\code{~~~~~~~~~~~~~~~~~~~~~~+--}\code{TopHat2Alignment}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
 
 public static class \bold{TopHat2Alignment}\cr
-extends \emph{\link[aroma.seq]{AbstractAlignment}}\cr
+extends \link[aroma.seq]{FileGroupsInterface}\cr
 
 
 
@@ -54,11 +56,12 @@ TopHat2Alignment(..., groupBy=NULL, indexSet=NULL, transcripts=NULL)
  \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{getOutputDataSet} \tab  -\cr
- \tab \code{getSampleNames} \tab  -\cr
- \tab \code{nbrOfGroups} \tab  -\cr
  \tab \code{process} \tab  -\cr
 }
 
+
+ \bold{Methods inherited from FileGroupsInterface}:\cr
+getGroupBy, getGroupNames, getGroups, getInputDataSet, nbrOfGroups, validateGroups
 
  \bold{Methods inherited from AbstractAlignment}:\cr
 as.character, getAcronym, getAsteriskTags, getIndexSet, getOrganism, getOutputDataSet, getRootPath, isPaired

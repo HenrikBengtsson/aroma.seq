@@ -17,6 +17,7 @@ importFrom("R.oo", "trim")
 ## Importing Class:es
 importFrom("R.oo", "BasicObject")
 importFrom("R.oo", "Object")
+importFrom("R.oo", "Interface")
 importFrom("R.filesets", "GenericDataFile")
 importFrom("R.filesets", "GenericDataFileSet")
 importFrom("R.filesets", "RdsFile")
@@ -44,11 +45,13 @@ importFrom("R.filesets", "setTags")
 
 ## Importing functions
 importFrom("matrixStats", "binCounts")
+importFrom("matrixStats", "rowAnys")
 importFrom("R.cache", "loadCache")
 importFrom("R.cache", "saveCache")
 importFrom("R.filesets", "extractMatrix")
 importFrom("R.filesets", "fullname")
 importFrom("R.filesets", "getChecksum") ## Multi-sources: R.filesets, R.cache
+importFrom("R.filesets", "getChecksumFile")
 importFrom("R.filesets", "getFile") ## Multi-sources: R.filesets, R.rsp
 importFrom("R.filesets", "getFileClass")
 importFrom("R.filesets", "getFiles")
@@ -59,8 +62,10 @@ importFrom("R.filesets", "getOneFile")
 importFrom("R.filesets", "getPathname")
 importFrom("R.filesets", "getPathnames")
 importFrom("R.filesets", "indexOf")
+importFrom("R.filesets", "readChecksum")
 importFrom("R.filesets", "readLines") ## Multi-sources: R.filesets, base
 importFrom("R.filesets", "setAttributesByTags")
+importFrom("R.filesets", "setFullNamesTranslator")
 
 
 import("R.utils")
@@ -177,6 +182,7 @@ S3method("readHeader", "BamDataFile")
 S3method("readReadPositions", "BamDataFile")
 S3method("replaceAllReadGroups", "BamDataFile")
 S3method("sort", "BamDataFile")
+S3method("sortByName", "BamDataFile")
 S3method("sortByPosition", "BamDataFile")
 S3method("validate", "BamDataFile")
 
@@ -190,6 +196,7 @@ S3method("getChipType", "BamDataSet")
 S3method("getDepth", "BamDataSet")
 S3method("getOrganism", "BamDataSet")
 S3method("getPlatform", "BamDataSet")
+S3method("sortByName", "BamDataSet")
 S3method("sortByPosition", "BamDataSet")
 
 # BamIndexDataFile
@@ -197,9 +204,7 @@ S3method("as.character", "BamIndexDataFile")
 
 # BamMerger
 S3method("getAsteriskTags", "BamMerger")
-S3method("getGroups", "BamMerger")
 S3method("getOutputDataSet", "BamMerger")
-S3method("nbrOfGroups", "BamMerger")
 S3method("process", "BamMerger")
 S3method("validateGroups", "BamMerger")
 
@@ -261,6 +266,7 @@ S3method("findCmdv", "default")
 S3method("htseqCount", "default")
 S3method("normalizeGcContent", "default")
 S3method("picardValidateSamFile", "default")
+S3method("samtoolsFaidx", "default")
 S3method("samtoolsMpileup", "default")
 S3method("samtoolsSort", "default")
 S3method("samtoolsView", "default")
@@ -347,6 +353,14 @@ S3method("getRootPath", "FastqDownsampler")
 S3method("getSampleSize", "FastqDownsampler")
 S3method("process", "FastqDownsampler")
 
+# FileGroupsInterface
+S3method("getGroupBy", "FileGroupsInterface")
+S3method("getGroupNames", "FileGroupsInterface")
+S3method("getGroups", "FileGroupsInterface")
+S3method("getInputDataSet", "FileGroupsInterface")
+S3method("nbrOfGroups", "FileGroupsInterface")
+S3method("validateGroups", "FileGroupsInterface")
+
 # GatkAlleleCounting
 S3method("getCombineBy", "GatkAlleleCounting")
 S3method("getExpectedOutputFullnames", "GatkAlleleCounting")
@@ -365,6 +379,11 @@ S3method("directoryStructure<-", "GenericDataFile")
 S3method("getDataSetName", "GenericDataFile")
 S3method("getOrganismName", "GenericDataFile")
 S3method("getSampleName", "GenericDataFile")
+S3method("loadCacheFile", "GenericDataFile")
+S3method("loadCacheFileItem", "GenericDataFile")
+S3method("memoizedCall2", "GenericDataFile")
+S3method("saveCacheFile", "GenericDataFile")
+S3method("saveCacheFileItem", "GenericDataFile")
 
 # GenericDataFileSet
 S3method(".getBatchJobRegistryId", "GenericDataFileSet")
@@ -453,6 +472,7 @@ S3method("getOutputDataSet", "TopHat2Alignment")
 S3method("getRootPath", "TopHat2Alignment")
 S3method("getSampleNames", "TopHat2Alignment")
 S3method("process", "TopHat2Alignment")
+S3method("validateGroups", "TopHat2Alignment")
 
 # TotalCnBinnedCounting
 S3method("findFilesTodo", "TotalCnBinnedCounting")

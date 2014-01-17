@@ -25,13 +25,15 @@
 \code{~~~~~~~~~~~~|}\cr
 \code{~~~~~~~~~~~~+--}\code{\link[aroma.seq]{SamTransform}}\cr
 \code{~~~~~~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~~~~~~+--}\code{BamMerger}\cr
+\code{~~~~~~~~~~~~~~~~~+--}\code{\link[aroma.seq]{FileGroupsInterface}}\cr
+\code{~~~~~~~~~~~~~~~~~~~~~~|}\cr
+\code{~~~~~~~~~~~~~~~~~~~~~~+--}\code{BamMerger}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
 
 public static class \bold{BamMerger}\cr
-extends \emph{\link[aroma.seq]{SamTransform}}\cr
+extends \link[aroma.seq]{FileGroupsInterface}\cr
 
 
 
@@ -54,12 +56,13 @@ BamMerger(dataSet=NULL, groupBy=NULL, ...)
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{getGroups} \tab  -\cr
  \tab \code{getOutputDataSet} \tab  -\cr
- \tab \code{nbrOfGroups} \tab  -\cr
  \tab \code{process} \tab  -\cr
 }
 
+
+ \bold{Methods inherited from FileGroupsInterface}:\cr
+getGroupBy, getGroupNames, getGroups, getInputDataSet, nbrOfGroups, validateGroups
 
  \bold{Methods inherited from SamTransform}:\cr
 getRootPath

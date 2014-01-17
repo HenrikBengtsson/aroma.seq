@@ -452,13 +452,14 @@
 \alias{picardValidateSamFile.default}
 \alias{getAsteriskTags.BamMerger}
 \alias{getGroups}
-\alias{getGroups.BamMerger}
-\alias{getOutputDataSet.BamMerger}
+\alias{getGroups.FileGroupsInterface}
+\alias{getOutputDataSet.FileGroupsInterface}
 \alias{getRootPath.SamTransform}
 \alias{nbrOfGroups}
-\alias{nbrOfGroups.BamMerger}
+\alias{nbrOfGroups.FileGroupsInterface}
 \alias{process.BamMerger}
 \alias{validateGroups}
+\alias{validateGroups.FileGroupsInterface}
 \alias{validateGroups.BamMerger}
 \alias{loadCacheFile}
 \alias{loadCacheFile.GenericDataFile}
@@ -470,8 +471,6 @@
 \alias{saveCacheFile.GenericDataFile}
 \alias{saveCacheFileItem}
 \alias{saveCacheFileItem.GenericDataFile}
-\alias{getGroups.TopHat2Alignment}
-\alias{nbrOfGroups.TopHat2Alignment}
 \alias{validateGroups.TopHat2Alignment}
 \alias{assertNoDuplicated}
 

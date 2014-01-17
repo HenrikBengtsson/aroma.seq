@@ -253,14 +253,14 @@ getBinWidth getBinWidth.QDNAseqEstimation
 picardValidateSamFile
 picardValidateSamFile.default
 getAsteriskTags.BamMerger getGroups
-getGroups.BamMerger getOutputDataSet.BamMerger
-getRootPath.SamTransform nbrOfGroups nbrOfGroups.BamMerger
-process.BamMerger validateGroups validateGroups.BamMerger
+getGroups.FileGroupsInterface getOutputDataSet.FileGroupsInterface
+getRootPath.SamTransform nbrOfGroups nbrOfGroups.FileGroupsInterface
+process.BamMerger validateGroups validateGroups.FileGroupsInterface
+validateGroups.BamMerger
 loadCacheFile loadCacheFile.GenericDataFile loadCacheFileItem
 loadCacheFileItem.GenericDataFile memoizedCall2
 memoizedCall2.GenericDataFile saveCacheFile
 saveCacheFile.GenericDataFile saveCacheFileItem
 saveCacheFileItem.GenericDataFile
-getGroups.TopHat2Alignment nbrOfGroups.TopHat2Alignment
 validateGroups.TopHat2Alignment
 assertNoDuplicated
