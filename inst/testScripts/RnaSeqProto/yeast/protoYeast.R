@@ -13,21 +13,18 @@ options(stringsAsFactors=FALSE)
 # Set up run
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# .. MODIFY THIS TO SUIT: ...
-PathsAll <- list(mac=list(ref="/Users/tokuyasu/Data/CCSP/annotationData/organisms/SC/",
-                          data="/Users/tokuyasu/Data/CCSP/fastqData/SC"),
-                 cluster=list(ref="",
-                              data=""))
+path0 <- system.file(file.path("exData"), package="aroma.seq", mustWork=TRUE)
+Organism <- "SaccharomycesCerevisiae"
+DataSetName <- "YeastTest"
+Paths <- list(ref=file.path(path0, "annotationData", "organisms", organism),
+              data=file.path(path0, "fastqData", DataSetName, organism))
 
-# .. MODIFY THIS TO SUIT: ...
-Paths <- PathsAll$mac
 config <- setupConfig(pathRef=Paths$ref,
                       pathData=Paths$data,
-                      datasetName="YeastTest",
-                      organism="SC",
-                      bPairedEnd=TRUE,
+                      datasetName=DataSetName,
+                      organism=Organism,
+                      bPairedEnd=TRUE,   ## This is actually not used
                       bOverwrite=FALSE)
-
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Set up dirs under aroma working dir
