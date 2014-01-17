@@ -88,8 +88,7 @@ setMethodS3("getGroups", "BamMerger", function(this, ...) {
     if (groupBy == "name") {
       names <- getNames(ds);
       namesU <- unique(names);
-      groups <- lapply(namesU, FUN=function(name) { which(names == name) });
-      names(groups) <- namesU;
+      groups <- lapply(namesU, FUN=function(name) which(names == name));
     }
   }
 
@@ -104,6 +103,17 @@ setMethodS3("getGroups", "BamMerger", function(this, ...) {
     }
     idxs;
   })
+
+  # Range and uniqueness check
+  max <- length(ds);
+  for (gg in seq_along(groups)) {
+    idxs <- groups[[gg]];
+    idxs <- Arguments$getIndices(idxs, max=max);
+    dups <- duplicated(idxs);
+    if (any(dups)) {
+      throw(sprintf("Detected duplicated file indices in group %s: %s", names(groups)[gg], hpaste(idxs[dups])));
+    }
+  } # for (gg ...)
 
   groups;
 })
@@ -298,6 +308,9 @@ setMethodS3("process", "BamMerger", function(this, ..., skip=TRUE, force=FALSE, 
 
 ############################################################################
 # HISTORY:
+# 2014-01-16 [HB]
+# o ROBUSTNESS: Now getGroups() of BamMerger assert that the
+#   file indices identified for each group/sample is unique.
 # 2013-11-22
 # o Created.
 ############################################################################

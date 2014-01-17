@@ -119,24 +119,38 @@ setMethodS3("getGroups", "TopHat2Alignment", function(this, ...) {
   } else if (is.character(groups)) {
     if (groups == "name") {
       names <- getNames(ds);
-      unames <- unique(names);
-      idxs <- match(names, unames);
-      names(idxs) <- fullnames;
-      groups <- tapply(idxs, INDEX=idxs, FUN=list);
-      names(groups) <- unames;
+      namesU <- unique(names);
+      groups <- lapply(namesU, FUN=function(name) which(names == name));
+      names(groups) <- namesU;
     }
   }
   # Sanity check
   stopifnot(is.list(groups));
 
-  # Range check
-  max <- length(ds);
-  groups <- lapply(groups, FUN=Arguments$getIndices, max=max);
-
   # Names
   if (is.null(names(groups))) {
     names(groups) <- sprintf("Group_%d", seq_along(groups));
   }
+
+  # Add index names, iff missing
+  names <- getFullNames(ds);
+  groups <- lapply(groups, FUN=function(idxs) {
+    if (is.null(names(idxs))) {
+      names(idxs) <- names[idxs];
+    }
+    idxs;
+  })
+
+  # Range and uniqueness check
+  max <- length(ds);
+  for (gg in seq_along(groups)) {
+    idxs <- groups[[gg]];
+    idxs <- Arguments$getIndices(idxs, max=max);
+    dups <- duplicated(idxs);
+    if (any(dups)) {
+      throw(sprintf("Detected duplicated file indices in group %s: %s", names(groups)[gg], hpaste(idxs[dups])));
+    }
+  } # for (gg ...)
 
   groups;
 }, protected=TRUE) # getGroups()
@@ -145,23 +159,6 @@ setMethodS3("getGroups", "TopHat2Alignment", function(this, ...) {
 setMethodS3("nbrOfGroups", "TopHat2Alignment", function(this, ...) {
   length(getGroups(this));
 })
-
-
-setMethodS3("getOutputDataSet", "TopHat2Alignment", function(this, onMissing=c("drop", "NA", "error"), ...) {
-  onMissing <- match.arg(onMissing);
-  # AD HOC for now because we are dealing with subdirectories
-  # being sample names. /HB 2014-01-10
-  paths <- getExpectedOutputPaths(this);
-  pathnames <- file.path(paths, "accepted_hits.bam");
-  bfList <- lapply(pathnames, FUN=BamDataFile, mustExist=FALSE);
-  bams <- BamDataSet(bfList);
-  bams <- setFullNamesTranslator(bams, function(names, file, ...) basename(getPath(file)));
-  groups  <- getGroups(this);
-  fullnames <- names(groups);
-  bams <- extract(bams, fullnames, onMissing=onMissing);
-  bams
-})
-
 
 setMethodS3("getSampleNames", "TopHat2Alignment", function(this, ...) {
   groups <- getGroups(this);
@@ -378,6 +375,11 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
 
 ############################################################################
 # HISTORY:
+# 2014-01-16 [HB]
+# o BUG FIX: getGroups() of TopHat2Alignment would not generate the
+#   correct sets of indices.
+# o ROBUSTNESS: Now getGroups() of TopHat2Alignment assert that the
+#   file indices identified for each group/sample is unique.
 # 2014-01-10 [HB]
 # o BUG FIX: Forgot to update getOutputDataSet() too.
 # o BUG FIX: Forgot to update getSampleNames() for TopHat2Alignment

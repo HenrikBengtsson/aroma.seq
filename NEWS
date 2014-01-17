@@ -1,6 +1,15 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.17 [2014-01-16]
+o ROBUSTNESS: Now getGroups() of BamMerger and TopHat2Alignment assert
+  that the file indices identified for each group/sample is unique.
+o ROBUSTNESS: Update test data set such that it possible to test
+  alignment of multiple FASTQ files per sample.
+o BUG FIX: getGroups() of TopHat2Alignment would not generate the
+  correct sets of indices.
+
+
 Version: 0.4.16 [2014-01-15]
 o BUG FIX: Automatic enabling of parallel processing was disabled
   by mistake in v0.4.13.

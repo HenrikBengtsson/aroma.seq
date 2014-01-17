@@ -121,6 +121,24 @@ setMethodS3("getOutputDataSet", "TopHat2Alignment", function(this, onMissing=c("
 }) # getOutputDataSet() for TopHat2Alignment
 
 
+setMethodS3("getOutputDataSet", "TopHat2Alignment", function(this, onMissing=c("drop", "NA", "error"), ...) {
+  # Argument 'onMissing':
+  onMissing <- match.arg(onMissing);
+
+  # AD HOC for now because we are dealing with subdirectories
+  # being sample names. /HB 2014-01-10
+  paths <- getExpectedOutputPaths(this);
+  pathnames <- file.path(paths, "accepted_hits.bam");
+  bfList <- lapply(pathnames, FUN=BamDataFile, mustExist=FALSE);
+  bams <- BamDataSet(bfList);
+  bams <- setFullNamesTranslator(bams, function(names, file, ...) basename(getPath(file)));
+  groups  <- getGroups(this);
+  fullnames <- names(groups);
+  bams <- extract(bams, fullnames, onMissing=onMissing);
+
+  bams;
+}) # getOutputDataSet() for TopHat2Alignment
+
 
 setMethodS3("getOutputDataSet", "TotalCnBinnedCounting", function(this, onMissing=c("drop", "NA", "error"), ...) {
   # Argument 'onMissing':
