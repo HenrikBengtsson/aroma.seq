@@ -473,6 +473,13 @@
 \alias{saveCacheFileItem.GenericDataFile}
 \alias{validateGroups.TopHat2Alignment}
 \alias{assertNoDuplicated}
+\alias{FileGroupsInterface}
+\alias{getGroupBy}
+\alias{getGroupBy.FileGroupsInterface}
+\alias{getGroupNames}
+\alias{getGroupNames.FileGroupsInterface}
+\alias{getInputDataSet.FileGroupsInterface}
+\alias{getOutputDataSet.BamMerger}
 
 \description{
   This page contains aliases for all "non-documented" objects that

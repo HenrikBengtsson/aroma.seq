@@ -264,3 +264,6 @@ saveCacheFile.GenericDataFile saveCacheFileItem
 saveCacheFileItem.GenericDataFile
 validateGroups.TopHat2Alignment
 assertNoDuplicated
+FileGroupsInterface getGroupBy getGroupBy.FileGroupsInterface
+  getGroupNames getGroupNames.FileGroupsInterface
+  getInputDataSet.FileGroupsInterface getOutputDataSet.BamMerger
