@@ -16,8 +16,8 @@ options(stringsAsFactors=FALSE)
 path0 <- system.file(file.path("exData"), package="aroma.seq", mustWork=TRUE)
 Organism <- "SaccharomycesCerevisiae"
 DataSetName <- "YeastTest"
-Paths <- list(ref=file.path(path0, "annotationData", "organisms", organism),
-              data=file.path(path0, "fastqData", DataSetName, organism))
+Paths <- list(ref=file.path(path0, "annotationData", "organisms", Organism),
+              data=file.path(path0, "fastqData", DataSetName, Organism))
 
 config <- setupConfig(pathRef=Paths$ref,
                       pathData=Paths$data,
