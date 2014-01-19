@@ -480,6 +480,9 @@
 \alias{getGroupNames.FileGroupsInterface}
 \alias{getInputDataSet.FileGroupsInterface}
 \alias{getOutputDataSet.BamMerger}
+\alias{getAsteriskTags.TopHat2Alignment}
+\alias{getFastaReferenceFile}
+\alias{getFastaReferenceFile.AbstractIndexSet}
 
 \description{
   This page contains aliases for all "non-documented" objects that

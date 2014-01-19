@@ -267,3 +267,5 @@ assertNoDuplicated
 FileGroupsInterface getGroupBy getGroupBy.FileGroupsInterface
   getGroupNames getGroupNames.FileGroupsInterface
   getInputDataSet.FileGroupsInterface getOutputDataSet.BamMerger
+getAsteriskTags.TopHat2Alignment getFastaReferenceFile
+  getFastaReferenceFile.AbstractIndexSet
