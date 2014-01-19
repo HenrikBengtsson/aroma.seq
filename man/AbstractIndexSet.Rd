@@ -49,6 +49,7 @@ AbstractIndexSet(files=NULL, ...)
  \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{byPrefix} \tab  -\cr
+ \tab \code{getFastaReferenceFile} \tab  -\cr
  \tab \code{getIndexPrefix} \tab  -\cr
  \tab \code{getOrganism} \tab  -\cr
  \tab \code{isComplete} \tab  -\cr
