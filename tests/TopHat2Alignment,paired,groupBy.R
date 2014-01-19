@@ -62,6 +62,7 @@ if (fullTest) {
 path <- getPath(fa)
 gtfs <- GenericDataFileSet$byPath(path, pattern="[.]gtf.gz$")
 gtf <- gtfs[[1L]]
+gtf <- gunzip(gtf) # Currently *gzipped* GTF files are not supported
 
 ta <- TopHat2Alignment(dataSet=fqs, groupBy="name", indexSet=is, transcripts=gtf)
 print(ta)
