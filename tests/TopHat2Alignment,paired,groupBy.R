@@ -12,23 +12,21 @@ setupExampleData()
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Setup data
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Annotation data
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 fa <- FastaReferenceFile$byOrganism(organism)
 print(fa)
 
-# FASTQ data
-fqs <- FastqDataSet$byName(dataSet, organism=organism, paired=TRUE)
-print(fqs)
-
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# TopHat2
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Bowtie2 index set
 is <- buildBowtie2IndexSet(fa, verbose=TRUE)  # is = 'index set'
 print(is)
 
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# FASTQ data
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+fqs <- FastqDataSet$byName(dataSet, organism=organism, paired=TRUE)
+print(fqs)
 
 # Set fullnames translator, making SRR + 5 digits the name
 # and the rest tags, just as an example
@@ -40,22 +38,37 @@ fqs <- setFullNamesTranslator(fqs, function(names, ...) {
 })
 print(getFullNames(fqs))
 
-ta <- TopHat2Alignment(dataSet=fqs, indexSet=is, groupBy="name")
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# TopHat alignment
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ta <- TopHat2Alignment(dataSet=fqs, groupBy="name", indexSet=is)
 print(ta)
 
 # Assert that for each group a unique set of files are identified
 groups <- getGroups(ta)
 lapply(groups, FUN=function(idxs) stopifnot(!anyDuplicated(idxs)))
 
-
-fullTest <- fullTest && isCapableOf(aroma.seq, "samtools")
 fullTest <- fullTest && isCapableOf(aroma.seq, "tophat2")
 if (fullTest) {
-process(ta, verbose=-100)
+  bams <- process(ta, verbose=-100)
+  print(bams)
+} # if (fullTest)
 
-bams <- getOutputDataSet(ta)
-print(bams)
 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# TopHat alignment with transcriptome model
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+path <- getPath(fa)
+gtfs <- GenericDataFileSet$byPath(path, pattern="[.]gtf.gz$")
+gtf <- gtfs[[1L]]
+
+ta <- TopHat2Alignment(dataSet=fqs, groupBy="name", indexSet=is, transcripts=gtf)
+print(ta)
+
+if (fullTest) {
+  bams <- process(ta, verbose=-100)
+  print(bams)
 } # if (fullTest)
 
 } # if (fullTest)

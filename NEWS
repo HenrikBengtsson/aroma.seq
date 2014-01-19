@@ -1,6 +1,18 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.18 [2014-01-18]
+o SPEEDUP: Now TopHat2Alignment adds a link to the FASTA file in the
+  directory if the Bowtie2 index set, which then will be used by TopHat
+  when processing all samples.  Previously it would create such a FASTA
+  file by reverse engineering.
+o Added getFastaReferenceFile() for AbstractIndexSet.
+o Added tag 'gtf' to the set of asterisk tags of TopHat2Alignment
+  if argument 'transcripts' is specified.
+o ROBUSTNESS: Added package system test of TopHat2Alignment with
+  a GTF transcripts file specified.
+
+
 Version: 0.4.17 [2014-01-16]
 o CLEANUP: Now BamMerger and TopHat2Alignment implements the new
   FileGroupsInterface.

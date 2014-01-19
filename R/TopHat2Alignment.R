@@ -82,6 +82,23 @@ setMethodS3("getRootPath", "TopHat2Alignment", function(this, ...) {
 }, protected=TRUE)
 
 
+setMethodS3("getParameters", "TopHat2Alignment", function(this, ...) {
+  params <- NextMethod("getAsteriskTags");
+  params$transcripts <- this$transcripts;
+  params;
+}, protected=TRUE)
+
+
+setMethodS3("getAsteriskTags", "TopHat2Alignment", function(this, ...) {
+  tags <- NextMethod("getAsteriskTags");
+  params <- getParameters(this);
+  if (!is.null(params$transcripts)) {
+    tags <- c(tags, "gtf");
+  }
+  tags;
+}, protected=TRUE)
+
+
 setMethodS3("getSampleNames", "TopHat2Alignment", function(this, ...) {
   getGroupNames(this, ...);
 }, protected=TRUE)
@@ -171,6 +188,18 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   is <- getIndexSet(this);
   verbose && cat(verbose, "Aligning using index set:");
   verbose && print(verbose, is);
+
+  # Make sure TopHat finds the FASTA reference in the directory
+  # of the index set
+  pathT <- getPath(is);
+  fa <- getFastaReferenceFile(is);
+  pathnameT <- file.path(pathT, getFilename(fa));
+  faT <- linkTo(fa, pathnameT, skip=TRUE);
+  faT <- newInstance(fa, pathnameT);
+  verbose && cat(verbose, "FASTA file that TopHat will see/use:");
+  verbose && print(verbose, faT);
+  pathT <- fa <- pathnameT <- faT <- NULL;
+  stopifnot(getPath(faT) == getPath(is));
 
   outPath <- getPath(this);
   verbose && cat(verbose, "Output directory: ", outPath);
@@ -322,6 +351,13 @@ setMethodS3("validateGroups", "TopHat2Alignment", function(this, groups, ...) {
 
 ############################################################################
 # HISTORY:
+# 2014-01-18 [HB]
+# o Added tag 'gtf' to the set of asterisk tags of TopHat2Alignment
+#   if argument 'transcripts' is specified.
+# o SPEEDUP: Now TopHat2Alignment adds a link to the FASTA file in the
+#   directory if the Bowtie2 index set, which then will be used by TopHat
+#   when processing all samples.  Previously it would create such a FASTA
+#   file by reverse engineering.
 # 2014-01-16 [HB]
 # o CLEANUP: Now TopHat2Alignment implements new FileGroupsInterface.
 # o BUG FIX: getGroups() of TopHat2Alignment would not generate the
