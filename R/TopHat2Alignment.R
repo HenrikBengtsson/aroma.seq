@@ -220,9 +220,9 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
       verbose && print(verbose, transcripts);
       verbose && exit(verbose);
     }
+    # Sanity check
+    stopifnot(!isGzipped(transcripts));
   }
-  # Sanity check
-  stopifnot(!isGzipped(transcripts));
 
   verbose && cat(verbose, "Number of files: ", length(ds));
   verbose && cat(verbose, "Number of groups: ", length(groups));

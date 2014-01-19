@@ -1,3 +1,34 @@
+###########################################################################/**
+# @RdocClass GtfDataFile
+#
+# @title "The GtfDataFile class"
+#
+# \description{
+#  @classhierarchy
+#
+#  A GtfDataFile object represents a Gene Transfer Format (GTF) file.
+# }
+#
+# @synopsis
+#
+# \arguments{
+#   \item{...}{Arguments passed to @see "R.filesets::TabularTextFile".}
+# }
+#
+# \section{Fields and Methods}{
+#  @allmethods "public"
+# }
+#
+# \section{Compression}{
+#  The package supports compressed GTF files.
+# }
+#
+# @author "HB"
+#
+# \seealso{
+#   ...
+# }
+#*/###########################################################################
 setConstructorS3("GtfDataFile", function(...) {
   extend(TabularTextFile(...), "GtfDataFile")
 })

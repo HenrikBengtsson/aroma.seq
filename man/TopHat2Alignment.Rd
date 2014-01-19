@@ -49,7 +49,8 @@ TopHat2Alignment(..., groupBy=NULL, indexSet=NULL, transcripts=NULL)
  \item{groupBy}{A \code{\link[base]{character}} string or an explicit named \code{\link[base]{list}},
   specifying which input files should be processed together.}
  \item{indexSet}{An \code{\link{Bowtie2IndexSet}}.}
- \item{transcripts}{Gene model (transcriptome) GTF/GFF3 file.}
+ \item{transcripts}{A \code{\link{GtfDataFile}} specifying a gene model
+  (transcriptome) GTF/GFF3 file.}
 }
 
 \section{Fields and Methods}{
