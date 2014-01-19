@@ -11,6 +11,8 @@ o Added tag 'gtf' to the set of asterisk tags of TopHat2Alignment
   if argument 'transcripts' is specified.
 o ROBUSTNESS: Added package system test of TopHat2Alignment with
   a GTF transcripts file specified.
+o ROBUSTNESS: Now tophat() and TopHat2Alignment give an informative error
+  message if a *gzipped* GTF file is passed, which is not supported.
 
 
 Version: 0.4.17 [2014-01-16]

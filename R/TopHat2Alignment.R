@@ -59,6 +59,10 @@ setConstructorS3("TopHat2Alignment", function(..., groupBy=NULL, indexSet=NULL, 
   # Argument 'transcripts':
   if (!is.null(transcripts)) {
     transcripts <- Arguments$getInstanceOf(transcripts, "GenericDataFile");
+    # Sanity check
+    if (isGzipped(transcripts)) {
+      throw("TopHat2Alignment does not support *gzipped* transcript files: ", getPathname(transcripts));
+    }
   }
 
   # Arguments '...':
@@ -352,6 +356,8 @@ setMethodS3("validateGroups", "TopHat2Alignment", function(this, groups, ...) {
 ############################################################################
 # HISTORY:
 # 2014-01-18 [HB]
+# o ROBUSTNESS: Now TopHat2Alignment gives an informative error message
+#   if a *gzipped* 'transcripts' argument is passed.
 # o Added tag 'gtf' to the set of asterisk tags of TopHat2Alignment
 #   if argument 'transcripts' is specified.
 # o SPEEDUP: Now TopHat2Alignment adds a link to the FASTA file in the

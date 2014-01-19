@@ -90,6 +90,9 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1, reads2=N
   # Argument 'gtf'
   if (!is.null(gtf)) {
     gtf <- Arguments$getReadablePathname(gtf, absolute=TRUE);
+    if (isGzipped(gtf)) {
+      throw("TopHat does not support gzipped GTF files: ", gtf);
+    }
   }
 
   # Argument 'verbose':
@@ -281,6 +284,9 @@ setMethodS3("tophat2", "default", function(..., command="tophat2") {
 
 ############################################################################
 # HISTORY:
+# 2014-01-18 [HB]
+# o ROBUSTNESS: Now tophat() gives an informative error message if
+#   a *gzipped* GTF file is passed, which is not supported.
 # 2014-01-14 [HB]
 # o ROBUSTNESS: Now tophat() tests for duplicated entries in 'reads1'
 #   and 'reads2' and gives an informative errors message if detected.
