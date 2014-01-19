@@ -198,8 +198,8 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   faT <- newInstance(fa, pathnameT);
   verbose && cat(verbose, "FASTA file that TopHat will see/use:");
   verbose && print(verbose, faT);
-  pathT <- fa <- pathnameT <- faT <- NULL;
   stopifnot(getPath(faT) == getPath(is));
+  pathT <- fa <- pathnameT <- faT <- NULL;
 
   outPath <- getPath(this);
   verbose && cat(verbose, "Output directory: ", outPath);
