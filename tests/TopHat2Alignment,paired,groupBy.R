@@ -59,12 +59,8 @@ if (fullTest) {
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # TopHat alignment with transcriptome model
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-path <- getPath(fa)
-gtfs <- GenericDataFileSet$byPath(path, pattern="[.]gtf[.]gz$")
-gunzip(gtfs) # Currently *gzipped* GTF files are not supported
-gtfs <- GenericDataFileSet$byPath(path, pattern="[.]gtf$")
-gtf <- gtfs[[1L]]
-
+gtf <- GtfDataFile$byOrganism(organism)
+print(gtf)
 ta <- TopHat2Alignment(dataSet=fqs, groupBy="name", indexSet=is, transcripts=gtf)
 print(ta)
 

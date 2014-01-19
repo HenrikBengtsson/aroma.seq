@@ -16,7 +16,8 @@
 #  \item{groupBy}{A @character string or an explicit named @list,
 #   specifying which input files should be processed together.}
 #  \item{indexSet}{An @see "Bowtie2IndexSet".}
-#  \item{transcripts}{Gene model (transcriptome) GTF/GFF3 file.}
+#  \item{transcripts}{A @see "GtfDataFile" specifying a gene model
+#   (transcriptome) GTF/GFF3 file.}
 # }
 #
 # \section{Fields and Methods}{
@@ -58,11 +59,7 @@ setConstructorS3("TopHat2Alignment", function(..., groupBy=NULL, indexSet=NULL, 
 
   # Argument 'transcripts':
   if (!is.null(transcripts)) {
-    transcripts <- Arguments$getInstanceOf(transcripts, "GenericDataFile");
-    # Sanity check
-    if (isGzipped(transcripts)) {
-      throw("TopHat2Alignment does not support *gzipped* transcript files: ", getPathname(transcripts));
-    }
+    transcripts <- Arguments$getInstanceOf(transcripts, "GtfDataFile");
   }
 
   # Arguments '...':
@@ -209,8 +206,23 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   verbose && cat(verbose, "Output directory: ", outPath);
 
   transcripts <- this$transcripts;
-  verbose && cat(verbose, "Using transcripts:");
-  verbose && print(verbose, transcripts);
+  if (!is.null(transcripts)) {
+    verbose && cat(verbose, "Using transcripts:");
+    verbose && print(verbose, transcripts);
+    # Workaround for *gzipped* GTF files (not supported by TopHat binaries)
+    if (isGzipped(transcripts)) {
+      verbose && enter(verbose, "Temporary uncompressing file");
+      pathnameZ <- getPathname(transcripts)
+      pathname <- gunzip(pathnameZ, temporary=TRUE, remove=FALSE)
+      on.exit(file.remove(pathname), add=TRUE);
+      transcripts <- newInstance(transcripts, pathname);
+      verbose && cat(verbose, "Using (temporary) transcripts:");
+      verbose && print(verbose, transcripts);
+      verbose && exit(verbose);
+    }
+  }
+  # Sanity check
+  stopifnot(!isGzipped(transcripts));
 
   verbose && cat(verbose, "Number of files: ", length(ds));
   verbose && cat(verbose, "Number of groups: ", length(groups));

@@ -1,6 +1,12 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.19 [2014-01-18]
+o Now TopHat2Alignment supports also gzipped GTF files by temporarily
+  uncompressing them before processing the samples.
+o Added GtfDataFile.
+
+
 Version: 0.4.18 [2014-01-18]
 o SPEEDUP: Now TopHat2Alignment adds a link to the FASTA file in the
   directory if the Bowtie2 index set, which then will be used by TopHat
