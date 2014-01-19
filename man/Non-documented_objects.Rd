@@ -483,6 +483,9 @@
 \alias{getAsteriskTags.TopHat2Alignment}
 \alias{getFastaReferenceFile}
 \alias{getFastaReferenceFile.AbstractIndexSet}
+\alias{byOrganism.GtfDataFile}
+\alias{findByOrganism.GtfDataFile}
+\alias{getOrganism.GtfDataFile}
 
 \description{
   This page contains aliases for all "non-documented" objects that

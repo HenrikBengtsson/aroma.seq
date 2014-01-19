@@ -269,3 +269,5 @@ FileGroupsInterface getGroupBy getGroupBy.FileGroupsInterface
   getInputDataSet.FileGroupsInterface getOutputDataSet.BamMerger
 getAsteriskTags.TopHat2Alignment getFastaReferenceFile
   getFastaReferenceFile.AbstractIndexSet
+byOrganism.GtfDataFile findByOrganism.GtfDataFile
+getOrganism.GtfDataFile
