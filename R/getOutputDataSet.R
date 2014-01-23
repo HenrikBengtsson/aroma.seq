@@ -140,6 +140,24 @@ setMethodS3("getOutputDataSet", "TopHat2Alignment", function(this, onMissing=c("
 }) # getOutputDataSet() for TopHat2Alignment
 
 
+setMethodS3("getOutputDataSet", "HTSeqCounting", function(this, onMissing=c("drop", "NA", "error"), ...) {
+  # Argument 'onMissing':
+  onMissing <- match.arg(onMissing);
+
+
+  ## Find all existing output data files
+  path <- getPath(this);
+  counts <- GenericDataFileSet$byPath(path, ...);
+
+  ## Order according to input data set
+  ds <- getInputDataSet(this);
+  fullnames <- getFullNames(ds);
+  counts <- extract(counts, fullnames, onMissing=onMissing);
+
+  counts;
+}) # getOutputDataSet() for HTSeqCounting
+
+
 setMethodS3("getOutputDataSet", "TotalCnBinnedCounting", function(this, onMissing=c("drop", "NA", "error"), ...) {
   # Argument 'onMissing':
   onMissing <- match.arg(onMissing);
