@@ -176,7 +176,8 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1, reads2=N
   #      (such that tophat sees no commas)
   link <- file.path(inPath, "refIndex");
   bowtieRefIndexPath <- createLink(link=link, target=bowtieRefIndexPath);
-  onExit({ file.remove(bowtieRefIndexPath) })
+  onExit({ file.remove(bowtieRefIndexPath) });
+  link <- NULL;  # Not needed anymore
   bowtieRefIndexPrefix <- file.path(bowtieRefIndexPath, basename(bowtieRefIndexPrefix));
   assertNoCommas(bowtieRefIndexPrefix);
 
@@ -185,6 +186,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1, reads2=N
     link <- file.path(inPath, basename(gtf));
     gtf <- createLink(link=link, target=gtf);
     onExit({ file.remove(gtf) })
+    link <- NULL;  # Not needed anymore
   }
 
 
