@@ -486,6 +486,10 @@
 \alias{byOrganism.GtfDataFile}
 \alias{findByOrganism.GtfDataFile}
 \alias{getOrganism.GtfDataFile}
+\alias{getParameters.HTSeqCounting}
+\alias{getRootPath.HTSeqCounting}
+\alias{getSampleNames.HTSeqCounting}
+\alias{process.HTSeqCounting}
 
 \description{
   This page contains aliases for all "non-documented" objects that

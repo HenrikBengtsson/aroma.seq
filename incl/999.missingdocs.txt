@@ -271,4 +271,6 @@ getAsteriskTags.TopHat2Alignment getFastaReferenceFile
   getFastaReferenceFile.AbstractIndexSet
 byOrganism.GtfDataFile findByOrganism.GtfDataFile
 getOrganism.GtfDataFile
-
+ getParameters.HTSeqCounting
+  getRootPath.HTSeqCounting getSampleNames.HTSeqCounting
+  process.HTSeqCounting

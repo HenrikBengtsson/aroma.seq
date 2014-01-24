@@ -1,6 +1,13 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.20 [2014-01-24]
+o Added HTSeqCounting.
+o BUG FIX: Now the BamDataFileSet returned by the TopHat2Alignment
+  properly identifies its name and organism.
+o BUG FIX: findHTSeq() failed to identify the version.
+
+
 Version: 0.4.19 [2014-01-18]
 o Now TopHat2Alignment supports also gzipped GTF files by temporarily
   uncompressing them before processing the samples.
