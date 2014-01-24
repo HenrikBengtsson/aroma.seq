@@ -4,7 +4,7 @@ fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 fullTest <- fullTest && isCapableOf(aroma.seq, "bowtie2")
 if (fullTest) {
 
-dataSet <- "YeastTest"
+dataset <- "YeastTest"
 organism <- "SaccharomycesCerevisiae"
 
 # Setup (writable) local data directory structure
@@ -25,7 +25,7 @@ print(is)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # FASTQ data
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-fqs <- FastqDataSet$byName(dataSet, organism=organism, paired=TRUE)
+fqs <- FastqDataSet$byName(dataset, organism=organism, paired=TRUE)
 print(fqs)
 
 # Set fullnames translator, making SRR + 5 digits the name
@@ -67,6 +67,28 @@ print(ta)
 if (fullTest) {
   bams <- process(ta, verbose=-100)
   print(bams)
+  # Assert proper name and organism inference
+  stopifnot(getName(bams) == organism)
+  stopifnot(getOrganism(bams) == organism)
+  stopifnot(all(getNames(bams) == names(groups)))
+} # if (fullTest)
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# HT-Seq counting
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+fullTest <- fullTest && isCapableOf(aroma.seq, "htseq")
+if (fullTest) {
+  htc <- HTSeqCounting(bams, transcripts=gtf)
+  print(htc)
+
+  counts <- process(htc, verbose=-100)
+  print(counts)
+
+  # Assert proper name and organism inference
+  stopifnot(getName(counts) == organism)
+#  stopifnot(getOrganism(counts) == organism)
+  stopifnot(all(getNames(counts) == getNames(bams)))
 } # if (fullTest)
 
 } # if (fullTest)

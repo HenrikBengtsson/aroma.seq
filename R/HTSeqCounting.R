@@ -12,8 +12,9 @@
 # @synopsis
 #
 # \arguments{
-#  \item{...}{Arguments passed to @see "AbstractAlignment".}
+#  \item{dataSet}{A @see "BamDataSet".}
 #  \item{transcripts}{A @see "GtfDataFile" specifying a gene model.}
+#  \item{...}{Arguments passed to @see "AbstractAlignment".}
 # }
 #
 # \section{Fields and Methods}{
@@ -32,19 +33,26 @@
 #      \url{http://www-huber.embl.de/users/anders/HTSeq/} \cr
 # }
 #*/###########################################################################
-setConstructorS3("HTSeqCounting", function(..., transcripts=NULL) {
+setConstructorS3("HTSeqCounting", function(dataSet=NULL, transcripts=NULL, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Argument 'transcripts':
-  transcripts <- Arguments$getInstanceOf(transcripts, "GtfDataFile");
+  # Validate arguments
+  if (!is.null(dataSet)) {
+    # Argument 'dataSet':
+    dataSet <- Arguments$getInstanceOf(dataSet, "BamDataSet");
+
+    # Argument 'transcripts':
+    transcripts <- Arguments$getInstanceOf(transcripts, "GtfDataFile");
+  } # if (!is.null(dataSet)) 
+
 
   # Arguments '...':
   args <- list(...);
 
-  extend(AbstractAlignment(...), "HTSeqCounting",
-    transcripts = transcripts
-  )
+  extend(AromaSeqTransform(dataSet, ...), "HTSeqCounting",
+    .transcripts = transcripts
+  );
 })
 
 
@@ -55,7 +63,7 @@ setMethodS3("getRootPath", "HTSeqCounting", function(this, ...) {
 
 setMethodS3("getParameters", "HTSeqCounting", function(this, ...) {
   params <- NextMethod("getAsteriskTags");
-  params$transcripts <- this$transcripts;
+  params$transcripts <- this$.transcripts;
   params;
 }, protected=TRUE)
 
@@ -63,14 +71,6 @@ setMethodS3("getParameters", "HTSeqCounting", function(this, ...) {
 setMethodS3("getSampleNames", "HTSeqCounting", function(this, ...) {
   ds <- getInputDataSet(this);
   getFullNames(ds, ...);
-}, protected=TRUE)
-
-setMethodS3("getExpectedOutputPaths", "HTSeqCounting", function(this, ...) {
-  # Find all available output directories
-  path <- getPath(this);
-  sampleNames <- getSampleNames(this);
-  paths <- file.path(path, sampleNames);
-  paths;
 }, protected=TRUE)
 
 
@@ -122,20 +122,21 @@ setMethodS3("process", "HTSeqCounting", function(this, ..., skip=TRUE, force=FAL
   outPath <- getPath(this);
   verbose && cat(verbose, "Output directory: ", outPath);
 
-  transcripts <- this$transcripts;
+  params <- getParameters(this);
+  transcripts <- params$transcripts;
   verbose && cat(verbose, "Using transcripts:");
   verbose && print(verbose, transcripts);
-##   # Workaround for *gzipped* GTF files (not supported by HTSeq binaries)
-##   if (isGzipped(transcripts)) {
-##     verbose && enter(verbose, "Temporary uncompressing file");
-##     pathnameZ <- getPathname(transcripts)
-##     pathname <- gunzip(pathnameZ, temporary=TRUE, remove=FALSE)
-##     on.exit(file.remove(pathname), add=TRUE);
-##     transcripts <- newInstance(transcripts, pathname);
-##     verbose && cat(verbose, "Using (temporary) transcripts:");
-##     verbose && print(verbose, transcripts);
-##     verbose && exit(verbose);
-##   }
+  # Workaround for *gzipped* GTF files (not supported by HTSeq binaries)
+  if (isGzipped(transcripts)) {
+    verbose && enter(verbose, "Temporary uncompressing file");
+    pathnameZ <- getPathname(transcripts)
+    pathname <- gunzip(pathnameZ, temporary=TRUE, remove=FALSE)
+    on.exit(file.remove(pathname), add=TRUE);
+    transcripts <- newInstance(transcripts, pathname);
+    verbose && cat(verbose, "Using (temporary) transcripts:");
+    verbose && print(verbose, transcripts);
+    verbose && exit(verbose);
+  }
   # Sanity check
   stopifnot(!isGzipped(transcripts));
 
@@ -178,17 +179,16 @@ setMethodS3("process", "HTSeqCounting", function(this, ..., skip=TRUE, force=FAL
     filenameD <- sprintf("%s.count", getFullName(df));
     pathnameD <- Arguments$getWritablePathname(filenameD, path=outPath, mustNotExist=FALSE);
     # Nothing to do?
-    if (skip && isFile(pathname)) {
+    if (skip && isFile(pathnameD)) {
       verbose && cat(verbose, "Already processed. Skipping.");
       verbose && exit(verbose);
       return(GenericDataFile(pathnameD));
     }
 
     # Final sample-specific output directory
-    outPathS <- file.path(outPath, sampleName);
     args <- list(
       pathnameS=pathnameBAM,
-      gff=pathnameGTF
+      gff=pathnameGTF,
       pathnameD=pathnameD
     );
 

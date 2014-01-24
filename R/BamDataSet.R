@@ -37,7 +37,12 @@ setMethodS3("getOrganism", "BamDataSet", function(this, depth=getDepth(this)-1L,
 
 
 setMethodS3("getDepth", "BamDataSet", function(this, ...) {
-  1L;
+  path <- getPath(this, absolute=FALSE);
+  parts <- unlist(strsplit(path, split="/", fixed=TRUE));
+  nparts <- length(parts);
+  depth <- nparts - 2L;
+  depth <- Arguments$getInteger(depth, range=c(0,Inf));
+  depth;
 }, protected=TRUE);
 
 

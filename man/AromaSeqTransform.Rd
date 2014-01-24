@@ -24,7 +24,7 @@
 \code{~~~~~~~+--}\emph{\code{AromaSeqTransform}}\cr
 
 \bold{Directly known subclasses:}\cr
-\emph{\link[aroma.seq]{AbstractAlignment}}, \link[aroma.seq]{BamMerger}, \link[aroma.seq]{Bowtie2Alignment}, \link[aroma.seq]{BwaAlignment}, \link[aroma.seq]{FastqDownsampler}, \link[aroma.seq]{PicardDuplicateRemoval}, \link[aroma.seq]{QDNAseqEstimation}, \emph{\link[aroma.seq]{SamTransform}}, \link[aroma.seq]{TopHat2Alignment}\cr
+\emph{\link[aroma.seq]{AbstractAlignment}}, \link[aroma.seq]{BamMerger}, \link[aroma.seq]{Bowtie2Alignment}, \link[aroma.seq]{BwaAlignment}, \link[aroma.seq]{FastqDownsampler}, \link[aroma.seq]{HTSeqCounting}, \link[aroma.seq]{PicardDuplicateRemoval}, \link[aroma.seq]{QDNAseqEstimation}, \emph{\link[aroma.seq]{SamTransform}}, \link[aroma.seq]{TopHat2Alignment}\cr
 
 public abstract static class \bold{AromaSeqTransform}\cr
 extends \link[aroma.core]{ParametersInterface}\cr

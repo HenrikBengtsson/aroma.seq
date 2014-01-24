@@ -11,7 +11,8 @@
 # @synopsis
 #
 # \arguments{
-#  \item{IDXS}{A (named) @list, where each element contains a @vector data set indices.}
+#  \item{IDXS}{A (named) @list, where each element contains a @vector data set indices,
+#    or an @integer @vector of individual elements.}
 #  \item{DROP}{If @FALSE, the first argument passed to \code{FUN} is always a @list of files.
 #    If @TRUE, an single-index element is passed to \code{FUN} as a file instead of
 #    as a @list containing a single file.}
@@ -67,6 +68,13 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, IDXS=NULL, DROP=is.nul
     IDXS <- seq_along(ds);
     names(IDXS) <- getNames(ds);
     IDXS <- as.list(IDXS);
+  } else if (is.numeric(IDXS)) {
+    max <- length(ds);
+    IDXS <- Arguments$getIndices(IDXS, max=max);
+    if (is.null(names(IDXS))) {
+      names(IDXS) <- getNames(ds);
+      IDXS <- as.list(IDXS);
+    }
   } else if (is.list(IDXS)) {
     max <- length(ds);
     for (idxs in IDXS) {
@@ -442,6 +450,9 @@ setMethodS3(".getBatchJobRegistry", "default", function(..., skip=TRUE) {
 
 ############################################################################
 # HISTORY:
+# 2014-01-24
+# o Now argument 'IDXS' can also be an index vector, which is then 
+#   treated as as.list(IDXS).
 # 2014-01-04
 # o CONSISTENCY: Now dsApply() returns a named vector with names
 #   corresponding to the names of the processed file items.
