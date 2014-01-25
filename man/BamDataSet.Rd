@@ -51,6 +51,7 @@ BamDataSet(files=NULL, ...)
  \tab \code{byName} \tab  -\cr
  \tab \code{byPath} \tab  -\cr
  \tab \code{directoryStructure} \tab  -\cr
+ \tab \code{doHTSeqCount} \tab  -\cr
  \tab \code{doQDNAseq} \tab  -\cr
  \tab \code{findByName} \tab  -\cr
  \tab \code{getChipType} \tab  -\cr
