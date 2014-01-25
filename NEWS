@@ -9,6 +9,7 @@ o Added HTSeqCountDataFile|Set classes.
 o BUG FIX: Now the BamDataFileSet returned by the TopHat2Alignment
   properly identifies its name and organism.
 o BUG FIX: findHTSeq() failed to identify the version.
+o Package passes 'R CMD check' with all OK.
 
 
 Version: 0.4.19 [2014-01-18]
