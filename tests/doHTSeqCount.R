@@ -26,12 +26,9 @@ print(gtf)
 fqs <- FastqDataSet$byName(dataSet, organism=organism, paired=TRUE)
 print(fqs)
 
-# Set fullnames translator, making SRR + 5 digits the name
-# and the rest tags, just as an example
+# Make sure to group FASTQ files per sample
 fqs <- setFullNamesTranslator(fqs, function(names, ...) {
-  # Drop any stray "R1" suffix
   names <- gsub("_(1|R1)$", "", names)
-  # Tagify
   gsub("_", ",", names, fixed=TRUE)
 })
 
