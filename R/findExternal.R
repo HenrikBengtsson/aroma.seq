@@ -154,7 +154,8 @@ findExternal <- function(mustExist=TRUE, command, version=NULL, versionPattern=N
       });
 
       # Parse
-      ver <- grep(versionPattern, res, value=TRUE);
+      resT <- paste(res, collapse=" ");  # Search across newlines
+      ver <- grep(versionPattern, resT, value=TRUE);
       if (length(ver) > 0L) {
         ver <- ver[1L];
         verbose && printf(verbose, "Version (output): '%s'\n", ver);

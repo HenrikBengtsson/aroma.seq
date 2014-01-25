@@ -68,7 +68,7 @@ if (fullTest) {
   bams <- process(ta, verbose=-100)
   print(bams)
   # Assert proper name and organism inference
-  stopifnot(getName(bams) == organism)
+  stopifnot(getName(bams) == dataset)
   stopifnot(getOrganism(bams) == organism)
   stopifnot(all(getNames(bams) == names(groups)))
 } # if (fullTest)
@@ -86,7 +86,7 @@ if (fullTest) {
   print(counts)
 
   # Assert proper name and organism inference
-  stopifnot(getName(counts) == organism)
+  stopifnot(getName(counts) == dataset)
   stopifnot(getOrganism(counts) == organism)
   stopifnot(all(getNames(counts) == getNames(bams)))
 
