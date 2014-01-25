@@ -13,6 +13,7 @@
 #
 # \arguments{
 #   \item{...}{Arguments passed to @see "R.filesets::TabularTextFile".}
+#   \item{columnNames}{Passed to @see "R.filesets::TabularTextFile".}
 # }
 #
 # \section{Fields and Methods}{
@@ -29,8 +30,8 @@
 #   ...
 # }
 #*/###########################################################################
-setConstructorS3("GtfDataFile", function(...) {
-  extend(TabularTextFile(...), "GtfDataFile")
+setConstructorS3("GtfDataFile", function(..., columnNames=FALSE) {
+  extend(TabularTextFile(..., columnNames=columnNames), "GtfDataFile")
 })
 
 setMethodS3("getOrganism", "GtfDataFile", function(this, ...) {
@@ -39,6 +40,42 @@ setMethodS3("getOrganism", "GtfDataFile", function(this, ...) {
   organism;
 })
 
+
+###########################################################################/**
+# @RdocMethod byOrganism
+# @aliasmethod findByOrganism
+#
+# @title "Locates a GTF file by organism"
+#
+# \description{
+#   @get "title".
+# }
+#
+# @synopsis
+#
+# \arguments{
+#  \item{organism}{A @character string specifying for which organism a
+#    file should be retrieved.}
+#  \item{tags}{(not used) A @character @vector.}
+#  \item{prefix}{(optional) A @character string specifying an optional
+#    regular expression prefix to be prepended to \code{pattern} when
+#    searching for the file.}
+#  \item{pattern}{A @character string specifying a regular expression for
+#    the file to be located.}
+#  \item{...}{Additional arguments passed to the constructor of
+#    @see "GtfDataFile" when instantiating the object.}
+# }
+#
+# \value{
+#   Returns a @see "GtfDataFile".
+# }
+#
+# \seealso{
+#   @seeclass
+# }
+#
+# @author
+#*/###########################################################################
 setMethodS3("findByOrganism", "GtfDataFile", function(static, organism, tags=NULL, prefix=NULL, pattern="[.]gtf(|[.]gz)$", ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -52,8 +89,6 @@ setMethodS3("findByOrganism", "GtfDataFile", function(static, organism, tags=NUL
   }
 
 
-  args <- list(pattern=pattern);
-
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Search in annotationData/organisms/<organism>/
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -65,7 +100,7 @@ setMethodS3("findByOrganism", "GtfDataFile", function(static, organism, tags=NUL
   organism <- parts[1L];
   tags <- parts[-1L];
 
-  # Search for "organisms/<organism>/.*[.]gtf$" files
+  # Search for "organisms/<organism>/<prefix>.*[.]gtf$" files
   patternS <- pattern;
   if (!is.null(prefix)) patternS <- sprintf("%s.*%s", prefix, patternS);
   args <- list(
@@ -95,9 +130,9 @@ setMethodS3("findByOrganism", "GtfDataFile", function(static, organism, tags=NUL
 
 setMethodS3("byOrganism", "GtfDataFile", function(static, organism, ...) {
   pathname <- findByOrganism(static, organism, ...);
-  if (length(pathname) == 0)
+  if (length(pathname) == 0L)
     throw("Failed to located GTF file for organism: ", organism);
-  res <- newInstance(static, pathname);
+  res <- newInstance(static, pathname, ...);
   organismR <- getOrganism(res);
   if (organismR != organism) {
     throw(sprintf("The located %s (%s) specifies an organism different from the requested one: %s != %s", class(res)[1L], getPathname(res), sQuote(organismR), sQuote(organism)));
@@ -108,6 +143,11 @@ setMethodS3("byOrganism", "GtfDataFile", function(static, organism, ...) {
 
 ############################################################################
 # HISTORY:
+# 2014-01-25
+# o DOCUMENTATION: Added help for GtfDataFile$byOrganism().
+# o Now GtfDataFile$byOrganism() passes '...' also to the constructor.
+# o Now GtfDataFile by default assumes that the GTF file has no
+#   column headers.
 # 2014-01-18
 # o Created.
 ############################################################################

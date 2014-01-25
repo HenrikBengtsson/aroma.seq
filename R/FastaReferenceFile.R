@@ -103,6 +103,42 @@ setMethodS3("readSeqLengths", "FastaReferenceFile", function(this, ...) {
 
 
 
+
+###########################################################################/**
+# @RdocMethod byOrganism
+# @aliasmethod findByOrganism
+#
+# @title "Locates a FASTA file by organism"
+#
+# \description{
+#   @get "title".
+# }
+#
+# @synopsis
+#
+# \arguments{
+#  \item{organism}{A @character string specifying for which organism a
+#    file should be retrieved.}
+#  \item{tags}{(not used) A @character @vector.}
+#  \item{prefix}{(optional) A @character string specifying an optional
+#    regular expression prefix to be prepended to \code{pattern} when
+#    searching for the file.}
+#  \item{pattern}{A @character string specifying a regular expression for
+#    the file to be located.}
+#  \item{...}{Additional arguments passed to the constructor of
+#    @see "FastaReferenceFile" when instantiating the object.}
+# }
+#
+# \value{
+#   Returns a @see "FastaReferenceFile".
+# }
+#
+# \seealso{
+#   @seeclass
+# }
+#
+# @author
+#*/###########################################################################
 setMethodS3("findByOrganism", "FastaReferenceFile", function(static, organism, tags=NULL, prefix=NULL, pattern="[.](fa|fasta)$", ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -129,7 +165,7 @@ setMethodS3("findByOrganism", "FastaReferenceFile", function(static, organism, t
   organism <- parts[1L];
   tags <- parts[-1L];
 
-  # Search for "organisms/<organism>/.*[.](fa|fasta)$" files
+  # Search for "organisms/<organism>/<prefix>.*[.](fa|fasta)$" files
   patternS <- pattern;
   if (!is.null(prefix)) patternS <- sprintf("%s.*%s", prefix, patternS);
   args <- list(
@@ -161,7 +197,7 @@ setMethodS3("byOrganism", "FastaReferenceFile", function(static, organism, ...) 
   pathname <- findByOrganism(static, organism, ...);
   if (length(pathname) == 0)
     throw("Failed to located FASTA reference file for organism: ", organism);
-  res <- newInstance(static, pathname);
+  res <- newInstance(static, pathname, ...);
   organismR <- getOrganism(res);
   if (organismR != organism) {
     throw(sprintf("The located %s (%s) specifies an organism different from the requested one: %s != %s", class(res)[1L], getPathname(res), sQuote(organismR), sQuote(organism)));
@@ -476,6 +512,9 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
 
 ############################################################################
 # HISTORY:
+# 2014-01-25
+# o Now GtfDataFile$byOrganism() passes '...' also to the constructor.
+# o DOCUMENTATION: Added help for byOrganism().
 # 2013-11-19
 # o ROBUSTNESS: Now FastaReferenceFile$byOrganism() asserts that the
 #   returned FASTA file specifies the requested organism.

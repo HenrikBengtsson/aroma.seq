@@ -1,6 +1,15 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.21 [2014-01-25]
+o Now GtfDataFile by default assumes that the GTF file has no
+  column headers.
+o Now byOrganism() for FastaReferenceFile and GtfDataFile pass '...' 
+  to the constructor as well.
+o DOCUMENTATION: Added help for byOrganism() for FastaReferenceFile
+  and GtfDataFile.
+
+
 Version: 0.4.20 [2014-01-24]
 o Added doHTSeqCount() with a package system test.
 o Added extractDGEList() for HTSeqCountDataSet  with a package system test.

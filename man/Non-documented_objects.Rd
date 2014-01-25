@@ -382,12 +382,10 @@
 \alias{byName.SamDataSet}
 \alias{byName.FastqDataSet}
 \alias{byOrganism}
-\alias{byOrganism.FastaReferenceFile}
 \alias{findByName.BamDataSet}
 \alias{findByName.SamDataSet}
 \alias{findByName.FastqDataSet}
 \alias{findByOrganism}
-\alias{findByOrganism.FastaReferenceFile}
 \alias{agsub}
 \alias{directoryItem}
 \alias{directoryItem.GenericDataFile}
@@ -483,8 +481,6 @@
 \alias{getAsteriskTags.TopHat2Alignment}
 \alias{getFastaReferenceFile}
 \alias{getFastaReferenceFile.AbstractIndexSet}
-\alias{byOrganism.GtfDataFile}
-\alias{findByOrganism.GtfDataFile}
 \alias{getOrganism.GtfDataFile}
 \alias{getParameters.HTSeqCounting}
 \alias{getRootPath.HTSeqCounting}

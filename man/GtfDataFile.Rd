@@ -43,17 +43,18 @@ extends \emph{\link[R.filesets]{TabularTextFile}}\cr
 }
 
 \usage{
-GtfDataFile(...)
+GtfDataFile(..., columnNames=FALSE)
 }
 
 \arguments{
   \item{...}{Arguments passed to \code{\link[R.filesets]{TabularTextFile}}.}
+  \item{columnNames}{Passed to \code{\link[R.filesets]{TabularTextFile}}.}
 }
 
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{byOrganism} \tab  -\cr
+ \tab \code{\link[aroma.seq:byOrganism.GtfDataFile]{byOrganism}} \tab Locates a GTF file by organism.\cr
  \tab \code{getOrganism} \tab  -\cr
 }
 
