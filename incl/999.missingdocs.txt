@@ -274,3 +274,6 @@ getOrganism.GtfDataFile
  getParameters.HTSeqCounting
   getRootPath.HTSeqCounting getSampleNames.HTSeqCounting
   process.HTSeqCounting
+byName.HTSeqCountDataSet byPath.HTSeqCountDataSet
+findByName.HTSeqCountDataSet getDepth.HTSeqCountDataSet
+getOrganism.HTSeqCountDataSet getOutputDataSet.HTSeqCounting

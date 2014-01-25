@@ -87,8 +87,13 @@ if (fullTest) {
 
   # Assert proper name and organism inference
   stopifnot(getName(counts) == organism)
-#  stopifnot(getOrganism(counts) == organism)
+  stopifnot(getOrganism(counts) == organism)
   stopifnot(all(getNames(counts) == getNames(bams)))
+
+  if (isPackageInstalled("edgeR")) {
+    dge <- extractDGEList(counts)
+    print(dge)
+  }
 } # if (fullTest)
 
 } # if (fullTest)

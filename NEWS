@@ -2,7 +2,9 @@ Package: aroma.seq
 ==================
 
 Version: 0.4.20 [2014-01-24]
+o Added extractDGEList() for HTSeqCountDataSet.
 o Added HTSeqCounting.
+o Added HTSeqCountDataFile|Set classes.
 o BUG FIX: Now the BamDataFileSet returned by the TopHat2Alignment
   properly identifies its name and organism.
 o BUG FIX: findHTSeq() failed to identify the version.

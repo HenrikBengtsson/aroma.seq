@@ -7,4 +7,5 @@
 ^bwaData$
 ^smoothCnData$
 ^tophat2Data$
+^htseqCountData$
 

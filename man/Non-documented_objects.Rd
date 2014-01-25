@@ -490,6 +490,12 @@
 \alias{getRootPath.HTSeqCounting}
 \alias{getSampleNames.HTSeqCounting}
 \alias{process.HTSeqCounting}
+\alias{byName.HTSeqCountDataSet}
+\alias{byPath.HTSeqCountDataSet}
+\alias{findByName.HTSeqCountDataSet}
+\alias{getDepth.HTSeqCountDataSet}
+\alias{getOrganism.HTSeqCountDataSet}
+\alias{getOutputDataSet.HTSeqCounting}
 
 \description{
   This page contains aliases for all "non-documented" objects that

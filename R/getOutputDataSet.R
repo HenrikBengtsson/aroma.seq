@@ -147,9 +147,7 @@ setMethodS3("getOutputDataSet", "HTSeqCounting", function(this, onMissing=c("dro
 
   ## Find all existing output data files
   path <- getPath(this);
-  counts <- TabularTextFileSet$byPath(path, ...);
-  # FIX ME
-  lapply(counts, FUN=function(df) df$readColumnNames <- FALSE);
+  counts <- HTSeqCountDataSet$byPath(path, ...);
 
   ## Order according to input data set
   ds <- getInputDataSet(this);

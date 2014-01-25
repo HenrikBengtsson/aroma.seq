@@ -23,6 +23,7 @@ importFrom("R.filesets", "GenericDataFileSet")
 importFrom("R.filesets", "RdsFile")
 importFrom("R.filesets", "RdsFileSet")
 importFrom("R.filesets", "TabularTextFile")
+importFrom("R.filesets", "TabularTextFileSet")
 
 ## Importing generics
 importFrom("R.filesets", "byPath")
@@ -62,6 +63,7 @@ importFrom("R.filesets", "getOneFile")
 importFrom("R.filesets", "getPathname")
 importFrom("R.filesets", "getPathnames")
 importFrom("R.filesets", "indexOf")
+importFrom("R.filesets", "linkTo")
 importFrom("R.filesets", "readChecksum")
 importFrom("R.filesets", "readLines") ## Multi-sources: R.filesets, base
 importFrom("R.filesets", "setAttributesByTags")
@@ -102,6 +104,7 @@ S3method("getIndexPrefix", "AbstractIndexFile")
 # AbstractIndexSet
 S3method("as.character", "AbstractIndexSet")
 S3method("byPrefix", "AbstractIndexSet")
+S3method("getFastaReferenceFile", "AbstractIndexSet")
 S3method("getIndexPrefix", "AbstractIndexSet")
 S3method("getOrganism", "AbstractIndexSet")
 S3method("isComplete", "AbstractIndexSet")
@@ -394,6 +397,27 @@ S3method("directoryStructure<-", "GenericDataFileSet")
 S3method("dsApply", "GenericDataFileSet")
 S3method("updateDirectoryStructure", "GenericDataFileSet")
 
+# GtfDataFile
+S3method("byOrganism", "GtfDataFile")
+S3method("findByOrganism", "GtfDataFile")
+S3method("getOrganism", "GtfDataFile")
+
+# HTSeqCountDataSet
+S3method("byName", "HTSeqCountDataSet")
+S3method("byPath", "HTSeqCountDataSet")
+S3method("extractDGEList", "HTSeqCountDataSet")
+S3method("findByName", "HTSeqCountDataSet")
+S3method("getDepth", "HTSeqCountDataSet")
+S3method("getOrganism", "HTSeqCountDataSet")
+S3method("readDGE", "HTSeqCountDataSet")
+
+# HTSeqCounting
+S3method("getOutputDataSet", "HTSeqCounting")
+S3method("getParameters", "HTSeqCounting")
+S3method("getRootPath", "HTSeqCounting")
+S3method("getSampleNames", "HTSeqCounting")
+S3method("process", "HTSeqCounting")
+
 # IlluminaFastqDataFile
 S3method("getBarcodeSequence", "IlluminaFastqDataFile")
 S3method("getDefaultSamReadGroup", "IlluminaFastqDataFile")
@@ -467,8 +491,10 @@ S3method("validate", "SamReadGroup")
 S3method("getRootPath", "SamTransform")
 
 # TopHat2Alignment
+S3method("getAsteriskTags", "TopHat2Alignment")
 S3method("getExpectedOutputPaths", "TopHat2Alignment")
 S3method("getOutputDataSet", "TopHat2Alignment")
+S3method("getParameters", "TopHat2Alignment")
 S3method("getRootPath", "TopHat2Alignment")
 S3method("getSampleNames", "TopHat2Alignment")
 S3method("process", "TopHat2Alignment")
