@@ -1,10 +1,16 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.22 [2014-02-03]
+o BUG FIX: byPath() for PairedEndFastqDataSet explicitly passed
+  arguments '...' to NextMethod(), which would cause them to be
+  duplicated in certain cases.
+
+
 Version: 0.4.21 [2014-01-25]
 o Now GtfDataFile by default assumes that the GTF file has no
   column headers.
-o Now byOrganism() for FastaReferenceFile and GtfDataFile pass '...' 
+o Now byOrganism() for FastaReferenceFile and GtfDataFile pass '...'
   to the constructor as well.
 o DOCUMENTATION: Added help for byOrganism() for FastaReferenceFile
   and GtfDataFile.
