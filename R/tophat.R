@@ -43,7 +43,7 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1, reads2=NULL, gtf=NULL, outPath="tophat/", optionsVec=NULL, ..., command="tophat", verbose=FALSE) {
+setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, reads2=NULL, gtf=NULL, outPath="tophat/", optionsVec=NULL, ..., command="tophat", verbose=FALSE) {
   # Make sure to evaluate registered onExit() statements
   on.exit(eval(onExit()));
 
@@ -74,10 +74,10 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1, reads2=N
   bowtieRefIndexPath <- Arguments$getReadablePath(bowtieRefIndexPath, absolute=TRUE);
 
   # Argument 'reads1'
-  stopifnot(length(reads1) > 0L);
-  reads1 <- Arguments$getReadablePathnames(reads1, absolute=TRUE);
-  assertNoDuplicated(reads1);
-
+  if (length(reads1) > 0L) {
+    reads1 <- Arguments$getReadablePathnames(reads1, absolute=TRUE);
+    assertNoDuplicated(reads1);
+  } 
 
   # Argument 'reads2'
   isPaired <- (length(reads2) > 0L);
@@ -102,6 +102,10 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1, reads2=N
      on.exit(popState(verbose), add=TRUE);
   }
 
+  # Nothing to do if no reads and no transcript model
+  if (is.null(reads1) && is.null(gtf)) {
+    throw("reads1 and gtf cannot both be NULL")
+  }
 
   verbose && enter(verbose, "Running tophat()");
   verbose && cat(verbose, "R1 FASTQ files:");
@@ -197,7 +201,9 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1, reads2=N
     assertNoCommas(link);
     createLink(link=link, target=pathname);
   })
-  onExit({ file.remove(reads1) })
+  if (length(reads1) > 0) {
+    onExit({ file.remove(reads1) })
+  }
 
   # (3b) Link to the (optional) FASTQ 'R2'
   #      (such that tophat sees no commas)
@@ -286,6 +292,8 @@ setMethodS3("tophat2", "default", function(..., command="tophat2") {
 
 ############################################################################
 # HISTORY:
+# 2014-01-24 [TT]
+# o reads1 default is now NULL (HB); check reads1 and gtf are not both NULL.
 # 2014-01-18 [HB]
 # o ROBUSTNESS: Now tophat() gives an informative error message if
 #   a *gzipped* GTF file is passed, which is not supported.
@@ -318,3 +326,5 @@ setMethodS3("tophat2", "default", function(..., command="tophat2") {
 # 2013-02-08
 # o TT:  Created
 ############################################################################
+
+
