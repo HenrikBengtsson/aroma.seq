@@ -270,6 +270,8 @@ setMethodS3("doQDNAseq", "FastqDataSet", function(dataSet, binWidth, reference, 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "QDNAseq/BWA alignment");
 
+  # Daud Sie (VUMC) confirm that they are using 'bwa aln -n 2 -q 40'
+  # [private email from HB on 2013-11-19]
   bs <- doBWA(dataSet, reference=reference, n=2, q=40, verbose=verbose);
   verbose && print(verbose, bs);
 
