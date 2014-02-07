@@ -49,6 +49,7 @@ Bowtie2IndexSet(...)
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
+ \tab \code{buildTopHat2TranscriptomeIndexSet} \tab  -\cr
  \tab \code{getSequenceNames} \tab  -\cr
  \tab \code{getSummary} \tab  -\cr
  \tab \code{isComplete} \tab  -\cr

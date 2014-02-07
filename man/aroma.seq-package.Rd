@@ -45,7 +45,7 @@
  Bengtsson H, Olshen A and Tokuyasu T (2014).
 \emph{aroma.seq: High-throughput sequence (HT-Seq) analysis in the Aroma
 framework}.
-R package version 0.4.21.
+R package version 0.4.22.
 }
 
 \section{License}{
