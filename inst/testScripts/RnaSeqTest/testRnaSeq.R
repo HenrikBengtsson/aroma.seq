@@ -1,86 +1,61 @@
 # source("testRnaSeq.R")
-# Test aroma.seq RNA-seq (through htseq-count)
+# 201402 - Figure out how to call TopHat2Alignment properly now
 
-library("aroma.seq")
+# Cf. system.file("testScripts/RnaSeqProto/rnaSeqScript.R", package="aroma.seq")
+# which also needs to be modified to reflect the latest arg types.
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Check pre-requisites
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-stopifnot(isCapableOf(aroma.seq, "bowtie2"))
-stopifnot(isCapableOf(aroma.seq, "tophat2"))
+library(aroma.seq)
 
+# Get sample gtf file
+annotsPath <- system.file("exData/annotationData", package="aroma.seq")
+Organism <- "SaccharomycesCerevisiae"
+gtfFile <- findFiles(file.path(annotsPath, "organisms", Organism), pattern="[.]gtf[.gz]*$")
 
-dataSet <- "YeastTest"
-organism <- "SC"
+# Get some sample reads
+dataPath <- system.file("exData/fastqData", package="aroma.seq")
+DataSet <- "YeastTest"
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Create local unzipped copies of data directories
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# The directory where all example data files are
-path0 <- system.file(file.path("exData"), package="aroma.seq", mustWork=TRUE)
+# Set up local aroma dirs
+annotsPathLocal <- Arguments$getWritablePath(file.path("annotationData", "organisms", Organism))
+dataPathLocal <- Arguments$getWritablePath(file.path("fastqData", DataSet, Organism))
 
-# Annotation data
-path <- file.path("annotationData", "organisms", organism)
-if (!isDirectory(path)) copyDirectory(from=file.path(path0, path), to=path)
-sapply(GenericDataFileSet$byPath(path, pattern="[.]gz$"), FUN=gunzip)
-
-
-# FASTQ data
-path <- file.path("fastqData", dataSet, organism)
-if (!isDirectory(path)) copyDirectory(from=file.path(path0, path), to=path)
-sapply(GenericDataFileSet$byPath(path, pattern="[.]gz$"), FUN=gunzip)
-
-
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Setup data
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Annotation data
-path <- file.path("annotationData", "organisms", organism)
-fas <- FastaReferenceSet$byPath(path)
-fa <- getFile(fas, 1)  # Presuming there is only one reference fasta file
-print(fa)
-
-# FASTQ data
-path <- file.path("fastqData", dataSet, organism)
-fqs <- FastqDataSet$byPath(path, paired=TRUE)
-print(fqs)
-
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# TopHat2
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-is <- buildBowtie2IndexSet(fa, verbose=TRUE)  # is = 'index set'
-print(is)
-
-# Align input reads using TopHat
-ta <- TopHat2Alignment(dataSet=fqs, indexSet=is)
-process(ta, verbose=TRUE)
-
-res <- getOutputDataSet(ta)
-
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Count reads
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-# [ TODO:  Sort TopHat bam files here ]
-
-# Gene model
-gtfFile <- findFiles(path=pathLocalAnnots, pattern="gtf$")[1]
-
-# Convert TopHat accept_hits.bam to sam
-obams <- getPathnames(getOutputDataSet(ta))
-osams <- sub(".bam$", ".sam", obams)
-for (i in seq_along(obams)) {
-  samtoolsView(obams[i], osams[i])
+# Copy gtf file locally
+gtfFileLocal <- file.path(annotsPathLocal, basename(gtfFile))
+copyFile(gtfFile, gtfFileLocal)
+if (regexpr("[.]gz$", gtfFileLocal, ignore.case=TRUE) != -1L) {
+  gtfFileLocal <- gunzip(gtfFileLocal)
 }
+transcripts <- GtfDataFile(gtfFileLocal)
+transcripts <- Arguments$getInstanceOf(transcripts, "GtfDataFile");
 
-for (i in seq_along(osams)) {
-  samFile <- osams[i]
-  htseqCount(samFile=samFile, gfFile=gtfFile, outFile=sub(".sam$", ".count", samFile))
-}
+# Copy fastq files locally
+fastqFiles <- findFiles(dataPath, pattern="[.]fastq[.gz]*$", recursive=TRUE, firstOnly=FALSE)
+sapply(fastqFiles, function(f) {copyFile(f, file.path(dataPathLocal, basename(f)))})
+fastqFilesLocal <- findFiles(dataPathLocal, pattern="[.]fastq[.gz]*$", recursive=TRUE, firstOnly=FALSE)
+# - not used
 
 
-cat("done\n")
+######################################
+# Confirm how to call TopHat2Alignment now
+######################################
+
+fqDs <- FastqDataSet$byPath(path=dataPathLocal, pattern="[.]fastq[.gz]*$", paired=TRUE)
+fqDs <- setFullNamesTranslator(fqDs, function(names, ...) sub("_", ",", names))                          
+
+# Build ref index
+refFile <- findFiles(path=file.path(annotsPath, "organisms", Organism), pattern="*[.]fa[.gz]*$")
+refFileLocal <- file.path(annotsPathLocal, basename(refFile))
+copyFile(refFile, refFileLocal)
+refFa <- FastaReferenceFile(refFileLocal)
+iSet <- buildBowtie2IndexSet(refFa)
+
+ta <- TopHat2Alignment(dataSet=fqDs, groupBy="name", indexSet=iSet, transcript=transcripts)
+bams <- process(ta)
+# => Error: Unknown arguments: prefix
+
+
+
+
+
+
 
