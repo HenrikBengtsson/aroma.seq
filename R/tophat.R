@@ -230,12 +230,6 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
   # Call the tophat executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   opts <- optionsVec
-  if (length(opts) > 0L) {
-    # Add dashes as appropriate to names of "tophat options"
-    nms <- names(opts)
-    nms <- paste(ifelse(nchar(nms) == 1, "-", "--"), nms, sep="")
-    names(opts) <- nms
-  }
 
   # Set the output directory to be the current directory
   opts <- c(opts, "-o"=".")

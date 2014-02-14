@@ -49,7 +49,7 @@ Bowtie2IndexSet(...)
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{buildTopHat2TranscriptomeIndexSet} \tab  -\cr
+ \tab \code{\link[aroma.seq:buildTopHat2TranscriptomeIndexSet.Bowtie2IndexSet]{buildTopHat2TranscriptomeIndexSet}} \tab Calls the TopHat executable to build a transcriptome index on a gene model in a reference genome.\cr
  \tab \code{getSequenceNames} \tab  -\cr
  \tab \code{getSummary} \tab  -\cr
  \tab \code{isComplete} \tab  -\cr

@@ -3,17 +3,18 @@
 # @RdocMethod buildTopHat2TranscriptomeIndexSet
 # @alias buildTopHat2TranscriptomeIndexSet
 #
-# @title "Calls the TopHat executable to build a transcriptome index on a gene model in a reference genome"
+# @title "Calls TopHat to build a transcriptome index; 'this' is the reference genome index set"
 #
 # \description{
 #  @get "title".
 # }
 #
 # \arguments{
-#   \item{tOutDir}{(optional) Output dir for tophat run itself (log files)}
 #   \item{gtf}{GtfDataFile to be indexed}
-#   \item{tiOutPrefix}{(optional) Output path and prefix for transcriptome index}
-#   \item{...}{(Not used)}
+#   \item{outPath}{(optional) Output directory for index and log file.}
+#   \item{tiPrefix}{(optional) Prefix for transcriptome index.}
+#   \item{...}{Arguments passed to tophat().}
+#   \item{skip}{If @TRUE, the index files are not rebuilt if already available.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
@@ -28,32 +29,29 @@
 #*/###########################################################################
 setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(this,
                                                                              gtf,
-                                                                             tOutDir=NULL,
-                                                                             tiOutPrefix=NULL,
-                                                                             ..., verbose=FALSE) {
-
-
-  organism <- getOrganism(this)
-
+                                                                             outPath=NULL,
+                                                                             tiPrefix=NULL,
+                                                                             ..., skip=TRUE, verbose=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument gtf
   gtfFile <- getPathname(gtf)
   gtfFile <- Arguments$getReadablePathname(gtfFile)
-
-  # Argument tiOutPrefix
-  if (is.null(tiOutPrefix)) {
-    tiOutDir <- file.path("annotationData", "organisms", organism, "tophat2")
-    tiOutPrefix <- file.path(tiOutDir, sub("[.]g[t|f]f$", "", basename(gtfFile)))
-  } else {
-    tiOutDir <- dirname(tiOutPrefix)
+  
+  # Argument outPath
+  if (is.null(outPath)) {
+    outPath <- file.path(getPath(gtf), "tophat2", getFullName(gtf))
   }
-  Arguments$getWritablePath(tiOutDir)
-  stopifnot(!is.null(basename(tiOutPrefix)))
-
-  # Argument tOutDir
-  if (is.null(tOutDir)) {
-    tOutDir <- file.path(tiOutDir, "tophat2Data")
+  Arguments$getWritablePath(outPath)  
+  
+  # Argument tiPrefix
+  if (is.null(tiPrefix)) {
+    tiPrefix <- "."
   }
-  Arguments$getWritablePath(tOutDir)
+  
+  # Argument 'skip':
+  skip <- Arguments$getLogical(skip);
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -68,25 +66,31 @@ setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(thi
     throw("TopHat version >= 2.0.10 required")
   }
 
+  # (Pre-existing) index for the reference genome
   refIdxPrefix <- getIndexPrefix(this)
 
-  # Call TopHat executable
-
-  verbose && enter(verbose, "Building Bowtie2 index set");
-
-  stopifnot(isCapableOf(aroma.seq, "bowtie2"));
-  verbose && enter(verbose, "Calling tophat()");
-  # ( Cmd line call:
-  #  'tophat2 -o tOutDir -G gtf --transcriptome-index=tiOutPrefix refIdx' )
-  res <- tophat(refIdxPrefix, gtf=gtfFile, optionsVec=c("-o"=tOutDir, "--transcriptome-index"=tiOutPrefix))
-  # (0125 TAT - This may not work, because -o is specified in tophat() itself??)
-
-  # Locate existing index files
+  # Check for existing transcriptome index files
   res <- tryCatch({
-    Bowtie2IndexSet$byPrefix(tiOutPrefix);
+    Bowtie2IndexSet$byPrefix(file.path(outPath, tiPrefix, tiPrefix))
   }, error=function(ex) Bowtie2IndexSet());
 
-  verbose && exit(verbose);
+  # Nothing todo?
+  if (skip && isComplete(res)) {
+    verbose && cat(verbose, "Transcriptome indexing already done. Skipping.");
+    return(res)
+  }
 
+  # Call TopHat executable
+  stopifnot(isCapableOf(aroma.seq, "bowtie2"));
+  verbose && enter(verbose, "Building transcriptome index.");
+  res <- tophat(refIdxPrefix, gtf=gtfFile, outPath=outPath, optionsVec=c("--transcriptome-index"=tiPrefix), ...)
+  
+  # Locate index set to return
+  res <- tryCatch({
+    Bowtie2IndexSet$byPrefix(file.path(outPath, tiPrefix, tiPrefix));
+  }, error=function(ex) Bowtie2IndexSet());
+  
+  verbose && exit(verbose);
+  
   res
 }) # buildTopHat2TranscriptomeIndexSet()

@@ -473,7 +473,17 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
   prefix <- bowtie2IndexPrefix(pathnameFA, ...);
   verbose && cat(verbose, "Prefix for index files: ", prefix);
 
-  # Locate existing index files
+  # Copy reference fasta file to bowtie index directory
+  # (- prevents TopHat from rebuilding the reference fasta from the bowtie2 index)
+
+  IndexFasta <- file.path(dirname(prefix), getFilename(this))
+  if (!file.exists(IndexFasta)) {
+    verbose && enter(verbose, "Copying ref fasta to Bowtie2 index location")
+    copyFile(getPathname(this), IndexFasta)
+    verbose && exit(verbose)
+  }
+
+  # Locate existing index set
   res <- tryCatch({
     Bowtie2IndexSet$byPrefix(prefix);
   }, error=function(ex) Bowtie2IndexSet());

@@ -151,6 +151,7 @@ print(is)
 
 # Copy reference fasta file to bowtie index directory
 # (This is for TopHat; otherwise it builds the reference .fa from the bowtie2 index)
+verbose && verbose("Copying reference fasta file to Bowtie2 index location")
 copyFile(getPathname(refFasta), file.path(dirname(getIndexPrefix(is)), getFilename(refFasta)),
          overwrite=bOverwrite)
 
@@ -184,6 +185,13 @@ if (FALSE) {  # Skip for now
 # Align reads
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+# Gene model
+gtfFile <- findFiles(path=pathLocalAnnots, pattern="gtf$")[1]
+# - POSSIBLE MANUAL STEP:  User needs to specify which gene model to use if more than one is available
+
+# (Q: Does Arguments$getInstanceOf(transcripts, "GtfDataFile");
+#  in TopHat2Alignment.R constructor convert gtfFile to a GtfDataFile?)
+
 ta <- TopHat2Alignment(dataSet=fqs, indexSet=is)
 # TODO:  Make this run only if not done already
 system.time({
@@ -202,10 +210,6 @@ taout <- getOutputDataSet(ta)  # For now, this is a GenericDataFileSet
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Count reads
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-# Gene model
-gtfFile <- findFiles(path=pathLocalAnnots, pattern="gtf$")[1]
-# - POSSIBLE MANUAL STEP:  User needs to specify which gene model to use if more than one is available
 
 if (FALSE) {
   # Convert bam to sam

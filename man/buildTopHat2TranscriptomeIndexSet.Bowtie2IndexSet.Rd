@@ -13,17 +13,18 @@
 \alias{buildTopHat2TranscriptomeIndexSet,Bowtie2IndexSet-method}
 \alias{buildTopHat2TranscriptomeIndexSet}
 
-\title{Calls the TopHat executable to build a transcriptome index on a gene model in a reference genome}
+\title{Calls TopHat to build a transcriptome index; 'this' is the reference genome index set}
 
 \description{
- Calls the TopHat executable to build a transcriptome index on a gene model in a reference genome.
+ Calls TopHat to build a transcriptome index; 'this' is the reference genome index set.
 }
 
 \arguments{
-  \item{tOutDir}{(optional) Output dir for tophat run itself (log files)}
   \item{gtf}{GtfDataFile to be indexed}
-  \item{tiOutPrefix}{(optional) Output path and prefix for transcriptome index}
-  \item{...}{(Not used)}
+  \item{outPath}{(optional) Output directory for index and log file.}
+  \item{tiPrefix}{(optional) Prefix for transcriptome index.}
+  \item{...}{Arguments passed to tophat().}
+  \item{skip}{If \code{\link[base:logical]{TRUE}}, the index files are not rebuilt if already available.}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }
 
