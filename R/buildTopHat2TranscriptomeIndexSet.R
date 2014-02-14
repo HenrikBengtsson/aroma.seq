@@ -71,7 +71,8 @@ setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(thi
 
   # Check for existing transcriptome index files
   res <- tryCatch({
-    Bowtie2IndexSet$byPrefix(file.path(outPath, tiPrefix, tiPrefix))
+    # Bowtie2IndexSet$byPrefix(file.path(outPath, tiPrefix, tiPrefix))
+    Bowtie2IndexSet$byPrefix(file.path(outPath, tiPrefix, getFullName(gtf)))
   }, error=function(ex) Bowtie2IndexSet());
 
   # Nothing todo?
