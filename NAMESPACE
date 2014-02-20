@@ -231,6 +231,7 @@ S3method("process", "Bowtie2Alignment")
 S3method("getIndexPrefix", "Bowtie2IndexFile")
 
 # Bowtie2IndexSet
+S3method("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet")
 S3method("getSequenceNames", "Bowtie2IndexSet")
 S3method("getSummary", "Bowtie2IndexSet")
 S3method("isComplete", "Bowtie2IndexSet")

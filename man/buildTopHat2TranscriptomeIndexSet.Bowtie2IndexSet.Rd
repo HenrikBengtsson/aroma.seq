@@ -13,10 +13,10 @@
 \alias{buildTopHat2TranscriptomeIndexSet,Bowtie2IndexSet-method}
 \alias{buildTopHat2TranscriptomeIndexSet}
 
-\title{Calls TopHat to build a transcriptome index; 'this' is the reference genome index set}
+\title{Calls TopHat to build a transcriptome index}
 
 \description{
- Calls TopHat to build a transcriptome index; 'this' is the reference genome index set.
+ Calls TopHat to build a transcriptome index.
 }
 
 \arguments{

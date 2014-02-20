@@ -51,6 +51,13 @@ setMethodS3("as.character", "FastaReferenceFile", function(x, ...) {
 }, protected=TRUE)
 
 
+setMethodS3("getDefaultFullName", "FastaReferenceFile", function(this, ...) {
+  name <- NextMethod("getDefaultFullName");
+  name <- gsub("[.](fasta|fa)$", "", name, ignore.case=TRUE);
+  name;
+}, protected=TRUE)
+
+
 setMethodS3("getOrganism", "FastaReferenceFile", function(this, ...) {
   path <- getPath(this);
   organism <- basename(path);
@@ -139,7 +146,7 @@ setMethodS3("readSeqLengths", "FastaReferenceFile", function(this, ...) {
 #
 # @author
 #*/###########################################################################
-setMethodS3("findByOrganism", "FastaReferenceFile", function(static, organism, tags=NULL, prefix=NULL, pattern="[.](fa|fasta)$", ...) {
+setMethodS3("findByOrganism", "FastaReferenceFile", function(static, organism, tags=NULL, prefix=NULL, pattern="[.](fa|fasta)(|[.]gz)$", ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -521,6 +528,11 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
 
 ############################################################################
 # HISTORY:
+# 2014-02-20
+# o Now findByOrganism() for FastaReferenceFile also locates gzipped files.
+# o Analogously to FastqDataFile, added getDefaultFullName() for
+#   FastaReferenceFile so <fullname>.fasta.gz is properly handled.
+#   Should ideally handled by R.filesets.
 # 2014-01-25
 # o Now GtfDataFile$byOrganism() passes '...' also to the constructor.
 # o DOCUMENTATION: Added help for byOrganism().

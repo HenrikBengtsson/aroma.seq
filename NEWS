@@ -1,6 +1,11 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.23 [2014-02-20]
+o GENERALIZATION: Better handling of gzipped FastaReferenceFile:s,
+  e.g. now byOrganism() also locates gzipped files.
+
+
 Version: 0.4.22 [2014-02-03]
 o BUG FIX: byPath() for PairedEndFastqDataSet explicitly passed
   arguments '...' to NextMethod(), which would cause them to be

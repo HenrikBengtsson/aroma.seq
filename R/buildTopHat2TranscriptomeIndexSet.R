@@ -3,7 +3,7 @@
 # @RdocMethod buildTopHat2TranscriptomeIndexSet
 # @alias buildTopHat2TranscriptomeIndexSet
 #
-# @title "Calls TopHat to build a transcriptome index; 'this' is the reference genome index set"
+# @title "Calls TopHat to build a transcriptome index"
 #
 # \description{
 #  @get "title".
@@ -38,18 +38,18 @@ setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(thi
   # Argument gtf
   gtfFile <- getPathname(gtf)
   gtfFile <- Arguments$getReadablePathname(gtfFile)
-  
+
   # Argument outPath
   if (is.null(outPath)) {
     outPath <- file.path(getPath(gtf), "tophat2", getFullName(gtf))
   }
-  Arguments$getWritablePath(outPath)  
-  
+  Arguments$getWritablePath(outPath)
+
   # Argument tiPrefix
   if (is.null(tiPrefix)) {
     tiPrefix <- "."
   }
-  
+
   # Argument 'skip':
   skip <- Arguments$getLogical(skip);
 
@@ -85,13 +85,13 @@ setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(thi
   stopifnot(isCapableOf(aroma.seq, "bowtie2"));
   verbose && enter(verbose, "Building transcriptome index.");
   res <- tophat(refIdxPrefix, gtf=gtfFile, outPath=outPath, optionsVec=c("--transcriptome-index"=tiPrefix), ...)
-  
+
   # Locate index set to return
   res <- tryCatch({
     Bowtie2IndexSet$byPrefix(file.path(outPath, tiPrefix, tiPrefix));
   }, error=function(ex) Bowtie2IndexSet());
-  
+
   verbose && exit(verbose);
-  
+
   res
 }) # buildTopHat2TranscriptomeIndexSet()
