@@ -492,6 +492,7 @@
 \alias{getDepth.HTSeqCountDataSet}
 \alias{getOrganism.HTSeqCountDataSet}
 \alias{getOutputDataSet.HTSeqCounting}
+\alias{getDefaultFullName.FastaReferenceFile}
 
 \description{
   This page contains aliases for all "non-documented" objects that
