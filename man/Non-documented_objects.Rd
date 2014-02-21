@@ -493,6 +493,7 @@
 \alias{getOrganism.HTSeqCountDataSet}
 \alias{getOutputDataSet.HTSeqCounting}
 \alias{getDefaultFullName.FastaReferenceFile}
+\alias{getOrganism.FastaReferenceSet}
 
 \description{
   This page contains aliases for all "non-documented" objects that

@@ -49,6 +49,8 @@ FastaReferenceSet(files=NULL, ...)
  \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{byPath} \tab  -\cr
+ \tab \code{getOrganism} \tab  -\cr
+ \tab \code{writeFastaReferenceFile} \tab  -\cr
 }
 
 

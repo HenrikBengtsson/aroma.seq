@@ -2,6 +2,9 @@ Package: aroma.seq
 ==================
 
 Version: 0.4.23 [2014-02-20]
+o Added writeFastaReferenceFile() for FastaReferenceSet for merging
+  multiple FASTA files into a new one.
+o Added getOrganism() to FastaReferenceSet.
 o GENERALIZATION: Better handling of gzipped FastaReferenceFile:s,
   e.g. now byOrganism() also locates gzipped files.
 

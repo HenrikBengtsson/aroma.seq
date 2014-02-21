@@ -35,6 +35,11 @@ setMethodS3("byPath", "FastaReferenceSet", function(static, ..., pattern="[.](fa
   NextMethod("byPath", pattern=pattern);
 }, static=TRUE)
 
+setMethodS3("getOrganism", "FastaReferenceSet", function(this, ...) {
+  aFile <- this[[1L]];
+  getOrganism(aFile, ...);
+})
+
 
 ############################################################################
 # HISTORY:

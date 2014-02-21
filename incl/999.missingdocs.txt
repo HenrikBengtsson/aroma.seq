@@ -276,3 +276,4 @@ byName.HTSeqCountDataSet byPath.HTSeqCountDataSet
 findByName.HTSeqCountDataSet getDepth.HTSeqCountDataSet
 getOrganism.HTSeqCountDataSet getOutputDataSet.HTSeqCounting
 getDefaultFullName.FastaReferenceFile
+getOrganism.FastaReferenceSet
