@@ -50,7 +50,7 @@ FastaReferenceSet(files=NULL, ...)
 \tabular{rll}{
  \tab \code{byPath} \tab  -\cr
  \tab \code{getOrganism} \tab  -\cr
- \tab \code{writeFastaReferenceFile} \tab  -\cr
+ \tab \code{\link[aroma.seq:writeFastaReferenceFile.FastaReferenceSet]{writeFastaReferenceFile}} \tab Writes the content of multiple FASTA files into a new FASTA file.\cr
 }
 
 
