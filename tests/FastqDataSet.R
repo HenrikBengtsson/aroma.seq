@@ -1,4 +1,6 @@
 library("aroma.seq")
+setOption(aromaSettings, "devel/parallel", "none")
+
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 
 # Setup (writable) local data directory structure

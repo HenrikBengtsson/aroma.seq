@@ -1,11 +1,10 @@
 library("aroma.seq")
+setOption(aromaSettings, "devel/parallel", "BiocParallel")
+
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 fullTest <- fullTest && isCapableOf(aroma.seq, "bowtie2")
 fullTest <- fullTest && isPackageInstalled("BatchJobs")
 if (fullTest) {
-
-setOption(aromaSettings, "devel/parallel", "BiocParallel")
-
 
 # Setup (writable) local data directory structure
 setupExampleData()

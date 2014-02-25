@@ -129,10 +129,15 @@ setMethodS3("findByOrganism", "GtfDataFile", function(static, organism, tags=NUL
 
 
 setMethodS3("byOrganism", "GtfDataFile", function(static, organism, ...) {
+  # Locate GTF file
   pathname <- findByOrganism(static, organism, ...);
   if (length(pathname) == 0L)
     throw("Failed to located GTF file for organism: ", organism);
-  res <- newInstance(static, pathname, ...);
+
+  # Allocate object
+  res <- newInstance(static, pathname, ..., .onUnknownArgs="ignore");
+
+  # Validate
   organismR <- getOrganism(res);
   if (organismR != organism) {
     throw(sprintf("The located %s (%s) specifies an organism different from the requested one: %s != %s", class(res)[1L], getPathname(res), sQuote(organismR), sQuote(organism)));
@@ -143,9 +148,11 @@ setMethodS3("byOrganism", "GtfDataFile", function(static, organism, ...) {
 
 ############################################################################
 # HISTORY:
+# 2014-02-25
+# o Now static byOrganism() no longer passes '...'.
 # 2014-01-25
 # o DOCUMENTATION: Added help for GtfDataFile$byOrganism().
-# o Now GtfDataFile$byOrganism() passes '...' also to the constructor.
+# o Now static byOrganism() passes '...' also to the constructor.
 # o Now GtfDataFile by default assumes that the GTF file has no
 #   column headers.
 # 2014-01-18

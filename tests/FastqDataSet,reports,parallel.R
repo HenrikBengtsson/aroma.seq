@@ -1,11 +1,10 @@
 library("aroma.seq")
+setOption(aromaSettings, "devel/parallel", "BiocParallel")
 
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 fullTest <- fullTest && require("qrqc")
 
 # Setup (writable) local data directory structure
-setOption(aromaSettings, "devel/parallel", "BiocParallel::BatchJobs")
-
 setupExampleData()
 
 dataSet <- "TopHat-example"

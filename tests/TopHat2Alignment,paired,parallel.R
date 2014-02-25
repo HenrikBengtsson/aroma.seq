@@ -1,4 +1,5 @@
 library("aroma.seq")
+setOption(aromaSettings, "devel/parallel", "BiocParallel")
 
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 fullTest <- fullTest && isCapableOf(aroma.seq, "bowtie2")
@@ -6,8 +7,6 @@ fullTest <- fullTest && isCapableOf(aroma.seq, "samtools")
 fullTest <- fullTest && isCapableOf(aroma.seq, "tophat2")
 fullTest <- fullTest && isPackageInstalled(aroma.seq, "BatchJobs")
 if (fullTest) {
-
-setOption(aromaSettings, "devel/parallel", "BiocParallel::BatchJobs")
 
 dataSet <- "YeastTest"
 organism <- "SaccharomycesCerevisiae"

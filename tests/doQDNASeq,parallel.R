@@ -1,4 +1,6 @@
 library("aroma.seq")
+setOption(aromaSettings, "devel/parallel", "BiocParallel")
+
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 fullTest <- fullTest && isCapableOf(aroma.seq, "bwa")
 fullTest <- fullTest && isCapableOf(aroma.seq, "picard")
@@ -7,8 +9,6 @@ fullTest <- fullTest && isDirectory("annotationData,aroma.seq,private");
 fullTest <- fullTest && isDirectory("fastqData,aroma.seq,private");
 fullTest <- fullTest && isPackageInstalled("BatchJobs")
 if (fullTest) {
-
-setOption(aromaSettings, "devel/parallel", "BiocParallel::BatchJobs")
 
 dataSet <- "AlbertsonD_2012-SCC,AB042"
 organism <- "HomoSapiens"

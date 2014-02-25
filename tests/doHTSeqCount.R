@@ -1,4 +1,6 @@
 library("aroma.seq")
+setOption(aromaSettings, "devel/parallel", "none")
+
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 fullTest <- fullTest && isCapableOf(aroma.seq, "bowtie2")
 fullTest <- fullTest && isCapableOf(aroma.seq, "tophat2")

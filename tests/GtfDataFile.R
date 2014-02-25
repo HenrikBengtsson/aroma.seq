@@ -1,4 +1,5 @@
 library("aroma.seq")
+setOption(aromaSettings, "devel/parallel", "none")
 
 # Setup (writable) local data directory structure
 setupExampleData()

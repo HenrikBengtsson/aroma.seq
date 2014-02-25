@@ -1,6 +1,14 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.24 [2014-02-25]
+o ROBUSTNESS: Now explicitly forcing package tests to run either
+  in sequential or in parallel mode.
+o BUG FIX: FastaReferenceFile$byOrganism(organism, prefix) would throw
+  "Error: Unknown arguments: prefix".  Added explicit package system
+  test for this.
+
+
 Version: 0.4.23 [2014-02-20]
 o Added writeFastaReferenceFile() for FastaReferenceSet for merging
   multiple FASTA files into a new one.

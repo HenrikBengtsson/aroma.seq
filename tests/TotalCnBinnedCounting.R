@@ -29,6 +29,7 @@
 #                                                   human_g1k_v37.fasta.gz
 ############################################################################
 library("aroma.seq")
+setOption(aromaSettings, "devel/parallel", "none")
 
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 fullTest <- fullTest && isCapableOf(aroma.seq, "bwa")
@@ -36,8 +37,6 @@ fullTest <- fullTest && isPackageInstalled("BatchJobs")
 if (fullTest) {
 # Setup (writable) local data directory structure
 setupExampleData()
-
-setOption(aromaSettings, "devel/parallel", "BiocParallel")
 
 dataSet <- "YeastTest"
 organism <- "SaccharomycesCerevisiae"

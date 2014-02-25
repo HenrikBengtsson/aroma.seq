@@ -201,10 +201,15 @@ setMethodS3("findByOrganism", "FastaReferenceFile", function(static, organism, t
 
 
 setMethodS3("byOrganism", "FastaReferenceFile", function(static, organism, ...) {
+  # Locate FASTA file
   pathname <- findByOrganism(static, organism, ...);
-  if (length(pathname) == 0)
+  if (length(pathname) == 0L)
     throw("Failed to located FASTA reference file for organism: ", organism);
-  res <- newInstance(static, pathname, ...);
+
+  # Allocate object
+  res <- newInstance(static, pathname, ..., .onUnknownArgs="ignore");
+
+  # Validate
   organismR <- getOrganism(res);
   if (organismR != organism) {
     throw(sprintf("The located %s (%s) specifies an organism different from the requested one: %s != %s", class(res)[1L], getPathname(res), sQuote(organismR), sQuote(organism)));
@@ -519,13 +524,15 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
 
 ############################################################################
 # HISTORY:
+# 2014-02-25
+# o Now static byOrganism() no longer passes '...'.
 # 2014-02-20
 # o Now findByOrganism() for FastaReferenceFile also locates gzipped files.
 # o Analogously to FastqDataFile, added getDefaultFullName() for
 #   FastaReferenceFile so <fullname>.fasta.gz is properly handled.
 #   Should ideally handled by R.filesets.
 # 2014-01-25
-# o Now GtfDataFile$byOrganism() passes '...' also to the constructor.
+# o Now static byOrganism() passes '...' also to the constructor.
 # o DOCUMENTATION: Added help for byOrganism().
 # 2013-11-19
 # o ROBUSTNESS: Now FastaReferenceFile$byOrganism() asserts that the

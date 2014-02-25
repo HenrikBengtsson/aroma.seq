@@ -1,4 +1,5 @@
 library("aroma.seq")
+setOption(aromaSettings, "devel/parallel", "none")
 
 fullTest <- isPackageInstalled("qrqc")
 if (fullTest) {
