@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.25 [2014-02-25]
+o Now getSampleName() passes '...' to getFullName().
+
+
 Version: 0.4.24 [2014-02-25]
 o ROBUSTNESS: Now explicitly forcing package tests to run either
   in sequential or in parallel mode.

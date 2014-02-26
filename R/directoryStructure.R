@@ -154,7 +154,7 @@ setMethodS3("getDataSetName", "GenericDataFile", function(this, ...) {
 })
 
 setMethodS3("getSampleName", "GenericDataFile", function(this, ...) {
-  directoryItem(this, name="sample", default=getFullName(this));
+  directoryItem(this, name="sample", default=getFullName(this, ...));
 })
 
 
