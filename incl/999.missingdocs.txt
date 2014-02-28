@@ -233,7 +233,7 @@ getOrganismName getOrganismName.GenericDataFile
 getSampleName.GenericDataFile process.TotalCnBinnedCounting
 updateDirectoryStructure
 updateDirectoryStructure.GenericDataFileSet
-findRspReportTemplate.FastqDataFile
+findRspReportTemplate.FastqDataFile findRspReportTemplate.FastqDataSet
 as.character.AromaSeqTransform getAcronym
 getAcronym.AbstractAlignment getAcronym.AromaSeqTransform
 getAsteriskTags.AromaSeqTransform getFlavor.AromaSeqTransform

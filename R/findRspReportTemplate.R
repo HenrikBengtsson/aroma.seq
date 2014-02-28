@@ -74,7 +74,11 @@ setMethodS3("findRspReportTemplate", "Object", function(this, tags=NULL, type="(
 }) # findRspReportTemplate()
 
 
-setMethodS3("findRspReportTemplate", "FastqDataFile", function(this,  ..., flavor="qrqc", paths=c("reports,rsp", "aroma.seq::reports,rsp")) {
+setMethodS3("findRspReportTemplate", "FastqDataFile", function(this, ..., flavor="qrqc", paths=c("reports,rsp", "aroma.seq::reports,rsp")) {
+  NextMethod("findRspReportTemplate", paths=paths);
+}, protected=TRUE)
+
+setMethodS3("findRspReportTemplate", "FastqDataSet", function(this, ..., flavor="qrqc", paths=c("reports,rsp", "aroma.seq::reports,rsp")) {
   NextMethod("findRspReportTemplate", paths=paths);
 }, protected=TRUE)
 
@@ -82,6 +86,8 @@ setMethodS3("findRspReportTemplate", "FastqDataFile", function(this,  ..., flavo
 
 ############################################################################
 # HISTORY:
+# 2014-02-27
+# o Added findRspReportTemplate() for FastqDataSet.
 # 2013-11-12
 # o Now findRspReportTemplate() expands 'paths' with format "pkg::path/to"
 #   to system.file("path/to", package="pkg").
