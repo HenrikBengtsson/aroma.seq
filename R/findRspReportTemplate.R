@@ -1,4 +1,4 @@
-setMethodS3("findRspReportTemplate", "Object", function(this, tags=NULL, type="(html|md|tex)", ..., paths="reports,rsp/", firstOnly=TRUE, verbose=FALSE) {
+setMethodS3("findRspReportTemplate", "Object", function(this, tags=NULL, flavor=NULL, type="(html|md|tex)", ..., paths="reports,rsp/", firstOnly=TRUE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -7,6 +7,8 @@ setMethodS3("findRspReportTemplate", "Object", function(this, tags=NULL, type="(
 
   # Argument 'firstOnly':
   firstOnly <- Arguments$getLogical(firstOnly);
+
+  # Argument 'flavor':
 
   # Argument 'type':
   type <- Arguments$getRegularExpression(type);
@@ -36,33 +38,58 @@ setMethodS3("findRspReportTemplate", "Object", function(this, tags=NULL, type="(
     return(NULL);
   }
 
-  # Filename pattern to search for
-  className <- class(this)[1L];
-  fullname <- paste(c(className, tags), collapse=",");
-  pattern <- sprintf("^%s.*[.]%s[.]rsp$", fullname, type);
-  verbose && cat(verbose, "Filename pattern: ", pattern);
+  if (is.null(flavor)) {
+    flavorPattern <- "";
+  } else {
+    flavorPattern <- paste(c("", flavor), collapse=",");
+  }
+
+  # Filename patterns to search for
+  patterns <- sapply(class(this), FUN=function(className) {
+    fullname <- paste(c(className, tags), collapse=",");
+    sprintf("^%s.*%s[.]%s[.]rsp$", fullname, flavorPattern, type);
+  })
+  verbose && cat(verbose, "Filename patterns:");
+  verbose && print(verbose, patterns);
 
   pathnames <- c();
   for (pp in seq_along(paths)) {
     path <- paths[pp];
     verbose && enter(verbose, sprintf("Path #%d ('%s') of %d", pp, path, length(paths)));
 
-    pathnamesT <- list.files(path=path, pattern=pattern, all.files=TRUE, full.names=TRUE);
-    if (length(pathnamesT) == 0L) {
+    pathnamesP <- c();
+    for (qq in seq_along(patterns)) {
+      pattern <- patterns[qq];
+      verbose && enter(verbose, sprintf("Pattern #%d ('%s') of %d", qq, pattern, length(patterns)));
+      pathnamesQ <- list.files(path=path, pattern=pattern, all.files=TRUE, full.names=TRUE);
+      # Nothing found?
+      if (length(pathnamesQ) == 0L) {
+        verbose && exit(verbose);
+        next;
+      }
+      pathnamesP <- c(pathnamesP, pathnamesQ);
       verbose && exit(verbose);
-      next;
+      if (firstOnly) break;
+    } # for (qq ...)
+
+    # Nothing found?
+    if (length(pathnamesP) == 0L) {
+      verbose && exit(verbose);
     }
 
+    # Found something!
+
+    # Nothing more to be done?
     if (firstOnly) {
-      pathname <- pathnamesT[1L];
+      pathname <- pathnamesP[1L];
       verbose && exit(verbose);
       verbose && exit(verbose);
       return(pathname);
     }
 
-    pathnames <- c(pathnames, pathnamesT);
+    pathnames <- c(pathnames, pathnamesP);
     verbose && exit(verbose);
-  } # for (path ...)
+  } # for (pp ...)
 
 
   verbose && cat(verbose, "Number of templates found: ", length(pathnames));
@@ -78,8 +105,9 @@ setMethodS3("findRspReportTemplate", "FastqDataFile", function(this, ..., flavor
   NextMethod("findRspReportTemplate", paths=paths);
 }, protected=TRUE)
 
-setMethodS3("findRspReportTemplate", "FastqDataSet", function(this, ..., flavor="qrqc", paths=c("reports,rsp", "aroma.seq::reports,rsp")) {
-  NextMethod("findRspReportTemplate", paths=paths);
+setMethodS3("findRspReportTemplate", "FastqDataSet", function(this, ...) {
+  aFile <- getOneFile(this);
+  findRspReportTemplate(aFile, ...);
 }, protected=TRUE)
 
 
@@ -87,6 +115,9 @@ setMethodS3("findRspReportTemplate", "FastqDataSet", function(this, ..., flavor=
 ############################################################################
 # HISTORY:
 # 2014-02-27
+# o GENERALIZATION: Now findRspReportTemplate() scans for templates
+#   also for super classes of the object.  This means that the template
+#   for FastqDataFile also works for IlluminaFastqDataFile:s.
 # o Added findRspReportTemplate() for FastqDataSet.
 # 2013-11-12
 # o Now findRspReportTemplate() expands 'paths' with format "pkg::path/to"

@@ -420,6 +420,7 @@
 \alias{updateDirectoryStructure}
 \alias{updateDirectoryStructure.GenericDataFileSet}
 \alias{findRspReportTemplate.FastqDataFile}
+\alias{findRspReportTemplate.FastqDataSet}
 \alias{as.character.AromaSeqTransform}
 \alias{getAcronym}
 \alias{getAcronym.AbstractAlignment}

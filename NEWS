@@ -1,6 +1,12 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.26 [2014-02-27]
+o GENERALIZATION: Now findRspReportTemplate() scans for templates
+  also for super classes of the object.  This means that the template
+  for FastqDataFile also works for IlluminaFastqDataFile:s.
+
+
 Version: 0.4.25 [2014-02-25]
 o Now getSampleName() passes '...' to getFullName().
 

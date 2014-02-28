@@ -21,9 +21,10 @@ setMethodS3("report", "FastqDataFile", function(this, dataSet, ..., flavor="qrqc
   }
 
   verbose && enter(verbose, "Generating report");
-  verbose && cat(verbose, "Flavor: ", flavor);
-  verbose && cat(verbose, "Data set: ", dataSet);
   verbose && print(verbose, this);
+  verbose && cat(verbose, "Data set: ", dataSet);
+  verbose && cat(verbose, "Flavor: ", flavor);
+  verbose && cat(verbose, "Output type: ", type);
 
   # Locate report template
   pathname <- findRspReportTemplate(this, tags=flavor, type=type);
@@ -56,7 +57,7 @@ setMethodS3("report", "FastqDataFile", function(this, dataSet, ..., flavor="qrqc
 }) # report()
 
 
-setMethodS3("report", "FastqDataSet", function(this, dataSet=getFullName(this), ..., flavor="qrqc", outPath=file.path("reports", fullname(dataSet, tags=flavor)), verbose=FALSE) {
+setMethodS3("report", "FastqDataSet", function(this, dataSet=getFullName(this), ..., flavor="qrqc", type="md", outPath=file.path("reports", fullname(dataSet, tags=flavor)), verbose=FALSE) {
   require("R.rsp") || throw("Package not loaded: R.rsp");
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -79,6 +80,17 @@ setMethodS3("report", "FastqDataSet", function(this, dataSet=getFullName(this), 
   }
 
   verbose && enter(verbose, "Generating reports");
+  verbose && print(verbose, this);
+  verbose && cat(verbose, "Flavor: ", flavor);
+  verbose && cat(verbose, "Output type: ", type);
+
+  # Locate report template
+  pathname <- findRspReportTemplate(this, tags=flavor, type=type);
+  if (length(pathname) == 0L) {
+    throw("Failed to locate report template for this flavor and type: ", paste(c(sQuote(flavor), sQuote(type)), collapse=" & "));
+  }
+  verbose && cat(verbose, "Report template (source): ", pathname);
+  verbose && cat(verbose, "Output path: ", outPath);
 
   resList <- dsApply(this, FUN=function(df, dataSet, flavor, outPath, ..., verbose=FALSE) {
     R.utils::use("R.utils, aroma.seq");
