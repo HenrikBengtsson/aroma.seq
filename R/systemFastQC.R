@@ -52,7 +52,7 @@ setMethodS3("systemFastQC", "default", function(..., verbose=FALSE) {
   # for results.
   resfile <- tempfile();
   on.exit(file.remove(resfile), add=TRUE);
-  args <- c(dQuote(fastq), ...);
+  args <- c(sprintf('"%s"', fastq), ...);
   verbose && cat(verbose, "Perl call: ", paste(args, collapse=" "));
   res <- system2(perl, args=args, stdout=resfile, stderr=resfile);
   verbose && cat(verbose, "Result code: ", res);

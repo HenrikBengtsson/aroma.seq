@@ -49,7 +49,7 @@ setMethodS3("fastQC", "default", function(..., pathnames=character(0L), outPath=
   }
   if (!is.null(outPath)) {
       str(outPath);
-    args <- c(args, sprintf("--outdir %s", dQuote(outPath)));
+    args <- c(args, sprintf('--outdir "%s"', outPath));
   }
   verbose && cat(verbose, "Arguments:");
   verbose && str(verbose, args);

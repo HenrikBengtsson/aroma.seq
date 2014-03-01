@@ -88,7 +88,7 @@ findFastQC <- function(mustExist=TRUE, ..., verbose=FALSE) {
   # for results.
   resfile <- tempfile();
   on.exit(file.remove(resfile), add=TRUE);
-  cmd <- sprintf("%s --version", dQuote(pathname));
+  cmd <- sprintf('"%s" --version', pathname);
   res <- system2(perl, args=cmd, stdout=resfile);
   verbose && cat(verbose, "Result code: ", res);
   if (res != 0L) {
