@@ -53,7 +53,7 @@ AromaSeq(...)
 
 
  \bold{Methods inherited from AromaPackage}:\cr
-fixSearchPath, fixSearchPathInternal, patch
+fixSearchPath, fixSearchPathInternal
 
  \bold{Methods inherited from Package}:\cr
 as.character, getAuthor, getBundle, getBundlePackages, getChangeLog, getClasses, getContents, getDataPath, getDate, getDescription, getDescriptionFile, getDocPath, getEnvironment, getExamplePath, getHistory, getHowToCite, getLicense, getMaintainer, getName, getNews, getPath, getPosition, getTitle, getUrl, getVersion, isLoaded, isOlderThan, ll, load, showChangeLog, showContents, showDescriptionFile, showHistory, showHowToCite, showNews, startupMessage, unload

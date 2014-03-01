@@ -75,6 +75,7 @@ setMethodS3("capabilitiesOf", "AromaSeq", function(static, what=NULL, force=FALS
     res$bwa <- !is.null(findBWA(mustExist=FALSE));
     res$gatk <- !is.null(findGATK(mustExist=FALSE));
     res$picard <- !is.null(findPicard(mustExist=FALSE));
+    res$fastqc <- !is.null(findFastQC(mustExist=FALSE));
     res$samtools <- !is.null(findSamtools(mustExist=FALSE));
     res$tophat1 <- !is.null(findTopHat1(mustExist=FALSE));
     res$tophat2 <- !is.null(findTopHat2(mustExist=FALSE));
@@ -191,6 +192,8 @@ setMethodS3("skeleton", "AromaSeq", function(static, dataSet="MyDatSet", organis
 
 ############################################################################
 # HISTORY:
+# 2014-02-28
+# o Added 'fastqc' to capabilities.
 # 2013-11-08
 # o Added skeleton() for AromaSeq, e.g.
 #   skeleon(aroma.seq, "MyDataSet", "HomoSapiens").

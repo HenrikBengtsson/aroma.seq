@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.27 [2014-02-28]
+o Added low-level support for calling FastQC.
+
+
 Version: 0.4.26 [2014-02-27]
 o GENERALIZATION: Now findRspReportTemplate() scans for templates
   also for super classes of the object.  This means that the template
