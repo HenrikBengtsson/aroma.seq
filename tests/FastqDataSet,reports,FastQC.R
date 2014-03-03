@@ -18,7 +18,7 @@ print(fqs)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # FastQC
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-rep <- FastQCReporter(fqs)
+rep <- FastQCReporter(fqs, groupBy="name")
 print(rep)
 
 if (fullTest && isCapableOf(aroma.seq, "fastqc")) {
