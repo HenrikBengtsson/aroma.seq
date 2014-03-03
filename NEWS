@@ -1,7 +1,9 @@
 Package: aroma.seq
 ==================
 
-Version: 0.4.27 [2014-02-28]
+Version: 0.4.27 [2014-03-02]
+o Added FastQCReporter.
+o Added FastQCDataFile and FastQCDataFileSet.
 o Added low-level support for calling FastQC.
 
 

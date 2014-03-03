@@ -28,5 +28,12 @@
 
 \author{Henrik Bengtsson}
 
+\references{
+ [1] Simon Andrews,
+     FastQC - A quality control tool for high throughput sequence data,
+     March 2014.
+     \url{http://www.bioinformatics.babraham.ac.uk/projects/fastqc/}
+}
+
 
 \keyword{internal}

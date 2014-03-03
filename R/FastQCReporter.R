@@ -1,23 +1,25 @@
 ###########################################################################/**
-# @RdocClass BamMerger
+# @RdocClass FastQCReporter
 #
-# @title "The BamMerger class"
+# @title "The FastQCReporter class"
 #
 # \description{
 #  @classhierarchy
 #
-#  A BamMerger takes a @see "BamDataSet" as input and merges subsets of
-#  @see "BamDataFile":s into single ones.  How the grouping is done, can
-#  be controlled by a parameter.
+#  A FastQCReporter takes a @see "FastqDataSet" as input, possibly groups
+#  the samples, and generates FastQC [1] reports.
+#  How the grouping is done, can be controlled by a parameter.
 # }
 #
 # @synopsis
 #
 # \arguments{
-#  \item{dataSet}{An @see "BamDataSet".}
+#  \item{dataSet}{An @see "FastqDataSet".}
 #  \item{groupBy}{A @character string or an explicit named @list,
 #   specifying which input files should be processed together.}
-#  \item{...}{Not used.}
+#  \item{...}{Additional arguments passed to @see "AromaSeqTransform".}
+#  \item{.className}{A @character string specifying what class of
+#   data sets to accept.}
 # }
 #
 # \section{Fields and Methods}{
@@ -30,12 +32,19 @@
 #
 # @author HB
 #
+# \references{
+#  [1] Simon Andrews,
+#      FastQC - A quality control tool for high throughput sequence data,
+#      March 2014.
+#      \url{http://www.bioinformatics.babraham.ac.uk/projects/fastqc/}
+# }
+#
 # \seealso{
 #   Internally @see "Rsamtools::mergeBam" is used for merging, sorting,
 #   and indexing.
 # }
 #*/###########################################################################
-setConstructorS3("BamMerger", function(dataSet=NULL, groupBy=NULL, ...) {
+setConstructorS3("FastQCReporter", function(dataSet=NULL, groupBy=NULL, ..., .className="FastqDataSet") {
   if (!is.null(dataSet)) {
     # Argument 'groupBy':
     if (is.character(groupBy)) {
@@ -47,7 +56,7 @@ setConstructorS3("BamMerger", function(dataSet=NULL, groupBy=NULL, ...) {
     }
   }
 
-  this <- extend(SamTransform(dataSet, groupBy=groupBy, ...), c("BamMerger", uses("FileGroupsInterface")));
+  this <- extend(AromaSeqTransform(dataSet, groupBy=groupBy, ..., .className=.className), c("FastQCReporter", uses("FileGroupsInterface")));
 
   # Argument 'groupBy':
   if (is.list(groupBy)) {
@@ -57,8 +66,11 @@ setConstructorS3("BamMerger", function(dataSet=NULL, groupBy=NULL, ...) {
   this;
 })
 
+setMethodS3("getRootPath", "FastQCReporter", function(this, ...) {
+  "reports";
+}, protected=TRUE)
 
-setMethodS3("getAsteriskTags", "BamMerger", function(this, ...) {
+setMethodS3("getAsteriskTags", "FastQCReporter", function(this, ...) {
   # The 'groupBy' tag
   params <- getParameters(this);
   groupBy <- params$groupBy;
@@ -69,28 +81,32 @@ setMethodS3("getAsteriskTags", "BamMerger", function(this, ...) {
     groupBy <- getChecksum(groupBy, algo="crc32");
   }
 
-  c("merged", groupBy);
+  c("FastQC", groupBy);
 }, protected=TRUE)
 
-setMethodS3("getOutputDataSet", "BamMerger", function(this, onMissing=c("drop", "NA", "error"), ...) {
+
+setMethodS3("getOutputDataSet", "FastQCReporter", function(this, onMissing=c("drop", "NA", "error"), ...) {
   # Argument 'onMissing':
   onMissing <- match.arg(onMissing);
 
 
   ## Find all existing output data files
   path <- getPath(this);
-  bams <- BamDataSet$byPath(path, ...);
+  fqcs <- FastQCDataFileSet$byPath(path, ...);
 
   ## Order according to grouped input data set
   names <- getGroupNames(this);
-  bams <- extract(bams, names, onMissing=onMissing);
+  fqcs <- extract(fqcs, names, onMissing=onMissing);
 
-  bams;
-}) # getOutputDataSet() for BamMerger
+  fqcs;
+}) # getOutputDataSet() for FastQCReporter
 
 
 
-setMethodS3("process", "BamMerger", function(this, ..., skip=TRUE, force=FALSE, verbose=FALSE) {
+setMethodS3("process", "FastQCReporter", function(this, ..., skip=TRUE, force=FALSE, verbose=FALSE) {
+  # Requirements
+  stopifnot(isCapableOf(aroma.seq, "fastqc"));
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -105,7 +121,7 @@ setMethodS3("process", "BamMerger", function(this, ..., skip=TRUE, force=FALSE, 
   }
 
 
-  verbose && enter(verbose, "Merging BAM files");
+  verbose && enter(verbose, "Generating FastQC reports");
   ds <- getInputDataSet(this);
   verbose && cat(verbose, "Input data set:");
   verbose && print(verbose, ds);
@@ -135,10 +151,13 @@ setMethodS3("process", "BamMerger", function(this, ..., skip=TRUE, force=FALSE, 
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Apply merger to each group of BAM files
+  # Apply FastQC reporting to each group of FASTQ files
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   dsApply(ds, IDXS=groups[todo], FUN=function(dfList, ..., force=FALSE, verbose=FALSE) {
-    R.utils::use("R.utils, aroma.seq, Rsamtools");
+    R.utils::use("R.utils, aroma.seq");
+
+    # Requirements
+    stopifnot(isCapableOf(aroma.seq, "fastqc"));
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Validate arguments
@@ -156,23 +175,24 @@ setMethodS3("process", "BamMerger", function(this, ..., skip=TRUE, force=FALSE, 
       on.exit(popState(verbose));
     }
 
-    verbose && enter(verbose, "Merging BAM files");
-    verbose && cat(verbose, "Number of BAM files to be merged: ", length(dfList));
+    verbose && enter(verbose, "Generating FastQC report");
+    verbose && cat(verbose, "Number of FASTQ files to be analyzed: ", length(dfList));
 
     pathnames <- unlist(sapply(dfList, FUN=getPathname), use.names=FALSE);
 
     name <- names(dfList)[1L];
-    filenameD <- sprintf("%s.bam", name);
+    pathD <- file.path(path, sprintf("%s_fastqc", name));
+    filenameD <- "fastqc_data.txt";
     filenameD <- Arguments$getFilename(filenameD);
-    pathnameBAM <- file.path(path, filenameD);
-    pathnameBAI <- sprintf("%s.bai", pathnameBAM);
-    verbose && cat(verbose, "Output BAM file: ", pathnameBAM);
-    verbose && cat(verbose, "Output BAM index file: ", pathnameBAI);
+    pathnameD <- file.path(pathD, filenameD);
+    verbose && cat(verbose, "Output file: ", pathnameD);
 
     # Already done?
-    if (!force && isFile(pathnameBAM)) {
+    if (!force && isFile(pathnameD)) {
       verbose && cat(verbose, "Already processed. Skipping.");
       verbose && exit(verbose);
+      res <- list(pathnameD=pathnameD);
+      return(invisible(res));
     }
 
 
@@ -180,55 +200,56 @@ setMethodS3("process", "BamMerger", function(this, ..., skip=TRUE, force=FALSE, 
     # BEGIN: ATOMIC PROCESSING
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     verbose && enter(verbose, "Atomic processing");
-    pathnameBAMT <- sprintf("%s.tmp", pathnameBAM);
-    verbose && cat(verbose, "Temporary output BAM file: ", pathnameBAMT);
-    pathnameBAIT <- sprintf("%s.bai", pathnameBAMT);
+    pathDT <- sprintf("%s.tmp", pathD);
+    verbose && cat(verbose, "Temporary output path: ", pathDT);
+    opts <- "--casava";
+    verbose && cat(verbose, "FastQC options: ", paste(opts, collapse=", "));
+    res <- fastQC(pathnames, outPath=pathDT, opts);
+    verbose && cat(verbose, "Output log:");
+    verbose && print(verbose, res);
 
-    # Special case; nothing to merge, just copy
-    if (length(pathnames) == 1L) {
-      verbose && enter(verbose, "Copying single BAM file (nothing to merge)");
-      pathname <- pathnames[1L];
-      copyFile(pathname, pathnameBAMT, overwrite=force);
+    # Identify output subdirectory
+    dirT <- list.files(path=pathDT, pattern="_fastqc$", full.names=FALSE);
+    pathT <- file.path(pathDT, dirT);
+    stopifnot(isDirectory(pathT));
 
-      # Copy existing index file or create index from scratch?
-      bam <- BamDataFile(pathname);
-      bai <- getIndexFile(bam);
-      if (!is.null(bai)) {
-        verbose && enter(verbose, "Copying existing BAM index file");
-        copyFile(getPathname(bai), pathnameBAIT, overwrite=force);
-        verbose && exit(verbose);
-      } else {
-        verbose && enter(verbose, "Indexing BAM file");
-        pathnameBAIT <- indexBam(pathnameBAMT);
-        verbose && cat(verbose, "Generated index file: ", pathnameBAIT);
-        file.rename(pathnameBAIT, pathnameBAI);
-        verbose && exit(verbose);
-      }
+    # Sanity check
+    stopifnot(isDirectory(pathDT));
+    pathnameDT <- file.path(pathT, filenameD);
+    stopifnot(isFile(pathnameDT));
 
-      verbose && exit(verbose);
-    } else {
-      pathnameBAMT2 <- mergeBam(pathnames, destination=pathnameBAMT, indexDestination=TRUE, overwrite=force);
-      verbose && cat(verbose, "Generated BAM file: ", pathnameBAMT);
-      stopifnot(pathnameBAMT2 == pathnameBAMT);
-      file.rename(pathnameBAIT, pathnameBAI);
+    # CLEANUP: Remove zip file
+    filenameDTZ <- sprintf("%s.zip", dirT);
+    pathnameDTZ <- file.path(pathDT, filenameDTZ);
+    if (isFile(pathnameDTZ)) {
+      file.remove(pathnameDTZ);
     }
 
-    file.rename(pathnameBAMT, pathnameBAM);
+    # Move output subdirectory
+    file.rename(pathT, pathD);
+
+    # Sanity check
+    stopifnot(isDirectory(pathD));
+    stopifnot(!isDirectory(pathT));
+
+    # CLEANUP
+    removeDirectory(pathDT);
+    stopifnot(!isDirectory(pathDT));
+
     verbose && exit(verbose);
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # END: ATOMIC PROCESSING
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
-    verbose && cat(verbose, "Created BAM file: ", pathnameBAM);
-    verbose && cat(verbose, "Created BAM index file: ", pathnameBAI);
+    verbose && cat(verbose, "Generated FASTQ report: ", pathD);
     # Sanity checks
-    pathnameBAM <- Arguments$getReadablePathname(pathnameBAM);
-    pathnameBAI <- Arguments$getReadablePathname(pathnameBAI);
+    pathD <- Arguments$getReadablePath(pathD);
+    pathnameD <- Arguments$getReadablePathname(pathnameD);
 
     verbose && exit(verbose);
 
-    invisible(list(pathnameBAM=pathnameBAM, pathnameBAI=pathnameBAI));
+    invisible(list(pathnameD=pathnameD));
   }, force=force, verbose=less(verbose, 1));
 
   res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 50));
@@ -243,7 +264,7 @@ setMethodS3("process", "BamMerger", function(this, ..., skip=TRUE, force=FALSE, 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # TO DROP
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-setMethodS3("validateGroups", "BamMerger", function(this, groups, ...) {
+setMethodS3("validateGroups", "FastQCReporter", function(this, groups, ...) {
   # Input data set
   ds <- getInputDataSet(this);
   nbrOfFiles <- length(ds);
@@ -252,9 +273,9 @@ setMethodS3("validateGroups", "BamMerger", function(this, groups, ...) {
   idxs <- unlist(groups, use.names=FALSE);
   idxs <- Arguments$getIndices(idxs, max=nbrOfFiles);
   if (length(idxs) < nbrOfFiles) {
-    throw("One or more input BAM files is not part of any group.");
+    throw("One or more input FASTQ files is not part of any group.");
   } else if (length(idxs) > nbrOfFiles) {
-    throw("One or more input BAM files is part of more than one group.");
+    throw("One or more input FASTQ files is part of more than one group.");
   }
 
   if (is.null(names(groups))) {
@@ -267,10 +288,6 @@ setMethodS3("validateGroups", "BamMerger", function(this, groups, ...) {
 
 ############################################################################
 # HISTORY:
-# 2014-01-16 [HB]
-# o CLEANUP: Now BamMerger implements new FileGroupsInterface.
-# o ROBUSTNESS: Now getGroups() of BamMerger assert that the
-#   file indices identified for each group/sample is unique.
-# 2013-11-22
+# 2014-03-02 [HB]
 # o Created.
 ############################################################################

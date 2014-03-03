@@ -27,8 +27,7 @@
 # }
 #
 # \seealso{
-#   An object of this class is typically part of an
-#   @see "FastqDataSet".
+#   An object of this class is typically part of a @see "FastqDataSet".
 # }
 #*/###########################################################################
 setConstructorS3("FastqDataFile", function(...) {

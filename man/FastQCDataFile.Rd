@@ -1,21 +1,21 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Do not modify this file since it was automatically generated from:
 % 
-%  FastqDataFile.R
+%  FastQCDataFile.R
 % 
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\name{FastqDataFile}
+\name{FastQCDataFile}
 \docType{class}
-\alias{FastqDataFile}
+\alias{FastQCDataFile}
 
 
-\title{The abstract FastqDataFile class}
+\title{The abstract FastQCDataFile class}
 
 \description{
  Package:  aroma.seq \cr
-\bold{Class FastqDataFile}\cr
+\bold{Class FastQCDataFile}\cr
 
 \code{\link[R.oo]{Object}}\cr
 \code{~~|}\cr
@@ -23,21 +23,21 @@
 \code{~~~~~~~|}\cr
 \code{~~~~~~~+--}\code{\link[R.filesets]{GenericDataFile}}\cr
 \code{~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~+--}\emph{\code{FastqDataFile}}\cr
+\code{~~~~~~~~~~~~+--}\emph{\code{FastQCDataFile}}\cr
 
 \bold{Directly known subclasses:}\cr
-\emph{\link[aroma.seq]{IlluminaFastqDataFile}}\cr
+\cr
 
-public abstract static class \bold{FastqDataFile}\cr
+public abstract static class \bold{FastQCDataFile}\cr
 extends \emph{\link[R.filesets]{GenericDataFile}}\cr
 
 
 
- A FastqDataFile object represents a FASTQ data file.
+ A FastQCDataFile object represents a FastQC [1] data file.
 }
 
 \usage{
-FastqDataFile(...)
+FastQCDataFile(...)
 }
 
 \arguments{
@@ -46,17 +46,7 @@ FastqDataFile(...)
 
 \section{Fields and Methods}{
  \bold{Methods:}\cr
-\tabular{rll}{
- \tab \code{directoryStructure} \tab  -\cr
- \tab \code{getCommonSeqWidth} \tab  -\cr
- \tab \code{getDefaultSamReadGroup} \tab  -\cr
- \tab \code{getGeometry} \tab  -\cr
- \tab \code{getSamReadGroup} \tab  -\cr
- \tab \code{nbrOfSeqs} \tab  -\cr
- \tab \code{readSeqFile} \tab  -\cr
- \tab \code{report} \tab  -\cr
- \tab \code{setSamReadGroup} \tab  -\cr
-}
+\emph{No methods defined}.
 
 
  \bold{Methods inherited from GenericDataFile}:\cr
@@ -74,11 +64,13 @@ $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCa
 \author{Henrik Bengtsson}
 
 \references{
-  Wikipedia, FASTQ format,
-  \url{http://en.wikipedia.org/wiki/FASTQ_format}.\cr
+ [1] Simon Andrews,
+     FastQC - A quality control tool for high throughput sequence data,
+     March 2014.
+     \url{http://www.bioinformatics.babraham.ac.uk/projects/fastqc/}
 }
 
 \seealso{
-  An object of this class is typically part of a \code{\link{FastqDataSet}}.
+  An object of this class is typically part of a \code{\link{FastQCDataFileSet}}.
 }
 \keyword{classes}
