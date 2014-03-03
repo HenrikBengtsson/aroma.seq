@@ -213,7 +213,7 @@ setMethodS3("process", "FastQCReporter", function(this, ..., skip=TRUE, force=FA
     # Which is what FastQC looks for. ..."
     opts <- "--casava";
     verbose && cat(verbose, "FastQC options: ", paste(opts, collapse=", "));
-    res <- fastQC(pathnames, outPath=pathDT, opts);
+    res <- fastQC(pathnames=pathnames, outPath=pathDT, opts, verbose=less(verbose, 10));
     verbose && cat(verbose, "Output log:");
     verbose && print(verbose, res);
 
