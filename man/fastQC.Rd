@@ -33,6 +33,10 @@
      FastQC - A quality control tool for high throughput sequence data,
      March 2014.
      \url{http://www.bioinformatics.babraham.ac.uk/projects/fastqc/}
+ [2] Simon Andrews,
+     FastQC: A quality control application for FastQ data [ANNOUNCEMENT],
+     2010-04-26.
+     \url{http://seqanswers.com/forums/showthread.php?t=4846}
 }
 
 
