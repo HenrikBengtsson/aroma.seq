@@ -48,7 +48,9 @@ FastQCReporter(dataSet=NULL, groupBy=NULL, ..., .className="FastqDataSet")
  \item{dataSet}{An \code{\link{FastqDataSet}}.}
  \item{groupBy}{A \code{\link[base]{character}} string or an explicit named \code{\link[base]{list}},
   specifying which input files should be processed together.}
- \item{...}{Not used.}
+ \item{...}{Additional arguments passed to \code{\link{AromaSeqTransform}}.}
+ \item{.className}{A \code{\link[base]{character}} string specifying what class of
+  data sets to accept.}
 }
 
 \section{Fields and Methods}{

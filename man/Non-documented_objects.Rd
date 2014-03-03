@@ -495,6 +495,15 @@
 \alias{getOutputDataSet.HTSeqCounting}
 \alias{getDefaultFullName.FastaReferenceFile}
 \alias{getOrganism.FastaReferenceSet}
+\alias{as.character.FastQCDataFile}
+\alias{byPath.FastQCDataFileSet}
+\alias{getAsteriskTags.FastQCReporter}
+\alias{getDefaultFullName.FastQCDataFile}
+\alias{getOutputDataSet.FastQCReporter}
+\alias{getRootPath.FastQCReporter}
+\alias{getSampleName.FastQCDataFile}
+\alias{process.FastQCReporter}
+\alias{validateGroups.FastQCReporter}
 
 \description{
   This page contains aliases for all "non-documented" objects that
