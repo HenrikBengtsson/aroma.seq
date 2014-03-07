@@ -252,7 +252,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
   # Append optional arguments
   if (!is.null(gtf)) opts <- c(opts, "-G"=gtf);
   if (!is.null(mateInnerDist)) opts <- c(opts, "--mate-inner-dist"=mateInnerDist);
-  if (!is.null(mateStdDev)) opts <- c(opts, "--mate-std-devt"=mateStdDev);
+  if (!is.null(mateStdDev)) opts <- c(opts, "--mate-std-dev"=mateStdDev);
 
   # Append user options
   opts <- c(opts, optionsVec);
@@ -268,9 +268,11 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
   if (isPaired) opts <- c(opts, paste(reads2, collapse=","));
 
   # Assert no duplicated options
-  dups <- names(opts)[duplicated(names(opts))];
+  names <- names(opts);
+  names <- names[nchar(names) > 0L];
+  dups <- names[duplicated(names)];
   if (length(dups) > 0L) {
-    throw("Duplicated options detected: ", paste(sQuote(dups)), collapse=", ");
+    throw("Duplicated options detected: ", paste(sQuote(dups), collapse=", "));
   }
 
 
@@ -281,6 +283,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
   args <- list(command=command, args=opts);
   verbose && cat(verbose, "Arguments:");
   verbose && print(verbose, args);
+  args$verbose <- less(verbose, 10);
   res <- do.call(systemTopHat, args=args);
   status <- attr(res, "status"); if (is.null(status)) status <- 0L;
   verbose && cat(verbose, "Results:");
@@ -315,6 +318,8 @@ setMethodS3("tophat2", "default", function(..., command="tophat2") {
 ############################################################################
 # HISTORY:
 # 2014-03-07 [HB]
+# o ROBUSTNESS: Now tophat() asserts that no duplicated options are
+#   passed to the TopHat executable.
 # o Added arguments 'mateInnerDist' and 'mateStdDev' to tophat().
 # 2014-01-24 [TT]
 # o reads1 default is now NULL (HB); check reads1 and gtf are not both NULL.

@@ -2,7 +2,11 @@ Package: aroma.seq
 ==================
 
 Version: 0.4.28 [2014-03-07]
+o Added convertToSam() analogously to convertToBam().
 o Added arguments 'mateInnerDist' and 'mateStdDev' to tophat().
+  Added a doTopHat2() package test for using these.
+o ROBUSTNESS: Now tophat() asserts that no duplicated options are
+  passed to the TopHat executable.
 
 
 Version: 0.4.27 [2014-03-02]

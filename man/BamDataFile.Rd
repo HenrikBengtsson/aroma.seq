@@ -48,6 +48,7 @@ BamDataFile(...)
  \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{buildIndex} \tab  -\cr
+ \tab \code{convertToSam} \tab  -\cr
  \tab \code{directoryStructure} \tab  -\cr
  \tab \code{doQDNAseq} \tab  -\cr
  \tab \code{extractReadStartPositions} \tab  -\cr

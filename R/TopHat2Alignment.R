@@ -205,7 +205,17 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   outPath <- getPath(this);
   verbose && cat(verbose, "Output directory: ", outPath);
 
-  transcripts <- this$transcripts;
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Additional alignment parameters
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  params <- getParameters(this);
+  verbose && cat(verbose, "Parameters:");
+  verbose && str(verbose, params);
+
+
+  # Align with known transcripts?
+  transcripts <- params$transcripts;
   if (!is.null(transcripts)) {
     verbose && cat(verbose, "Using transcripts:");
     verbose && print(verbose, transcripts);
@@ -224,14 +234,25 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
     stopifnot(!isGzipped(transcripts));
   }
 
-  verbose && cat(verbose, "Number of files: ", length(ds));
-  verbose && cat(verbose, "Number of groups: ", length(groups));
 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # User arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  args <- params;
+  # Drop already used parameters
+  args$transcripts <- NULL;
+  args$groupBy <- NULL;
+  verbose && cat(verbose, "User arguments:");
+  verbose && str(verbose, args);
+
+   
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Apply aligner to each of the FASTQ files
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  dsApply(ds, IDXS=groups[todo], DROP=FALSE, FUN=function(dfListR1, isPaired=FALSE, indexSet, transcripts=NULL, outPath, ...., skip=TRUE, verbose=FALSE) {
+  verbose && cat(verbose, "Number of files: ", length(ds));
+  verbose && cat(verbose, "Number of groups: ", length(groups));
+  dsApply(ds, IDXS=groups[todo], DROP=FALSE, FUN=function(dfListR1, isPaired=FALSE, indexSet, transcripts=NULL, outPath, ..., skip=TRUE, verbose=FALSE) {
     R.utils::use("R.utils, aroma.seq, Rsamtools");
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -279,8 +300,9 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
       bowtieRefIndexPrefix=getIndexPrefix(indexSet),
       reads1=reads1,
       reads2=NULL,
-      outPath=outPathS,
-      gtf=gtf
+      gtf=gtf,
+      ...,
+      outPath=outPathS
     );
 
     if (isPaired) {
@@ -320,7 +342,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
     verbose && exit(verbose);
 
     invisible(list(res=res));
-  }, isPaired=isPaired, indexSet=is, transcripts=transcripts, outPath=getPath(this), skip=skip, verbose=verbose) # dsApply()
+  }, isPaired=isPaired, indexSet=is, transcripts=transcripts, outPath=getPath(this), args=args, skip=skip, verbose=verbose) # dsApply()
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

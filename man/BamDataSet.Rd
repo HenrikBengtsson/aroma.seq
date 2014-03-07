@@ -50,6 +50,7 @@ BamDataSet(files=NULL, ...)
 \tabular{rll}{
  \tab \code{byName} \tab  -\cr
  \tab \code{byPath} \tab  -\cr
+ \tab \code{convertToSam} \tab  -\cr
  \tab \code{directoryStructure} \tab  -\cr
  \tab \code{doHTSeqCount} \tab  -\cr
  \tab \code{doQDNAseq} \tab  -\cr

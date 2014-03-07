@@ -32,6 +32,21 @@ print(fqs)
 bams <- doTopHat2(fqs, reference=fa, verbose=TRUE)
 print(bams)
 
+# Specifying additional parameters (identical to the defaults)
+bams2 <- doTopHat2(fqs, reference=fa, mateInnerDist=50, mateStdDev=20, tags=c("*", "50_20"), verbose=TRUE)
+print(bams2)
+
+# Assert that we get the same as the default settings
+# Comparison of BAM files must be done at the SAM level here,
+# because there are additional things encoded in the BAM files.
+if (packageVersion("Rsamtools") >= "1.15.0") {
+  sams <- convertToSam(bams)
+  sams2 <- convertToSam(bams2)
+  samsC <- getChecksumFileSet(sams)
+  sams2C <- getChecksumFileSet(sams2)
+  stopifnot(equals(samsC, sams2C))
+}
+
 } # if (fullTest)
 
 
