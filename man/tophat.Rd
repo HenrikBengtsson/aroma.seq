@@ -22,26 +22,31 @@
 }
 
 \usage{
- \method{tophat}{default}(bowtieRefIndexPrefix, reads1=NULL, reads2=NULL, gtf=NULL, outPath="tophat/",
-  optionsVec=NULL, ..., command="tophat", verbose=FALSE)
+ \method{tophat}{default}(bowtieRefIndexPrefix, reads1=NULL, reads2=NULL, gtf=NULL, mateInnerDist=NULL,
+  mateStdDev=NULL, optionsVec=NULL, ..., outPath="tophat/", command="tophat",
+  verbose=FALSE)
  \method{tophat1}{default}(..., command="tophat")
  \method{tophat2}{default}(..., command="tophat2")
 }
 
 \arguments{
-  \item{bowtieRefIndexPrefix}{bowtie2 reference index (partial pathname, i.e. minus the .x.bt2 suffix)}
-  \item{reads1}{(required) Vector of fastq filenames to align; currently only a single filename is supported}
-  \item{reads2}{(optional) Vector of fastq filenames to align, paired with reads1; currently only a single filename is supported}
-  \item{outPath}{Directory where result files are written}
-  \item{optionsVec}{Vector of named options to pass to tophat}
-  \item{...}{(Not used)}
-  \item{command}{Name of executable}
+  \item{bowtieRefIndexPrefix}{A \code{\link[base]{character}} string specifying the Bowtie2 reference index prefix.}
+  \item{reads1}{(required) A \code{\link[base]{vector}} of FASTQ pathnames of reads.}
+  \item{reads2}{(optional; paired-end only) A \code{\link[base]{vector}} of FASTQ pathnames of mate reads.}
+  \item{gtf}{(optional) A GTF pathname.}
+  \item{mateInnerDist, mateStdDev}{(optional; paired-end only) The expected mean and standard
+        deviation of the inner distance between mate pairs.}
+  \item{optionsVec}{Vector of named options to pass to the executable.}
+  \item{...}{(Not used)}.
+  \item{outPath}{Directory where result files are written.}
+  \item{command}{The name of the executable.}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }
 
 \section{Support for compressed input files}{
-  TopHat (>= 1.3.0) handles FASTQ files that have been compressed by gzip (or bzip2) [1].
-  If not supported, this method will give an informative error message about it.
+  TopHat (>= 1.3.0), which was released June 2011, handles FASTQ files that have been compressed
+  by gzip (or bzip2) [1]. If not supported, this method will give an informative error message
+  about it.
 }
 
 \author{Henrik Bengtsson, Taku Tokuyasu}

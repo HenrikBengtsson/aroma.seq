@@ -19,19 +19,23 @@
 # }
 #
 # \arguments{
-#   \item{bowtieRefIndexPrefix}{bowtie2 reference index (partial pathname, i.e. minus the .x.bt2 suffix)}
-#   \item{reads1}{(required) Vector of fastq filenames to align; currently only a single filename is supported}
-#   \item{reads2}{(optional) Vector of fastq filenames to align, paired with reads1; currently only a single filename is supported}
-#   \item{outPath}{Directory where result files are written}
-#   \item{optionsVec}{Vector of named options to pass to tophat}
-#   \item{...}{(Not used)}
-#   \item{command}{Name of executable}
+#   \item{bowtieRefIndexPrefix}{A @character string specifying the Bowtie2 reference index prefix.}
+#   \item{reads1}{(required) A @vector of FASTQ pathnames of reads.}
+#   \item{reads2}{(optional; paired-end only) A @vector of FASTQ pathnames of mate reads.}
+#   \item{gtf}{(optional) A GTF pathname.}
+#   \item{mateInnerDist, mateStdDev}{(optional; paired-end only) The expected mean and standard
+#         deviation of the inner distance between mate pairs.}
+#   \item{optionsVec}{Vector of named options to pass to the executable.}
+#   \item{...}{(Not used)}.
+#   \item{outPath}{Directory where result files are written.}
+#   \item{command}{The name of the executable.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
 # \section{Support for compressed input files}{
-#   TopHat (>= 1.3.0) handles FASTQ files that have been compressed by gzip (or bzip2) [1].
-#   If not supported, this method will give an informative error message about it.
+#   TopHat (>= 1.3.0), which was released June 2011, handles FASTQ files that have been compressed
+#   by gzip (or bzip2) [1]. If not supported, this method will give an informative error message
+#   about it.
 # }
 #
 # @author "HB,TT"
@@ -43,7 +47,7 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, reads2=NULL, gtf=NULL, outPath="tophat/", optionsVec=NULL, ..., command="tophat", verbose=FALSE) {
+setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, reads2=NULL, gtf=NULL, mateInnerDist=NULL, mateStdDev=NULL, optionsVec=NULL, ..., outPath="tophat/", command="tophat", verbose=FALSE) {
   # Make sure to evaluate registered onExit() statements
   on.exit(eval(onExit()));
 
@@ -67,8 +71,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
 
   # Argument 'bowtieRefIndexPrefix'
   # (and the existence of the corresponding directory)
-  bowtieRefIndexPrefix <- Arguments$getCharacter(bowtieRefIndexPrefix,
-                                                          length=c(1L,1L));
+  bowtieRefIndexPrefix <- Arguments$getCharacter(bowtieRefIndexPrefix, length=c(1L,1L));
   bowtieRefIndexPath <- dirname(bowtieRefIndexPrefix);
   bowtieRefIndexName <- basename(bowtieRefIndexPrefix);
   bowtieRefIndexPath <- Arguments$getReadablePath(bowtieRefIndexPath, absolute=TRUE);
@@ -77,7 +80,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
   if (length(reads1) > 0L) {
     reads1 <- Arguments$getReadablePathnames(reads1, absolute=TRUE);
     assertNoDuplicated(reads1);
-  } 
+  }
 
   # Argument 'reads2'
   isPaired <- (length(reads2) > 0L);
@@ -93,6 +96,20 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
     if (isGzipped(gtf)) {
       throw("TopHat does not support gzipped GTF files: ", gtf);
     }
+  }
+
+  # Argument 'mateInnerDist' & 'mateStdDev':
+  if (!is.null(mateInnerDist)) {
+    if (!isPaired) {
+      throw("Argument 'mateInnerDist' can only be used with paired-end reads.");
+    }
+    mateInnerDist <- Arguments$getInteger(mateInnerDist, range=c(0,Inf));
+  }
+  if (!is.null(mateStdDev)) {
+    if (!isPaired) {
+      throw("Argument 'mateStdDev' can only be used with paired-end reads.");
+    }
+    mateStdDev <- Arguments$getInteger(mateStdDev, range=c(0,Inf));
   }
 
   # Argument 'verbose':
@@ -227,28 +244,39 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Call the tophat executable
+  # Setup tophat arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  opts <- optionsVec
+  # The output directory should always to be the current directory
+  opts <- c("-o"=".");
 
-  # Set the output directory to be the current directory
-  opts <- c(opts, "-o"=".")
+  # Append optional arguments
+  if (!is.null(gtf)) opts <- c(opts, "-G"=gtf);
+  if (!is.null(mateInnerDist)) opts <- c(opts, "--mate-inner-dist"=mateInnerDist);
+  if (!is.null(mateStdDev)) opts <- c(opts, "--mate-std-devt"=mateStdDev);
 
-  # GTF file, iff specified
-  opts <- c(opts, "-G"=gtf)
+  # Append user options
+  opts <- c(opts, optionsVec);
 
-  # Append the bowtie2 reference index prefix
+  # At the very end:
+  # (a) Append the bowtie2 reference index prefix
   opts <- c(opts, bowtieRefIndexPrefix);
 
-  # Append the R1 FASTQ files
+  # (b) Append the R1 FASTQ files
   opts <- c(opts, paste(reads1, collapse=","));
 
-  # Paired-end analysis?  Then append the R2 FASTQ files
-  if (!is.null(reads2)) {
-    opts <- c(opts, paste(reads2, collapse=","));
+  # (c) Paired-end analysis?  Then append the R2 FASTQ files
+  if (isPaired) opts <- c(opts, paste(reads2, collapse=","));
+
+  # Assert no duplicated options
+  dups <- names(opts)[duplicated(names(opts))];
+  if (length(dups) > 0L) {
+    throw("Duplicated options detected: ", paste(sQuote(dups)), collapse=", ");
   }
 
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Call TopHat executable
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Calling systemTopHat()");
   args <- list(command=command, args=opts);
   verbose && cat(verbose, "Arguments:");
@@ -286,6 +314,8 @@ setMethodS3("tophat2", "default", function(..., command="tophat2") {
 
 ############################################################################
 # HISTORY:
+# 2014-03-07 [HB]
+# o Added arguments 'mateInnerDist' and 'mateStdDev' to tophat().
 # 2014-01-24 [TT]
 # o reads1 default is now NULL (HB); check reads1 and gtf are not both NULL.
 # 2014-01-18 [HB]

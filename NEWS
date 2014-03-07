@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.28 [2014-03-07]
+o Added arguments 'mateInnerDist' and 'mateStdDev' to tophat().
+
+
 Version: 0.4.27 [2014-03-02]
 o Added FastQCReporter.
 o Added FastQCDataFile and FastQCDataFileSet.
