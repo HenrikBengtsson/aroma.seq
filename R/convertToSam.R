@@ -67,7 +67,7 @@ setMethodS3("convertToSam", "BamDataFile", function(this, path=getPath(this), sk
   # Nothing to do?
   if (skip && isFile(pathnameSAM)) {
     verbose && cat(verbose, "Already converted. Skipping.");
-    res <- BamDataFile(pathnameSAM);
+    res <- SamDataFile(pathnameSAM);
     verbose && exit(verbose);
     return(res);
   }

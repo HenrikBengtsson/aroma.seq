@@ -1,7 +1,14 @@
 Package: aroma.seq
 ==================
 
-Version: 0.4.28 [2014-03-07]
+Version: 0.4.29 [2014-03-07]
+o RELAXATION: readHeader() for BamDataFile no longer require that
+  the BAM file is indexed.
+o Now as.character()/print() for BamDataFile reports on by which software
+  (and how) the BAM file was created, if the @PG SAM header is available.
+
+
+Version: 0.4.28 [2014-03-06]
 o Added convertToSam() analogously to convertToBam().
 o Added arguments 'mateInnerDist' and 'mateStdDev' to tophat().
   Added a doTopHat2() package test for using these.

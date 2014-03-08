@@ -282,3 +282,6 @@ getAsteriskTags.FastQCReporter getDefaultFullName.FastQCDataFile
 getOutputDataSet.FastQCReporter getRootPath.FastQCReporter
 getSampleName.FastQCDataFile process.FastQCReporter
 validateGroups.FastQCReporter
+getProgram getProgram.BamDataFile getProgramString
+getProgramString.BamDataFile getPrograms
+getPrograms.BamDataFile

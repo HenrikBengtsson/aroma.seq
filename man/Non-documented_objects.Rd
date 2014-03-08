@@ -504,6 +504,12 @@
 \alias{getSampleName.FastQCDataFile}
 \alias{process.FastQCReporter}
 \alias{validateGroups.FastQCReporter}
+\alias{getProgram}
+\alias{getProgram.BamDataFile}
+\alias{getProgramString}
+\alias{getProgramString.BamDataFile}
+\alias{getPrograms}
+\alias{getPrograms.BamDataFile}
 
 \description{
   This page contains aliases for all "non-documented" objects that
