@@ -42,9 +42,9 @@ print(bams2)
 if (packageVersion("Rsamtools") >= "1.15.0") {
   sams <- convertToSam(bams)
   sams2 <- convertToSam(bams2)
-  samsC <- getChecksumFileSet(sams)
-  sams2C <- getChecksumFileSet(sams2)
-  stopifnot(equals(samsC, sams2C))
+#  samsC <- getChecksumFileSet(sams)
+#  sams2C <- getChecksumFileSet(sams2)
+#  stopifnot(equals(samsC, sams2C))
 }
 
 } # if (fullTest)
