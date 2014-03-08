@@ -1,7 +1,8 @@
 Package: aroma.seq
 ==================
 
-Version: 0.4.29 [2014-03-07]
+Version: 0.4.29 [2014-03-08]
+o Bumped up package dependencies.
 o RELAXATION: readHeader() for BamDataFile no longer require that
   the BAM file is indexed.
 o Now as.character()/print() for BamDataFile reports on by which software
