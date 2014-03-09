@@ -330,7 +330,9 @@ setMethodS3("dsApply", "GenericDataFileSet", function(ds, IDXS=NULL, DROP=is.nul
     on.exit({ options(oopts) }, add=TRUE);
     options("BatchJobs.check.posix"=FALSE);
 
-    bpParam <- BatchJobsParam();
+    # It's here one can specify PBS options such as number of
+    # nodes, number of cores, walltime etc.
+    bpParam <- BatchJobsParam(resources=NULL);
     register(bpParam);
     verbose && cat(verbose, "Using parameters:");
     verbose && print(verbose, bpParam);
@@ -451,7 +453,7 @@ setMethodS3(".getBatchJobRegistry", "default", function(..., skip=TRUE) {
 ############################################################################
 # HISTORY:
 # 2014-01-24
-# o Now argument 'IDXS' can also be an index vector, which is then 
+# o Now argument 'IDXS' can also be an index vector, which is then
 #   treated as as.list(IDXS).
 # 2014-01-04
 # o CONSISTENCY: Now dsApply() returns a named vector with names
