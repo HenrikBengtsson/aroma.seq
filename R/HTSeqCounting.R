@@ -209,8 +209,9 @@ setMethodS3("process", "HTSeqCounting", function(this, ..., skip=TRUE, force=FAL
 
     verbose && enter(verbose, "htseq-count");
 
+    verbose && cat(verbose, "BAM file:");
+    verbose && print(verbose, df);
     pathnameBAM <- getPathname(df);
-    verbose && cat(verbose, "BAM pathname: ", pathnameBAM);
 
     pathnameGTF <- getPathname(transcripts);
     verbose && cat(verbose, "GTF pathname: ", pathnameGTF);
@@ -231,6 +232,13 @@ setMethodS3("process", "HTSeqCounting", function(this, ..., skip=TRUE, force=FAL
       pathnameD=pathnameD
     );
 
+    # Is BAM file sorted?
+    isSorted <- isSorted(df);
+    if (isSorted) {
+      # ...then assume it is sorted by position (aroma.seq policy)
+      # FIXME: Check how BAM file is sorted
+      args$orderedBy <- "position";
+    }
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # BEGIN: ATOMIC OUTPUT
@@ -239,8 +247,7 @@ setMethodS3("process", "HTSeqCounting", function(this, ..., skip=TRUE, force=FAL
 ##    args$outPath <- sprintf("%s.tmp", args$outPath);
 ##    verbose && cat(verbose, "Temporary output directory: ", args$outPath);
 
-    # Run htseq-count
-    verbose && cat(verbose, "Arguments passed to htseq-count:");
+    verbose && cat(verbose, "Arguments passed to htseqCount():");
     verbose && str(verbose, args);
     args$verbose <- less(verbose, 1);
     res <- do.call(htseqCount, args=args);
@@ -276,6 +283,7 @@ setMethodS3("process", "HTSeqCounting", function(this, ..., skip=TRUE, force=FAL
 ############################################################################
 # HISTORY:
 # 2014-03-10 [HB]
+# o Now process() passes orderedBy="position" to htseqCount().
 # o ROBUSTNESS: Now process() for HTSeqCounting validates that the GTF
 #   file has chromsome names in a format that matched the BAM files.
 #   If not, an error is thrown.
