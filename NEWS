@@ -1,6 +1,13 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.30 [2014-03-09]
+o Added verbose output to htseqCount().
+o DOCUMENTATION: Added Details section to help("htseqCount").
+o BUG FIX: getIndexStats() for BamDataFile would not work if pathname
+  had a space or other symbols causing it to be split up.
+
+
 Version: 0.4.29 [2014-03-08]
 o Bumped up package dependencies.
 o RELAXATION: readHeader() for BamDataFile no longer require that

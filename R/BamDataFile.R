@@ -106,7 +106,9 @@ setMethodS3("getIndexStats", "BamDataFile", function(this, ..., force=FALSE) {
     if (!hasIndex(this)) {
       throw("Cannot get index statistics. Index does not exists: ", pathname);
     }
-    bfr <- systemSamtools("idxstats", pathname, stdout=TRUE, ...);
+    # Quote pathnames
+    pathnameT <- sprintf('"%s"', pathname);
+    bfr <- systemSamtools("idxstats", pathnameT, stdout=TRUE, ...);
     bfr <- strsplit(bfr, split="\t", fixed=TRUE);
     seqName <- sapply(bfr, FUN=.subset, 1L);
     seqLength <- as.integer(sapply(bfr, FUN=.subset, 2L));
@@ -589,6 +591,9 @@ setMethodS3("validate", "BamDataFile", function(this, method=c("picard"), ..., v
 
 ############################################################################
 # HISTORY:
+# 2014-03-09
+# o BUG FIX: getIndexStats() for BamDataFile would not work if pathname
+#   had a space or other symbols causing it to be split up.
 # 2014-03-07
 # o RELAXATION: readHeader() for BamDataFile no longer require that
 #   the BAM file is indexed.
