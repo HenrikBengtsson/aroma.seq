@@ -161,6 +161,10 @@ findExternal <- function(mustExist=TRUE, command, version=NULL, versionPattern=N
         verbose && printf(verbose, "Version (output): '%s'\n", ver);
         ver <- gsub(versionPattern, "\\1", ver);
         verbose && printf(verbose, "Version (string): '%s'\n", ver);
+        # Drop trailing periods and more
+        ver <- gsub("[.]$", "", ver);
+        ver <- trim(ver);
+        verbose && printf(verbose, "Version (trimmed): '%s'\n", ver);
         # Try to coerce
         tryCatch({
           ver <- gsub("_", "-", ver);
@@ -210,6 +214,8 @@ findExternal <- function(mustExist=TRUE, command, version=NULL, versionPattern=N
 
 ############################################################################
 # HISTORY:
+# 2014-03-09
+# o Now findExternal() drops trailing periods and trims too.
 # 2013-04-02
 # o ROBUSTNESS: Now findExternal(..., version=NULL) only gives a warning
 #   if it fails to infer the version from the software's version output.

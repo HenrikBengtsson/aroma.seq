@@ -17,14 +17,16 @@
 }
 
 \usage{
-\method{htseqCount}{default}(pathnameS, pathnameD=NULL, gff, optionsVec=c(`-s` = "no", `-a` = "10"), ...,
-  command="htseq-count", verbose=FALSE)
+\method{htseqCount}{default}(pathnameS, pathnameD=NULL, gff, orderedBy=c("none", "position", "name"),
+  optionsVec=c(`-s` = "no", `-a` = "10"), ..., command="htseq-count", verbose=FALSE)
 }
 
 \arguments{
   \item{pathnameS}{An input BAM or SAM file containing aligned reads.}
   \item{pathnameD}{(optional) destination file to save htseq-count output.}
   \item{gff}{The gene feature file, in GFF/GTF format}
+  \item{orderedBy}{A \code{\link[base]{character}} string specifying how the input file has
+   been sorted, if at all.}
   \item{optionsVec}{A named \code{\link[base]{character}} \code{\link[base]{vector}} of options to htseq-count.}
   \item{...}{(Not used)}
   \item{command}{A \code{\link[base]{character}} string specifying the name of the executable.}
@@ -35,8 +37,8 @@
   Returns what \code{\link{systemHTSeqCount}}() returns.
 }
 
-\details{
-  The \code{htseq-count} executable requires (i) a SAM file as input
+\section{Backward compatibility}{
+  \code{htseq-count} (< 0.6.0) requires (i) a SAM file as input
   that (ii) is sorted by name.  However, this method will take of that
   internally, iff needed.  That is, it will created a temporary SAM
   file that is sorted by query name before passing it to \code{htseq-count}.
