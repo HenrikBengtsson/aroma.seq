@@ -34,6 +34,14 @@ setConstructorS3("GtfDataFile", function(..., columnNames=FALSE) {
   extend(TabularTextFile(..., columnNames=columnNames), "GtfDataFile")
 })
 
+setMethodS3("as.character", "GtfDataFile", function(this, ...) {
+  s <- NextMethod("as.character");
+  seqNames <- getSeqNames(this, unique=TRUE, onlyIfCached=TRUE);
+  s <- c(s, sprintf("Unique sequence names: %s [%d]", hpaste(seqNames), length(seqNames)));
+  s;
+}, protected=TRUE)
+
+
 setMethodS3("getOrganism", "GtfDataFile", function(this, ...) {
   path <- getPath(this);
   organism <- basename(path);
@@ -146,8 +154,38 @@ setMethodS3("byOrganism", "GtfDataFile", function(static, organism, ...) {
 }, static=TRUE) # byOrganism()
 
 
+setMethodS3("getSeqNames", "GtfDataFile", function(this, unique=FALSE, onlyIfCached=FALSE, force=FALSE, ...) {
+  seqNames <- this$.seqNames;
+  if (force || is.null(seqNames)) {
+    if (!onlyIfCached) {
+      pathname <- getPathname(this);
+      con <- gzfile(pathname, open="r");
+      on.exit(close(con));
+      seqNames <- NULL;
+      while (length(bfr <- readLines(con, n=10e3)) > 0L) {
+        bfr <- gsub("\t.*", "", bfr);
+        seqNames <- c(seqNames, bfr);
+      }
+      this$.seqNames <- seqNames;
+    }
+  }
+
+  if (unique && length(seqNames) > 1L) {
+    seqNames <- unique(seqNames);
+    seqNames <- sort(seqNames);
+    o <- order(nchar(seqNames), order(seqNames));
+    seqNames <- seqNames[o];
+  }
+
+  seqNames;
+})
+
+
 ############################################################################
 # HISTORY:
+# 2014-03-10
+# o Added getSeqNames() for GtfDataFile, which now as.character() reports
+#   on, iff already parsed.
 # 2014-02-25
 # o Now static byOrganism() no longer passes '...'.
 # 2014-01-25

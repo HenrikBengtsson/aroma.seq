@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.31 [2014-03-10]
+o Added getSeqNames() for GtfDataFile.
+
+
 Version: 0.4.30 [2014-03-09]
 o ROBUSTNESS: Now htseqCount() writes results atomically.
 o Now findHTSeq() returns versions in format '0.5.4-3' not '0.5.4p3',
