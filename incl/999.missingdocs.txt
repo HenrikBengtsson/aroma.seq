@@ -1,3 +1,4 @@
+as.character.GtfDataFile getSeqNames.GtfDataFile
 as.character.FastaReferenceFile as.character.FastqDataFile
 getCommonSeqWidth getCommonSeqWidth.FastqDataFile getGeometry
 getGeometry.FastqDataFile getSeqLengths

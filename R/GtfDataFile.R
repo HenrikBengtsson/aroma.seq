@@ -34,9 +34,9 @@ setConstructorS3("GtfDataFile", function(..., columnNames=FALSE) {
   extend(TabularTextFile(..., columnNames=columnNames), "GtfDataFile")
 })
 
-setMethodS3("as.character", "GtfDataFile", function(this, ...) {
+setMethodS3("as.character", "GtfDataFile", function(x, ...) {
   s <- NextMethod("as.character");
-  seqNames <- getSeqNames(this, unique=TRUE, onlyIfCached=TRUE);
+  seqNames <- getSeqNames(x, unique=TRUE, onlyIfCached=TRUE);
   s <- c(s, sprintf("Unique sequence names: %s [%d]", hpaste(seqNames), length(seqNames)));
   s;
 }, protected=TRUE)

@@ -143,6 +143,45 @@ setMethodS3("process", "HTSeqCounting", function(this, ..., skip=TRUE, force=FAL
   verbose && cat(verbose, "Number of samples: ", length(ds));
 
 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validating compatibility between GTF and BAM data set
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  verbose && enter(verbose, "Validating compatibility between GTF and BAM data set");
+  # Get one BAM file.
+  bam <- ds[[1L]];
+  bamNames <- getTargetNames(bam);
+  verbose && printf(verbose, "Target/chromosome names in BAM: %s [%d]\n", hpaste(bamNames), length(bamNames));
+
+  # Slightly faster to parse unzipped file.  
+  gtf <- transcripts;
+  gtfNames <- getSeqNames(gtf, unique=TRUE);
+  gtf <- params$transcripts;
+  verbose && printf(verbose, "Sequence/chromosome names in GTF: %s [%d]\n", hpaste(gtfNames), length(gtfNames));
+  
+  inBoth <- intersect(bamNames, gtfNames);
+  if (length(inBoth) == 0L) {
+    msg <- sprintf("Incompatible GTF file: None of the %d sequence/chromosome names in the GTF (%s) are found in the BAM file (%s): [%s] not in [%s]", length(gtfNames), getPathname(gtf), getPathname(bam), hpaste(gtfNames), hpaste(bamNames));
+    verbose && cat(verbose, msg);
+    throw(msg);
+  }
+  
+  inBAMnotGTF <- setdiff(bamNames, gtfNames);
+  if (length(inBAMnotGTF) > 0L) {
+    msg <- sprintf("Possibly an incompatible GTF file: Found %d target/chromosome names in the BAM file (%s) that are not in the GTF (%s): [%s] not in [%s]", length(inBAMnotGTF), getPathname(bam), getPathname(gtf), hpaste(inBAMnotGTF), hpaste(gtfNames));
+    verbose && cat(verbose, msg);
+    # FIXME: Should we use throw() here instead?  Set some thresholding? /HB 2014-03-10
+    warning(msg);
+  }
+  
+  inGTFnotBAM <- setdiff(gtfNames, bamNames);
+  if (length(inGTFnotBAM) > 0L) {
+    msg <- sprintf("Not counting all sequences/chromosomes in GTF file: Found %d sequence/chromosome names in the GTF (%s) that are not in the BAM file (%s): [%s] not in [%s]", length(inGTFnotBAM), getPathname(gtf), getPathname(bam), hpaste(inGTFnotBAM), hpaste(gtfNames));
+    verbose && cat(verbose, msg);
+    warning(msg);
+  }
+  verbose && exit(verbose);
+  
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Apply aligner to each of the FASTQ files
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -236,6 +275,10 @@ setMethodS3("process", "HTSeqCounting", function(this, ..., skip=TRUE, force=FAL
 
 ############################################################################
 # HISTORY:
+# 2014-03-10 [HB]
+# o ROBUSTNESS: Now process() for HTSeqCounting validates that the GTF
+#   file has chromsome names in a format that matched the BAM files.
+#   If not, an error is thrown.
 # 2014-01-23 [HB]
 # o Created.
 ############################################################################

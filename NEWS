@@ -2,6 +2,9 @@ Package: aroma.seq
 ==================
 
 Version: 0.4.31 [2014-03-10]
+o ROBUSTNESS: Now process() for HTSeqCounting validates that the GTF
+  file has chromsome names in a format that matched the BAM files.
+  If not, an error is thrown.
 o Added getSeqNames() for GtfDataFile.
 
 

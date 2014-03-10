@@ -12,6 +12,8 @@
 
 
 % Other missing docs
+\alias{as.character.GtfDataFile}
+\alias{getSeqNames.GtfDataFile}
 \alias{as.character.FastaReferenceFile}
 \alias{as.character.FastqDataFile}
 \alias{getCommonSeqWidth}

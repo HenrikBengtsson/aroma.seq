@@ -56,6 +56,7 @@ GtfDataFile(..., columnNames=FALSE)
 \tabular{rll}{
  \tab \code{\link[aroma.seq:byOrganism.GtfDataFile]{byOrganism}} \tab Locates a GTF file by organism.\cr
  \tab \code{getOrganism} \tab  -\cr
+ \tab \code{getSeqNames} \tab  -\cr
 }
 
 
