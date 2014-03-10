@@ -227,10 +227,7 @@ setMethodS3("getHeader", "BamDataFile", function(this, force=FALSE, ...) {
 
 setMethodS3("readHeader", "BamDataFile", function(this, ...) {
   pathname <- getPathname(this);
-#  if (!hasIndex(this)) {
-#    throw("Cannot read header. Index file (*.bai) is missing: ", pathname);
-#  }
-  bf <- Rsamtools::BamFile(pathname);
+  bf <- Rsamtools::BamFile(pathname, index=character(0L));
   hdr <- Rsamtools::scanBamHeader(bf);
   hdr;
 }, private=TRUE)
