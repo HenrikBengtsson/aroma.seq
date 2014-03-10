@@ -2,6 +2,8 @@ Package: aroma.seq
 ==================
 
 Version: 0.4.30 [2014-03-09]
+o Now findHTSeq() returns versions in format '0.5.4-3' not '0.5.4p3',
+  This makes it easier to test against different versions of HTSeq.
 o Added verbose output to htseqCount().
 o DOCUMENTATION: Added Details section to help("htseqCount").
 o BUG FIX: getIndexStats() for BamDataFile would not work if pathname

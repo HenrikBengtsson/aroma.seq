@@ -6,11 +6,18 @@ findHTSeq <- function(..., command=c("htseq-count", "htseq-qa")) {
   command <- match.arg(command);
 
   versionPattern <- c(".*version ([0-9.]+(|p[0-9]+)).*");
-  findExternal(command=command, versionPattern=versionPattern, ...);
+  res <- findExternal(command=command, versionPattern=versionPattern, ...);
+  ver <- attr(res, "version");
+  # Update version format '0.5.4p3' to '0.5.4-3'
+  ver <- gsub("p", "-", ver, fixed=TRUE);
+  attr(res, "version") <- ver;
+  res;
 } # findHTSeq()
 
 ############################################################################
 # HISTORY:
+# 2014-03-09 [HB]
+# o Now findHTSeq() returns versions in format '0.5.4-3' not '0.5.4p3',
 # 2014-01-24 [HB]
 # o BUG FIX: findHTSeq() failed to identify the version.
 # 2013-06-20 [HB]
