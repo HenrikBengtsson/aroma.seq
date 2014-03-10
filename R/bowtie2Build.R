@@ -94,10 +94,10 @@ setMethodS3("bowtie2Build", "default", function(pathnameFAs,
   }
 
   # Append FASTA reference files
-  opts <- c(opts, paste(unname(pathnameFAs), collapse=","));
+  opts <- c(opts, shQuote(paste(unname(pathnameFAs), collapse=",")));
 
   # Append bowtie reference index prefix
-  opts <- c(opts, bowtieRefIndexPrefix);
+  opts <- c(opts, shQuote(bowtieRefIndexPrefix));
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -111,6 +111,10 @@ setMethodS3("bowtie2Build", "default", function(pathnameFAs,
 
 ############################################################################
 # HISTORY:
+# 2014-03-10 [HB]
+# o ROBUSTNESS: Now bowtie2Build() uses shQuote() for all pathnames.
+# 2014-03-10 [HB]
+# o ROBUSTNESS: Now bowtie2Build() uses shQuote() for all pathnames.
 # 2014-01-14 [HB]
 # o ROBUSTNESS: Now bowtie2Build() tests for duplicated entries in
 #   'pathnameFAs' and gives an informative errors message if detected.

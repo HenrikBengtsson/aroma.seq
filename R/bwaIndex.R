@@ -50,7 +50,7 @@ setMethodS3("bwaIndex", "default", function(pathnameFA, indexPrefix="*", ..., ve
 
   verbose && enter(verbose, "Running BWA index");
   verbose && cat(verbose, "Index prefix: ", indexPrefix);
-  res <- systemBWA("index", p=indexPrefix, ..., pathnameFA, verbose=less(verbose, 10));
+  res <- systemBWA("index", p=shQuote(indexPrefix), ..., shQuote(pathnameFA), verbose=less(verbose, 10));
   verbose && exit(verbose);
 
   res;
@@ -60,6 +60,8 @@ setMethodS3("bwaIndex", "default", function(pathnameFA, indexPrefix="*", ..., ve
 
 ############################################################################
 # HISTORY:
+# 2014-03-10 [HB]
+# o ROBUSTNESS: Now bwaIndex() uses shQuote() for all pathnames.
 # 2013-11-21
 # o CLEANUP: bwaIndex() no longer has a 'method' argument as it is no
 #   longer needed by bwaIndexPrefix().

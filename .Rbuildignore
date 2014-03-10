@@ -1,11 +1,13 @@
 ^Makefile$
 ^incl
 ^NAMESPACE,.*.txt$
+^BiocParallel_
 ^annotationData$
-^fastqData$
 ^bamData$
 ^bwaData$
+^fastqData$
+^htseqCountData$
 ^smoothCnData$
 ^tophat2Data$
-^htseqCountData$
+^reports$
 

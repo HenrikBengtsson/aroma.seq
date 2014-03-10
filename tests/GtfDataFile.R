@@ -8,3 +8,8 @@ organism <- "SaccharomycesCerevisiae"
 
 gtf <- GtfDataFile$byOrganism(organism)
 print(gtf)
+
+names <- getSeqNames(gtf)
+str(names)
+print(gtf)
+

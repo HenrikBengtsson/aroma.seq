@@ -76,9 +76,9 @@ bowtie2_hb <- function(pathnameFQ, indexPrefix, pathnameSAM, ..., gzAllowed=NA, 
   if (isPaired) {
     # Sanity check
     stopifnot(pathnameFQ[1L] != pathnameFQ[2L]);
-    res <- systemBowtie2(args=list("-x"=indexPrefix, "-1"=pathnameFQ[1L], "-2"=pathnameFQ[2L], "-S"=pathnameSAM, ...), verbose=verbose);
+    res <- systemBowtie2(args=list("-x"=indexPrefix, "-1"=shQuote(pathnameFQ[1L]), "-2"=shQuote(pathnameFQ[2L]), "-S"=shQuote(pathnameSAM), ...), verbose=verbose);
   } else {
-    res <- systemBowtie2(args=list("-x"=indexPrefix, "-U"=pathnameFQ, "-S"=pathnameSAM, ...), verbose=verbose);
+    res <- systemBowtie2(args=list("-x"=shQuote(indexPrefix), "-U"=shQuote(pathnameFQ), "-S"=shQuote(pathnameSAM), ...), verbose=verbose);
   }
 
 
@@ -99,6 +99,8 @@ bowtie2_hb <- function(pathnameFQ, indexPrefix, pathnameSAM, ..., gzAllowed=NA, 
 
 ############################################################################
 # HISTORY:
+# 2014-03-10 [HB]
+# o ROBUSTNESS: Now bowtie2() uses shQuote() for all pathnames.
 # 2014-01-14 [HB]
 # o ROBUSTNESS: Now bowtie2() tests for duplicated entries in 'reads1'
 #   and 'reads2' and gives an informative errors message if detected.

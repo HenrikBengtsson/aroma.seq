@@ -124,9 +124,9 @@ setMethodS3("htseqCount", "default", function(pathnameS,
     verbose && enter(verbose, "Making sure to provide htseq-count (< 0.6.0) with a SAM file sorted by query name [EXPENSIVE WORKAROUND]");
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # 
+    #
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # (a) Create/setup BAM input for sorting, iff SAM file is passed    
+    # (a) Create/setup BAM input for sorting, iff SAM file is passed
     isSAM <- (regexpr(".*[.]sam$", pathnameS, ignore.case=TRUE) != -1L);
     if (isSAM) {
       verbose && enter(verbose, "Converting BAM to SAM");
@@ -146,7 +146,7 @@ setMethodS3("htseqCount", "default", function(pathnameS,
     } else {
       pathnameBAM <- NULL;
     }
-  
+
     # (b) Sort input BAM by name
     verbose && enter(verbose, "Sorting BAM by query name");
     pathnameBAMs <- sub("[.]bam$", ",byName,tmp.bam", pathnameS)
@@ -164,7 +164,7 @@ setMethodS3("htseqCount", "default", function(pathnameS,
     # Update input pathname
     pathnameS <- pathnameBAMs;
     verbose && exit(verbose);
-  
+
     # (c) Convert sorted BAM to SAM
     verbose && enter(verbose, "Converting sorted BAM to SAM");
     pathnameSAMs <- sub("[.]bam$", ".sam", pathnameS);
@@ -233,7 +233,7 @@ setMethodS3("htseqCount", "default", function(pathnameS,
   opts <- c(opts, optionsVec);
 
   # All htseq-count arguments including pathnames
-  args <- c(opts, pathnameS, gff);
+  args <- c(opts, shQuote(pathnameS), shQuote(gff));
 
   verbose && cat(verbose, "Arguments:");
   verbose && str(verbose, args);
@@ -242,14 +242,14 @@ setMethodS3("htseqCount", "default", function(pathnameS,
   # to redirect to output file.
 
   # Write to a temporary file
-  pathnameDT <- pushTemporaryFile(pathnameD, verbose=verbose); 
-  args <- c(args, " > ", pathnameDT);
+  pathnameDT <- pushTemporaryFile(pathnameD, verbose=verbose);
+  args <- c(args, " > ", shQuote(pathnameDT));
 
   res <- do.call(what=systemHTSeqCount, args=list(command=command, args=args));
 
   # Renaming temporary file
   pathnameD <- popTemporaryFile(pathnameDT, verbose=verbose);
-	 
+
   verbose && exit(verbose);
 
   verbose && exit(verbose);
@@ -260,6 +260,8 @@ setMethodS3("htseqCount", "default", function(pathnameS,
 
 ############################################################################
 # HISTORY:
+# 2014-03-10 [HB]
+# o ROBUSTNESS: Now htseqCount() uses shQuote() for all pathnames.
 # 2014-03-09 [HB]
 # o ROBUSTNESS: Now htseqCount() writes results atomically.
 # o CLEANUP: Now htseqCount() cleans out temporary files ASAP.

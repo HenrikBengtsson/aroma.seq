@@ -7,10 +7,14 @@ findHTSeq <- function(..., command=c("htseq-count", "htseq-qa")) {
 
   versionPattern <- c(".*version ([0-9.]+(|p[0-9]+)).*");
   res <- findExternal(command=command, versionPattern=versionPattern, ...);
-  ver <- attr(res, "version");
+
   # Update version format '0.5.4p3' to '0.5.4-3'
-  ver <- gsub("p", "-", ver, fixed=TRUE);
-  attr(res, "version") <- ver;
+  if (!is.null(res)) {
+    ver <- attr(res, "version");
+    ver <- gsub("p", "-", ver, fixed=TRUE);
+    attr(res, "version") <- ver;
+  }
+
   res;
 } # findHTSeq()
 

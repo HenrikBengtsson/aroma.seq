@@ -25,7 +25,7 @@
 setMethodS3("samtoolsMpileup", "default", function(refFile, bamFile, pathnameD="mpileup.out", ..., verbose=FALSE) {
 
   # Support a call like this:  system(paste("samtools mpileup -uf", RefFile, BamFile, ">tmp1.out"))
-  # NB from samtools mpileup help:  'Assuming diploid individuals.'  
+  # NB from samtools mpileup help:  'Assuming diploid individuals.'
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -33,7 +33,7 @@ setMethodS3("samtoolsMpileup", "default", function(refFile, bamFile, pathnameD="
   # Argument 'pathname':
   refFile <- Arguments$getReadablePathname(refFile);
   bamFile <- Arguments$getReadablePathname(bamFile);
-  
+
   # Argument 'pathnameD':
   pathnameD <- Arguments$getWritablePathname(pathnameD);
 
@@ -49,8 +49,8 @@ setMethodS3("samtoolsMpileup", "default", function(refFile, bamFile, pathnameD="
   # Assert that input files are not overwritten
   stopifnot((getAbsolutePath(pathnameD) != getAbsolutePath(refFile)) &&
               (getAbsolutePath(pathnameD) != getAbsolutePath(bamFile)));
-  
-  res <- systemSamtools("mpileup", ..., refFile, bamFile, "stdout"=pathnameD, verbose=less(verbose, 10));
+
+  res <- systemSamtools("mpileup", ..., shQuote(refFile), shQuote(bamFile), "stdout"=shQuote(pathnameD), verbose=less(verbose, 10));
 
   verbose && exit(verbose);
 
@@ -60,6 +60,8 @@ setMethodS3("samtoolsMpileup", "default", function(refFile, bamFile, pathnameD="
 
 ############################################################################
 # HISTORY:
+# 2014-03-10 [HB]
+# o ROBUSTNESS: Now samtoolsMpileup() uses shQuote() for all pathnames.
 # 2013-10-31
 # o Created as copy of samtoolsView.R [TT]
 ############################################################################

@@ -121,7 +121,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
 
   # Nothing to do if no reads and no transcript model
   if (is.null(reads1) && is.null(gtf)) {
-    throw("reads1 and gtf cannot both be NULL")
+    throw("Arguments 'reads1' and 'gtf' cannot both be NULL")
   }
 
   verbose && enter(verbose, "Running tophat()");
@@ -146,7 +146,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
     verbose && str(verbose, bin);
     ver <- attr(bin, "version");
     verbose && cat(verbose, "TopHat version: ", ver);
-    if (ver <= "1.3.0") {
+    if (ver < "1.3.0") {
       throw("Detected gzip'ed FASTQ files, which is only supported by TopHat (>= 1.3.0): ", ver);
     }
   }
@@ -218,7 +218,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
     assertNoCommas(link);
     createLink(link=link, target=pathname);
   })
-  if (length(reads1) > 0) {
+  if (length(reads1) > 0L) {
     onExit({ file.remove(reads1) })
   }
 
@@ -250,7 +250,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
   opts <- c("-o"=".");
 
   # Append optional arguments
-  if (!is.null(gtf)) opts <- c(opts, "-G"=gtf);
+  if (!is.null(gtf)) opts <- c(opts, "-G"=shQuote(gtf));
   if (!is.null(mateInnerDist)) opts <- c(opts, "--mate-inner-dist"=mateInnerDist);
   if (!is.null(mateStdDev)) opts <- c(opts, "--mate-std-dev"=mateStdDev);
 
@@ -259,13 +259,13 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
 
   # At the very end:
   # (a) Append the bowtie2 reference index prefix
-  opts <- c(opts, bowtieRefIndexPrefix);
+  opts <- c(opts, shQuote(bowtieRefIndexPrefix));
 
   # (b) Append the R1 FASTQ files
-  opts <- c(opts, paste(reads1, collapse=","));
+  opts <- c(opts, shQuote(paste(reads1, collapse=",")));
 
   # (c) Paired-end analysis?  Then append the R2 FASTQ files
-  if (isPaired) opts <- c(opts, paste(reads2, collapse=","));
+  if (isPaired) opts <- c(opts, shQuote(paste(reads2, collapse=",")));
 
   # Assert no duplicated options
   names <- names(opts);
@@ -317,6 +317,8 @@ setMethodS3("tophat2", "default", function(..., command="tophat2") {
 
 ############################################################################
 # HISTORY:
+# 2014-03-10 [HB]
+# o ROBUSTNESS: Now tophat() uses shQuote() for all pathnames.
 # 2014-03-07 [HB]
 # o ROBUSTNESS: Now tophat() asserts that no duplicated options are
 #   passed to the TopHat executable.

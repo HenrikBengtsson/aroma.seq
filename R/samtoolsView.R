@@ -43,7 +43,7 @@ setMethodS3("samtoolsView", "default", function(pathname, pathnameD, ..., verbos
   # Assert that input files are not overwritten
   stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathname));
 
-  res <- systemSamtools("view", "o"=pathnameD, pathname, ..., verbose=less(verbose, 10));
+  res <- systemSamtools("view", "o"=shQuote(pathnameD), shQuote(pathname), ..., verbose=less(verbose, 10));
 
   verbose && exit(verbose);
 
@@ -53,6 +53,8 @@ setMethodS3("samtoolsView", "default", function(pathname, pathnameD, ..., verbos
 
 ############################################################################
 # HISTORY:
+# 2014-03-10 [HB]
+# o ROBUSTNESS: Now samtoolsView() uses shQuote() for all pathnames.
 # 2012-09-25
 # o Created.
 ############################################################################

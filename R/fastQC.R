@@ -57,11 +57,11 @@ setMethodS3("fastQC", "default", function(..., pathnames=character(0L), outPath=
   args <- list(...);
   if (length(pathnames) > 0L) {
     # Always quote pathnames (to handle spaces)
-    pathnames <- sprintf('"%s"', pathnames);
+    pathnames <- sprintf("%s", shQuote(pathnames));
     args <- c(list(pathnames), args);
   }
   if (!is.null(outPath)) {
-    args <- c(args, sprintf('--outdir "%s"', outPath));
+    args <- c(args, sprintf("--outdir %s", shQuote(outPath)));
   }
   verbose && cat(verbose, "Arguments:");
   verbose && str(verbose, args);
@@ -76,6 +76,8 @@ setMethodS3("fastQC", "default", function(..., pathnames=character(0L), outPath=
 
 ############################################################################
 # HISTORY:
-# 2014-02-28
+# 2014-03-10 [HB]
+# o ROBUSTNESS: Now fastQC() uses shQuote() for all pathnames.
+# 2014-02-28 [HB]
 # o Created from bwaSamse().
 ############################################################################

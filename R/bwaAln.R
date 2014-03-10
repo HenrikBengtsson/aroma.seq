@@ -58,7 +58,7 @@ setMethodS3("bwaAln", "default", function(pathnameFQ, indexPrefix, pathnameD, ..
   stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFQ));
 ##  stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFA));
 
-  res <- systemBWA("aln", "f"=pathnameD, indexPrefix, pathnameFQ, ..., verbose=less(verbose, 10));
+  res <- systemBWA("aln", "f"=shQuote(pathnameD), shQuote(indexPrefix), shQuote(pathnameFQ), ..., verbose=less(verbose, 10));
 
   verbose && exit(verbose);
 
@@ -68,6 +68,8 @@ setMethodS3("bwaAln", "default", function(pathnameFQ, indexPrefix, pathnameD, ..
 
 ############################################################################
 # HISTORY:
+# 2014-03-10 [HB]
+# o ROBUSTNESS: Now bwaAln() uses shQuote() for all pathnames.
 # 2012-09-24
 # o Created.
 ############################################################################

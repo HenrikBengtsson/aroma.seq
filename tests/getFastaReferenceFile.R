@@ -1,4 +1,5 @@
 library("aroma.seq")
+equals <- R.oo::equals # In case testthat::equals() is attached
 setOption(aromaSettings, "devel/parallel", "none")
 
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")

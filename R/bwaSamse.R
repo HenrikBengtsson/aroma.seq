@@ -64,7 +64,7 @@ setMethodS3("bwaSamse", "default", function(pathnameSAI, pathnameFQ, indexPrefix
   stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFQ));
 ##  stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFA));
 
-  res <- systemBWA("samse", "f"=pathnameD, indexPrefix, pathnameSAI, pathnameFQ, ..., verbose=less(verbose, 10));
+  res <- systemBWA("samse", "f"=shQuote(pathnameD), shQuote(indexPrefix), shQuote(pathnameSAI), shQuote(pathnameFQ), ..., verbose=less(verbose, 10));
 
   verbose && exit(verbose);
 
@@ -74,6 +74,8 @@ setMethodS3("bwaSamse", "default", function(pathnameSAI, pathnameFQ, indexPrefix
 
 ############################################################################
 # HISTORY:
+# 2014-03-10 [HB]
+# o ROBUSTNESS: Now bwaSamse() uses shQuote() for all pathnames.
 # 2012-09-24
 # o Created.
 ############################################################################

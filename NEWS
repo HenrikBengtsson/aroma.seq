@@ -2,9 +2,13 @@ Package: aroma.seq
 ==================
 
 Version: 0.4.31 [2014-03-10]
+o ROBUSTNESS: Now bowtie2(), bowtie2Build(), bwaAln(), bwaIndex() and so
+  on use shQuote() for all pathnames.
 o ROBUSTNESS: Now process() for HTSeqCounting validates that the GTF
   file has chromsome names in a format that matched the BAM files.
   If not, an error is thrown.
+o SPEEDUP: Now htseqCount() only workaround non-supported BAM files
+  for older version of htseq-count.
 o Added getSeqNames() for GtfDataFile.
 
 
