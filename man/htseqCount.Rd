@@ -17,18 +17,19 @@
 }
 
 \usage{
-\method{htseqCount}{default}(pathnameS, pathnameD=NULL, gff, orderedBy=c("none", "position", "name"),
-  optionsVec=c(`-s` = "no", `-a` = "10"), ..., command="htseq-count", verbose=FALSE)
+\method{htseqCount}{default}(pathnameS, gff, orderedBy=c("none", "position", "name"),
+  optionsVec=c(`-s` = "no", `-a` = "10"), ..., pathnameD=NULL, command="htseq-count",
+  verbose=FALSE)
 }
 
 \arguments{
   \item{pathnameS}{An input BAM or SAM file containing aligned reads.}
-  \item{pathnameD}{(optional) destination file to save htseq-count output.}
   \item{gff}{The gene feature file, in GFF/GTF format}
   \item{orderedBy}{A \code{\link[base]{character}} string specifying how the input file has
    been sorted, if at all.}
   \item{optionsVec}{A named \code{\link[base]{character}} \code{\link[base]{vector}} of options to htseq-count.}
   \item{...}{(Not used)}
+  \item{pathnameD}{(optional) destination file to save htseq-count output.}
   \item{command}{A \code{\link[base]{character}} string specifying the name of the executable.}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }

@@ -43,7 +43,7 @@ print(bams)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # HTSeqCount
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-counts <- doHTSeqCount(bams, transcripts=gtf, verbose=TRUE)
+counts <- doHTSeqCount(bams, transcripts=gtf, verbose=-100)
 print(counts)
 
 } # if (fullTest)

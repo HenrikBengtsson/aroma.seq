@@ -17,8 +17,8 @@
 }
 
 \usage{
-\method{systemHTSeqCount}{default}(commandName="htseq-count", ...,
-  system2ArgsList=list(stdout = TRUE, stderr = FALSE), .fake=FALSE, verbose=FALSE)
+\method{systemHTSeqCount}{default}(..., args=NULL, stdout=TRUE, stderr=FALSE, command="htseq-count",
+  .fake=FALSE, verbose=FALSE)
 }
 
 \arguments{

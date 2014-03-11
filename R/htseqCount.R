@@ -11,12 +11,12 @@
 #
 # \arguments{
 #   \item{pathnameS}{An input BAM or SAM file containing aligned reads.}
-#   \item{pathnameD}{(optional) destination file to save htseq-count output.}
 #   \item{gff}{The gene feature file, in GFF/GTF format}
 #   \item{orderedBy}{A @character string specifying how the input file has
 #    been sorted, if at all.}
 #   \item{optionsVec}{A named @character @vector of options to htseq-count.}
 #   \item{...}{(Not used)}
+#   \item{pathnameD}{(optional) destination file to save htseq-count output.}
 #   \item{command}{A @character string specifying the name of the executable.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
@@ -42,15 +42,10 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("htseqCount", "default", function(pathnameS,
-                                              pathnameD=NULL,
-                                              gff,
-					      orderedBy=c("none", "position", "name"),
+setMethodS3("htseqCount", "default", function(pathnameS, gff, orderedBy=c("none", "position", "name"),
                                               optionsVec=c('-s'='no', '-a'='10'),  ## Anders et al default
                                               ...,
-                                              command='htseq-count',
-                                              verbose=FALSE) {
-
+                                              pathnameD=NULL, command='htseq-count', verbose=FALSE) {
   ## ( Support a call like this: "htseq-count -s no -a 10 lib_sn.sam gff > countFile")
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Local functions
@@ -79,21 +74,17 @@ setMethodS3("htseqCount", "default", function(pathnameS,
     throw("Not a BAM or SAM file: ", pathnameS);
   }
 
-  # Argument 'pathnameD'
-  if (is.null(pathnameD)) {
-    pathnameD <- sub("[.](bam|sam)$", ".count", pathnameS, ignore.case=TRUE)
-    if (pathnameD == pathnameS) { # should not happen
-      pathnameD <- paste(pathnameS, ".count", sep="")
-    }
-  }
-  stopifnot(pathnameD != pathnameS)
-  pathnameD <- Arguments$getWritablePathname(pathnameD, mustNotExist=TRUE);
-
   # Argument 'gff'
   gff <- Arguments$getReadablePathname(gff);
 
   # Argument 'orderedBy':
   orderedBy <- match.arg(orderedBy);
+
+  # Count file
+  if (is.null(pathnameD)) {
+    pathnameD <- sub("[.](bam|sam)$", ".count", pathnameS, ignore.case=TRUE);
+  }
+  pathnameD <- Arguments$getWritablePathname(pathnameD, mustNotExist=TRUE);
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -104,9 +95,16 @@ setMethodS3("htseqCount", "default", function(pathnameS,
 
 
   verbose && enter(verbose, "Running htseqCount()");
+
+  # Log file
+  pathnameL <- sprintf("%s.log", pathnameD);
+  pathnameL <- Arguments$getWritablePathname(pathnameL, mustNotExist=TRUE);
+
+
   verbose && cat(verbose, "Input BAM/SAM file: ", sQuote(pathnameS));
   verbose && cat(verbose, "Genome transcript file: ", sQuote(gff));
   verbose && cat(verbose, "Output count file: ", sQuote(pathnameD));
+  verbose && cat(verbose, "Output log file: ", sQuote(pathnameL));
   verbose && cat(verbose, "htseq-count executable: ", command);
 
   # Locates the htseq-count executable
@@ -241,11 +239,11 @@ setMethodS3("htseqCount", "default", function(pathnameS,
   # htseq-count sends results to standard output, so make sure
   # to redirect to output file.
 
-  # Write to a temporary file
+  # Write results and log to temporary files
   pathnameDT <- pushTemporaryFile(pathnameD, verbose=verbose);
-  args <- c(args, " > ", shQuote(pathnameDT));
+  pathnameLT <- pushTemporaryFile(pathnameL, verbose=verbose);
 
-  res <- do.call(systemHTSeqCount, args=list(commandName=command, args=args, verbose=less(verbose, 1)));
+  res <- systemHTSeqCount(..., args=args, stdout=pathnameDT, stderr=pathnameLT, command=command, verbose=less(verbose, 1));
 
   verbose && cat(verbose, "Result:");
   verbose && str(verbose, res);
@@ -256,8 +254,15 @@ setMethodS3("htseqCount", "default", function(pathnameS,
     verbose && cat(verbose, "Non-zero exit status: ", status);
   }
 
-  # Renaming temporary file
+  # Renaming temporary files
   pathnameD <- popTemporaryFile(pathnameDT, verbose=verbose);
+  pathnameL <- popTemporaryFile(pathnameLT, verbose=verbose);
+
+  pathnameD <- Arguments$getReadablePathname(pathnameD);
+  pathnameL <- Arguments$getReadablePathname(pathnameL);
+
+  attr(res, "countFile") <- pathnameD;
+  attr(res, "logFile") <- pathnameL;
 
   verbose && exit(verbose);
 
@@ -269,6 +274,8 @@ setMethodS3("htseqCount", "default", function(pathnameS,
 
 ############################################################################
 # HISTORY:
+# 2014-03-11 [HB]
+# o Now htseqCount() writes counts to one file and log messages to another.
 # 2014-03-10 [HB]
 # o ROBUSTNESS: Now htseqCount() uses shQuote() for all pathnames.
 # 2014-03-09 [HB]

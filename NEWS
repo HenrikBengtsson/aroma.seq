@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.32 [2014-03-11]
+o Now htseqCount() also outputs a log file.
+
+
 Version: 0.4.31 [2014-03-10]
 o ROBUSTNESS: Now bowtie2(), bowtie2Build(), bwaAln(), bwaIndex() and so
   on use shQuote() for all pathnames.
