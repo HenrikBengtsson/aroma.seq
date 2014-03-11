@@ -245,7 +245,16 @@ setMethodS3("htseqCount", "default", function(pathnameS,
   pathnameDT <- pushTemporaryFile(pathnameD, verbose=verbose);
   args <- c(args, " > ", shQuote(pathnameDT));
 
-  res <- do.call(what=systemHTSeqCount, args=list(command=command, args=args));
+  res <- do.call(systemHTSeqCount, args=list(commandName=command, args=args, verbose=less(verbose, 1)));
+
+  verbose && cat(verbose, "Result:");
+  verbose && str(verbose, res);
+
+  # Was there a non-zero exit status?
+  status <- attr(res, "status");
+  if (!is.null(status)) {
+    verbose && cat(verbose, "Non-zero exit status: ", status);
+  }
 
   # Renaming temporary file
   pathnameD <- popTemporaryFile(pathnameDT, verbose=verbose);
