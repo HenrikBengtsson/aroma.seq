@@ -14,6 +14,8 @@
 #   \item{gff}{The gene feature file, in GFF/GTF format}
 #   \item{orderedBy}{A @character string specifying how the input file has
 #    been sorted, if at all.}
+#   \item{sortByName}{A @character string specifying when the BAM/SAM file
+#    should be sorted by name.}
 #   \item{optionsVec}{A named @character @vector of options to htseq-count.}
 #   \item{...}{(Not used)}
 #   \item{pathnameD}{(optional) destination file to save htseq-count output.}
@@ -43,6 +45,7 @@
 # @keyword internal
 #*/###########################################################################
 setMethodS3("htseqCount", "default", function(pathnameS, gff, orderedBy=c("none", "position", "name"),
+                                              sortByName=c("always", "auto"),
                                               optionsVec=c('-s'='no', '-a'='10'),  ## Anders et al default
                                               ...,
                                               pathnameD=NULL, command='htseq-count', verbose=FALSE) {
@@ -63,6 +66,10 @@ setMethodS3("htseqCount", "default", function(pathnameS, gff, orderedBy=c("none"
     } # asSam()
   }
 
+  isSAM <- function(pathname, ...) {
+    (regexpr(".*[.]sam$", pathname, ignore.case=TRUE) != -1L);
+  } # isSAM()
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -79,6 +86,9 @@ setMethodS3("htseqCount", "default", function(pathnameS, gff, orderedBy=c("none"
 
   # Argument 'orderedBy':
   orderedBy <- match.arg(orderedBy);
+
+  # Argument 'sortByName':
+  sortByName <- match.arg(sortByName);
 
   # Count file
   if (is.null(pathnameD)) {
@@ -115,18 +125,45 @@ setMethodS3("htseqCount", "default", function(pathnameS, gff, orderedBy=c("none"
   verbose && cat(verbose, "Version: ", ver);
   if (is.na(ver)) ver <- numeric_version("0.0.0");
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # BACKWARD COMPATIBILITY for htseq-count (< 0.6.0)
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  if (ver < "0.6.0") {
-    verbose && enter(verbose, "Making sure to provide htseq-count (< 0.6.0) with a SAM file sorted by query name [EXPENSIVE WORKAROUND]");
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    #
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # BACKWARD COMPATIBILITY for htseq-count (< 0.6.0)
+  convertToSam <- "auto";
+  if (convertToSam == "auto") {
+    if (ver < "0.6.0") {
+      verbose && cat(verbose, "Backward compatibility: Detected htseq-count (< 0.6.0): Will convert to SAM [EXPENSIVE WORKAROUND]");
+      convertToSam <- "always";
+    } else {
+      convertToSam <- "never";
+    }
+  }
+  convertToSam <- match.arg(convertToSam, c("always", "never"));
+
+  # BACKWARD COMPATIBILITY for htseq-count (< 0.6.0)
+  if (sortByName == "auto") {
+    if (orderedBy == "name") {
+      sortByName <- "never";
+    } else if (ver < "0.6.0") {
+      verbose && cat(verbose, "Backward compatibility: Detected htseq-count (< 0.6.0): Will sort BAM/SAM by name [EXPENSIVE WORKAROUND]");
+      sortByName <- "always";
+    } else {
+      if (orderedBy == "none") {
+        sortByName <- "always";
+      } else {
+        sortByName <- "never";
+      }
+    }
+  }
+  sortByName <- match.arg(sortByName, c("always", "never"));
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Sort by query name?
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (sortByName == "always") {
+    verbose && enter(verbose, "Making sure to provide with a BAM/SAM file sorted by query name [EXPENSIVE WORKAROUND]");
+
     # (a) Create/setup BAM input for sorting, iff SAM file is passed
-    isSAM <- (regexpr(".*[.]sam$", pathnameS, ignore.case=TRUE) != -1L);
-    if (isSAM) {
+    if (isSAM(pathnameS)) {
       verbose && enter(verbose, "Converting BAM to SAM");
       pathnameBAM <- sub("[.]sam$", ",tmp.bam", pathnameS, ignore.case=TRUE);
       pathnameBAM <- Arguments$getWritablePathname(pathnameBAM, mustNotExist=TRUE);
@@ -147,8 +184,8 @@ setMethodS3("htseqCount", "default", function(pathnameS, gff, orderedBy=c("none"
 
     # (b) Sort input BAM by name
     verbose && enter(verbose, "Sorting BAM by query name");
-    pathnameBAMs <- sub("[.]bam$", ",byName,tmp.bam", pathnameS)
-    pathnameBAMs <- Arguments$getWritablePathname(pathnameBAMs, mustNotExist=TRUE)
+    pathnameBAMs <- sub("(|,tmp)[.]bam$", ",byName,tmp.bam", pathnameS);
+    pathnameBAMs <- Arguments$getWritablePathname(pathnameBAMs, mustNotExist=TRUE);
     on.exit({
       if (isFile(pathnameBAMs)) file.remove(pathnameBAMs);
     }, add=TRUE);
@@ -161,10 +198,24 @@ setMethodS3("htseqCount", "default", function(pathnameS, gff, orderedBy=c("none"
     if (isFile(pathnameBAM)) file.remove(pathnameBAM);
     # Update input pathname
     pathnameS <- pathnameBAMs;
+    orderedBy <- "name";
     verbose && exit(verbose);
 
-    # (c) Convert sorted BAM to SAM
+    verbose && exit(verbose);
+  } else {
+    pathnameBAMs <- NULL;
+  } # if (sortByName == "always")
+
+  # Sanity check
+  pathnameS <- Arguments$getReadablePathname(pathnameS);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Convert BAM to SAM?
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (convertToSam == "always" && !isSAM(pathnameS)) {
     verbose && enter(verbose, "Converting sorted BAM to SAM");
+
     pathnameSAMs <- sub("[.]bam$", ".sam", pathnameS);
     pathnameSAMs <- Arguments$getWritablePathname(pathnameSAMs);
     on.exit({
@@ -175,33 +226,17 @@ setMethodS3("htseqCount", "default", function(pathnameS, gff, orderedBy=c("none"
     # Sanity checks
     pathnameSAMs <- Arguments$getReadablePathname(pathnameSAMs);
     verbose && cat(verbose, "Sorted temporary SAM file: ", pathnameSAMs);
-    # Remove temporary sorted BAM file
-    if (isFile(pathnameBAMs)) file.remove(pathnameBAMs);
     # Update input pathname
     pathnameS <- pathnameBAMs;
-    verbose && exit(verbose);
+
+    # Remove temporary sorted BAM file
+    if (isFile(pathnameBAMs)) file.remove(pathnameBAMs);
 
     verbose && exit(verbose);
-  } else {
-    # Sort input BAM?
-    if (orderedBy == "none") {
-      verbose && enter(verbose, "Sorting non-sorted BAM by query name");
-      pathnameBAMs <- sub("[.]bam$", ",byName,tmp.bam", pathnameS);
-      pathnameBAMs <- Arguments$getWritablePathname(pathnameBAMs, mustNotExist=TRUE);
-      on.exit({
-        if (isFile(pathnameBAMs)) file.remove(pathnameBAMs);
-      }, add=TRUE);
-      # Sort BAM
-      sortBam(pathnameS, sub("[.]bam$", "", pathnameBAMs), byQname=TRUE);
-      # Sanity check
-      pathnameBAMs <- Arguments$getReadablePathname(pathnameBAMs);
-      verbose && cat(verbose, "Sorted temporary BAM file: ", pathnameBAMs);
-      # Update input pathname
-      pathnameS <- pathnameBAMs;
-      orderedBy <- "name";
-      verbose && exit(verbose);
-    }
-  } # if (... ver < "0.6.0")
+  }
+
+  # Sanity check
+  pathnameS <- Arguments$getReadablePathname(pathnameS);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -211,10 +246,10 @@ setMethodS3("htseqCount", "default", function(pathnameS, gff, orderedBy=c("none"
   opts <- NULL;
   if (ver >= "0.6.0") {
     # SAM or BAM format?
-    if (regexpr("[.]bam$", pathnameS, ignore.case=TRUE) != -1L) {
-      opts <- c(opts, "--format=bam");
-    } else {
+    if (isSAM(pathnameS)) {
       opts <- c(opts, "--format=sam");
+    } else {
+      opts <- c(opts, "--format=bam");
     }
 
     # Ordered by position or by name?
@@ -243,24 +278,57 @@ setMethodS3("htseqCount", "default", function(pathnameS, gff, orderedBy=c("none"
   pathnameDT <- pushTemporaryFile(pathnameD, verbose=verbose);
   pathnameLT <- pushTemporaryFile(pathnameL, verbose=verbose);
 
-  res <- systemHTSeqCount(..., args=args, stdout=pathnameDT, stderr=pathnameLT, command=command, verbose=less(verbose, 1));
+  status <- systemHTSeqCount(..., args=args, stdout=pathnameDT, stderr=pathnameLT, command=command, verbose=less(verbose, 1));
+  verbose && cat(verbose, "Exit status: ", status);
 
-  verbose && cat(verbose, "Result:");
-  verbose && str(verbose, res);
-
-  # Was there a non-zero exit status?
-  status <- attr(res, "status");
-  if (!is.null(status)) {
-    verbose && cat(verbose, "Non-zero exit status: ", status);
-  }
-
-  # Renaming temporary files
-  pathnameD <- popTemporaryFile(pathnameDT, verbose=verbose);
+  # Renaming temporary log file
   pathnameL <- popTemporaryFile(pathnameLT, verbose=verbose);
-
-  pathnameD <- Arguments$getReadablePathname(pathnameD);
   pathnameL <- Arguments$getReadablePathname(pathnameL);
 
+
+  # Was there a non-zero exit status?
+  if (is.numeric(status) && status != 0L) {
+    verbose && enter(verbose, "Non-zero exit status: ", status);
+
+    # Remove empty count file
+    fi <- file.info(pathnameDT);
+    if (fi$size == 0L) {
+      file.remove(pathnameDT);
+      verbose && cat(verbose, "Removed empty result file: ", pathnameDT);
+      pathnameDT <- NULL;
+    }
+
+    # Parse log file
+    log <- readLines(pathnameL);
+
+    # Did an error occur?  Then throw an R error
+    idx <- grep("^Error", log, value=FALSE, ignore.case=TRUE)[1L];
+    if (!is.na(idx)) {
+      msg <- log[seq(from=idx,to=length(log))];
+      msg <- paste(msg, collapse="\n");
+      msg <- sprintf("Error detected while running %s (v%s) on %s [exit code %d]: %s", command, ver, shQuote(pathnameS), status, msg);
+      throw(msg);
+    }
+
+    # Was a warning generated?  The translate it into an R warning
+    idx <- grep("^Warning", log, value=FALSE, ignore.case=TRUE)[1L];
+    if (!is.na(idx)) {
+      msg <- log[seq(from=idx,to=length(log))];
+      msg <- paste(msg, collapse="\n");
+      msg <- sprintf("Warning detected while running %s (v%s) on %s [exit code %d]: %s", command, ver, shQuote(pathnameS), status, msg);
+      warning(msg);
+    }
+    verbose && exit(verbose);
+  }
+
+  # Renaming temporary count file
+  if (!is.null(pathnameDT)) {
+    pathnameD <- popTemporaryFile(pathnameDT, verbose=verbose);
+    pathnameD <- Arguments$getReadablePathname(pathnameD);
+  }
+
+  res <- character(0L);
+  attr(res, "status") <- status;
   attr(res, "countFile") <- pathnameD;
   attr(res, "logFile") <- pathnameL;
 
@@ -275,6 +343,13 @@ setMethodS3("htseqCount", "default", function(pathnameS, gff, orderedBy=c("none"
 ############################################################################
 # HISTORY:
 # 2014-03-11 [HB]
+# o ROBUSTNESS: Added argument 'sortByName' to htseqCount(), which for 
+#   now defaults to "always", because although htseq-count (>= 0.6.0)
+#   is supposed to handle when BAM files are sorted by position, it will
+#   run out of memory for modestly large BAM files.
+# o ROBUSTNESS: If the external software returns a non-zero exit code,
+#   then htseqCount() removes any empty count file and scans the log file
+#   for errors and warnings and translates them into ditto in R.
 # o Now htseqCount() writes counts to one file and log messages to another.
 # 2014-03-10 [HB]
 # o ROBUSTNESS: Now htseqCount() uses shQuote() for all pathnames.

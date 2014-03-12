@@ -2,6 +2,13 @@ Package: aroma.seq
 ==================
 
 Version: 0.4.32 [2014-03-11]
+o ROBUSTNESS: Added argument 'sortByName' to htseqCount(), which for 
+  now defaults to "always", because although htseq-count (>= 0.6.0)
+  is supposed to handle when BAM files are sorted by position, it will
+  run out of memory for modestly large BAM files.
+o ROBUSTNESS: If the external software returns a non-zero exit code,
+  then htseqCount() removes any empty count file and scans the log file
+  for errors and warnings and translates them into ditto in R.
 o Now htseqCount() also outputs a log file.
 
 
