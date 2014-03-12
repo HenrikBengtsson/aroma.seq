@@ -18,8 +18,8 @@
 
 \usage{
 \method{htseqCount}{default}(pathnameS, gff, orderedBy=c("none", "position", "name"),
-  optionsVec=c(`-s` = "no", `-a` = "10"), ..., pathnameD=NULL, command="htseq-count",
-  verbose=FALSE)
+  sortByName=c("always", "auto"), optionsVec=c(`-s` = "no", `-a` = "10"), ...,
+  pathnameD=NULL, command="htseq-count", verbose=FALSE)
 }
 
 \arguments{
@@ -27,6 +27,8 @@
   \item{gff}{The gene feature file, in GFF/GTF format}
   \item{orderedBy}{A \code{\link[base]{character}} string specifying how the input file has
    been sorted, if at all.}
+  \item{sortByName}{A \code{\link[base]{character}} string specifying when the BAM/SAM file
+   should be sorted by name.}
   \item{optionsVec}{A named \code{\link[base]{character}} \code{\link[base]{vector}} of options to htseq-count.}
   \item{...}{(Not used)}
   \item{pathnameD}{(optional) destination file to save htseq-count output.}
