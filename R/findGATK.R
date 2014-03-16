@@ -75,8 +75,11 @@ findGATK <- function(mustExist=TRUE, ..., verbose=FALSE) {
   pathname <- Arguments$getReadablePathname(filename, path=path, mustExist=FALSE);
   verbose && cat(verbose, "Located main jar file: ", pathname);
 
+  
   if (isFile(pathname)) {
-    ver <- NULL;
+    .findCache(name=command, path=pathname);
+    ver <- systemGATK("--version", stdout=TRUE, stderr=TRUE);
+    attr(pathname, "version") <- ver;
     .findCache(name=command, path=pathname);
   } else if (mustExist) {
     throw(sprintf("Failed to located GATK tools"));
@@ -90,6 +93,8 @@ findGATK <- function(mustExist=TRUE, ..., verbose=FALSE) {
 
 ############################################################################
 # HISTORY:
+# 2014-03-14
+# o Now findGATK() also returns the version of GATK.
 # 2012-10-01
 # o BUG FIX: findGATK(mustExists=FALSE) would throw an error if GATK
 #   was not found.

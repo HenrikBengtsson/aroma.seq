@@ -1,6 +1,5 @@
 ###########################################################################/**
 # @RdocFunction findFastqDump
-# \alias{}  
 #
 # @title "Locates the FastqDump executable"
 #
@@ -13,9 +12,6 @@
 # \arguments{
 #   \item{...}{Not used.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
-# }
-#
-# \details{
 # }
 #
 # @author "TT"

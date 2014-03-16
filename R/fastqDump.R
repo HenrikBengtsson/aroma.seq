@@ -19,9 +19,6 @@
 #
 # @author "TT"
 #
-# \references{
-# }
-#
 # @keyword internal
 #*/###########################################################################
 setMethodS3("fastqDump", "default", function(...,

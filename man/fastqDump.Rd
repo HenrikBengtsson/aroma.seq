@@ -30,8 +30,5 @@
 
 \author{Taku Tokuyasu}
 
-\references{
-}
-
 
 \keyword{internal}

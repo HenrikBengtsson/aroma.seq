@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.33 [2014-03-14]
+o Now findGATK() also returns the version of GATK.
+
+
 Version: 0.4.32 [2014-03-11]
 o ROBUSTNESS: Added argument 'sortByName' to htseqCount(), which for 
   now defaults to "always", because although htseq-count (>= 0.6.0)

@@ -9,7 +9,6 @@
 \name{findFastqDump}
 \alias{findFastqDump}
 
-\alias{}
 
 \title{Locates the FastqDump executable}
 
@@ -24,9 +23,6 @@ findFastqDump(commandName="fastq-dump", ...)
 \arguments{
   \item{...}{Not used.}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
-}
-
-\details{
 }
 
 \author{Taku Tokuyasu}
