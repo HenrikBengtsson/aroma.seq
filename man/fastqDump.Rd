@@ -17,18 +17,23 @@
 }
 
 \usage{
-\method{fastqDump}{default}(..., split3=TRUE, outPath="fastqData", pathnames=character(0L), verbose=FALSE)
+\method{fastqDump}{default}(..., bSplit3=TRUE, bGzip=TRUE, outPath="fastqData", pathnames=character(0L),
+  verbose=FALSE)
 }
 
 \arguments{
   \item{...}{Additional arguments passed to \code{\link{systemFastqDump}}().}
+  \item{bSplit3}{If TRUE, use '--split-3' option to produce two fastq files for paired-end data}
+  \item{bGzip}{If TRUE, gzip output fastq files}
   \item{outPath}{Directory where output fastq files will reside at completion}
   \item{pathnames}{Zero or more input pathnames.}
-  \item{split3}{If TRUE, add '--split-3' option to produce two files in case of paired-end data}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }
 
 \author{Taku Tokuyasu}
+
+\references{
+}
 
 
 \keyword{internal}
