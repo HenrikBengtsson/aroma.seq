@@ -11,6 +11,8 @@
 #
 # \arguments{
 #   \item{...}{Not used.}
+#   \item{commandName}{'fastq-dump'; command name to find}
+#   \item{versionPattern}{regexp to use if version not found properly; default should work}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
@@ -18,7 +20,11 @@
 #
 # @keyword internal
 #*/###########################################################################
-findFastqDump <- function(commandName='fastq-dump',...) {
+findFastqDump <- function(...,
+                          commandName='fastq-dump',
+                          versionPattern=".*fastq-dump[ ]*:[ ]*([0-9.]+)",
+                          verbose=FALSE)
+{
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
   if (verbose) {
@@ -26,8 +32,8 @@ findFastqDump <- function(commandName='fastq-dump',...) {
     on.exit(popState(verbose));
   }
   verbose && enter(verbose, "Locating FastqDump software");
-  versionPattern <- "fastq-dump[ ]*:[s ]*([0-9.]+)";
-  findExternal(command=commandName, versionPattern=versionPattern, ...);
+  res <- findExternal(command=commandName, versionPattern=versionPattern, ...);
+  res
 } # findFastqDump()
 
 ############################################################################

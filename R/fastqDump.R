@@ -22,9 +22,6 @@
 #
 # @author "TT"
 #
-# \references{
-# }
-#
 # @keyword internal
 #*/###########################################################################
 setMethodS3("fastqDump", "default", function(...,
@@ -41,10 +38,10 @@ setMethodS3("fastqDump", "default", function(...,
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   
   # Argument 'bSplit3':
-  stopifnot(is.logical(bSplit3))
+  bSplit3 <- Arguments$getLogical(bSplit3)
   
   # Argument 'bGzip':
-  stopifnot(is.logical(bGzip))
+  bGzip <- Arguments$getLogical(bGzip)
   
   # Argument 'outPath'
   outPath <- Arguments$getWritablePath(outPath)

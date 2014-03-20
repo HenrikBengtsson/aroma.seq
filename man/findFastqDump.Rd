@@ -17,11 +17,14 @@
 }
 
 \usage{
-findFastqDump(commandName="fastq-dump", ...)
+findFastqDump(..., commandName="fastq-dump",
+  versionPattern=".*fastq-dump[ ]*:[ ]*([0-9.]+)", verbose=FALSE)
 }
 
 \arguments{
   \item{...}{Not used.}
+  \item{commandName}{'fastq-dump'; command name to find}
+  \item{versionPattern}{regexp to use if version not found properly; default should work}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }
 
