@@ -75,7 +75,7 @@ findGATK <- function(mustExist=TRUE, ..., verbose=FALSE) {
   pathname <- Arguments$getReadablePathname(filename, path=path, mustExist=FALSE);
   verbose && cat(verbose, "Located main jar file: ", pathname);
 
-  
+
   if (isFile(pathname)) {
     .findCache(name=command, path=pathname);
     ver <- systemGATK("--version", stdout=TRUE, stderr=TRUE);

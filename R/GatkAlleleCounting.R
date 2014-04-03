@@ -52,7 +52,7 @@ setMethodS3("getPath", "GatkAlleleCounting", function(this, ...) {
 
   # The full path
   path <- filePath(path, chipType);
-  path <- Arguments$getWritablePath(path); 
+  path <- Arguments$getWritablePath(path);
 
   # Verify that it is not the same as the input path
   inPath <- getPath(getInputDataSet(this));
@@ -118,7 +118,7 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
 
       # (a) Instead of having GATK build a missing FAI index file, build it here
       buildIndex(fa, verbose=verbose);
-      
+
       # (b) Get the BED file representation of UGP file
       if (is.null(bedf)) {
         verbose && enter(verbose, "Writing BED file representation of UGP file");
@@ -131,6 +131,17 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
       verbose && enter(verbose, "Calling GATK DepthOfCoverage");
       pathnameDT <- pushTemporaryFile(pathnameD);
       verbose && cat(verbose, "Writing to temporary file: ", pathnameDT);
+      # -T / --analysis_type: Name of the tool to run
+      # -I / --input_file: Pathname to BAM file
+      # -R / --reference_sequence: Pathname to FASTA reference file
+      # -L / --intervals: Pathname to BED file
+      # --omitIntervalStatistics: Do not calculate per-interval statistics
+      #   [Disabling the tabulation of interval statistics (mean, median, quartiles AND # intervals by sample by coverage) should speed up processing. This option is required in order to use -nt parallelism.]
+      # --omitLocusTable: Do not calculate per-sample per-depth counts of loci
+      #   [Disabling the tabulation of locus statistics (# loci covered by sample by coverage) should speed up processing.]
+      # --omitPerSampleStats: Do not output the summary files per-sample
+      #   [This option simply disables writing separate files for per-sample summary statistics (total, mean, median, quartile coverage per sample). These statistics are still calculated internally, so enabling this option will not improve runtime.]
+      # --printBaseCounts: Add base counts to per-locus output
       res <- systemGATK(T="DepthOfCoverage", I=getPathname(bf), R=getPathname(fa), L=getPathname(bedf), "--omitIntervalStatistics", "--omitLocusTable", "--omitPerSampleStats", "--printBaseCounts", "o"=pathnameDT, verbose=verbose);
       verbose && cat(verbose, "GATK system result: ", res);
       verbose && exit(verbose);
@@ -140,7 +151,7 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
       verbose && enter(verbose, "Parsing and cleaning up the GATK output file");
       db <- TabularTextFile(pathnameDT);
       verbose && print(verbose, db);
-    
+
       verbose && enter(verbose, "Reading");
       colClassPatterns <- c("(Locus|_base_counts)"="character");
       data <- readDataFrame(db, colClassPatterns=colClassPatterns);
@@ -257,14 +268,14 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
       file.remove(pathnameDT); # AD HOC
       pathnameDT <- popTemporaryFile(pathnameDTT);
       verbose && exit(verbose);
-      
+
       pathnameD <- popTemporaryFile(pathnameDT);
     } # if (overwrite || !isFile(...))
-  
+
     # Parse GATK output file
     db <- TabularTextFile(pathnameD);
     verbose && print(verbose, db);
-  
+
     verbose && exit(verbose);
   } # for (ii ...)
 
@@ -320,42 +331,42 @@ setMethodS3("getCombineBy", "GatkAlleleCounting", function(this, ...) {
       counts <- Reduce("+", dfT);
       df[counts > 0L,];
     });
-  
+
     # Stack
     df <- Reduce(rbind, dfList);
     rm(dfList);
-  
+
     dfK <- df[,c("chromosome", "position")];
     counts <- as.matrix(df[,countKeys]);
     keys <- Reduce(function(...) paste(..., sep="\t"), dfK);
     dups <- duplicated(keys);
-    
+
     # Unique (chromosome,position)
     dfU <- dfK[!dups,];
     keysU <- keys[!dups];
     countsU <- counts[!dups,,drop=FALSE];
-  
+
     # Remainders
     keys <- keys[dups];
     counts <- counts[dups,,drop=FALSE];
-  
+
     while(length(keys) > 0L) {
       dups <- duplicated(keys);
-  
+
       # Unique (chromosome,position)
       keysT <- keys[!dups];
       countsT <- counts[!dups,,drop=FALSE];
-  
+
       # Add to total counts
       idxs <- match(keysT, table=keys);
       stopifnot(all(is.finite(idxs)));
       countsU[idxs,] <- countsU[idxs,] + countsT;
-      
+
       # Remainders
       keys <- keys[dups];
       counts <- counts[dups,,drop=FALSE];
     } # while()
-  
+
     data <- cbind(dfU, countsU);
     data;
   } # combineBy()
