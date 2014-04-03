@@ -1,6 +1,11 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.34 [2014-04-02]
+o CLEANUP: Dropped declaration of internal S3 method dsApply().
+  This ease the migration of that method to the R.filesets package.
+
+
 Version: 0.4.33 [2014-03-14]
 o Now findGATK() also returns the version of GATK.
 
