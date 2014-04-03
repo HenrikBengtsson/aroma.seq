@@ -41,8 +41,11 @@
 #   @usage findTopHat1
 #   @usage findTopHat2
 #
-#   HTSeq
+#   # HTSeq
 #   @usage findHTSeq
+#
+#   # fastq-dump
+#   @usage findFastqDump
 # }
 #
 # \arguments{

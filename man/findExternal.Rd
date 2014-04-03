@@ -52,8 +52,12 @@
   findTopHat1(..., command="tophat", version=c(1, 2))
   findTopHat2(..., command="tophat2", version=c(2, 3))
 
-  HTSeq
+  # HTSeq
   findHTSeq(..., command=c("htseq-count", "htseq-qa"))
+
+  # fastq-dump
+  findFastqDump(..., commandName="fastq-dump",
+  versionPattern=".*fastq-dump[ ]*:[ ]*([0-9.]+)", verbose=FALSE)
 }
 
 \arguments{

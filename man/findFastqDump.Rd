@@ -10,10 +10,10 @@
 \alias{findFastqDump}
 
 
-\title{Locates the FastqDump executable}
+\title{Locates the fastq-dump executable}
 
 \description{
- Locates the FastqDump executable on the current system.
+ Locates the fastq-dump executable on the current system.
 }
 
 \usage{

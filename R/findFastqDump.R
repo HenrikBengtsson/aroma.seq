@@ -1,7 +1,7 @@
 ###########################################################################/**
 # @RdocFunction findFastqDump
 #
-# @title "Locates the FastqDump executable"
+# @title "Locates the fastq-dump executable"
 #
 # \description{
 #  @get "title" on the current system.
