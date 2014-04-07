@@ -29,7 +29,7 @@ importFrom("R.filesets", "TabularTextFileSet")
 importFrom("R.filesets", "byPath")
 importFrom("R.filesets", "findByName")
 importFrom("R.filesets", "byName")
-##importFrom("R.filesets", "dsApply")
+importFrom("R.filesets", "dsApply")
 importFrom("R.filesets", "getAsteriskTags")
 importFrom("R.filesets", "getDefaultColumnNames")
 importFrom("R.filesets", "getDefaultFullName")
@@ -74,7 +74,6 @@ importFrom("R.filesets", "setFullNamesTranslator")
 import("R.utils")
 import("aroma.core")
 # importFrom("Biobase", "anyMissing")
-import("BiocParallel")
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -250,8 +249,6 @@ S3method("directoryItems", "character")
 S3method("directoryStructure", "character")
 
 # default
-S3method(".getBatchJobRegistry", "default")
-S3method(".getBatchJobRegistryId", "default")
 S3method("bowtie2", "default")
 S3method("bowtie2Build", "default")
 S3method("bowtie2IndexPrefix", "default")
@@ -391,7 +388,6 @@ S3method("saveCacheFile", "GenericDataFile")
 S3method("saveCacheFileItem", "GenericDataFile")
 
 # GenericDataFileSet
-S3method(".getBatchJobRegistryId", "GenericDataFileSet")
 S3method("directoryItem", "GenericDataFileSet")
 S3method("directoryItems", "GenericDataFileSet")
 S3method("directoryStructure", "GenericDataFileSet")

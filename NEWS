@@ -1,6 +1,11 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.35 [2014-04-06]
+o CLEANUP: Now all parallel/distributed processing is handled by
+  dsApply(), which has been moved to R.filesets 1.5.0.
+
+
 Version: 0.4.34 [2014-04-02]
 o CLEANUP: Dropped declaration of internal S3 method dsApply().
   This ease the migration of that method to the R.filesets package.

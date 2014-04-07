@@ -195,17 +195,10 @@ isPaired.AbstractAlignment isPaired.FastqDataSet
 process.TopHatAlignment validate.FastaReferenceSet
 findMateFile findMateFile.FastqDataFile getMateFile
 getMateFile.FastqDataFile
-
-getBatchJobRegistry getBatchJobRegistry.default
-getBatchJobRegistryIdByMethod
-getBatchJobRegistryIdByMethod.GenericDataFileSet
-getBatchJobRegistryIdByMethod.default
-
 getParameters.TopHat2Alignment
 getRootPath.TopHat2Alignment
 process.TopHat2Alignment
 getPath.TopHat2Alignment
-dsApply
 getExpectedOutputPaths getExpectedOutputPaths.TopHat2Alignment
 getSampleNames.TopHat2Alignment isDone.TopHat2Alignment
 getKnownOrganisms getKnownOrganisms.AromaSeq getOrganism

@@ -225,7 +225,7 @@ setMethodS3("process", "FastQCReporter", function(this, ..., skip=TRUE, force=FA
     # Sanity check
     stopifnot(isDirectory(pathDT));
     pathnameDT <- file.path(pathT, filenameD);
-    stopifnot(isFile(pathnameDT));
+    Arguments$getReadablePathname(pathnameDT);
 
     # CLEANUP: Remove zip file
     filenameDTZ <- sprintf("%s.zip", dirT);

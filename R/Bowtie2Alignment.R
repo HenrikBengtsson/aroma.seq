@@ -244,7 +244,7 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
       } # if (!isFile(pathnameSAM))
 
       # Sanity check
-      stopifnot(isFile(pathnameSAM));
+      Arguments$getReadablePathname(pathnameSAM);
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # (b) Generates a (sorted and indexed) BAM file from SAM file
@@ -255,7 +255,7 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
         verbose && print(verbose, pathnameBAM);
       }
       # Sanity check
-      stopifnot(isFile(pathnameBAM));
+      Arguments$getReadablePathname(pathnameBAM);
     } # if (done)
 
     verbose && exit(verbose);

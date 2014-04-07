@@ -250,7 +250,7 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
       }
 
       # Sanity check
-      stopifnot(isFile(pathnameSAI));
+      Arguments$getReadablePathname(pathnameSAI);
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # (b) Generate SAM file via BWA samse
@@ -284,7 +284,7 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
         }
       }
       # Sanity check
-      stopifnot(isFile(pathnameSAM));
+      Arguments$getReadablePathname(pathnameSAM);
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # (c) Generates a (sorted and indexed) BAM file from SAM file
@@ -295,7 +295,7 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
         verbose && print(verbose, pathnameBAM);
       }
       # Sanity check
-      stopifnot(isFile(pathnameBAM));
+      Arguments$getReadablePathname(pathnameBAM);
     } # if (done)
 
     verbose && exit(verbose);
