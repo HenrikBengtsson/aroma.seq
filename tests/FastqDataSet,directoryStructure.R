@@ -62,4 +62,4 @@ for (ii in seq_along(fqs2)) {
 
 stopifnot(getFullName(fqs2) == dataset2)
 stopifnot(getOrganism(fqs2) == organism)
-stopifnot(all(getFullNames(fqs2) == directoryItem(fqs2, "sample", firstOnly=FALSE)))
+stopifnot(all(getFullName(fqs2[[1]]) == directoryItem(fqs2[[1]], "sample")))
