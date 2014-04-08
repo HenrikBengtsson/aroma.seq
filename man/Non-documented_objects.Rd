@@ -357,16 +357,10 @@
 \alias{findMateFile.FastqDataFile}
 \alias{getMateFile}
 \alias{getMateFile.FastqDataFile}
-\alias{getBatchJobRegistry}
-\alias{getBatchJobRegistry.default}
-\alias{getBatchJobRegistryIdByMethod}
-\alias{getBatchJobRegistryIdByMethod.GenericDataFileSet}
-\alias{getBatchJobRegistryIdByMethod.default}
 \alias{getParameters.TopHat2Alignment}
 \alias{getRootPath.TopHat2Alignment}
 \alias{process.TopHat2Alignment}
 \alias{getPath.TopHat2Alignment}
-\alias{dsApply}
 \alias{getExpectedOutputPaths}
 \alias{getExpectedOutputPaths.TopHat2Alignment}
 \alias{getSampleNames.TopHat2Alignment}
@@ -512,6 +506,17 @@
 \alias{getProgramString.BamDataFile}
 \alias{getPrograms}
 \alias{getPrograms.BamDataFile}
+\alias{AromaSeqDataFile}
+\alias{AromaSeqDataFileSet}
+\alias{directoryStructure.AromaSeqDataFile}
+\alias{directoryStructure.AromaSeqDataFileSet}
+\alias{directoryStructure.NULL}
+\alias{gatk}
+\alias{gatk.default}
+\alias{getDefaultFullName.AromaSeqDataFile}
+\alias{getDefaultFullName.AromaSeqDataFileSet}
+\alias{getOrganism.AromaSeqDataFile}
+\alias{getOrganism.AromaSeqDataFileSet}
 
 \description{
   This page contains aliases for all "non-documented" objects that

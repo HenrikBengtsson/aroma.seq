@@ -279,3 +279,9 @@ validateGroups.FastQCReporter
 getProgram getProgram.BamDataFile getProgramString
 getProgramString.BamDataFile getPrograms
 getPrograms.BamDataFile
+AromaSeqDataFile AromaSeqDataFileSet
+directoryStructure.AromaSeqDataFile
+directoryStructure.AromaSeqDataFileSet directoryStructure.NULL
+gatk gatk.default getDefaultFullName.AromaSeqDataFile
+getDefaultFullName.AromaSeqDataFileSet
+getOrganism.AromaSeqDataFile getOrganism.AromaSeqDataFileSet

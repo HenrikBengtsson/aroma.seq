@@ -48,7 +48,7 @@ setConstructorS3("FastqDataSet", function(files=NULL, ..., paired=FALSE, struct=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   paired <- Arguments$getLogical(paired);
 
-  this <- extend(GenericDataFileSet(files=files, ...), "FastqDataSet",
+  this <- extend(AromaSeqDataFileSet(files=files, ...), "FastqDataSet",
     .paired = paired
   );
 
@@ -137,10 +137,8 @@ setMethodS3("byPath", "FastqDataSet", function(static, ..., recursive=FALSE, str
 }, protected=TRUE)
 
 
-setMethodS3("getOrganism", "FastqDataSet", function(this, depth=getDepth(this)-1L, ...) {
-  path <- getPath(this);
-  path <- getParent(path, depth=depth);
-  organism <- basename(path);
+setMethodS3("getOrganism", "FastqDataSet", function(this, ...) {
+  organism <- directoryItem(this, "organism");
   organism <- Arguments$getCharacter(organism, length=c(1L, 1L));
   organism;
 }, protected=TRUE);

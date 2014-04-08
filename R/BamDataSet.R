@@ -23,14 +23,12 @@
 # @author "HB"
 #*/###########################################################################
 setConstructorS3("BamDataSet", function(files=NULL, ...) {
-  extend(GenericDataFileSet(files=files, ...), "BamDataSet");
+  extend(AromaSeqDataFileSet(files=files, ...), "BamDataSet");
 })
 
 
-setMethodS3("getOrganism", "BamDataSet", function(this, depth=getDepth(this)-1L, ...) {
-  path <- getPath(this);
-  path <- getParent(path, depth=depth);
-  organism <- basename(path);
+setMethodS3("getOrganism", "BamDataSet", function(this, ...) {
+  organism <- directoryItem(this, "organism");
   organism <- Arguments$getCharacter(organism, length=c(1L, 1L));
   organism;
 }, protected=TRUE);

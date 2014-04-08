@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.36 [2014-04-07]
+o Making more efforts of utilizing directory structure patterns.
+
+
 Version: 0.4.35 [2014-04-06]
 o CLEANUP: Now all parallel/distributed processing is handled by
   dsApply(), which has been moved to R.filesets 1.5.0.

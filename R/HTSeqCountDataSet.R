@@ -38,10 +38,8 @@ setMethodS3("getDepth", "HTSeqCountDataSet", function(this, ...) {
 }, protected=TRUE)
 
 
-setMethodS3("getOrganism", "HTSeqCountDataSet", function(this, depth=getDepth(this)-1L, ...) {
-  path <- getPath(this);
-  path <- getParent(path, depth=depth);
-  organism <- basename(path);
+setMethodS3("getOrganism", "HTSeqCountDataSet", function(this, ...) {
+  organism <- directoryItem(this, "organism");
   organism <- Arguments$getCharacter(organism, length=c(1L, 1L));
   organism;
 }, protected=TRUE)

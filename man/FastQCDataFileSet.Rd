@@ -23,13 +23,15 @@
 \code{~~~~~~~|}\cr
 \code{~~~~~~~+--}\code{\link[R.filesets]{GenericDataFileSet}}\cr
 \code{~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~+--}\code{FastQCDataFileSet}\cr
+\code{~~~~~~~~~~~~+--}\code{\link[aroma.seq]{AromaSeqDataFileSet}}\cr
+\code{~~~~~~~~~~~~~~~~~|}\cr
+\code{~~~~~~~~~~~~~~~~~+--}\code{FastQCDataFileSet}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
 
 public static class \bold{FastQCDataFileSet}\cr
-extends \link[R.filesets]{GenericDataFileSet}\cr
+extends \link[aroma.seq]{AromaSeqDataFileSet}\cr
 
 
 
@@ -51,6 +53,9 @@ FastQCDataFileSet(files=NULL, ...)
  \tab \code{byPath} \tab  -\cr
 }
 
+
+ \bold{Methods inherited from AromaSeqDataFileSet}:\cr
+directoryStructure, getDefaultFullName, getOrganism
 
  \bold{Methods inherited from GenericDataFileSet}:\cr
 [, [[, anyDuplicated, anyNA, append, appendFiles, appendFullNamesTranslator, appendFullNamesTranslatorByNULL, appendFullNamesTranslatorByTabularTextFile, appendFullNamesTranslatorByTabularTextFileSet, appendFullNamesTranslatorBydata.frame, appendFullNamesTranslatorByfunction, appendFullNamesTranslatorBylist, as.character, as.list, byName, byPath, c, clearCache, clearFullNamesTranslator, clone, copyTo, dsApply, dsApplyInPairs, duplicated, equals, extract, findByName, findDuplicated, getChecksum, getChecksumFileSet, getChecksumObjects, getDefaultFullName, getFile, getFileClass, getFileSize, getFiles, getFullNames, getNames, getOneFile, getPath, getPathnames, getSubdirs, gunzip, gzip, hasFile, indexOf, is.na, na.omit, nbrOfFiles, resetFullNames, seq, setFullNamesTranslator, sortBy, unique, update2, updateFullName, updateFullNames, validate, directoryItem, directoryItems, directoryStructure, directoryStructure<-, updateDirectoryStructure, getFullNameTranslatorSet, getParentName

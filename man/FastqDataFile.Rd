@@ -23,13 +23,15 @@
 \code{~~~~~~~|}\cr
 \code{~~~~~~~+--}\code{\link[R.filesets]{GenericDataFile}}\cr
 \code{~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~+--}\emph{\code{FastqDataFile}}\cr
+\code{~~~~~~~~~~~~+--}\code{\link[aroma.seq]{AromaSeqDataFile}}\cr
+\code{~~~~~~~~~~~~~~~~~|}\cr
+\code{~~~~~~~~~~~~~~~~~+--}\emph{\code{FastqDataFile}}\cr
 
 \bold{Directly known subclasses:}\cr
 \emph{\link[aroma.seq]{IlluminaFastqDataFile}}\cr
 
 public abstract static class \bold{FastqDataFile}\cr
-extends \emph{\link[R.filesets]{GenericDataFile}}\cr
+extends \emph{\link[aroma.seq]{AromaSeqDataFile}}\cr
 
 
 
@@ -47,7 +49,6 @@ FastqDataFile(...)
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{directoryStructure} \tab  -\cr
  \tab \code{getCommonSeqWidth} \tab  -\cr
  \tab \code{getDefaultSamReadGroup} \tab  -\cr
  \tab \code{getGeometry} \tab  -\cr
@@ -58,6 +59,9 @@ FastqDataFile(...)
  \tab \code{setSamReadGroup} \tab  -\cr
 }
 
+
+ \bold{Methods inherited from AromaSeqDataFile}:\cr
+directoryStructure, getDefaultFullName, getOrganism
 
  \bold{Methods inherited from GenericDataFile}:\cr
 as.character, clone, compareChecksum, copyTo, equals, fromFile, getAttribute, getAttributes, getChecksum, getChecksumFile, getCreatedOn, getDefaultFullName, getExtension, getExtensionPattern, getFileSize, getFileType, getFilename, getFilenameExtension, getLastAccessedOn, getLastModifiedOn, getOutputExtension, getPath, getPathname, gunzip, gzip, hasBeenModified, is.na, isFile, isGzipped, linkTo, readChecksum, renameTo, renameToUpperCaseExt, setAttribute, setAttributes, setAttributesBy, setAttributesByTags, setExtensionPattern, testAttributes, validate, validateChecksum, writeChecksum, directoryItem, directoryItems, directoryStructure, directoryStructure<-, getDataSetName, getOrganismName, getSampleName, loadCacheFile, loadCacheFileItem, memoizedCall2, saveCacheFile, saveCacheFileItem, getParentName

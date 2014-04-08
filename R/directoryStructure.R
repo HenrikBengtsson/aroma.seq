@@ -9,6 +9,9 @@
 #   pattern <- "(.*)/(.*)/(.*)/(.*)/"
 #   replacement <- c(rootpath="\\1", dataset="\\2", organism="\\3", sample="\\4")
 
+
+setMethodS3("directoryStructure", "NULL", function(struct, ...) NULL)
+
 setMethodS3("directoryStructure", "list", function(struct, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -40,7 +43,7 @@ setMethodS3("directoryStructure", "character", function(struct, ...) {
   parts <- strsplit(struct, split="/", fixed=TRUE);
   parts <- unlist(parts, use.names=FALSE);
   names <- gsub("^<(.*)>$", "\\1", parts);
-  pattern <- paste(rep("(.*)", length=length(parts)), collapse="/");
+  pattern <- paste(rep("([^/]*)", length=length(parts)), collapse="/");
   replacement <- sprintf("\\%d", seq_along(names));
   names(replacement) <- names;
   struct <- list(
@@ -54,16 +57,49 @@ setMethodS3("directoryStructure", "character", function(struct, ...) {
   struct;
 }) # directoryStructure()
 
+setMethodS3(".findDefaultDirectoryStructure", "GenericDataFile", function(this, ...) {
+  fcn <- NULL;
+  for (class in class(this)) {
+    fcn <- getS3method("directoryStructure", class, optional=TRUE);
+    if (!is.null(fcn)) {
+      args <- formals(fcn);
+      if (is.element("default", names(args))) return(args$default);
+    }
+  }
+  throw(sprintf("Failed to locate default directory structure for class '%s'", class(this)[1L]));
+})
+
+setMethodS3(".findDefaultDirectoryStructure", "GenericDataFileSet", function(this, ...) {
+  # Infer 'default' from corresponding file class.
+  className <- this$getFileClass();
+  clazz <- Class$forName(className);
+  classNames <- class(newInstance(clazz));
+  fcn <- NULL;
+  for (class in classNames) {
+    fcn <- getS3method("directoryStructure", class, optional=TRUE);
+    if (!is.null(fcn)) {
+      args <- formals(fcn);
+      if (is.element("default", names(args))) return(args$default);
+    }
+  }
+  throw(sprintf("Failed to locate default directory structure for class '%s'", className));
+})
 
 setMethodS3("directoryStructure", "GenericDataFile", function(this, default=NULL, ...) {
   parts <- this$.directoryStructure;
-  if (is.null(parts)) parts <- directoryStructure(default, ...);
+  if (is.null(parts)) {
+    if (is.null(default)) default <- .findDefaultDirectoryStructure(this);
+    parts <- directoryStructure(default, ...);
+  }
   parts;
 })
 
 setMethodS3("directoryStructure", "GenericDataFileSet", function(this, default=NULL, ...) {
   parts <- this$.directoryStructure;
-  if (is.null(parts)) parts <- directoryStructure(default, ...);
+  if (is.null(parts)) {
+    if (is.null(default)) default <- .findDefaultDirectoryStructure(this);
+    parts <- directoryStructure(default, ...);
+  }
   parts;
 })
 
@@ -96,34 +132,47 @@ setMethodS3("directoryItems", "character", function(paths, struct, ..., as="list
   # Argument 'struct':
   struct <- directoryStructure(struct, ...);
 
+  # Nothing to do?
+  if (is.null(struct)) return(list());
+
+  # Append optional slush/tail to the end
+  pattern <- sprintf("%s(|/(.*))", struct$pattern);
+  tail <- sprintf("\\%d", length(struct$replacement)+1L);
+  names(tail) <- "<tail>";
+  replacement <- c(struct$replacement, tail);
+
   # Parse path according to 'struct'
   paths <- gsub("\\", "/", paths, fixed=TRUE);
-  res <- agsub(pattern=struct$pattern, replacement=struct$replacement, paths, ..., as=as);
+  res <- agsub(pattern=pattern, replacement=replacement, paths, ..., as=as);
 
   res;
 }) # directoryItems()
 
 
 setMethodS3("directoryItems", "GenericDataFile", function(this, ...) {
-  path <- getPath(this);
+  pathname <- getPathname(this);
   struct <- directoryStructure(this);
-  directoryItems(path, struct=struct, ...);
+  directoryItems(pathname, struct=struct, ...);
 }, protected=TRUE)
 
 
-setMethodS3("directoryItems", "GenericDataFileSet", function(this, ...) {
-  paths <- sapply(this, FUN=getPath);
+setMethodS3("directoryItems", "GenericDataFileSet", function(this, ..., firstOnly=TRUE) {
+  if (firstOnly) this <- this[1L];
   struct <- directoryStructure(this);
+  paths <- sapply(this, FUN=getPath);
+  paths <- file.path(paths, NA_character_);
   directoryItems(paths, struct=struct, ...);
 }, protected=TRUE)
 
 
-setMethodS3("directoryItem", "GenericDataFileSet", function(this, name, default=NULL, ...) {
+setMethodS3("directoryItem", "GenericDataFileSet", function(this, name, default=NULL, ..., mustExist=TRUE) {
   items <- directoryItems(this, ...);
   if (!is.element(name, names(items))) {
     if (is.null(default)) {
-      path <- getPath(this);
-      throw(sprintf("Cannot infer %s from path %s using set directory structure (%s).", sQuote(name), sQuote(path), paste(sQuote(names(items)), collapse=", ")));
+      if (mustExist) {
+        path <- getPath(this);
+        throw(sprintf("Cannot infer %s from path %s using set directory structure (%s).", sQuote(name), sQuote(path), paste(sQuote(names(items)), collapse=", ")));
+      }
     }
     items[[name]] <- default;
   }
@@ -131,12 +180,14 @@ setMethodS3("directoryItem", "GenericDataFileSet", function(this, name, default=
   value;
 }, protected=TRUE) # directoryItem()
 
-setMethodS3("directoryItem", "GenericDataFile", function(this, name, default=NULL, ...) {
+setMethodS3("directoryItem", "GenericDataFile", function(this, name, default=NULL, ..., mustExist=TRUE) {
   items <- directoryItems(this, ...);
   if (!is.element(name, names(items))) {
     if (is.null(default)) {
-      path <- getPath(this);
-      throw(sprintf("Cannot infer %s from path %s using set directory structure (%s).", sQuote(name), sQuote(path), paste(sQuote(names(items)), collapse=", ")));
+      if (mustExist) {
+        pathname <- getPathname(this);
+        throw(sprintf("Cannot infer %s from pathname %s using set directory structure (%s).", sQuote(name), sQuote(pathname), paste(sQuote(names(items)), collapse=", ")));
+      }
     }
     items[[name]] <- default;
   }
@@ -145,6 +196,9 @@ setMethodS3("directoryItem", "GenericDataFile", function(this, name, default=NUL
 }, protected=TRUE) # directoryItem()
 
 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# AD HOC
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 setMethodS3("getOrganismName", "GenericDataFile", function(this, ...) {
   directoryItem(this, name="organism");
 })
@@ -158,54 +212,49 @@ setMethodS3("getSampleName", "GenericDataFile", function(this, ...) {
 })
 
 
-
-setMethodS3("directoryStructure", "FastqDataFile", function(this, default="<rootpath>/<dataset>/<organism>/", ...) {
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# AROMA.SEQ GENERIC
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+setMethodS3("directoryStructure", "AromaSeqDataFile", function(this, default="<rootpath>/<dataset>/<organism>/<sample>/", ...) {
+  if (is.null(default)) default <- .findDefaultDirectoryStructure(this);
   NextMethod("directoryStructure", default=default);
 })
 
-setMethodS3("directoryStructure", "FastqDataSet", function(this, default=NULL, ...) {
-  if (is.null(default)) {
-    # Infer 'default' from corresponding file class.
-    className <- this$getFileClass();
-    fcn <- getS3method("directoryStructure", className);
-    default <- formals(fcn)$default;
+setMethodS3("directoryStructure", "AromaSeqDataFileSet", function(this, default="<rootpath>/<dataset>/<organism>/<sample>/", ...) {
+  if (is.null(default)) default <- .findDefaultDirectoryStructure(this);
+  NextMethod("directoryStructure", default=default);
+})
+
+setMethodS3("getOrganism", "AromaSeqDataFile", function(this, ...) {
+  directoryItem(this, name="organism");
+})
+
+setMethodS3("getOrganism", "AromaSeqDataFileSet", function(this, ...) {
+  directoryItem(this, name="organism");
+})
+
+setMethodS3("getDefaultFullName", "AromaSeqDataFile", function(this, ...) {
+  value <- directoryItem(this, name="sample", mustExist=FALSE);
+  if (is.null(value)) {
+    value <- NextMethod("getDefaultFullName");
+  } else {
+    pattern <- getExtensionPattern(this);
+    value <- gsub(pattern, "", value);
   }
-  NextMethod("directoryStructure", default=default);
+  value;
 })
 
-
-setMethodS3("directoryStructure", "BamDataFile", function(this, default="<rootpath>/<dataset>/<organism>/", ...) {
-  NextMethod("directoryStructure", default=default);
-})
-
-setMethodS3("directoryStructure", "BamDataSet", function(this, default=NULL, ...) {
-  if (is.null(default)) {
-    # Infer 'default' from corresponding file class.
-    className <- this$getFileClass();
-    fcn <- getS3method("directoryStructure", className);
-    default <- formals(fcn)$default;
-  }
-  NextMethod("directoryStructure", default=default);
-})
-
-
-setMethodS3("directoryStructure", "SamDataFile", function(this, default="<rootpath>/<dataset>/<organism>/", ...) {
-  NextMethod("directoryStructure", default=default);
-})
-
-setMethodS3("directoryStructure", "SamDataSet", function(this, default=NULL, ...) {
-  if (is.null(default)) {
-    # Infer 'default' from corresponding file class.
-    className <- this$getFileClass();
-    fcn <- getS3method("directoryStructure", className);
-    default <- formals(fcn)$default;
-  }
-  NextMethod("directoryStructure", default=default);
+setMethodS3("getDefaultFullName", "AromaSeqDataFileSet", function(this, ...) {
+  directoryItem(this, name="dataset");
 })
 
 
 ############################################################################
 # HISTORY
+# 2014-04-07
+# o ROBUSTNESS: Now directory structure items may not contain slashes.
+# o Added argument 'firstOnly' to directoryItems() for GenericDataFileSet.
+# o CLEANUP: Added .findDefaultDirectoryStructure().
 # 2013-11-10
 # o Added directoryStructure() for BAM, SAM and FASTQ classes.
 # o Added directoryStructure() and ditto replacement functions,

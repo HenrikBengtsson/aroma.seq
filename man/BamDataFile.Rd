@@ -23,13 +23,15 @@
 \code{~~~~~~~|}\cr
 \code{~~~~~~~+--}\code{\link[R.filesets]{GenericDataFile}}\cr
 \code{~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~+--}\code{BamDataFile}\cr
+\code{~~~~~~~~~~~~+--}\code{\link[aroma.seq]{AromaSeqDataFile}}\cr
+\code{~~~~~~~~~~~~~~~~~|}\cr
+\code{~~~~~~~~~~~~~~~~~+--}\code{BamDataFile}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
 
 public static class \bold{BamDataFile}\cr
-extends \emph{\link[R.filesets]{GenericDataFile}}\cr
+extends \emph{\link[aroma.seq]{AromaSeqDataFile}}\cr
 
 
 
@@ -49,7 +51,6 @@ BamDataFile(...)
 \tabular{rll}{
  \tab \code{buildIndex} \tab  -\cr
  \tab \code{convertToSam} \tab  -\cr
- \tab \code{directoryStructure} \tab  -\cr
  \tab \code{doQDNAseq} \tab  -\cr
  \tab \code{extractReadStartPositions} \tab  -\cr
  \tab \code{getChipType} \tab  -\cr
@@ -79,6 +80,9 @@ BamDataFile(...)
  \tab \code{sortByPosition} \tab  -\cr
 }
 
+
+ \bold{Methods inherited from AromaSeqDataFile}:\cr
+directoryStructure, getDefaultFullName, getOrganism
 
  \bold{Methods inherited from GenericDataFile}:\cr
 as.character, clone, compareChecksum, copyTo, equals, fromFile, getAttribute, getAttributes, getChecksum, getChecksumFile, getCreatedOn, getDefaultFullName, getExtension, getExtensionPattern, getFileSize, getFileType, getFilename, getFilenameExtension, getLastAccessedOn, getLastModifiedOn, getOutputExtension, getPath, getPathname, gunzip, gzip, hasBeenModified, is.na, isFile, isGzipped, linkTo, readChecksum, renameTo, renameToUpperCaseExt, setAttribute, setAttributes, setAttributesBy, setAttributesByTags, setExtensionPattern, testAttributes, validate, validateChecksum, writeChecksum, directoryItem, directoryItems, directoryStructure, directoryStructure<-, getDataSetName, getOrganismName, getSampleName, loadCacheFile, loadCacheFileItem, memoizedCall2, saveCacheFile, saveCacheFileItem, getParentName

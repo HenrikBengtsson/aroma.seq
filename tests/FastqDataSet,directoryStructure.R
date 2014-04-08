@@ -12,6 +12,7 @@ organism <- "LambdaPhage"
 # Setup original FASTQ set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 fqs <- FastqDataSet$byName(dataset, organism=organism)
+print(directoryStructure(fqs))
 
 # Validate directory structure
 for (ii in seq_along(fqs)) {
@@ -40,11 +41,14 @@ for (ii in seq_along(fqs)) {
   createLink(pathname2T, target=getPathname(fq), skip=TRUE)
 }
 
+stopifnot(getFullName(fqs) == dataset)
+stopifnot(getOrganism(fqs) == organism)
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup custom FASTQ set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 fqs2 <- FastqDataSet$byPath(path2, struct="<rootpath>/<dataset>/<organism>/<sample>/", recursive=TRUE)
+print(directoryStructure(fqs2))
 
 # Validate directory structure
 for (ii in seq_along(fqs2)) {
@@ -55,3 +59,7 @@ for (ii in seq_along(fqs2)) {
   stopifnot(gsub(",.*", "", directoryItem(fq, "dataset")) == dataset)
   stopifnot(directoryItem(fq, "organism") == organism)
 }
+
+stopifnot(getFullName(fqs2) == dataset2)
+stopifnot(getOrganism(fqs2) == organism)
+stopifnot(all(getFullNames(fqs2) == directoryItem(fqs2, "sample", firstOnly=FALSE)))
