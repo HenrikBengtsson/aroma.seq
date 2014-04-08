@@ -1,15 +1,19 @@
 library("aroma.seq")
 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Paths
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dataset <- "MyDataSet"
 organism <- "HomoSapiens"
 samples <- c(A="LH001", B="LH003")
 samplesT <- c(sprintf("Sample_%s", samples), samples)
+samplesT[3] <- gsub("/", "_", samplesT[3], fixed=TRUE)
 x <- file.path(dataset, organism, samplesT)
-x[3] <- gsub("/", "_", x[3], fixed=TRUE)
+x <- gsub("\\", "/", x, fixed=TRUE)
 names(x) <- names(samples)
 print(x)
 
-pattern <- "(.*)/(.*)/(Sample_|)([^,]*)"
+pattern <- "^([^/]*)/([^/]*)/(Sample_|)([^/]*)$"
 
 replacements <- list(
   A=list(dataset="\\1", organism="\\2", sample="\\4"),
@@ -36,3 +40,4 @@ for (as in c("list", "data.frame", "matrix")) {
     }
   } # for (rr ...)
 } # for (as ...)
+

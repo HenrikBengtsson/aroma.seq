@@ -35,7 +35,7 @@ pathZ <- file.path("fastqData", dataSetZ, organism)
 for (ii in seq_along(fqs)) {
   fq <- getFile(fqs, ii)
   pathnameZ <- file.path(pathZ, sprintf("%s.gz", getFilename(fq)))
-  if (!isFile(pathnameZ)) gzip(getPathname(fq), pathnameZ, remove=FALSE)
+  gzip(getPathname(fq), pathnameZ, skip=TRUE, remove=FALSE)
 }
 
 
@@ -48,3 +48,6 @@ for (ii in seq_along(fqsZ)) {
   fqZ <- getFile(fqsZ, ii)
   print(fqZ)
 }
+
+# Assert that file extensions are properly dropped
+stopifnot(all(getFullNames(fqsZ) == getFullNames(fqs)))

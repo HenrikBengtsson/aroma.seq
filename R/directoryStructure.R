@@ -145,6 +145,16 @@ setMethodS3("directoryItems", "character", function(paths, struct, ..., as="list
   paths <- gsub("\\", "/", paths, fixed=TRUE);
   res <- agsub(pattern=pattern, replacement=replacement, paths, ..., as=as);
 
+  if (is.matrix(res)) {
+     tail <- res[,"<tail>"];
+     res <- append(res, c(hasTail=nzchar(tail)));
+  } else if (is.list(res)) {
+     tail <- res[["<tail>"]];
+     res <- append(res, list(hasTail=nzchar(tail)));
+  } else {
+    throw("Cannot set 'hasTail' element.");
+  }
+
   res;
 }) # directoryItems()
 
@@ -197,6 +207,7 @@ setMethodS3("directoryItem", "GenericDataFile", function(this, name, default=NUL
     items[[name]] <- default;
   }
   value <- items[[name]];
+  attr(value, "hasTail") <- items$hasTail;
   value;
 }, protected=TRUE) # directoryItem()
 

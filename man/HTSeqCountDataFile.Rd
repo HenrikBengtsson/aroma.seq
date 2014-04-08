@@ -86,7 +86,7 @@ $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCa
 
 }
 
-\author{Henrik Bengtsson})
+\author{Henrik Bengtsson}
 
 \references{
  [1] Simon Anders, \emph{HTSeq: Analysing high-throughput sequencing

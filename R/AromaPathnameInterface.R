@@ -22,8 +22,11 @@ setMethodS3("getDefaultFullName", "AromaSeqDataFile", function(this, ...) {
   if (is.null(value)) {
     value <- NextMethod("getDefaultFullName");
   } else {
-    pattern <- getExtensionPattern(this);
-    value <- gsub(pattern, "", value);
+    # Inferred from a filename?
+    if (!isTRUE(attr(value, "hasTail"))) {
+      pattern <- getExtensionPattern(this);
+      value <- gsub(pattern, "", value);
+    }
   }
   value;
 })
