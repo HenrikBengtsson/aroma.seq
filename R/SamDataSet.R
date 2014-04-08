@@ -23,7 +23,7 @@
 # @author "HB"
 #*/###########################################################################
 setConstructorS3("SamDataSet", function(files=NULL, ...) {
-  extend(AromaSeqDataFileSet(files=files, ...), "SamDataSet");
+  extend(GenericDataFileSet(files=files, ...), c("SamDataSet", uses("AromaSeqDataFileSet")));
 })
 
 

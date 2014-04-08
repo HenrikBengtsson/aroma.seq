@@ -12,6 +12,9 @@
 
 
 % Other missing docs
+\alias{AromaPathnameInterface}
+\alias{directoryStructure.AromaPathnameInterface}
+\alias{getOrganism.AromaPathnameInterface}
 \alias{as.character.GtfDataFile}
 \alias{getSeqNames.GtfDataFile}
 \alias{as.character.FastaReferenceFile}

@@ -29,13 +29,17 @@
 \code{~~~~~~~~~~~~~~~~~~~~~~|}\cr
 \code{~~~~~~~~~~~~~~~~~~~~~~+--}\code{\link[R.filesets]{TabularTextFile}}\cr
 \code{~~~~~~~~~~~~~~~~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~~~~~~~~~~~~~~~~+--}\emph{\code{HTSeqCountDataFile}}\cr
+\code{~~~~~~~~~~~~~~~~~~~~~~~~~~~+--}\code{\link[aroma.seq]{AromaPathnameInterface}}\cr
+\code{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|}\cr
+\code{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+--}\code{\link[aroma.seq]{AromaSeqDataFile}}\cr
+\code{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|}\cr
+\code{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+--}\emph{\code{HTSeqCountDataFile}}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
 
 public abstract static class \bold{HTSeqCountDataFile}\cr
-extends \emph{\link[R.filesets]{TabularTextFile}}\cr
+extends \link[aroma.seq]{AromaSeqDataFile}\cr
 
 
 
@@ -54,6 +58,12 @@ HTSeqCountDataFile(...)
  \bold{Methods:}\cr
 \emph{No methods defined}.
 
+
+ \bold{Methods inherited from AromaSeqDataFile}:\cr
+getDefaultFullName
+
+ \bold{Methods inherited from AromaPathnameInterface}:\cr
+directoryStructure, getOrganism
 
  \bold{Methods inherited from TabularTextFile}:\cr
 as.character, getCommentChar, getDefaultColumnClassPatterns, getDefaultColumnClasses, getDefaultColumnNames, getHeader, getReadArguments, hasColumnHeader, nbrOfLines, nbrOfRows, readColumnNames, readColumns, readDataFrame, readLines, readRawHeader, setCommentChar
@@ -76,7 +86,7 @@ $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCa
 
 }
 
-\author{Henrik Bengtsson}
+\author{Henrik Bengtsson})
 
 \references{
  [1] Simon Anders, \emph{HTSeq: Analysing high-throughput sequencing

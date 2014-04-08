@@ -217,43 +217,6 @@ setMethodS3("getSampleName", "GenericDataFile", function(this, ...) {
 })
 
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# AROMA.SEQ GENERIC
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-setMethodS3("directoryStructure", "AromaSeqDataFile", function(this, default="<rootpath>/<dataset>/<organism>/<sample>/", ...) {
-  if (is.null(default)) default <- .findDefaultDirectoryStructure(this);
-  NextMethod("directoryStructure", default=default);
-})
-
-setMethodS3("directoryStructure", "AromaSeqDataFileSet", function(this, default="<rootpath>/<dataset>/<organism>/<sample>/", ...) {
-  if (is.null(default)) default <- .findDefaultDirectoryStructure(this);
-  NextMethod("directoryStructure", default=default);
-})
-
-setMethodS3("getOrganism", "AromaSeqDataFile", function(this, ...) {
-  directoryItem(this, name="organism");
-})
-
-setMethodS3("getOrganism", "AromaSeqDataFileSet", function(this, ...) {
-  directoryItem(this, name="organism");
-})
-
-setMethodS3("getDefaultFullName", "AromaSeqDataFile", function(this, ...) {
-  value <- directoryItem(this, name="sample", mustExist=FALSE);
-  if (is.null(value)) {
-    value <- NextMethod("getDefaultFullName");
-  } else {
-    pattern <- getExtensionPattern(this);
-    value <- gsub(pattern, "", value);
-  }
-  value;
-})
-
-setMethodS3("getDefaultFullName", "AromaSeqDataFileSet", function(this, ...) {
-  directoryItem(this, name="dataset");
-})
-
-
 ############################################################################
 # HISTORY
 # 2014-04-07

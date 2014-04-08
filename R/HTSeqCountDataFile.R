@@ -19,7 +19,7 @@
 #  @allmethods "public"
 # }
 #
-# @author "HB"
+# @author "HB")
 #
 # \references{
 #  [1] Simon Anders, \emph{HTSeq: Analysing high-throughput sequencing
@@ -28,7 +28,7 @@
 # }
 #*/###########################################################################
 setConstructorS3("HTSeqCountDataFile", function(...) {
-  extend(TabularTextFile(..., columnNames=c("transcript", "count"), .verify=FALSE), "HTSeqCountDataFile")
+  extend(TabularTextFile(..., columnNames=c("transcript", "count"), .verify=FALSE), c("HTSeqCountDataFile", uses("AromaSeqDataFile")))
 })
 
 

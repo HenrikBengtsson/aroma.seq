@@ -119,9 +119,6 @@ S3method("isCapableOf", "AromaSeq")
 S3method("setupTests", "AromaSeq")
 S3method("skeleton", "AromaSeq")
 
-S3method("directoryStructure", "AromaSeqDataFile")
-S3method("directoryStructure", "AromaSeqDataFileSet")
-
 # AromaSeqTransform
 S3method("as.character", "AromaSeqTransform")
 S3method("findFilesTodo", "AromaSeqTransform")

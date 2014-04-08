@@ -48,7 +48,7 @@ setConstructorS3("FastqDataSet", function(files=NULL, ..., paired=FALSE, struct=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   paired <- Arguments$getLogical(paired);
 
-  this <- extend(AromaSeqDataFileSet(files=files, ...), "FastqDataSet",
+  this <- extend(GenericDataFileSet(files=files, ...), c("FastqDataSet", uses("AromaSeqDataFileSet")),
     .paired = paired
   );
 

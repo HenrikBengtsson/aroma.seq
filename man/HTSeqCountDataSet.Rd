@@ -27,13 +27,17 @@
 \code{~~~~~~~~~~~~~~~~~|}\cr
 \code{~~~~~~~~~~~~~~~~~+--}\code{\link[R.filesets]{TabularTextFileSet}}\cr
 \code{~~~~~~~~~~~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~~~~~~~~~~~+--}\code{HTSeqCountDataSet}\cr
+\code{~~~~~~~~~~~~~~~~~~~~~~+--}\code{\link[aroma.seq]{AromaPathnameInterface}}\cr
+\code{~~~~~~~~~~~~~~~~~~~~~~~~~~~|}\cr
+\code{~~~~~~~~~~~~~~~~~~~~~~~~~~~+--}\code{\link[aroma.seq]{AromaSeqDataFileSet}}\cr
+\code{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|}\cr
+\code{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+--}\code{HTSeqCountDataSet}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
 
 public static class \bold{HTSeqCountDataSet}\cr
-extends \link[R.filesets]{TabularTextFileSet}\cr
+extends \link[aroma.seq]{AromaSeqDataFileSet}\cr
 
 
 
@@ -57,6 +61,12 @@ HTSeqCountDataSet(files=NULL, ...)
  \tab \code{findByName} \tab  -\cr
 }
 
+
+ \bold{Methods inherited from AromaSeqDataFileSet}:\cr
+getDefaultFullName
+
+ \bold{Methods inherited from AromaPathnameInterface}:\cr
+directoryStructure, getOrganism
 
  \bold{Methods inherited from TabularTextFileSet}:\cr
 readDataFrame

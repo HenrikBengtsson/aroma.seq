@@ -29,7 +29,7 @@
 # @author "HB"
 #*/###########################################################################
 setConstructorS3("HTSeqCountDataSet", function(files=NULL, ...) {
-  extend(TabularTextFileSet(files=files, ...), "HTSeqCountDataSet");
+  extend(TabularTextFileSet(files=files, ...), c("HTSeqCountDataSet", uses("AromaSeqDataFileSet")));
 })
 
 

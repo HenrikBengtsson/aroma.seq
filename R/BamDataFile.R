@@ -32,7 +32,7 @@
 # }
 #*/###########################################################################
 setConstructorS3("BamDataFile", function(...) {
-  extend(AromaSeqDataFile(...), "BamDataFile");
+  extend(GenericDataFile(...), c("BamDataFile", uses("AromaSeqDataFile")));
 })
 
 

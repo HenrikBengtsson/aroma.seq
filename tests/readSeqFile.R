@@ -7,7 +7,8 @@ if (fullTest) {
   readSeqFile <- aroma.seq::readSeqFile
 
   path <- system.file("extdata", package="qrqc", mustWork=TRUE)
-  fqs <- FastqDataSet$byPath(path)
+  struct <- list(pattern=".*/extdata/([^/]*)", replacement=c(dataset="qrqc", organism="foo", sample="\\1"))
+  fqs <- FastqDataSet$byPath(path, struct=struct)
   print(fqs)
 
   fq <- fqs[[indexOf(fqs, "test-contam")]]

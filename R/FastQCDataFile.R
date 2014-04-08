@@ -33,7 +33,7 @@
 # }
 #*/###########################################################################
 setConstructorS3("FastQCDataFile", function(...) {
-  extend(AromaSeqDataFile(...), "FastQCDataFile");
+  extend(GenericDataFile(...), c("FastQCDataFile", uses("AromaSeqDataFile")));
 })
 
 setMethodS3("as.character", "FastQCDataFile", function(x, ...) {

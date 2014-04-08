@@ -32,7 +32,7 @@
 # @author "HB"
 #*/###########################################################################
 setConstructorS3("SamDataFile", function(...) {
-  extend(AromaSeqDataFile(...), "SamDataFile");
+  extend(GenericDataFile(...), c("SamDataFile", uses("AromaSeqDataFile")));
 })
 
 
