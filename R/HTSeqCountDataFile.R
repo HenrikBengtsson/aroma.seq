@@ -19,7 +19,7 @@
 #  @allmethods "public"
 # }
 #
-# @author "HB")
+# @author "HB"
 #
 # \references{
 #  [1] Simon Anders, \emph{HTSeq: Analysing high-throughput sequencing

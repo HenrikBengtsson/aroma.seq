@@ -284,6 +284,6 @@ getPrograms.BamDataFile
 AromaSeqDataFile AromaSeqDataFileSet
 directoryStructure.AromaSeqDataFile
 directoryStructure.AromaSeqDataFileSet directoryStructure.NULL
-gatk gatk.default getDefaultFullName.AromaSeqDataFile
+getDefaultFullName.AromaSeqDataFile
 getDefaultFullName.AromaSeqDataFileSet
 getOrganism.AromaSeqDataFile getOrganism.AromaSeqDataFileSet

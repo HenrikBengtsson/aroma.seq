@@ -514,8 +514,6 @@
 \alias{directoryStructure.AromaSeqDataFile}
 \alias{directoryStructure.AromaSeqDataFileSet}
 \alias{directoryStructure.NULL}
-\alias{gatk}
-\alias{gatk.default}
 \alias{getDefaultFullName.AromaSeqDataFile}
 \alias{getDefaultFullName.AromaSeqDataFileSet}
 \alias{getOrganism.AromaSeqDataFile}
