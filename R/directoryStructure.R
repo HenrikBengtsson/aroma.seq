@@ -150,18 +150,23 @@ setMethodS3("directoryItems", "character", function(paths, struct, ..., as="list
 
 
 setMethodS3("directoryItems", "GenericDataFile", function(this, ...) {
-  pathname <- getPathname(this);
   struct <- directoryStructure(this);
+  # Nothing to do?
+  if (is.null(struct)) return(list());
+
+  pathname <- getPathname(this);
   directoryItems(pathname, struct=struct, ...);
 }, protected=TRUE)
 
 
-setMethodS3("directoryItems", "GenericDataFileSet", function(this, ..., firstOnly=TRUE) {
-  if (firstOnly) this <- this[1L];
+setMethodS3("directoryItems", "GenericDataFileSet", function(this, ...) {
   struct <- directoryStructure(this);
-  paths <- sapply(this, FUN=getPath);
-  paths <- file.path(paths, NA_character_);
-  directoryItems(paths, struct=struct, ...);
+  # Nothing to do?
+  if (is.null(struct)) return(list());
+
+  path <- getPath(this);
+  pathname <- file.path(path, NA_character_);
+  directoryItems(pathname, struct=struct, ...);
 }, protected=TRUE)
 
 
