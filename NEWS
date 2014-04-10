@@ -5,10 +5,12 @@ Version: 0.4.37 [2014-04-10]
 o Now doTopHat2() requires that 'transcripts' is explicitly specified.
   This is to protect against the mistake when the user forgets to
   specify the transcripts.
+o BUG FIX: getSequenceNames() for Bowtie2IndexSet returned nothing.
 
 
 Version: 0.4.36 [2014-04-08]
 o Making more efforts of utilizing directory structure patterns.
+o BUG FIX: getSequenceNames() for Bowtie2IndexSet returned nothing.
 
 
 Version: 0.4.35 [2014-04-06]
@@ -26,7 +28,7 @@ o Now findGATK() also returns the version of GATK.
 
 
 Version: 0.4.32 [2014-03-11]
-o ROBUSTNESS: Added argument 'sortByName' to htseqCount(), which for 
+o ROBUSTNESS: Added argument 'sortByName' to htseqCount(), which for
   now defaults to "always", because although htseq-count (>= 0.6.0)
   is supposed to handle when BAM files are sorted by position, it will
   run out of memory for modestly large BAM files.

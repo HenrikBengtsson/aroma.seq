@@ -70,12 +70,16 @@ setMethodS3("getSequenceNames", "Bowtie2IndexSet", function(this, ...) {
   stopifnot(isComplete(this));
   stopifnot(isCapableOf(aroma.seq, "bowtie2"));
   prefix <- getIndexPrefix(this);
-  system2("bowtie2-inspect", args=c("--names", prefix));
+  res <- system2("bowtie2-inspect", args=c("--names", prefix), stdout=TRUE);
+  res <- trim(res);
+  res;
 })
 
 
 ############################################################################
 # HISTORY:
+# 2014-04-10
+# o BUG FIX: getSequenceNames() for Bowtie2IndexSet returned nothing.
 # 2012-09-27
 # o Added getSummary() and getSequenceNames() for Bowtie2IndexSet, which
 #   utilizes 'bowtie2-inspect' executable.
