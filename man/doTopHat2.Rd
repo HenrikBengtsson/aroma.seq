@@ -19,12 +19,13 @@
 
 \usage{
   doTopHat2(...)
-  \method{doTopHat2}{FastqDataSet}(dataSet, reference, ..., verbose=FALSE)
+  \method{doTopHat2}{FastqDataSet}(dataSet, reference, transcripts, ..., verbose=FALSE)
 }
 
 \arguments{
  \item{dataSet, df}{A \code{\link{FastqDataSet}}.}
  \item{reference}{A \code{\link{FastaReferenceFile}} or a \code{\link{Bowtie2IndexSet}} specifying the genome reference to align the FASTQ reads to.}
+ \item{transcripts}{A \code{\link{GtfDataFile}} or \code{\link[base]{NULL}} specifying known transcripts and/or gene model annotations.}
  \item{...}{Additional arguments passed to \code{\link{TopHat2Alignment}}.}
  \item{verbose}{See \code{\link{Verbose}}.}
 }

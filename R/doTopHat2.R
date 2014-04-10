@@ -16,6 +16,7 @@
 # \arguments{
 #  \item{dataSet, df}{A @see "FastqDataSet".}
 #  \item{reference}{A @see "FastaReferenceFile" or a @see "Bowtie2IndexSet" specifying the genome reference to align the FASTQ reads to.}
+#  \item{transcripts}{A @see "GtfDataFile" or @NULL specifying known transcripts and/or gene model annotations.}
 #  \item{...}{Additional arguments passed to @see "TopHat2Alignment".}
 #  \item{verbose}{See @see "Verbose".}
 # }
@@ -40,7 +41,7 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("doTopHat2", "FastqDataSet", function(dataSet, reference, ..., verbose=FALSE) {
+setMethodS3("doTopHat2", "FastqDataSet", function(dataSet, reference, transcripts, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -49,6 +50,13 @@ setMethodS3("doTopHat2", "FastqDataSet", function(dataSet, reference, ..., verbo
   } else if (inherits(reference, "Bowtie2IndexSet")) {
   } else {
     throw("Argument 'reference' should either be of class 'FastaReferenceFile' or 'BwaIndexSet': ", class(reference)[1L]);
+  }
+
+  # Argument 'reference':
+  if (is.null(transcripts)) {
+  } else if (inherits(transcripts, "GtfDataFile")) {
+  } else {
+    throw("Argument 'transcripts' should be either of class 'GtfDataFile' or explicitly NULL': ", class(transcripts)[1L]);
   }
 
   # Argument 'verbose':
@@ -96,7 +104,7 @@ setMethodS3("doTopHat2", "FastqDataSet", function(dataSet, reference, ..., verbo
     # Not needed anymore
   reference <- NULL;
 
-  alg <- TopHat2Alignment(dataSet, indexSet=is, ...);
+  alg <- TopHat2Alignment(dataSet, indexSet=is, transcripts=transcripts, ...);
   verbose && print(verbose, alg);
 
   bams <- process(alg, verbose=verbose);
@@ -118,6 +126,10 @@ setMethodS3("doTopHat2", "default", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2014-04-10
+# o Now doTopHat2() requires that 'transcripts' is explicitly specified.
+#   This is to protect against the mistake when the user forgets to
+#   specify the transcripts.
 # 2013-11-02
 # o Created from doBowtie2().
 ############################################################################

@@ -1,6 +1,12 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.37 [2014-04-10]
+o Now doTopHat2() requires that 'transcripts' is explicitly specified.
+  This is to protect against the mistake when the user forgets to
+  specify the transcripts.
+
+
 Version: 0.4.36 [2014-04-08]
 o Making more efforts of utilizing directory structure patterns.
 

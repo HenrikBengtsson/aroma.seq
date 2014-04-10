@@ -29,11 +29,11 @@ print(fqs)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # TopHat2
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bams <- doTopHat2(fqs, reference=fa, verbose=TRUE)
+bams <- doTopHat2(fqs, reference=fa, transcripts=NULL, verbose=TRUE)
 print(bams)
 
 # Specifying additional parameters (identical to the defaults)
-bams2 <- doTopHat2(fqs, reference=fa, mateInnerDist=50, mateStdDev=20, tags=c("*", "50_20"), verbose=TRUE)
+bams2 <- doTopHat2(fqs, reference=fa, transcripts=NULL, mateInnerDist=50, mateStdDev=20, tags=c("*", "50_20"), verbose=TRUE)
 print(bams2)
 
 # Assert that we get the same as the default settings
