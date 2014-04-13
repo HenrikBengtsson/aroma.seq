@@ -58,6 +58,7 @@ setupExampleData <- function(dirs=c("annotationData", "bamData", "fastqData*"), 
   # Data set: GATK Resource Bundle (iff available)
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (isCapableOf(aroma.seq, "gatk")) {
+    bin <- findGATK();
     srcPath <- file.path(dirname(bin), "resources");
     srcPath <- Arguments$getReadablePath(srcPath, mustExist=FALSE);
     if (isDirectory(srcPath)) {
