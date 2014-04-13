@@ -282,6 +282,88 @@ setMethodS3("buildIndex", "FastaReferenceFile", function(this, ..., skip=TRUE, v
 }) # buildIndex()
 
 
+
+
+###########################################################################/**
+# @RdocMethod buildDictionary
+#
+# @title "Builds a DICT sequence dictionary file"
+#
+# \description{
+#   @get "title".
+# }
+#
+# @synopsis
+#
+# \arguments{
+#  \item{...}{Additional arguments passed to @see "Rsamtools::indexFa".}
+#  \item{skip}{If @TRUE, the dictionary is not rebuilt if already available.}
+#  \item{verbose}{See @see "R.utils::Verbose".}
+# }
+#
+# \value{
+#   Returns a @see "R.filesets::GenericDataFileSet" consisting of the BWA index files.
+# }
+#
+# \references{
+#  [1] Geraldine van der Auwera,
+#      How can I prepare a FASTA file to use as reference?,
+#      GATK Forum, Sept 2013.
+#      \url{http://gatkforums.broadinstitute.org/discussion/1601/how-can-i-prepare-a-fasta-file-to-use-as-reference}
+# }
+#
+# @author
+#*/###########################################################################
+setMethodS3("buildDictionary", "FastaReferenceFile", function(this, ..., skip=TRUE, verbose=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'skip':
+  skip <- Arguments$getLogical(skip);
+
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
+
+  verbose && enter(verbose, "Building FASTA sequence dictionary");
+  pathname <- getPathname(this);
+  verbose && cat(verbose, "FASTA pathname: ", pathname);
+
+  pathnameDICT <- sprintf("%s.dict", pathname);
+  verbose && cat(verbose, "FASTA DICT pathname: ", pathnameDICT);
+
+  pathnameDICT <- Arguments$getWritablePathname(pathnameDICT, mustNotExist=FALSE);
+  if (!skip || !isFile(pathnameDICT)) {
+    verbose && enter(verbose, "Building sequence dictionary using Picard");
+
+    # Emulate overwriting
+    if (isFile(pathnameDICT)) file.remove(pathnameDICT);
+
+    # Write to temporary file
+    pathnameDICTT <- pushTemporaryFile(pathnameDICT);
+
+    res <- systemPicard(command="CreateSequenceDictionary", R=pathname, O=pathnameDICTT, verbose=less(verbose, 50));
+    verbose && cat(verbose, "System result:");
+    verbose && str(verbose, res);
+
+    pathnameDICT <- popTemporaryFile(pathnameDICTT);
+    verbose && cat(verbose, "Generated file: ", pathnameDICT);
+    verbose && exit(verbose);
+  }
+  pathnameDICT <- Arguments$getReadablePathname(pathnameDICT);
+
+  verbose && exit(verbose);
+
+  invisible(pathnameDICT);
+}) # buildDictionary()
+
+
+
+
 ###########################################################################/**
 # @RdocMethod buildBwaIndexSet
 #
@@ -524,6 +606,8 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
 
 ############################################################################
 # HISTORY:
+# 2014-04-13
+# o Added buildDictionary() for FastaReferenceFile.
 # 2014-02-25
 # o Now static byOrganism() no longer passes '...'.
 # 2014-02-20

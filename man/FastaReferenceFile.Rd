@@ -49,6 +49,7 @@ FastaReferenceFile(...)
 \tabular{rll}{
  \tab \code{\link[aroma.seq:buildBowtie2IndexSet.FastaReferenceFile]{buildBowtie2IndexSet}} \tab Builds a Bowtie2 index files set.\cr
  \tab \code{\link[aroma.seq:buildBwaIndexSet.FastaReferenceFile]{buildBwaIndexSet}} \tab Builds a BWA index files set.\cr
+ \tab \code{\link[aroma.seq:buildDictionary.FastaReferenceFile]{buildDictionary}} \tab Builds a DICT sequence dictionary file.\cr
  \tab \code{\link[aroma.seq:buildIndex.FastaReferenceFile]{buildIndex}} \tab Builds an FAI index file.\cr
  \tab \code{\link[aroma.seq:byOrganism.FastaReferenceFile]{byOrganism}} \tab Locates a FASTA file by organism.\cr
  \tab \code{getOrganism} \tab  -\cr

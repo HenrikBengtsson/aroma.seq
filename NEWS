@@ -1,6 +1,12 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.39 [2014-04-13]
+o Added buildDictionary() for FastaReferenceFile.  Required by GATK.
+o ROBUSTNESS: Now gatk() throws GATK errors as R errors.
+o ROBUSTNESS: Added package system test for gatk().
+
+
 Version: 0.4.38 [2014-04-13]
 o Added support for paired-end BWA alignment in addition already
   supported single-end BWA alignment.

@@ -518,6 +518,7 @@
 \alias{getDefaultFullName.AromaSeqDataFileSet}
 \alias{getOrganism.AromaSeqDataFile}
 \alias{getOrganism.AromaSeqDataFileSet}
+\alias{buildDictionary}
 
 \description{
   This page contains aliases for all "non-documented" objects that

@@ -1,5 +1,5 @@
 Package: aroma.seq
-Version: 0.4.38
+Version: 0.4.39
 Depends: R (>= 3.0.3), R.utils (>= 1.30.2), R.filesets (>= 2.5.0), aroma.core (>= 2.12.1)
 Imports: methods, R.methodsS3 (>= 1.6.1), R.oo (>= 1.18.0), R.cache (>= 0.9.2), matrixStats (>= 0.8.14)
 Suggests: Biobase (>= 2.22.0), Biostrings (>= 2.30.1), ShortRead (>= 1.20.0), Rsamtools (>= 1.14.3), aroma.light (>= 1.32.0), aroma.cn (>= 1.5.0), GenomicRanges (>= 1.14.4), edgeR (>= 3.4.2), R.devices (>= 2.8.2), R.rsp (>= 0.15.0), markdown (>= 0.6.5), qrqc (>= 1.16.0), BiocParallel (>= 0.4.1), BatchJobs (>= 1.2)

@@ -287,3 +287,4 @@ directoryStructure.AromaSeqDataFileSet directoryStructure.NULL
 getDefaultFullName.AromaSeqDataFile
 getDefaultFullName.AromaSeqDataFileSet
 getOrganism.AromaSeqDataFile getOrganism.AromaSeqDataFileSet
+buildDictionary

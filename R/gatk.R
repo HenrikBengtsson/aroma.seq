@@ -13,7 +13,15 @@
 # }
 #
 # \arguments{
-#   \item{...}{(Not used)}.
+#   \item{...}{(optional) named arguments}.
+#   \item{analysisType}{(required) A @character string specifying type of analysis.
+#     In GATK, this corrensponds to argument \code{--analysis_type} (or \code{-T}).}
+#   \item{pathnameI}{(optional) A @character @vector specifying one or more
+#     (SAM or BAM) files.
+#     In GATK, this corrensponds to one or more arguments
+#     \code{--input_file} (or \code{-I}).}
+#   \item{pathnameR}{(optional) A @character string specifying an reference file.
+#     In GATK, this corrensponds to argument \code{--reference_sequence} (or \code{-R}).}
 #   \item{outPath}{Directory where result files are written.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
@@ -28,20 +36,28 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("gatk", "default", function(..., analysisType=NULL, inputFile=NULL, referenceSequence=NULL, interval=NULL, outPath="gatkData/", verbose=FALSE) {
+setMethodS3("gatk", "default", function(..., pathnameI=NULL, pathnameR=NULL, analysisType, outPath="gatkData/", verbose=FALSE) {
   # Make sure to evaluate registered onExit() statements
   on.exit(eval(onExit()));
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Argument 'inputFile'
-  if (length(inputFile) > 0L) {
-    inputFile <- Arguments$getReadablePathnames(inputFile, absolute=TRUE);
-    assertNoDuplicated(inputFile);
+  # Argument 'analysisType':
+  analysisType <- Arguments$getCharacter(analysisType);
+
+  # Argument 'pathnameI':
+  if (length(pathnameR) > 0L) {
+    pathnameR <- Arguments$getReadablePathname(pathnameR, absolute=TRUE);
   }
 
-  # Argument 'outPath'
+  # Argument 'pathnameI':
+  if (length(pathnameI) > 0L) {
+    pathnameI <- Arguments$getReadablePathnames(pathnameI, absolute=TRUE);
+    assertNoDuplicated(pathnameI);
+  }
+
+  # Argument 'outPath':
   outPath <- Arguments$getWritablePath(outPath, mustNotExist=TRUE);
 
   # Argument 'verbose':
@@ -52,9 +68,18 @@ setMethodS3("gatk", "default", function(..., analysisType=NULL, inputFile=NULL, 
   }
 
   verbose && enter(verbose, "Running gatk()");
-  verbose && cat(verbose, "Input files:");
-  verbose && print(verbose, sapply(inputFile, FUN=getRelativePath));
+  verbose && cat(verbose, "Analysis type: ", analysisType);
   verbose && cat(verbose, "Output directory: ", outPath);
+
+  if (length(pathnameI) > 0L) {
+    verbose && cat(verbose, "Input files:");
+    verbose && print(verbose, sapply(pathnameI, FUN=getRelativePath));
+  }
+
+  if (length(pathnameR) > 0L) {
+    verbose && cat(verbose, "Reference file:");
+    verbose && print(verbose, getRelativePath(pathnameR));
+  }
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Generate output atomically by writing to a temporary directory
@@ -88,26 +113,13 @@ setMethodS3("gatk", "default", function(..., analysisType=NULL, inputFile=NULL, 
   # Setup gatk arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # The output directory should always to be the current directory
-  opts <- c();
-
-  if (!is.null(analysisType)) opts <- c(opts, "--analysis_type", shQuote(analysisType));
-  if (!is.null(inputFile)) opts <- c(opts, "--input_file", shQuote(inputFile));
-  if (!is.null(referenceSequence)) opts <- c(opts, "--reference_sequence", shQuote(referenceSequence));
-  if (!is.null(interval)) opts <- c(opts, "--interval", shQuote(interval));
+  opts <- c("--analysis_type", shQuote(analysisType));
+  for (p in pathnameI) opts <- c(opts, "--input_file", shQuote(p));
+  for (p in pathnameR) opts <- c(opts, "--reference_sequence", shQuote(p));
   opts <- c(opts, ...);
-  str(opts);
   opts <- as.list(opts);
-  str(opts);
   opts$stdout <- TRUE;
   opts$stderr <- TRUE;
-
-  # Assert no duplicated options
-  names <- names(opts);
-  names <- names[nchar(names) > 0L];
-  dups <- names[duplicated(names)];
-  if (length(dups) > 0L) {
-    throw("Duplicated options detected: ", paste(sQuote(dups), collapse=", "));
-  }
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -132,6 +144,16 @@ setMethodS3("gatk", "default", function(..., analysisType=NULL, inputFile=NULL, 
     # Allow the temporary output path to be renamed to the
     # intended output path instead of the "error" one.
     outPathFinal <- outPathOrg;
+  } else {
+    # Any errors?
+    pattern <- "^(#)+( )+ERROR MESSAGE:( )+";
+    errors <- grep(pattern, res, value=TRUE);
+    if (length(errors) > 0L) {
+      errors <- gsub(pattern, "", errors);
+      errors <- trim(errors);
+      errors <- paste(errors, collapse="\n");
+      throw(errors);
+    }
   }
 
   verbose && exit(verbose);
@@ -142,6 +164,10 @@ setMethodS3("gatk", "default", function(..., analysisType=NULL, inputFile=NULL, 
 
 ############################################################################
 # HISTORY:
+# 2014-04-13 [HB]
+# o ROBUSTNESS: Now gatk() throws GATK errors as R errors.
+# o Added optional arguments 'pathnameI' and 'pathnameR' to gatk().
+# o Made argument 'analysisType' mantadory for gatk().
 # 2014-03-14 [HB]
 # o Created from tophat.R.
 ############################################################################
