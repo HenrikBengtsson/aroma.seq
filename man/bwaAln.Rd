@@ -10,10 +10,10 @@
 \alias{bwaAln.default}
 \alias{bwaAln}
 
-\title{Calls the BWA 'aln' command}
+\title{BWA-backtrack alignment via 'bwa aln'}
 
 \description{
- Calls the BWA 'aln' command.
+ BWA-backtrack alignment via 'bwa aln'.
 }
 
 \usage{

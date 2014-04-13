@@ -89,7 +89,7 @@ setMethodS3("getAsteriskTags", "AbstractAlignment", function(this, collapse=NULL
   tags <- NextMethod("getAsteriskTags");
 
   # Tags when paired-end reads are used
-  if (isPaired(this)) tags <- c(tags, "paired");
+  if (isPaired(this)) tags <- c(tags, "pe");
 
   # Tags for the index set
   is <- getIndexSet(this);
@@ -112,6 +112,10 @@ setMethodS3("getRootPath", "AbstractAlignment", function(this, ...) {
 
 ############################################################################
 # HISTORY:
+# 2014-04-13
+# o Now paired-end alignments are tagged as "pe".  Previously they were
+#   tagged as "paired", which was ambigous in case for instance
+#   tumor-normal pair data was analyzed.
 # 2013-11-16
 # o Now AbstractAlignment extends AromaSeqTransform.
 # 2013-11-09

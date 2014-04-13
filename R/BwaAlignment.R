@@ -209,24 +209,28 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
 
     verbose && enter(verbose, "BWA alignment of one sample");
 
+    # The FASTQ to be aligned
     if (isPaired) {
-      pathnameFQ <- sapply(list(R1=df, R2=getMateFile(df)), FUN=getPathname);
-      verbose && cat(verbose, "FASTQ R1 pathname: ", pathnameFQ[1L]);
-      verbose && cat(verbose, "FASTQ R2 pathname: ", pathnameFQ[2L]);
-      stop("Paired-end BWA alignment is not yet supported.");
+      dfList <- list(R1=df, R2=getMateFile(df));
     } else {
-      pathnameFQ <- getPathname(df);
-      verbose && cat(verbose, "FASTQ pathname: ", pathnameFQ);
+      dfList <- list(df);
     }
+    pathnameFQs <- sapply(dfList, FUN=getPathname);
+    verbose && cat(verbose, "FASTQ pathname(s): ", hpaste(pathnameFQs));
 
-    # The SAI and SAM files to be generated
-    fullname <- getFullName(df);
+    # The SAI to be generated
+    fullname <- sapply(dfList, FUN=getFullName);
     filename <- sprintf("%s.sai", fullname);
-    pathnameSAI <- Arguments$getWritablePathname(filename, path=path);
-    filename <- sprintf("%s.sam", fullname);
+    pathnameSAIs <- sapply(filename, FUN=Arguments$getWritablePathname, path=path);
+    verbose && cat(verbose, "SAI pathname(s): ", hpaste(pathnameSAIs));
+
+    # The SAM file to be generated
+    filename <- sprintf("%s.sam", fullname[1L]);
     pathnameSAM <- Arguments$getWritablePathname(filename, path=path);
     verbose && cat(verbose, "SAM pathname: ", pathnameSAM);
-    filename <- sprintf("%s.bam", fullname);
+
+    # The BAM file to be generated
+    filename <- sprintf("%s.bam", fullname[1L]);
     pathnameBAM <- Arguments$getWritablePathname(filename, path=path);
     verbose && cat(verbose, "BAM pathname: ", pathnameBAM);
 
@@ -235,25 +239,32 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
     if (done) {
       verbose && cat(verbose, "Already aligned. Skipping");
     } else {
-      verbose && print(verbose, df);
+      verbose && print(verbose, dfList);
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # (a) Generate SAI file via BWA aln
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      if (!isFile(pathnameSAI)) {
-        args <- list(pathnameFQ, indexPrefix=indexPrefix,
-                     pathnameD=pathnameSAI);
-        args <- c(args, paramsList$aln);
-        args$verbose <- less(verbose, 5);
-        res <- do.call(bwaAln, args=args);
-        verbose && cat(verbose, "System result code: ", res);
-      }
+      verbose && enter(verbose, "Generating SAI");
+      for (kk in seq_along(pathnameSAIs)) {
+        pathnameSAI <- pathnameSAIs[kk];
+        if (!isFile(pathnameSAI)) {
+          pathnameFQ <- pathnameFQs[kk];
+          args <- list(pathnameFQ, indexPrefix=indexPrefix,
+                       pathnameD=pathnameSAI);
+          args <- c(args, paramsList$aln);
+          args$verbose <- less(verbose, 5);
+          res <- do.call(bwaAln, args=args);
+          verbose && cat(verbose, "System result code: ", res);
+        }
+      } # for (kk ...)
 
       # Sanity check
-      Arguments$getReadablePathname(pathnameSAI);
+      Arguments$getReadablePathnames(pathnameSAIs);
+
+      verbose && exit(verbose)
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      # (b) Generate SAM file via BWA samse
+      # (b) Generate SAM via BWA samse/sampe
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       if (!isFile(pathnameSAM)) {
         # Extract sample-specific read group
@@ -268,14 +279,19 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
         rgArg <- asBwaParameter(rgII, default=list(ID=fullname, SM=fullname));
         verbose && print(verbose, rgArg);
 
-        args <- list(pathnameSAI=pathnameSAI, pathnameFQ=pathnameFQ,
+        args <- list(pathnameSAI=pathnameSAIs, pathnameFQ=pathnameFQs,
                      indexPrefix=indexPrefix, pathnameD=pathnameSAM);
         args <- c(args, rgArg);
         args$verbose <- less(verbose, 5);
-        res <- do.call(bwaSamse, args=args);
+
+        if (isPaired) {
+          res <- do.call(bwaSampe, args=args);
+        } else {
+          res <- do.call(bwaSamse, args=args);
+        }
         verbose && cat(verbose, "System result code: ", res);
 
-        # BWA 'samse' can generate empty SAM files
+        # BWA 'samse/sampe' can generate empty SAM files
         if (isFile(pathnameSAM)) {
           if (file.info(pathnameSAM)$size == 0L) {
             verbose && cat(verbose, "Removing empty SAM file falsely created by BWA: ", pathnameSAM);
@@ -300,7 +316,7 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
 
     verbose && exit(verbose);
 
-    invisible(list(pathnameFQ=pathnameFQ, pathnameSAM=pathnameSAM, pathnameBAM=pathnameBAM));
+    invisible(list(pathnameFQ=pathnameFQs, pathnameSAM=pathnameSAM, pathnameBAM=pathnameBAM));
   }, paired=isPaired(this), indexPrefix=indexPrefix, rgSet=rgSet, paramsList=paramsList, path=getPath(this), skip=skip, verbose=verbose) # dsApply()
 
   res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1));
@@ -314,6 +330,8 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
 
 ############################################################################
 # HISTORY:
+# 2014-04-13
+# o Now BwaAlignment supports paired-end alignment too.
 # 2013-11-17
 # o CLEANUP: Now getAsteriskTags() for BwaAlignment no longer includes
 #   the 'method' tag, e.g. now 'bwa' when it used to be 'bwa,is'.  This

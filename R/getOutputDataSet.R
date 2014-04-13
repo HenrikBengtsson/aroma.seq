@@ -99,27 +99,6 @@ setMethodS3("getOutputDataSet", "PicardDuplicateRemoval", function(this, onMissi
 }) # getOutputDataSet() for PicardDuplicateRemoval
 
 
-setMethodS3("getOutputDataSet", "TopHat2Alignment", function(this, onMissing=c("drop", "NA", "error"), ...) {
-  # Argument 'onMissing':
-  onMissing <- match.arg(onMissing);
-
-  ## Find all existing output data files
-  path <- getPath(this);
-  bams <- BamDataSet$byPath(path=path, pattern="accepted_hits.bam$", recursive=TRUE);
-
-  ## Order according to input data set
-  # Get the sample names in the found output set
-  sampleNames <- getSampleNames(this);
-  sampleNamesB <- getPathnames(bams);
-  # Workaround: getPathnames() returns NULL, not character(0L), when empty
-  if (length(sampleNamesB) == 0L) sampleNamesB <- character(0L);
-  sampleNamesB <- basename(dirname(sampleNamesB));
-  idxs <- match(sampleNames, sampleNamesB);
-  bams <- extract(bams, idxs, onMissing=onMissing);
-
-  bams;
-}) # getOutputDataSet() for TopHat2Alignment
-
 
 setMethodS3("getOutputDataSet", "TopHat2Alignment", function(this, onMissing=c("drop", "NA", "error"), ...) {
   # Argument 'onMissing':

@@ -2,8 +2,9 @@ library("aroma.seq")
 setOption(aromaSettings, "devel/parallel", "none")
 
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
-fullTest <- fullTest && isCapableOf(aroma.seq, "bowtie2")
+fullTest <- fullTest && isCapableOf(aroma.seq, "bwa")
 if (fullTest) {
+
 
 # Setup (writable) local data directory structure
 setupExampleData()
@@ -28,30 +29,38 @@ print(fqs)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Build index set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-is <- buildBowtie2IndexSet(fa, verbose=-10)
+is <- buildBwaIndexSet(fa, verbose=-10)
 print(is)
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Single-end alignment
+# Paired-end alignment
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-alg <- Bowtie2Alignment(fqs, indexSet=is)
+# BWA with BWA 'aln' options '-n 2' and '-q 40'.
+alg <- BwaAlignment(fqs, indexSet=is, n=2, q=40)
 print(alg)
 
 bams <- process(alg, verbose=-20)
 print(bams)
 
-# Display an example BAM file
-for (ii in seq_along(bams)) {
-  bam <- getFile(bams, ii)
-  print(bam)
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Validate
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+if (isCapableOf(aroma.seq, "picard")) {
+  # Without IGNORE="MISSING_READ_GROUP" below,
+  # we get error 'Read groups is empty'
+  bam <- bams[[1]]
+  validate(bam, IGNORE="MISSING_READ_GROUP")
+  validate(bam, onError="warning")
 }
+
 
 } # if (fullTest)
 
 
 ############################################################################
 # HISTORY:
-# 2013-08-24
-# o Created from non-paired version.
+# 2014-04-13
+# o Created from corresponding SE test.
 ############################################################################

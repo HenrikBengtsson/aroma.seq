@@ -1,7 +1,7 @@
 ###########################################################################/**
 # @RdocDefault bwaAln
 #
-# @title "Calls the BWA 'aln' command"
+# @title "BWA-backtrack alignment via 'bwa aln'"
 #
 # \description{
 #  @get "title".

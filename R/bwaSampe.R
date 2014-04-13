@@ -1,7 +1,7 @@
 ###########################################################################/**
-# @RdocDefault bwaSamse
+# @RdocDefault bwaSampe
 #
-# @title "Generates BWA-backtrack single-end (SE) alignments via 'bwa samse'"
+# @title "Generates BWA-backtrack paired-end (PE) alignments via 'bwa sampe'"
 #
 # \description{
 #  @get "title".
@@ -10,11 +10,11 @@
 # @synopsis
 #
 # \arguments{
-#   \item{pathnameSAI}{The SAI file to be aligned.}
-#   \item{pathnameFQ}{The FASTQ file to be aligned.}
+#   \item{pathnameSAI}{A @character @vector of two SAI files.}
+#   \item{pathnameFQ}{A @character @vector of two FASTQ files.}
 #   \item{indexPrefix}{The pathname prefix to the BWA index files.}
 #   \item{pathnameD}{The destination pathname.}
-#   \item{...}{Additional arguments specifying BWA 'samse' switches
+#   \item{...}{Additional arguments specifying BWA 'sampe' switches
 #     passed to @see "systemBWA".}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
@@ -26,7 +26,7 @@
 #   pathnameSAI <- "bwaData/LambdaVirusExample/Generic/reads_1.sai";
 #   pathnameFQ <- "fastqData/LambdaVirusExample/Generic/reads_1.fq";
 #   pathnameD <- "bwaData/LambdaVirusExample/Generic/reads_1.sam";
-#   bwaSamse(pathnameSAI=pathnameSAI, pathnameFQ=pathnameFQ,
+#   bwaSampe(pathnameSAI=pathnameSAI, pathnameFQ=pathnameFQ,
 #            pathnameFA=pathnameFA, pathnameD=pathnameD);
 # }}
 #
@@ -34,15 +34,17 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("bwaSamse", "default", function(pathnameSAI, pathnameFQ, indexPrefix, pathnameD, ..., verbose=FALSE) {
+setMethodS3("bwaSampe", "default", function(pathnameSAI, pathnameFQ, indexPrefix, pathnameD, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'pathnameSAI':
-  pathnameSAI <- Arguments$getReadablePathname(pathnameSAI);
+  pathnameSAI <- Arguments$getReadablePathnames(pathnameSAI, length=c(2,2));
+  stopifnot(pathnameSAI[2L] != pathnameSAI[1L]);
 
   # Argument 'pathnameFQ':
-  pathnameFQ <- Arguments$getReadablePathname(pathnameFQ);
+  pathnameFQ <- Arguments$getReadablePathnames(pathnameFQ, length=c(2,2));
+  stopifnot(pathnameFQ[2L] != pathnameFQ[1L]);
 
   # Argument 'indexPrefix':
   dummy <- Arguments$getReadablePath(getParent(indexPrefix));
@@ -57,25 +59,23 @@ setMethodS3("bwaSamse", "default", function(pathnameSAI, pathnameFQ, indexPrefix
     on.exit(popState(verbose));
   }
 
-  verbose && enter(verbose, "Running BWA 'samse'");
+  verbose && enter(verbose, "Running BWA 'sampe'");
 
   # Assert that input files are not overwritten
-  stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameSAI));
-  stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFQ));
+  stopifnot(!getAbsolutePath(pathnameD) %in% getAbsolutePath(pathnameSAI));
+  stopifnot(!getAbsolutePath(pathnameD) %in% getAbsolutePath(pathnameFQ));
 ##  stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFA));
 
-  res <- systemBWA("samse", "f"=shQuote(pathnameD), shQuote(indexPrefix), shQuote(pathnameSAI), shQuote(pathnameFQ), ..., verbose=less(verbose, 10));
+  res <- systemBWA("sampe", "f"=shQuote(pathnameD), shQuote(indexPrefix), shQuote(pathnameSAI), shQuote(pathnameFQ), ..., verbose=less(verbose, 10));
 
   verbose && exit(verbose);
 
   res;
-}) # bwaSamse()
+}) # bwaSampe()
 
 
 ############################################################################
 # HISTORY:
-# 2014-03-10 [HB]
-# o ROBUSTNESS: Now bwaSamse() uses shQuote() for all pathnames.
-# 2012-09-24
-# o Created.
+# 2014-04-13 [HB]
+# o Created from bwaSamse().
 ############################################################################

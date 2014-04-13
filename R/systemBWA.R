@@ -45,6 +45,8 @@ setMethodS3("systemBWA", "default", function(command, ..., .fake=FALSE, verbose=
   bin <- findBWA(verbose=less(verbose, 50));
   verbose && cat(verbose, "Executable: ", bin);
 
+  # Unwrap vectors
+  args <- unlist(args);
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Split up '...' arguments by system2() and BWA executable

@@ -1,6 +1,14 @@
 Package: aroma.seq
 ==================
 
+Version: 0.4.38 [2014-04-13]
+o Added support for paired-end BWA alignment in addition already
+  supported single-end BWA alignment.
+o Now paired-end alignments are tagged as "pe".  Previously they were
+  tagged as "paired", which was ambigous in case for instance
+  tumor-normal pair data was analyzed.
+
+
 Version: 0.4.37 [2014-04-10]
 o Now doTopHat2() requires that 'transcripts' is explicitly specified.
   This is to protect against the mistake when the user forgets to
