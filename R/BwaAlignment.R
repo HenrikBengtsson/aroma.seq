@@ -14,6 +14,8 @@
 # \arguments{
 #  \item{...}{Arguments passed to @see "AbstractAlignment".}
 #  \item{indexSet}{An @see "BwaIndexSet".}
+#  \item{flavor}{A @character string specifying the type of
+#    BWA algoritm to use for alignment.}
 # }
 #
 # \section{Fields and Methods}{
@@ -29,7 +31,7 @@
 #
 # \author{Henrik Bengtsson}
 #*/###########################################################################
-setConstructorS3("BwaAlignment", function(..., indexSet=NULL) {
+setConstructorS3("BwaAlignment", function(..., indexSet=NULL, flavor=c("backtracking")) {
   # Validate arguments
   if (!is.null(indexSet)) {
     indexSet <- Arguments$getInstanceOf(indexSet, "BwaIndexSet");
@@ -38,7 +40,10 @@ setConstructorS3("BwaAlignment", function(..., indexSet=NULL) {
   # Arguments '...':
   args <- list(...);
 
-  extend(AbstractAlignment(..., indexSet=indexSet), "BwaAlignment");
+  # Arguments 'flavor':
+  flavor <- match.arg(flavor);
+
+  extend(AbstractAlignment(..., indexSet=indexSet, flavor=flavor), "BwaAlignment");
 })
 
 
@@ -47,12 +52,18 @@ setMethodS3("getAsteriskTags", "BwaAlignment", function(this, collapse=NULL, ...
   # Drop BWA index 'method' tag, e.g. 'is' or 'bwtsw'
   idx <- which(tags == "bwa") + 1L;
   if (is.element(tags[idx], c("is", "bwtsw"))) tags <- tags[-idx];
+
+  # Append flavor
+  flavor <- getFlavor(this);
+  if (!identical(flavor, "backtracking")) tags <- c(tags, flavor);
+
   paste(tags, collapse=collapse);
 })
 
 
 setMethodS3("getParameterSets", "BwaAlignment", function(this, ...) {
   paramsList <- NextMethod("getParameterSets");
+  paramsList$method <- list(flavor=getFlavor(this));
   paramsList$aln <- getOptionalArguments(this, ...);
   paramsList;
 }, protected=TRUE)
@@ -169,6 +180,11 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
   verbose && printf(verbose, "Additional BWA arguments: %s\n", getParametersAsString(this));
 
   verbose && cat(verbose, "Number of files: ", length(ds));
+
+  method <- paramsList$method;
+  if (method != "backtracking") {
+    throw("Non-supported BWA algorithm. Currently only 'backtracking' is supported: ", method);
+  }
 
   isPaired <- isPaired(this);
   if (isPaired) {
