@@ -17,7 +17,7 @@
 }
 
 \usage{
-setupExampleData(dirs=c("annotationData", "fastqData*"), ...)
+setupExampleData(dirs=c("annotationData", "bamData", "fastqData*"), ...)
 }
 
 \arguments{

@@ -1,53 +1,34 @@
 library("aroma.seq")
 
-if (isCapableOf(aroma.seq, "gatk")) {
-  bin <- findGATK()
-  print(bin)
-
-
-}
-
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 fullTest <- fullTest && isCapableOf(aroma.seq, "gatk")
-fullTest <- fullTest && isCapableOf(aroma.seq, "picard")
-fullTest <- fullTest && isCapableOf(aroma.seq, "bowtie2")
 if (fullTest) {
 
+bin <- findGATK()
+print(bin)
 
 # Setup (writable) local data directory structure
 setupExampleData()
 
-dataSet <- "TopHat-example"
-organism <- "LambdaPhage"
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Setup FASTA reference file
+# Setup FASTA and BAM files
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-fa <- FastaReferenceFile$byOrganism(organism)
-print(fa)
+path <- file.path("annotationData", "organisms", organism)
+pathnameFA <- Arguments$getReadablePathname("exampleFASTA.fasta", path=pathFA)
+print(pathnameFA)
 
-fai <- buildIndex(fa)
-print(fai)
+path <- file.path("bamData", dataset, organism)
+pathnameBAM <- Arguments$getReadablePathname("exampleBAM.bam", path=path)
+print(pathnameBAM)
 
-dict <- buildDictionary(fa)
-print(dict)
-
-fqs <- FastqDataSet$byName(dataSet, organism=organism)
-print(fqs)
-
-bams <- doBowtie2(fqs, reference=fa, verbose=TRUE)
-print(bams)
-
-pathnameFA <- getPathname(fa)
-pathnameBAMs <- getPathnames(bams)
-
-tryCatch({
-  res <- gatk(analysisType="CountReads", pathnameR=pathnameFA,
-              pathnameI=pathnameBAMs, verbose=TRUE)
-  print(res)
-}, error = function(ex) {
-  print(ex)
-})
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Call GATK CountReads, cf. '(howto) Run the GATK for the first time'
+# http://gatkforums.broadinstitute.org/discussion/1209/howto-run-the-gatk-for-the-first-time
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+res <- gatk(analysisType="CountReads", pathnameR=pathnameFA,
+            pathnameI=pathnameBAM, verbose=TRUE)
+print(res)
 
 } # if (fullTest)
 

@@ -18,7 +18,7 @@
 #
 # @keyword internal
 #*/###########################################################################
-setupExampleData <- function(dirs=c("annotationData", "fastqData*"), ...) {
+setupExampleData <- function(dirs=c("annotationData", "bamData", "fastqData*"), ...) {
   # Argument 'dirs':
   dirs <- Arguments$getCharacters(dirs);
 
@@ -36,6 +36,10 @@ setupExampleData <- function(dirs=c("annotationData", "fastqData*"), ...) {
 
     # Create
     dirS <- file.path(pathS, dir);
+
+    # Nothing to do?
+    if (!isDirectory(dirS)) next;
+
     if (link) {
       dir <- Arguments$getWritablePath(dir);
       for (dirSS in list.files(path=dirS)) {
@@ -49,12 +53,47 @@ setupExampleData <- function(dirs=c("annotationData", "fastqData*"), ...) {
     stopifnot(isDirectory(dir));
   } # for (ii ...)
 
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Data set: GATK Resource Bundle (iff available)
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (isCapableOf(aroma.seq, "gatk")) {
+    srcPath <- file.path(dirname(bin), "resources");
+    srcPath <- Arguments$getReadablePath(srcPath, mustExist=FALSE);
+    if (isDirectory(srcPath)) {
+      dataset <- "GATKResourceBundle";
+      organism <- "GATKExample";
+
+      if (is.element("annotationData", dirs)) {
+        path <- file.path("annotationData", "organisms", organism);
+        path <- Arguments$getWritablePath(path);
+        pathnames <- dir(path=srcPath, pattern="^exampleFASTA[.]", full.names=TRUE);
+        sapply(pathnames, FUN=function(pathname) {
+          copyFile(pathname, file.path(path, basename(pathname)), skip=TRUE);
+        })
+      }
+
+      if (is.element("bamData", dirs)) {
+        path <- file.path("bamData", dataset, organism);
+        path <- Arguments$getWritablePath(path);
+
+        pathnames <- dir(path=srcPath, pattern="^exampleBAM[.]", full.names=TRUE)
+        sapply(pathnames, FUN=function(pathname) {
+          copyFile(pathname, file.path(path, basename(pathname)), skip=TRUE)
+        })
+      }
+    } # if (isDirectory(srcPath))
+  }
+
   invisible(dirs);
 } # setupExampleData()
 
 
 ############################################################################
 # HISTORY:
+# 2014-04-11
+# o Now setupExampleData() includes GATKResourceBundle data, iff GATK
+#   and its resource bundle is available.
 # 2013-11-01
 # o Added setupExampleData().
 # o Created.
