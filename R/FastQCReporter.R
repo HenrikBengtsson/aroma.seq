@@ -181,7 +181,7 @@ setMethodS3("process", "FastQCReporter", function(this, ..., skip=TRUE, force=FA
     pathnames <- unlist(sapply(dfList, FUN=getPathname), use.names=FALSE);
 
     name <- names(dfList)[1L];
-    pathD <- file.path(path, sprintf("%s_fastqc", name));
+    pathD <- file.path(path, name);
     filenameD <- "fastqc_data.txt";
     filenameD <- Arguments$getFilename(filenameD);
     pathnameD <- file.path(pathD, filenameD);
@@ -217,13 +217,15 @@ setMethodS3("process", "FastQCReporter", function(this, ..., skip=TRUE, force=FA
     verbose && cat(verbose, "Output log:");
     verbose && print(verbose, res);
 
-    # Identify output subdirectory
+    # Sanity check
+    stopifnot(isDirectory(pathDT));
+
+    # Identify the output subdirectory that 'fastqc' created
     dirT <- list.files(path=pathDT, pattern="_fastqc$", full.names=FALSE);
     pathT <- file.path(pathDT, dirT);
     stopifnot(isDirectory(pathT));
 
     # Sanity check
-    stopifnot(isDirectory(pathDT));
     pathnameDT <- file.path(pathT, filenameD);
     Arguments$getReadablePathname(pathnameDT);
 
@@ -297,6 +299,9 @@ setMethodS3("validateGroups", "FastQCReporter", function(this, groups, ...) {
 
 ############################################################################
 # HISTORY:
+# 2014-04-13 [HB]
+# o CLEANUP: Now FastQCReporter outputs sample directories without the
+#   default and auxillary '_fastqc' suffix.
 # 2014-03-02 [HB]
 # o Created.
 ############################################################################

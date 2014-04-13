@@ -7,6 +7,8 @@ o Added support for paired-end BWA alignment in addition already
 o Now paired-end alignments are tagged as "pe".  Previously they were
   tagged as "paired", which was ambigous in case for instance
   tumor-normal pair data was analyzed.
+o CLEANUP: Now FastQCReporter outputs sample directories without the
+  default and auxillary '_fastqc' suffix.
 
 
 Version: 0.4.37 [2014-04-10]

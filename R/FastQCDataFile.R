@@ -45,7 +45,6 @@ setMethodS3("as.character", "FastQCDataFile", function(x, ...) {
 setMethodS3("getSampleName", "FastQCDataFile", function(this, ...) {
   name <- getPath(this);
   name <- basename(name);
-  name <- gsub("_fastqc$", "", name);
   name;
 }, protected=TRUE)
 
