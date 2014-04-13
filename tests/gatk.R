@@ -10,12 +10,15 @@ print(bin)
 # Setup (writable) local data directory structure
 setupExampleData()
 
+dataset <- "GATKResourceBundle";
+organism <- "GATKExample";
+
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup FASTA and BAM files
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 path <- file.path("annotationData", "organisms", organism)
-pathnameFA <- Arguments$getReadablePathname("exampleFASTA.fasta", path=pathFA)
+pathnameFA <- Arguments$getReadablePathname("exampleFASTA.fasta", path=path)
 print(pathnameFA)
 
 path <- file.path("bamData", dataset, organism)
