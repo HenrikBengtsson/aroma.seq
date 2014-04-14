@@ -18,8 +18,8 @@
 }
 
 \usage{
- \method{gatk}{default}(analysisType, ..., pathnameI=NULL, pathnameR=NULL, pathnameL=NULL,
-  outPath="gatkData/", verbose=FALSE)
+ \method{gatk}{default}(analysisType, ..., pathnameI=NULL, pathnameR=NULL, pathnameL=NULL, pathnameLog=NULL,
+  outPath=NULL, overwrite=FALSE, verbose=FALSE)
 }
 
 \arguments{

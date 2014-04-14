@@ -51,7 +51,7 @@ setMethodS3("systemGATK", "default", function(..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Call GATK java jar
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  .fmtArg <- c(".*"="-%s %s");
+  .fmtArg <- c("--.*"="%s %s", ".*"="-%s %s");
   res <- systemJavaJar(pathname, ..., .fmtArg=.fmtArg, verbose=less(verbose, 5));
 
   verbose && exit(verbose);

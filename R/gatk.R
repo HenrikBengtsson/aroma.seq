@@ -42,7 +42,7 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("gatk", "default", function(analysisType, ..., pathnameI=NULL, pathnameR=NULL, pathnameL=NULL, outPath="gatkData/", verbose=FALSE) {
+setMethodS3("gatk", "default", function(analysisType, ..., pathnameI=NULL, pathnameR=NULL, pathnameL=NULL, pathnameLog=NULL, outPath=NULL, overwrite=FALSE, verbose=FALSE) {
   # Make sure to evaluate registered onExit() statements
   on.exit(eval(onExit()));
 
@@ -68,8 +68,18 @@ setMethodS3("gatk", "default", function(analysisType, ..., pathnameI=NULL, pathn
     pathnameL <- Arguments$getReadablePathname(pathnameL, absolute=TRUE);
   }
 
+  # Argument 'pathnameLog':
+  if (length(pathnameLog) > 0L) {
+    pathnameLog <- Arguments$getWritablePathname(pathnameLog, absolute=TRUE);
+  }
+
   # Argument 'outPath':
-  outPath <- Arguments$getWritablePath(outPath, mustNotExist=TRUE);
+  if (is.null(outPath)) {
+    checksum <- getChecksum(list(analysisType=analysisType, ..., pathnameI=pathnameI, pathnameR=pathnameR, pathnameL=pathnameL));
+    outPath <- file.path("gatkData", checksum);
+    outPath <- Arguments$getWritablePath(outPath, mustNotExist=!overwrite);
+    removeDirectory(outPath, recursive=overwrite, mustExist=TRUE);
+  }
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -101,15 +111,14 @@ setMethodS3("gatk", "default", function(analysisType, ..., pathnameI=NULL, pathn
   # Generate output atomically by writing to a temporary directory
   # that is renamed upon completion.
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  outPathOrg <- outPath;
-  outPath <- sprintf("%s.TMP", outPath);
-  outPath <- Arguments$getWritablePath(outPath, mustNotExist=TRUE);
-  verbose && cat(verbose, "Temporary output directory: ", outPath);
+  outPathT <- sprintf("%s.TMP", outPath);
+  outPathT <- Arguments$getWritablePath(outPathT, mustNotExist=TRUE);
+  verbose && cat(verbose, "Temporary output directory: ", outPathT);
   # At the end, assume failure, unless successful.
   outPathFinal <- sprintf("%s.ERROR", outPath);
   onExit({
-    removeDirectory(outPathOrg, recursive=FALSE, mustExist=FALSE);
-    file.rename(outPath, outPathFinal);
+    # Rename temporary output directory to the final one
+    file.rename(outPathT, outPathFinal);
   });
 
 
@@ -117,7 +126,7 @@ setMethodS3("gatk", "default", function(analysisType, ..., pathnameI=NULL, pathn
   # While running, let the output directory be the working directory.
   # Make sure the working directory is restored when exiting.
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  opwd <- setwd(outPath);
+  opwd <- setwd(outPathT);
   verbose && cat(verbose, "Original working directory: ", opwd);
   onExit({
     verbose && cat(verbose, "Resetting working directory: ", opwd);
@@ -133,6 +142,7 @@ setMethodS3("gatk", "default", function(analysisType, ..., pathnameI=NULL, pathn
   for (p in pathnameI) opts <- c(opts, "--input_file", shQuote(p));
   for (p in pathnameR) opts <- c(opts, "--reference_sequence", shQuote(p));
   for (p in pathnameL) opts <- c(opts, "--interval", shQuote(p));
+  for (p in pathnameLog) opts <- c(opts, "--log_to_file", shQuote(p));
   opts <- c(opts, ...);
   opts <- as.list(opts);
   opts$stdout <- TRUE;
@@ -160,7 +170,7 @@ setMethodS3("gatk", "default", function(analysisType, ..., pathnameI=NULL, pathn
     # If we get this far, assume it was all successful.
     # Allow the temporary output path to be renamed to the
     # intended output path instead of the "error" one.
-    outPathFinal <- outPathOrg;
+    outPathFinal <- outPath;
   } else {
     # Any errors?
     pattern <- "^(#)+( )+ERROR MESSAGE:( )+";
@@ -181,6 +191,9 @@ setMethodS3("gatk", "default", function(analysisType, ..., pathnameI=NULL, pathn
 
 ############################################################################
 # HISTORY:
+# 2014-04-14 [HB]
+# o Added argument 'pathnameLog' to gatk().
+# o ROBUSTNESS: Now gatk() outputs to a "unique" directory.
 # 2014-04-13 [HB]
 # o ROBUSTNESS: Now gatk() throws GATK errors as R errors.
 # o Added optional arguments 'pathnameI', 'pathnameR' and 'pathnameL'
@@ -189,5 +202,3 @@ setMethodS3("gatk", "default", function(analysisType, ..., pathnameI=NULL, pathn
 # 2014-03-14 [HB]
 # o Created from tophat.R.
 ############################################################################
-
-
