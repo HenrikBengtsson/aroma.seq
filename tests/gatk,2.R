@@ -38,7 +38,9 @@ lapply(fqs, FUN=function(fq) {setSamReadGroup(fq, SamReadGroup(
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Alignment
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bams <- doBowtie2(fqs, reference=fa, verbose=TRUE)
+# Need to add tag below to make sure we're not picking up another
+# alignment without read groups.
+bams <- doBowtie2(fqs, reference=fa, tags="*,hasRGs", verbose=TRUE)
 print(bams)
 
 
