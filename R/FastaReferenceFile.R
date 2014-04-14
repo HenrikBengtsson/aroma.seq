@@ -239,7 +239,7 @@ setMethodS3("byOrganism", "FastaReferenceFile", function(static, organism, ...) 
 # }
 #
 # \value{
-#   Returns a @see "R.filesets::GenericDataFileSet" consisting of the BWA index files.
+#   Returns the pathname to the FASTA index file.
 # }
 #
 # @author
@@ -296,13 +296,13 @@ setMethodS3("buildIndex", "FastaReferenceFile", function(this, ..., skip=TRUE, v
 # @synopsis
 #
 # \arguments{
-#  \item{...}{Additional arguments passed to @see "Rsamtools::indexFa".}
+#  \item{...}{Additional arguments passed to @see "systemPicard".}
 #  \item{skip}{If @TRUE, the dictionary is not rebuilt if already available.}
 #  \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
 # \value{
-#   Returns a @see "R.filesets::GenericDataFileSet" consisting of the BWA index files.
+#   Returns the pathname to the DICT file.
 # }
 #
 # \references{
@@ -333,7 +333,9 @@ setMethodS3("buildDictionary", "FastaReferenceFile", function(this, ..., skip=TR
   pathname <- getPathname(this);
   verbose && cat(verbose, "FASTA pathname: ", pathname);
 
-  pathnameDICT <- sprintf("%s.dict", pathname);
+  path <- getPath(this);
+  filename <- sprintf("%s.dict", getFullName(this));
+  pathnameDICT <- file.path(path, filename);
   verbose && cat(verbose, "FASTA DICT pathname: ", pathnameDICT);
 
   pathnameDICT <- Arguments$getWritablePathname(pathnameDICT, mustNotExist=FALSE);
