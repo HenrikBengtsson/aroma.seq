@@ -13,15 +13,21 @@
 # }
 #
 # \arguments{
+#   \item{analysisType}{(required) A @character string specifying type of
+#     analysis.
+#     In GATK, this corrensponds to engine argument
+#     \code{--analysis_type} (or \code{-T}).}
 #   \item{...}{(optional) named arguments}.
-#   \item{analysisType}{(required) A @character string specifying type of analysis.
-#     In GATK, this corrensponds to argument \code{--analysis_type} (or \code{-T}).}
 #   \item{pathnameI}{(optional) A @character @vector specifying one or more
 #     (SAM or BAM) files.
-#     In GATK, this corrensponds to one or more arguments
+#     In GATK, this corrensponds to one or more engine arguments
 #     \code{--input_file} (or \code{-I}).}
-#   \item{pathnameR}{(optional) A @character string specifying an reference file.
-#     In GATK, this corrensponds to argument \code{--reference_sequence} (or \code{-R}).}
+#   \item{pathnameR}{(optional) A @character string specifying a reference file.
+#     In GATK, this corrensponds to engine argument
+#     \code{--reference_sequence} (or \code{-R}).}
+#   \item{pathnameL}{(optional) A @character string specifying a ROD file.
+#     In GATK, this corrensponds to engine argument
+#     \code{--interval} (or \code{-L}).}
 #   \item{outPath}{Directory where result files are written.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
@@ -36,7 +42,7 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("gatk", "default", function(..., pathnameI=NULL, pathnameR=NULL, analysisType, outPath="gatkData/", verbose=FALSE) {
+setMethodS3("gatk", "default", function(analysisType, ..., pathnameI=NULL, pathnameR=NULL, pathnameL=NULL, outPath="gatkData/", verbose=FALSE) {
   # Make sure to evaluate registered onExit() statements
   on.exit(eval(onExit()));
 
@@ -47,14 +53,19 @@ setMethodS3("gatk", "default", function(..., pathnameI=NULL, pathnameR=NULL, ana
   analysisType <- Arguments$getCharacter(analysisType);
 
   # Argument 'pathnameI':
+  if (length(pathnameI) > 0L) {
+    pathnameI <- Arguments$getReadablePathnames(pathnameI, absolute=TRUE);
+    assertNoDuplicated(pathnameI);
+  }
+
+  # Argument 'pathnameR':
   if (length(pathnameR) > 0L) {
     pathnameR <- Arguments$getReadablePathname(pathnameR, absolute=TRUE);
   }
 
-  # Argument 'pathnameI':
-  if (length(pathnameI) > 0L) {
-    pathnameI <- Arguments$getReadablePathnames(pathnameI, absolute=TRUE);
-    assertNoDuplicated(pathnameI);
+  # Argument 'pathnameL':
+  if (length(pathnameL) > 0L) {
+    pathnameL <- Arguments$getReadablePathname(pathnameL, absolute=TRUE);
   }
 
   # Argument 'outPath':
@@ -79,6 +90,11 @@ setMethodS3("gatk", "default", function(..., pathnameI=NULL, pathnameR=NULL, ana
   if (length(pathnameR) > 0L) {
     verbose && cat(verbose, "Reference file:");
     verbose && print(verbose, getRelativePath(pathnameR));
+  }
+
+  if (length(pathnameL) > 0L) {
+    verbose && cat(verbose, "Interval ROD file:");
+    verbose && print(verbose, getRelativePath(pathnameL));
   }
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -116,6 +132,7 @@ setMethodS3("gatk", "default", function(..., pathnameI=NULL, pathnameR=NULL, ana
   opts <- c("--analysis_type", shQuote(analysisType));
   for (p in pathnameI) opts <- c(opts, "--input_file", shQuote(p));
   for (p in pathnameR) opts <- c(opts, "--reference_sequence", shQuote(p));
+  for (p in pathnameL) opts <- c(opts, "--interval", shQuote(p));
   opts <- c(opts, ...);
   opts <- as.list(opts);
   opts$stdout <- TRUE;
@@ -166,7 +183,8 @@ setMethodS3("gatk", "default", function(..., pathnameI=NULL, pathnameR=NULL, ana
 # HISTORY:
 # 2014-04-13 [HB]
 # o ROBUSTNESS: Now gatk() throws GATK errors as R errors.
-# o Added optional arguments 'pathnameI' and 'pathnameR' to gatk().
+# o Added optional arguments 'pathnameI', 'pathnameR' and 'pathnameL'
+#   to gatk().
 # o Made argument 'analysisType' mantadory for gatk().
 # 2014-03-14 [HB]
 # o Created from tophat.R.

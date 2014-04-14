@@ -22,13 +22,13 @@
 }
 
 \arguments{
- \item{...}{Additional arguments passed to \code{\link[Rsamtools]{indexFa}}.}
+ \item{...}{Additional arguments passed to \code{\link{systemPicard}}().}
  \item{skip}{If \code{\link[base:logical]{TRUE}}, the dictionary is not rebuilt if already available.}
  \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }
 
 \value{
-  Returns a \code{\link[R.filesets]{GenericDataFileSet}} consisting of the BWA index files.
+  Returns the pathname to the DICT file.
 }
 
 \references{

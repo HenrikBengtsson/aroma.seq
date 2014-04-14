@@ -37,6 +37,9 @@
 # \references{
 #  [1] The SAM Format Specification Working Group,
 #      \emph{The SAM Format Specification}, Sept 7, 2011.\cr
+#  [2] \emph{Collected FAQs about BAM files: What's the meaning
+#            of the standard read group fields?}, GATK Forums,
+#      Mar 2013. \url{http://goo.gl/PWv8MX} \cr
 # }
 #*/###########################################################################
 setConstructorS3("SamReadGroup", function(id=NULL, sample=NULL, library=NULL, platform=NULL, platformUnit=NULL, sequencingCenter=NULL, description=NULL, runDate=NULL, flowOrder=NULL, keySequence=NULL, program=NULL, predictedInsertSize=NULL, ...) {

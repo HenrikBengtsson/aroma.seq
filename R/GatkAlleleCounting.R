@@ -89,8 +89,8 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
 
   verbose && enter(verbose, "Counting alleles for known SNPs");
 
-  bs <- getInputDataSet(this);
-  verbose && print(verbose, bs);
+  bams <- getInputDataSet(this);
+  verbose && print(verbose, bams);
 
   params <- getParameters(this);
   targetUgp <- params$targetUgp;
@@ -106,11 +106,11 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
 
   bedf <- NULL;
 
-  for (ii in seq_along(bs)) {
-    bf <- getFile(bs, ii);
-    verbose && enter(verbose, sprintf("Sample #%d ('%s') of %d", ii, getName(bf), length(bs)));
+  for (ii in seq_along(bams)) {
+    bam <- getFile(bams, ii);
+    verbose && enter(verbose, sprintf("Sample #%d ('%s') of %d", ii, getName(bam), length(bams)));
 
-    filename <- sprintf("%s,alleleCounts.txt", getFullName(bf));
+    filename <- sprintf("%s,alleleCounts.txt", getFullName(bam));
     pathnameD <- Arguments$getReadablePathname(filename, path=pathD, mustExist=FALSE);
 
     if (overwrite || !isFile(pathnameD)) {
@@ -142,7 +142,10 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
       # --omitPerSampleStats: Do not output the summary files per-sample
       #   [This option simply disables writing separate files for per-sample summary statistics (total, mean, median, quartile coverage per sample). These statistics are still calculated internally, so enabling this option will not improve runtime.]
       # --printBaseCounts: Add base counts to per-locus output
-      res <- systemGATK(T="DepthOfCoverage", I=getPathname(bf), R=getPathname(fa), L=getPathname(bedf), "--omitIntervalStatistics", "--omitLocusTable", "--omitPerSampleStats", "--printBaseCounts", "o"=pathnameDT, verbose=verbose);
+###      res <- systemGATK(T="DepthOfCoverage", I=getPathname(bam), R=getPathname(fa), L=getPathname(bedf), "--omitIntervalStatistics", "--omitLocusTable", "--omitPerSampleStats", "--printBaseCounts", "o"=pathnameDT, verbose=verbose);
+
+      res <- gatk(analysisType="DepthOfCoverage", pathnameI=getPathname(bam), pathnameR=getPathname(fa), pathnameL=getPathname(bedf), "--omitIntervalStatistics", "--omitLocusTable", "--omitPerSampleStats", "--printBaseCounts", "o"=pathnameDT, verbose=verbose);
+
       verbose && cat(verbose, "GATK system result: ", res);
       verbose && exit(verbose);
 

@@ -28,7 +28,7 @@
 }
 
 \value{
-  Returns a \code{\link[R.filesets]{GenericDataFileSet}} consisting of the BWA index files.
+  Returns the pathname to the FASTA index file.
 }
 
 \author{Henrik Bengtsson}
