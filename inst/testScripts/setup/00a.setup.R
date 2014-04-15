@@ -1,5 +1,4 @@
 library("R.utils");
-stopifnot(packageVersion("R.utils") >= "1.16.5");
 
 package <- "aroma.seq";
 

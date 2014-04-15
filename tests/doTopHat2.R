@@ -39,13 +39,13 @@ print(bams2)
 # Assert that we get the same as the default settings
 # Comparison of BAM files must be done at the SAM level here,
 # because there are additional things encoded in the BAM files.
-if (packageVersion("Rsamtools") >= "1.15.0") {
-  sams <- convertToSam(bams)
-  sams2 <- convertToSam(bams2)
-#  samsC <- getChecksumFileSet(sams)
-#  sams2C <- getChecksumFileSet(sams2)
+sams <- convertToSam(bams)
+sams2 <- convertToSam(bams2)
+samsC <- getChecksumFileSet(sams)
+sams2C <- getChecksumFileSet(sams2)
+print(samsC)
+print(sams2C)
 #  stopifnot(equals(samsC, sams2C))
-}
 
 } # if (fullTest)
 

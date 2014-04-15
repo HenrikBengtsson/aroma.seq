@@ -80,10 +80,6 @@ setMethodS3("convertToSam", "BamDataFile", function(this, path=getPath(this), sk
   verbose && enter(verbose, "Converting using Rsamtools");
   asSam <- NULL; rm(list="asSam"); # To please R CMD check
   require("Rsamtools") || throw("Package not loaded: Rsamtools");
-  ver <- packageVersion("Rsamtools");
-  if (ver < "1.15.0") {
-    throw("convertToSam() requires Rsamtools (>= 1.15.0): ", ver);
-  }
   pathnameSAMx <- gsub("[.]sam$", "", pathnameSAM);
   verbose && cat(verbose, "SAM destination: ", pathnameSAMx);
   # NB: Rsamtools::asSam() already writes atomically.

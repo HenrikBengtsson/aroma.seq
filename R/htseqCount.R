@@ -55,17 +55,6 @@ setMethodS3("htseqCount", "default", function(pathnameS, gff, orderedBy=c("none"
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   R.utils::use("Rsamtools")
 
-  # BACKWARD COMPATIBILITY: Add asSam(), iff missing.
-  if (packageVersion("Rsamtools") < "1.15.14") {
-    asSam <- function(file, destination, ...) {
-      file <- Arguments$getReadablePathname(file)
-      fileD <- sprintf("%s.sam", destination)
-      fileD <- Arguments$getWritablePathname(fileD)
-      samtoolsView(file, fileD)
-      fileD
-    } # asSam()
-  }
-
   isSAM <- function(pathname, ...) {
     (regexpr(".*[.]sam$", pathname, ignore.case=TRUE) != -1L);
   } # isSAM()
@@ -343,7 +332,7 @@ setMethodS3("htseqCount", "default", function(pathnameS, gff, orderedBy=c("none"
 ############################################################################
 # HISTORY:
 # 2014-03-11 [HB]
-# o ROBUSTNESS: Added argument 'sortByName' to htseqCount(), which for 
+# o ROBUSTNESS: Added argument 'sortByName' to htseqCount(), which for
 #   now defaults to "always", because although htseq-count (>= 0.6.0)
 #   is supposed to handle when BAM files are sorted by position, it will
 #   run out of memory for modestly large BAM files.
