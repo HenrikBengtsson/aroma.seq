@@ -98,7 +98,7 @@ setMethodS3("getOutputDataSet", "QDNAseqEstimation", function(this, ...) {
 
 
 setMethodS3("process", "QDNAseqEstimation", function(this, ..., force=FALSE, verbose=FALSE) {
-  R.utils::use("QDNAseq (>= 0.5.8)");
+  R.utils::use("QDNAseq (>= 1.0.0)");
   getBinAnnotations <- NULL; # To please 'R CMD check'.
 
 

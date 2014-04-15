@@ -3,7 +3,7 @@ Package: aroma.seq
 
 Version: 0.5.0 [2014-04-15]
 o Package now requires R (>= 3.1.0) and BioC (>= 2.14.0).
-o Bumped up package dependencies.
+o Bumped up package dependencies. Added 'QDNAseq'.
 o CLEANUP: Dropped BioC (< 2.14.0) backward compatibility code.
 
 
