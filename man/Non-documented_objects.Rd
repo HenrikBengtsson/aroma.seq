@@ -519,6 +519,7 @@
 \alias{getOrganism.AromaSeqDataFile}
 \alias{getOrganism.AromaSeqDataFileSet}
 \alias{buildDictionary}
+\alias{isPaired.FastqDataFile}
 
 \description{
   This page contains aliases for all "non-documented" objects that

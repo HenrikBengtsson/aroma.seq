@@ -288,3 +288,4 @@ getDefaultFullName.AromaSeqDataFile
 getDefaultFullName.AromaSeqDataFileSet
 getOrganism.AromaSeqDataFile getOrganism.AromaSeqDataFileSet
 buildDictionary
+isPaired.FastqDataFile
