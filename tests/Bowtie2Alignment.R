@@ -42,10 +42,7 @@ bams <- process(alg, verbose=-20)
 print(bams)
 
 # Display an example BAM file
-for (ii in seq_along(bams)) {
-  bam <- getFile(bams, ii)
-  print(bam)
-}
+for (ii in seq_along(bams)) print(bams[[ii]])
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -55,7 +52,7 @@ for (ii in seq_along(bams)) {
 dataSetZ <- sprintf("%s,gz", dataSet);
 pathZ <- file.path("fastqData", dataSetZ, organism)
 for (ii in seq_along(fqs)) {
-  fq <- getFile(fqs, ii)
+  fq <- fqs[[ii]]
   pathnameZ <- file.path(pathZ, sprintf("%s.gz", getFilename(fq)))
   if (!isFile(pathnameZ)) gzip(getPathname(fq), pathnameZ, remove=FALSE)
 }
@@ -72,8 +69,8 @@ print(bamsZ)
 stopifnot(length(bamsZ) == length(bams))
 stopifnot(identical(getFullNames(bamsZ), getFullNames(bams)))
 for (ii in seq_along(bams)) {
-  bam <- getFile(bams, ii)
-  bamZ <- getFile(bamsZ, ii)
+  bam <- bams[[ii]]
+  bamZ <- bamsZ[[ii]]
   stopifnot(getChecksum(bamZ) == getChecksum(bam))
 }
 

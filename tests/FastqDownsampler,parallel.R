@@ -31,7 +31,7 @@ print(fqsS)
 
 # Sanity checks
 stopifnot(identical(getFullNames(fqsS), getFullNames(fqs)))
-fqS <- getFile(fqsS, 1)
+fqS <- fqsS[[1]]
 stopifnot(nbrOfSeqs(fqS) == getSampleSize(ds))
 
 } # if (fullTest)

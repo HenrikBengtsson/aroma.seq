@@ -21,10 +21,7 @@ print(fa)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 fqs <- FastqDataSet$byName(dataSet, organism=organism)
 print(fqs)
-for (ii in seq_along(fqs)) {
-  fq <- getFile(fqs, ii)
-  print(fq)
-}
+for (ii in seq_along(fqs)) print(fqs[[ii]])
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -33,7 +30,7 @@ for (ii in seq_along(fqs)) {
 dataSetZ <- sprintf("%s,gz", dataSet);
 pathZ <- file.path("fastqData", dataSetZ, organism)
 for (ii in seq_along(fqs)) {
-  fq <- getFile(fqs, ii)
+  fq <- fqs[[ii]]
   pathnameZ <- file.path(pathZ, sprintf("%s.gz", getFilename(fq)))
   gzip(getPathname(fq), pathnameZ, skip=TRUE, remove=FALSE)
 }
@@ -44,10 +41,8 @@ for (ii in seq_along(fqs)) {
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 fqsZ <- FastqDataSet$byName(dataSet, tags="gz", organism=organism)
 print(fqsZ)
-for (ii in seq_along(fqsZ)) {
-  fqZ <- getFile(fqsZ, ii)
-  print(fqZ)
-}
+for (ii in seq_along(fqsZ)) print(fqsZ[[ii]])
+
 
 # Assert that file extensions are properly dropped
 stopifnot(all(getFullNames(fqsZ) == getFullNames(fqs)))

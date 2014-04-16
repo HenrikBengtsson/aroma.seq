@@ -48,9 +48,9 @@ bams <- BamDataSet$byName(dataSet, tags="bwa,is,-dups", organism=organism)
 print(bams)
 
 # QDNAseq on a single BAM file
-bf <- getFile(bams, 1)
-print(bf)
-cn <- doQDNAseq(bf, binWidth=100, verbose=-20)
+bam <- bams[[1]]
+print(bam)
+cn <- doQDNAseq(bam, binWidth=100, verbose=-20)
 print(cn)
 
 # QDNAseq on a BAM file set

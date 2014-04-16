@@ -93,12 +93,14 @@ setMethodS3("convertToBam", "SamDataFile", function(this, path=getPath(this), sk
 
 
 
-setMethodS3("convertToBam", "SamDataSet", function(ds, path=getPath(ds), ..., verbose=FALSE) {
+setMethodS3("convertToBam", "SamDataSet", function(ds, path=NULL, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'path':
-  path <- Arguments$getWritablePath(path);
+  if (!is.null(path)) {
+    path <- Arguments$getWritablePath(path);
+  }
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -115,14 +117,18 @@ setMethodS3("convertToBam", "SamDataSet", function(ds, path=getPath(ds), ..., ve
   verbose && cat(verbose, "BAM path: ", path);
 
   # TO DO: Parallelize. /HB 2013-11-08
+  bfList <- list();
   for (ii in seq_along(ds)) {
-    df <- getFile(ds, ii);
+    df <- ds[[ii]];
     verbose && enter(verbose, sprintf("File #%d ('%s') of %d", ii, getName(df), length(ds)));
-    bf <- convertToBam(df, path=path, ..., verbose=less(verbose,1));
+    pathII <- if (is.null(path)) getPath(df) else path;
+    bf <- convertToBam(df, path=pathII, ..., verbose=less(verbose,1));
+    bfList[[ii]] <- bf;
+    verbose && print(verbose, bf);
     verbose && exit(verbose);
   } # for (ii ...)
 
-  bs <- BamDataSet$byPath(path);
+  bs <- BamDataSet(bfList);
   bs <- extract(bs, getFullNames(ds), onMissing="error");
   verbose && print(verbose, bs);
 
@@ -134,9 +140,11 @@ setMethodS3("convertToBam", "SamDataSet", function(ds, path=getPath(ds), ..., ve
 }) # convertToBam() for SamDataSet
 
 
-
 ############################################################################
 # HISTORY:
+# 2014-04-16 [HB]
+# o BUG FIX: convertToBam() for SamDataSet would write all BAM files
+#   to the directory of the first SAM file.
 # 2013-11-08
 # o Merged source code of convertToBam() for SamDataFile and SamDataSet
 #   into the same source code file and documents as a generic function.

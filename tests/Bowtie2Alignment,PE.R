@@ -42,10 +42,7 @@ bams <- process(alg, verbose=-20)
 print(bams)
 
 # Display an example BAM file
-for (ii in seq_along(bams)) {
-  bam <- getFile(bams, ii)
-  print(bam)
-}
+for (ii in seq_along(bams)) print(bams[[ii]])
 
 } # if (fullTest)
 

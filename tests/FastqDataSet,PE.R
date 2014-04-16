@@ -20,7 +20,7 @@ print(pairs[,2])
 
 
 # Locate mate pair
-r1 <- getFile(fqs, 1)
+r1 <- fqs[[1]]
 print(r1)
 r2 <- getMateFile(r1)
 print(r2)

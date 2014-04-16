@@ -107,7 +107,7 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
   bedf <- NULL;
 
   for (ii in seq_along(bams)) {
-    bam <- getFile(bams, ii);
+    bam <- bams[[ii]];
     verbose && enter(verbose, sprintf("Sample #%d ('%s') of %d", ii, getName(bam), length(bams)));
 
     filename <- sprintf("%s,alleleCounts.txt", getFullName(bam));
@@ -308,7 +308,7 @@ setMethodS3("readGatkCountFile", "GatkAlleleCounting", function(this, array, ...
   ds <- getOutputDataSet(this);
   array <- Arguments$getIndex(array, max=length(ds));
 
-  df <- getFile(ds, array);
+  df <- ds[[array]];
   verbose && print(verbose, df);
 
   # Parse GATK results

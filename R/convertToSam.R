@@ -96,12 +96,14 @@ setMethodS3("convertToSam", "BamDataFile", function(this, path=getPath(this), sk
 
 
 
-setMethodS3("convertToSam", "BamDataSet", function(ds, path=getPath(ds), ..., verbose=FALSE) {
+setMethodS3("convertToSam", "BamDataSet", function(ds, path=NULL, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'path':
-  path <- Arguments$getWritablePath(path);
+  if (!is.null(path)) {
+    path <- Arguments$getWritablePath(path);
+  }
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -118,14 +120,18 @@ setMethodS3("convertToSam", "BamDataSet", function(ds, path=getPath(ds), ..., ve
   verbose && cat(verbose, "SAM path: ", path);
 
   # TO DO: Parallelize. /HB 2013-11-08
+  bfList <- list();
   for (ii in seq_along(ds)) {
-    df <- getFile(ds, ii);
+    df <- ds[[ii]];
     verbose && enter(verbose, sprintf("File #%d ('%s') of %d", ii, getName(df), length(ds)));
-    bf <- convertToSam(df, path=path, ..., verbose=less(verbose,1));
+    pathII <- if (is.null(path)) getPath(df) else path;
+    bf <- convertToSam(df, path=pathII, ..., verbose=less(verbose,1));
+    bfList[[ii]] <- bf;
+    verbose && print(verbose, bf);
     verbose && exit(verbose);
   } # for (ii ...)
 
-  bs <- SamDataSet$byPath(path);
+  bs <- SamDataSet(bfList);
   bs <- extract(bs, getFullNames(ds), onMissing="error");
   verbose && print(verbose, bs);
 
@@ -140,6 +146,9 @@ setMethodS3("convertToSam", "BamDataSet", function(ds, path=getPath(ds), ..., ve
 
 ############################################################################
 # HISTORY:
+# 2014-04-16 [HB]
+# o BUG FIX: convertToSam() for BamDataSet would write all SAM files
+#   to the directory of the first BAM file.
 # 2014-03-06 [HB]
 # o Created from convertToBam().
 ############################################################################

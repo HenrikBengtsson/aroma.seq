@@ -158,7 +158,7 @@ setMethodS3("getFilePairs", "FastqDataSet", function(this, ...) {
   colnames(pairs) <- c("R1", "R2");
 
   for (ii in seq_along(this)) {
-    r1 <- getFile(this, ii);
+    r1 <- this[[ii]];
     if (isFile(r1)) {
       r2 <- getMateFile(r1);
     } else {
