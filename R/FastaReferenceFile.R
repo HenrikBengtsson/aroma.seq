@@ -43,10 +43,10 @@ setConstructorS3("FastaReferenceFile", function(...) {
 setMethodS3("as.character", "FastaReferenceFile", function(x, ...) {
   this <- x;
   s <- NextMethod("as.character");
-  n <- nbrOfSeqs(this, onlyIfCached=TRUE);
-  s <- c(s, sprintf("Total sequence length: %.0f", getTotalSeqLengths(this, onlyIfCached=TRUE)));
+  n <- nbrOfSeqs(this);
+  s <- c(s, sprintf("Total sequence length: %.0f", getTotalSeqLengths(this)));
   s <- c(s, sprintf("Number of sequences: %d", n));
-  s <- c(s, sprintf("Sequence names: [%d] %s", n, hpaste(getSeqNames(this, onlyIfCached=TRUE))));
+  s <- c(s, sprintf("Sequence names: [%d] %s", n, hpaste(getSeqNames(this))));
   s;
 }, protected=TRUE)
 
@@ -65,13 +65,11 @@ setMethodS3("getOrganism", "FastaReferenceFile", function(this, ...) {
 })
 
 
-setMethodS3("getSeqLengths", "FastaReferenceFile", function(this, force=FALSE, onlyIfCached=FALSE, ...) {
+setMethodS3("getSeqLengths", "FastaReferenceFile", function(this, force=FALSE, ...) {
   seqLengths <- this$.seqLengths;
   if (force || is.null(seqLengths)) {
-    if (!onlyIfCached) {
-      seqLengths <- readSeqLengths(this, ...);
-      this$.seqLengths <- seqLengths;
-    }
+    seqLengths <- readSeqLengths(this, ...);
+    this$.seqLengths <- seqLengths;
   }
   seqLengths;
 })
@@ -102,9 +100,23 @@ setMethodS3("nbrOfSeqs", "FastaReferenceFile", function(this, ...) {
 # \seealso{
 #   Internally, \code{fasta.info()} of \pkg{Biostrings} is used.
 # }
-setMethodS3("readSeqLengths", "FastaReferenceFile", function(this, ...) {
+setMethodS3("readSeqLengths", "FastaReferenceFile", function(this, force=FALSE, ...) {
   pathname <- getPathname(this);
+
+  # Check for cached results
+  dirs <- c("aroma.seq", getOrganism(this));
+  key <- list(method="readSeqLengths", class=class(this), pathname=pathname);
+  seqLengths <- loadCache(key=key, dirs=dirs);
+  if (!force && !is.null(seqLengths)) {
+    return(seqLengths);
+  }
+
+  # Read FASTA file
   seqLengths <- Biostrings::fasta.info(pathname);
+
+  # Cache
+  saveCache(seqLengths, key=key, dirs=dirs);
+
   seqLengths;
 }, private=TRUE)
 
@@ -608,6 +620,8 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
 
 ############################################################################
 # HISTORY:
+# 2014-04-16
+# o SPEEDUP: Now readSeqLengths() for FastaReferenceFile memoizes results.
 # 2014-04-13
 # o Added buildDictionary() for FastaReferenceFile.
 # 2014-02-25
