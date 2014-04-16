@@ -41,11 +41,13 @@ extends \link[aroma.seq]{AromaSeqDataFile}\cr
 }
 
 \usage{
-FastqDataFile(...)
+FastqDataFile(..., paired=FALSE)
 }
 
 \arguments{
   \item{...}{Arguments passed to \code{\link[R.filesets]{GenericDataFile}}.}
+  \item{paired}{If \code{\link[base:logical]{TRUE}}, the data set contains paired-end reads,
+    otherwise not.}
 }
 
 \section{Fields and Methods}{
