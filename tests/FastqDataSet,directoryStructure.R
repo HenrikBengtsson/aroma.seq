@@ -11,7 +11,7 @@ organism <- "LambdaPhage"
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup original FASTQ set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-fqs <- FastqDataSet$byName(dataset, organism=organism)
+fqs <- FastqDataSet$byName(dataset, organism=organism, paired=FALSE)
 print(directoryStructure(fqs))
 
 # Validate directory structure
@@ -47,7 +47,7 @@ stopifnot(getOrganism(fqs) == organism)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup custom FASTQ set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-fqs2 <- FastqDataSet$byPath(path2, struct="<rootpath>/<dataset>/<organism>/<sample>/", recursive=TRUE)
+fqs2 <- FastqDataSet$byPath(path2, struct="<rootpath>/<dataset>/<organism>/<sample>/", recursive=TRUE, paired=FALSE)
 print(directoryStructure(fqs2))
 
 # Validate directory structure

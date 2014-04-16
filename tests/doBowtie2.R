@@ -22,7 +22,7 @@ print(fa)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup FASTQ set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-fqs <- FastqDataSet$byName(dataSet, organism=organism)
+fqs <- FastqDataSet$byName(dataSet, organism=organism, paired=FALSE)
 print(fqs)
 
 

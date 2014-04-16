@@ -128,6 +128,12 @@ setMethodS3("byPath", "FastqDataSet", function(static, ..., recursive=FALSE, str
 
     res <- extract(res, idxs);
 
+    # Set paired status
+    for (ii in seq_along(res)) {
+      df <- res[[ii]];
+      df$.paired <- TRUE;
+    }
+
     verbose && exit(verbose);
   } # if (isPaired(res))
 

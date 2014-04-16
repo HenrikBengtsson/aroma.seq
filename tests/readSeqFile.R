@@ -8,7 +8,7 @@ if (fullTest) {
 
   path <- system.file("extdata", package="qrqc", mustWork=TRUE)
   struct <- list(pattern=".*/extdata/([^/]*)", replacement=c(dataset="qrqc", organism="foo", sample="\\1"))
-  fqs <- FastqDataSet$byPath(path, struct=struct)
+  fqs <- FastqDataSet$byPath(path, struct=struct, paired=FALSE)
   print(fqs)
 
   fq <- fqs[[indexOf(fqs, "test-contam")]]

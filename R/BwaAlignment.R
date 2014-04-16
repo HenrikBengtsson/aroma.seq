@@ -234,19 +234,20 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
     pathnameFQs <- sapply(dfList, FUN=getPathname);
     verbose && cat(verbose, "FASTQ pathname(s): ", hpaste(pathnameFQs));
 
-    # The SAI to be generated
-    fullname <- sapply(dfList, FUN=getFullName);
-    filename <- sprintf("%s.sai", fullname);
-    pathnameSAIs <- sapply(filename, FUN=Arguments$getWritablePathname, path=path);
+    # The SAIs to be generated
+    fullnames <- sapply(dfList, FUN=getFullName, paired=FALSE);
+    filenames <- sprintf("%s.sai", fullnames);
+    pathnameSAIs <- sapply(filenames, FUN=Arguments$getWritablePathname, path=path);
     verbose && cat(verbose, "SAI pathname(s): ", hpaste(pathnameSAIs));
 
     # The SAM file to be generated
-    filename <- sprintf("%s.sam", fullname[1L]);
+    fullname <- getFullName(dfList[[1L]]);
+    filename <- sprintf("%s.sam", fullname);
     pathnameSAM <- Arguments$getWritablePathname(filename, path=path);
     verbose && cat(verbose, "SAM pathname: ", pathnameSAM);
 
     # The BAM file to be generated
-    filename <- sprintf("%s.bam", fullname[1L]);
+    filename <- sprintf("%s.bam", fullname);
     pathnameBAM <- Arguments$getWritablePathname(filename, path=path);
     verbose && cat(verbose, "BAM pathname: ", pathnameBAM);
 

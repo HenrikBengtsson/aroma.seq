@@ -22,7 +22,7 @@ print(fa)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup FASTQ set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-fqs <- FastqDataSet$byName(dataSet, organism=organism)
+fqs <- FastqDataSet$byName(dataSet, organism=organism, paired=FALSE)
 print(fqs)
 
 
@@ -47,7 +47,7 @@ for (ii in seq_along(fqs)) {
   pathnameZ <- file.path(pathZ, sprintf("%s.gz", getFilename(fq)))
   if (!isFile(pathnameZ)) gzip(getPathname(fq), pathnameZ, remove=FALSE)
 }
-fqsZ <- FastqDataSet$byName(dataSet, tags="gz", organism=organism)
+fqsZ <- FastqDataSet$byName(dataSet, tags="gz", organism=organism, paired=FALSE)
 
 bamsZ <- doBWA(fqsZ, reference=fa, verbose=-20)
 print(bamsZ)

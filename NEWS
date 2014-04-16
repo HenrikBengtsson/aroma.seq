@@ -2,6 +2,8 @@ Package: aroma.seq
 ==================
 
 Version: 0.5.1 [2014-04-16]
+o Now getDefaultFullName() for FastqDataFile drops PE suffixes.
+o Added field 'paired' to FastqDataFile.
 o SPEEDUP: Now readSeqLengths() for FastaReferenceFile memoizes results.
 o BUG FIX: convertToBam()/convertToSam() for data sets would write
   all SAM/BAM files to the directory of the first file.

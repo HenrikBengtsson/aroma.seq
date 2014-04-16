@@ -13,6 +13,8 @@
 #
 # \arguments{
 #   \item{...}{Arguments passed to @see "R.filesets::GenericDataFile".}
+#   \item{paired}{If @TRUE, the data set contains paired-end reads,
+#     otherwise not.}
 # }
 #
 # \section{Fields and Methods}{
@@ -30,14 +32,16 @@
 #   An object of this class is typically part of a @see "FastqDataSet".
 # }
 #*/###########################################################################
-setConstructorS3("FastqDataFile", function(...) {
-  extend(GenericDataFile(...), c("FastqDataFile", uses("AromaSeqDataFile")));
+setConstructorS3("FastqDataFile", function(..., paired=FALSE) {
+  extend(GenericDataFile(...), c("FastqDataFile", uses("AromaSeqDataFile")),
+    .paired = paired
+  );
 })
-
 
 setMethodS3("as.character", "FastqDataFile", function(x, ...) {
   this <- x;
   s <- NextMethod("as.character");
+  s <- c(s, sprintf("Is paired: %s", isPaired(this)));
   n <- nbrOfSeqs(this);
   s <- c(s, sprintf("Number of sequences: %s", n));
   s <- c(s, sprintf("Common width of sequences: %d", getCommonSeqWidth(this)));
@@ -45,9 +49,22 @@ setMethodS3("as.character", "FastqDataFile", function(x, ...) {
 }, protected=TRUE)
 
 
-setMethodS3("getDefaultFullName", "FastqDataFile", function(this, ...) {
+setMethodS3("isPaired", "FastqDataFile", function(this, ...) {
+  this$.paired;
+}, protected=TRUE)
+
+
+setMethodS3("getDefaultFullName", "FastqDataFile", function(this, paired=isPaired(this), ...) {
   name <- NextMethod("getDefaultFullName");
+
+  # Drop filename extension
   name <- gsub("[.](fastq|fq)$", "", name, ignore.case=TRUE);
+
+  # Drop paired-end suffixes, e.g. '_1'?
+  if (paired) {
+    name <- gsub("_(1|R1|2|R2)$", "", name, ignore.case=TRUE);
+  }
+
   name;
 }, protected=TRUE)
 
@@ -199,6 +216,9 @@ setMethodS3("getMateFile", "FastqDataFile", function(this, ...) {
 
 ############################################################################
 # HISTORY:
+# 2014-04-16
+# o Now getDefaultFullName() for FastqDataFile drops PE suffixes.
+# o Added field 'paired' to FastqDataFile.
 # 2014-01-07
 # o Now readGeometry() for FastqDataFile returns missing values for
 #   non-existing files.

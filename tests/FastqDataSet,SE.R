@@ -19,7 +19,7 @@ print(fa)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup FASTQ set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-fqs <- FastqDataSet$byName(dataSet, organism=organism)
+fqs <- FastqDataSet$byName(dataSet, organism=organism, paired=FALSE)
 print(fqs)
 for (ii in seq_along(fqs)) print(fqs[[ii]])
 
@@ -39,7 +39,7 @@ for (ii in seq_along(fqs)) {
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup gzip'ed FASTQ set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-fqsZ <- FastqDataSet$byName(dataSet, tags="gz", organism=organism)
+fqsZ <- FastqDataSet$byName(dataSet, tags="gz", organism=organism, paired=FALSE)
 print(fqsZ)
 for (ii in seq_along(fqsZ)) print(fqsZ[[ii]])
 

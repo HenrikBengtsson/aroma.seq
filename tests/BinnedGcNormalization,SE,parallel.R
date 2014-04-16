@@ -61,7 +61,7 @@ print(unc)
 # Setup FASTQ set
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pathR <- "fastqData,aroma.seq,private"
-fqs <- IlluminaFastqDataSet$byName(dataSet, organism=organism, paths=pathR)
+fqs <- IlluminaFastqDataSet$byName(dataSet, organism=organism, paths=pathR, paired=FALSE)
 fqs <- extract(fqs, 1:2)
 print(fqs)
 
