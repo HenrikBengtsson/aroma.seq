@@ -669,7 +669,7 @@ setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, seed=NULL,
   verbose && cat(verbose, "Displaying progress: ", progress);
   cprogress <- 0L;
   dprogress <- ceiling(nMax/yieldSize/100);
-  sprogress <- paste(rep(".", times=max(min(100/dprogress, 100),1), collapse="");
+  sprogress <- paste(rep(".", times=max(min(100/dprogress, 100),1)), collapse="");
 
   verbose && enter(verbose, "Sampling read indexed to keep");
   if (n < nMax) {
