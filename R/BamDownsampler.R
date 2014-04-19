@@ -153,7 +153,7 @@ setMethodS3("process", "BamDownsampler", function(this, ..., force=FALSE, verbos
       file.remove(pathname);
     }
 
-    dfT <- writeSample(df, n=n, seed=seed, pathname=pathname);
+    dfT <- writeSample(df, n=n, seed=seed, pathname=pathname, verbose=less(verbose, 1));
     verbose && print(verbose, dfT);
 
     # Not needed anymore

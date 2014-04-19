@@ -663,9 +663,11 @@ setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, seed=NULL,
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Sample what to keep
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  yieldSize <- 100e3;
+
   verbose && enter(verbose, "Sample read indexed to keep");
   progress <- isVisible(verbose);
-  yieldSize <- 100e3;
+  verbose && cat(verbose, "Displaying progress: ", progress);
 
   if (n < nMax) {
     keep <- logical(length=nMax);
@@ -677,12 +679,13 @@ setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, seed=NULL,
 
     cprogress <- 0L;
     dprogress <- ceiling(nMax/yieldSize/100);
+    sprogress <- paste(rep(".", times=max(nMax/dprogress, 100)), collapse="");
 
     # TODO: Added ram/buffer size option. /HB 2013-07-01
     filter <- FilterRules(list(sampler=function(x) {
       # Display progress?
       if (progress) {
-        if (cprogress %% dprogress == 0L) message(".", appendLF=FALSE);
+        if (cprogress %% dprogress == 0L) message(sprogress, appendLF=FALSE);
       }
 
       n <- nrow(x);
@@ -701,7 +704,10 @@ setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, seed=NULL,
 
       if (progress) {
         cprogress <<- cprogress + 1L;
-        if (cprogress == 100L) message(". [100%]", appendLF=TRUE);
+        if (cprogress == 100L) {
+          message(" [100%]", appendLF=TRUE);
+          cprogress <<- 0L;
+        }
       }
 
       res;
@@ -717,7 +723,6 @@ setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, seed=NULL,
 
   # Input file
   pathnameBAM <- getPathname(this);
-  verbose && enter(verbose, "");
 
   # Index file
   pathnameI <- sprintf("%s.bai", pathname);
@@ -727,7 +732,11 @@ setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, seed=NULL,
   pathnameIT <- sprintf("%s.bai", pathnameT);
 
   bam <- BamFile(pathnameBAM, yieldSize=yieldSize);
+
+  if (progress) message("[0%] ", appendLF=FALSE);
   pathname2 <- filterBam(bam, destination=pathnameT, filter=filter, indexDestination=TRUE);
+  if (progress && cprogress < 100L) message(" [100%]", appendLF=TRUE);
+
   verbose && cat(verbose, "Created: ", pathname2);
 
   bam2 <- newInstance(this, pathname2);
