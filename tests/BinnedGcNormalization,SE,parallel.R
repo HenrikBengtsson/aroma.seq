@@ -29,7 +29,7 @@
 #                                                   human_g1k_v37.fasta.gz
 ############################################################################
 library("aroma.seq")
-setOption(aromaSettings, "devel/parallel", "BiocParallel")
+setOption("R.filesets/parallel", "BiocParallel")
 
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 fullTest <- fullTest && isCapableOf(aroma.seq, "bwa")

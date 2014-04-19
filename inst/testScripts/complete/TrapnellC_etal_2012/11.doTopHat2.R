@@ -15,7 +15,7 @@
 # [3] http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE32038
 
 library("aroma.seq")
-setOption(aromaSettings, "devel/parallel", "BiocParallel::BatchJobs")
+setOption("R.filesets/parallel", "BiocParallel::BatchJobs")
 library("BatchJobs")
 
 organism <- "DrosophilaMelanogaster"

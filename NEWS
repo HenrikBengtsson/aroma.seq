@@ -1,6 +1,12 @@
 Package: aroma.seq
 ==================
 
+Version: 0.5.3 [2014-04-19]
+o BUG FIX: After moving dsApply() et al. to R.filesets, this package
+  never ran jobs in parallel.  Forgot to update the name of the
+  setting.
+
+
 Version: 0.5.2 [2014-04-18]
 o Added doDownsample() for BamDataSet and FastqDataSet.
 o Added BamDownsampler analogously to FastqDownsampler.

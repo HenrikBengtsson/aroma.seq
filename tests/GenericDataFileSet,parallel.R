@@ -1,5 +1,5 @@
 library("aroma.seq")
-setOption(aromaSettings, "devel/parallel", "none")
+setOption("R.filesets/parallel", "none")
 
 # - - - - - - - - - - - - - - - - - - - - - - - -
 # Setting up a file set
