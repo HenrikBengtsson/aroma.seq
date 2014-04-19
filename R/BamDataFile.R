@@ -611,7 +611,7 @@ setMethodS3("validate", "BamDataFile", function(this, method=c("picard"), ..., v
 
 
 
-setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, ordered=FALSE, seed=NULL, ..., full=FALSE) {
+setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, seed=NULL, ..., verbose=FALSE) {
   require("Rsamtools") || throw("Package not loaded: Rsamtools");
 
   # Argument 'pathname':
@@ -624,15 +624,21 @@ setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, ordered=FA
     throw("Requested more reads than available. Cannot sample with replacement: ", n, " > ", nMax);
   }
 
-  # Argument 'ordered':
-  ordered <- Arguments$getLogical(ordered);
-
   # Argument 'seed':
   if (!is.null(seed)) seed <- Arguments$getInteger(seed);
 
-  # Argument 'full':
-  full <- Arguments$getLogical(full);
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
 
+
+  verbose && enter(verbose, sprintf("Writing sample of %s", class(this)[1L]));
+  verbose && print(verbose, this);
+  verbose && cat(verbose, "Sample size: ", n);
+  verbose && cat(verbose, "seed: ", seed);
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Set the random seed
@@ -657,15 +663,28 @@ setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, ordered=FA
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Sample what to keep
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  verbose && enter(verbose, "Sample read indexed to keep");
+  progress <- isVisible(verbose);
+  yieldSize <- 100e3;
+
   if (n < nMax) {
     keep <- logical(length=nMax);
     keep[sample(nMax, size=n, replace=FALSE)] <- TRUE;
+    verbose && print(verbose, table(keep));
 
     # Offset
     offset <- 0L;
 
+    cprogress <- 0L;
+    dprogress <- ceiling(nMax/yieldSize/100);
+
     # TODO: Added ram/buffer size option. /HB 2013-07-01
     filter <- FilterRules(list(sampler=function(x) {
+      # Display progress?
+      if (progress) {
+        if (cprogress %% dprogress == 0L) message(".", appendLF=FALSE);
+      }
+
       n <- nrow(x);
 
       # Nothing to do?
@@ -680,15 +699,25 @@ setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, ordered=FA
       # Update offset
       offset <<- offset + n;
 
+      if (progress) {
+        cprogress <<- cprogress + 1L;
+        if (cprogress == 100L) message(". [100%]", appendLF=TRUE);
+      }
+
       res;
     }))
   } else {
+    verbose && cat(verbose, "Nothing to filter; keeping all reads");
     # Nothing to filter; keep everything
     filter <- NULL;
   }
+  verbose && exit(verbose);
+
+  verbose && enter(verbose, "Filtering");
 
   # Input file
   pathnameBAM <- getPathname(this);
+  verbose && enter(verbose, "");
 
   # Index file
   pathnameI <- sprintf("%s.bai", pathname);
@@ -697,8 +726,9 @@ setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, ordered=FA
   pathnameT <- pushTemporaryFile(pathname);
   pathnameIT <- sprintf("%s.bai", pathnameT);
 
-  bam <- BamFile(pathnameBAM, yieldSize=100e3);
+  bam <- BamFile(pathnameBAM, yieldSize=yieldSize);
   pathname2 <- filterBam(bam, destination=pathnameT, filter=filter, indexDestination=TRUE);
+  verbose && cat(verbose, "Created: ", pathname2);
 
   bam2 <- newInstance(this, pathname2);
   stopifnot(nbrOfReads(bam2) == n);
@@ -707,7 +737,12 @@ setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, ordered=FA
   file.rename(pathnameIT, pathnameI);
   pathname <- popTemporaryFile(pathnameT);
 
+  verbose && exit(verbose);
+
   bam <- newInstance(this, pathname);
+  verbose && print(verbose, bam);
+
+  verbose && exit(verbose);
 
   bam;
 }, protected=TRUE)
