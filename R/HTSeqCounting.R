@@ -131,7 +131,10 @@ setMethodS3("process", "HTSeqCounting", function(this, ..., skip=TRUE, force=FAL
     verbose && enter(verbose, "Temporary uncompressing file");
     pathnameZ <- getPathname(transcripts)
     pathname <- gunzip(pathnameZ, temporary=TRUE, remove=FALSE)
-    on.exit(file.remove(pathname), add=TRUE);
+    done <- FALSE;
+    on.exit({
+      if (done) file.remove(pathname)
+    }, add=TRUE);
     transcripts <- newInstance(transcripts, pathname);
     verbose && cat(verbose, "Using (temporary) transcripts:");
     verbose && print(verbose, transcripts);
@@ -273,6 +276,8 @@ setMethodS3("process", "HTSeqCounting", function(this, ..., skip=TRUE, force=FAL
     invisible(list(res=res));
   }, transcripts=transcripts, outPath=getPath(this), skip=skip, verbose=verbose) # dsApply()
 
+  # All calls are completed
+  done <- TRUE;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Get results

@@ -2,6 +2,7 @@
 # @RdocGeneric getOutputDataSet
 # @alias getOutputDataSet.AromaSeqTransform
 # @alias getOutputDataSet.AbstractAlignment
+# @alias getOutputDataSet.BamDownsampler
 # @alias getOutputDataSet.FastqDownsampler
 # @alias getOutputDataSet.PicardDuplicateRemoval
 # @alias getOutputDataSet.TopHat2Alignment
@@ -65,6 +66,19 @@ setMethodS3("getOutputDataSet", "AbstractAlignment", function(this, onMissing=c(
 
   bams;
 }) # getOutputDataSet() for AbstractAlignment
+
+
+setMethodS3("getOutputDataSet", "BamDownsampler", function(this, ...) {
+  ## Find all existing output data files
+  ds <- getInputDataSet(this);
+  path <- getPath(this);
+  res <- byPath(ds, path, ...);
+
+  ## Order according to input data set
+  fullnames <- getFullNames(ds);
+  res <- extract(res, fullnames, onMissing="NA");
+  res;
+}, protected=TRUE) # getOutputDataSet() for BamDownsampler
 
 
 setMethodS3("getOutputDataSet", "FastqDownsampler", function(this, ...) {

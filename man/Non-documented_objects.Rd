@@ -340,7 +340,6 @@
 \alias{process.FastqDownsampler}
 \alias{writeSample}
 \alias{writeSample.FastqDataFile}
-\alias{as.character.FastqDownsampler}
 \alias{getAsteriskTags.FastqDownsampler}
 \alias{getPath.FastqDownsampler}
 \alias{getTags.FastqDownsampler}
@@ -520,6 +519,11 @@
 \alias{getOrganism.AromaSeqDataFileSet}
 \alias{buildDictionary}
 \alias{isPaired.FastqDataFile}
+\alias{getAsteriskTags.BamDownsampler}
+\alias{getRootPath.BamDownsampler}
+\alias{getSampleSize.BamDownsampler}
+\alias{process.BamDownsampler}
+\alias{writeSample.BamDataFile}
 
 \description{
   This page contains aliases for all "non-documented" objects that

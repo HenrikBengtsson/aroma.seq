@@ -11,6 +11,7 @@
 
 \alias{getOutputDataSet.AromaSeqTransform}
 \alias{getOutputDataSet.AbstractAlignment}
+\alias{getOutputDataSet.BamDownsampler}
 \alias{getOutputDataSet.FastqDownsampler}
 \alias{getOutputDataSet.PicardDuplicateRemoval}
 \alias{getOutputDataSet.TopHat2Alignment}

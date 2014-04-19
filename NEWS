@@ -1,6 +1,15 @@
 Package: aroma.seq
 ==================
 
+Version: 0.5.2 [2014-04-18]
+o Added BamDownsampler analogously to FastqDownsampler.
+o Added writeSample() for BamDataFile utilizing Rsamtools::filterBam().
+o BUG FIX: FastqDownsampler did not respect fullname translators.
+o BUG FIX: process() for HTSeqCounting and TopHat2Alignment would
+  remove the temporary uncompressed GTF file on exit, even if
+  asynchroneous calls are still running.
+
+
 Version: 0.5.1 [2014-04-16]
 o Now getDefaultFullName() for FastqDataFile drops PE suffixes.
 o Added field 'paired' to FastqDataFile.

@@ -224,7 +224,10 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
       verbose && enter(verbose, "Temporary uncompressing file");
       pathnameZ <- getPathname(transcripts)
       pathname <- gunzip(pathnameZ, temporary=TRUE, remove=FALSE)
-      on.exit(file.remove(pathname), add=TRUE);
+      done <- FALSE;
+      on.exit({
+        if (done) file.remove(pathname)
+      }, add=TRUE);
       transcripts <- newInstance(transcripts, pathname);
       verbose && cat(verbose, "Using (temporary) transcripts:");
       verbose && print(verbose, transcripts);
@@ -245,7 +248,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   verbose && cat(verbose, "User arguments:");
   verbose && str(verbose, args);
 
-   
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Apply aligner to each of the FASTQ files
@@ -344,6 +347,8 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
     invisible(list(res=res));
   }, isPaired=isPaired, indexSet=is, transcripts=transcripts, outPath=getPath(this), args=args, skip=skip, verbose=verbose) # dsApply()
 
+  # All calls are completed
+  done <- TRUE;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Get results
@@ -389,6 +394,10 @@ setMethodS3("validateGroups", "TopHat2Alignment", function(this, groups, ...) {
 
 ############################################################################
 # HISTORY:
+# 2014-04-18 [HB]
+# o BUG FIX: process() for HTSeqCounting and TopHat2Alignment would
+#   remove the temporary uncompressed GTF file on exit, even if
+#   asynchroneous calls are still running.
 # 2014-01-18 [HB]
 # o ROBUSTNESS: Now TopHat2Alignment gives an informative error message
 #   if a *gzipped* 'transcripts' argument is passed.

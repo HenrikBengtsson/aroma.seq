@@ -107,8 +107,7 @@ setMethodS3("getIndexStats", "BamDataFile", function(this, ..., force=FALSE) {
       throw("Cannot get index statistics. Index does not exists: ", pathname);
     }
     # Quote pathnames
-    pathnameT <- sprintf('"%s"', pathname);
-    bfr <- systemSamtools("idxstats", pathnameT, stdout=TRUE, ...);
+    bfr <- systemSamtools("idxstats", shQuote(pathname), stdout=TRUE, ...);
     bfr <- strsplit(bfr, split="\t", fixed=TRUE);
     seqName <- sapply(bfr, FUN=.subset, 1L);
     seqLength <- as.integer(sapply(bfr, FUN=.subset, 2L));
@@ -139,7 +138,10 @@ setMethodS3("getReadCounts", "BamDataFile", function(this, ...) {
 
 
 setMethodS3("nbrOfReads", "BamDataFile", function(this, ...) {
-  counts <- getReadCounts(this, ...);
+## Does always work. /HB 2014-04-18
+## Maybe 'samtools flagstat' is better?
+##  counts <- getReadCounts(this, ...);
+  counts <- Rsamtools::countBam(getPathname(this))$records;
   sum(counts, na.rm=TRUE);
 })
 
@@ -586,8 +588,87 @@ setMethodS3("validate", "BamDataFile", function(this, method=c("picard"), ..., v
 }, protected=TRUE)
 
 
+
+setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, ordered=FALSE, ..., full=FALSE) {
+  require("Rsamtools") || throw("Package not loaded: Rsamtools");
+
+  # Argument 'pathname':
+  pathname <- Arguments$getWritablePathname(pathname, mustNotExist=TRUE);
+
+  # Argument 'n':
+  n <- Arguments$getInteger(n, range=c(1,Inf));
+  nMax <- nbrOfReads(this);
+  if (n > nMax) {
+    throw("Requested more reads than available. Cannot sample with replacement: ", n, " > ", nMax);
+  }
+
+  # Argument 'ordered':
+  ordered <- Arguments$getLogical(ordered);
+
+  # Argument 'full':
+  full <- Arguments$getLogical(full);
+
+
+  pathnameBAM <- getPathname(this);
+
+  # Sample what to keep
+  if (n < nMax) {
+    keep <- logical(length=nMax);
+    keep[sample(nMax, size=n, replace=FALSE)] <- TRUE;
+
+    # Offset
+    offset <- 0L;
+
+    # TODO: Added ram/buffer size option. /HB 2013-07-01
+    filter <- FilterRules(list(sampler=function(x) {
+      n <- nrow(x);
+
+      # Nothing to do?
+      if (n == 0L) return(logical(0L));
+
+      # Available indices
+      res <- keep[offset + seq_len(n)];
+
+      # Sanity check
+      stopifnot(length(res) == n);
+
+      # Update offset
+      offset <<- offset + n;
+
+      res;
+    }))
+  } else {
+    # Nothing to filter; keep everything
+    filter <- NULL;
+  }
+
+  # Index file
+  pathnameI <- sprintf("%s.bai", pathname);
+
+  # Write to temporary file
+  pathnameT <- pushTemporaryFile(pathname);
+  pathnameIT <- sprintf("%s.bai", pathnameT);
+
+  pathname2 <- filterBam(pathnameBAM, destination=pathnameT, filter=filter, indexDestination=TRUE);
+
+  bam2 <- newInstance(this, pathname2);
+  stopifnot(nbrOfReads(bam2) == n);
+
+  # Undo temporary files
+  file.rename(pathnameIT, pathnameI);
+  pathname <- popTemporaryFile(pathnameT);
+
+  bam <- newInstance(this, pathname);
+
+  bam;
+}, protected=TRUE)
+
+
+
 ############################################################################
 # HISTORY:
+# 2014-04-18
+# o Added writeSample() for BamDataFile utilizing Rsamtools::filterBam().
 # 2014-03-09
 # o BUG FIX: getIndexStats() for BamDataFile would not work if pathname
 #   had a space or other symbols causing it to be split up.

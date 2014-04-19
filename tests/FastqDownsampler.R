@@ -18,9 +18,11 @@ organism <- "LambdaPhage"
 fqs <- FastqDataSet$byName(dataSet, organism=organism, paired=FALSE)
 print(fqs)
 
+n <- sapply(fqs, FUN=nbrOfSeqs)
+
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Downsample
+# Downsample to fixed count
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ds <- FastqDownsampler(fqs, subset=25)
 print(ds)
@@ -30,7 +32,22 @@ print(fqsS)
 
 # Sanity checks
 stopifnot(identical(getFullNames(fqsS), getFullNames(fqs)))
-fqS <- fqsS[[1]]
-stopifnot(nbrOfSeqs(fqS) == getSampleSize(ds))
+nS <- sapply(fqsS, FUN=nbrOfSeqs)
+stopifnot(all(nS == 25L))
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Downsample to fraction
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ds <- FastqDownsampler(fqs, subset=0.10)
+print(ds)
+
+fqsS <- process(ds, verbose=-20)
+print(fqsS)
+
+# Sanity checks
+stopifnot(identical(getFullNames(fqsS), getFullNames(fqs)))
+nS <- sapply(fqsS, FUN=nbrOfSeqs)
+stopifnot(all(nS == 0.10*n))
 
 } # if (fullTest)

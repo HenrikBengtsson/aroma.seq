@@ -1,7 +1,7 @@
 ###########################################################################/**
-# @RdocClass FastqDownsampler
+# @RdocClass BamDownsampler
 #
-# @title "The FastqDownsampler class"
+# @title "The BamDownsampler class"
 #
 # \description{
 #  @classhierarchy
@@ -12,7 +12,7 @@
 # @synopsis
 #
 # \arguments{
-#  \item{dataSet}{An @see "FastqDataSet".}
+#  \item{dataSet}{An @see "BamDataSet".}
 #  \item{subset}{An @integer specifying the total number of reads to sample,
 #    or a @double specifying the fraction of total number of reads to sample.}
 #  \item{...}{Additional arguments passed to @see "AromaSeqTransform".}
@@ -23,16 +23,16 @@
 # }
 #
 # \seealso{
-#  Internally, the @see "ShortRead::FastqSampler" method is used.
+#  Internally, the @see "Rsamtools::BamSampler" method is used.
 # }
 #
 # @author "HB"
 #*/###########################################################################
-setConstructorS3("FastqDownsampler", function(dataSet=NULL, subset=1e6, ...) {
+setConstructorS3("BamDownsampler", function(dataSet=NULL, subset=1e6, ...) {
   # Validate arguments
   if (!is.null(dataSet)) {
     # Argument 'dataSet':
-    dataSet <- Arguments$getInstanceOf(dataSet, "FastqDataSet");
+    dataSet <- Arguments$getInstanceOf(dataSet, "BamDataSet");
 
     # Argument 'subset':
     if (length(subset) == 1L) {
@@ -48,15 +48,15 @@ setConstructorS3("FastqDownsampler", function(dataSet=NULL, subset=1e6, ...) {
     }
   } # if (!is.null(dataSet))
 
-  extend(AromaSeqTransform(dataSet=dataSet, subset=subset, ...), "FastqDownsampler");
+  extend(AromaSeqTransform(dataSet=dataSet, subset=subset, ...), "BamDownsampler");
 })
 
 
-setMethodS3("getSampleSize", "FastqDownsampler", function(this, df, ...) {
+setMethodS3("getSampleSize", "BamDownsampler", function(this, df, ...) {
   params <- getParameters(this);
-  subset <- parmas$subset;
+  subset <- params$subset;
   if (subset <= 1) {
-    n <- subset * nbrOfSeqs(df);
+    n <- subset * nbrOfReads(df);
     n <- Arguments$getInteger(n);
   } else {
     n <- subset;
@@ -65,18 +65,18 @@ setMethodS3("getSampleSize", "FastqDownsampler", function(this, df, ...) {
 }, protected=TRUE);
 
 
-setMethodS3("getAsteriskTags", "FastqDownsampler", function(this, ...) {
+setMethodS3("getAsteriskTags", "BamDownsampler", function(this, ...) {
   params <- getParameters(this);
   sprintf("n=%g", params$subset);
 }, protected=TRUE);
 
 
-setMethodS3("getRootPath", "FastqDownsampler", function(this, ...) {
-  "fastqData";
+setMethodS3("getRootPath", "BamDownsampler", function(this, ...) {
+  "bamData";
 }, protected=TRUE);
 
 
-setMethodS3("process", "FastqDownsampler", function(this, ..., force=FALSE, verbose=FALSE) {
+setMethodS3("process", "BamDownsampler", function(this, ..., force=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -88,18 +88,13 @@ setMethodS3("process", "FastqDownsampler", function(this, ..., force=FALSE, verb
   }
 
 
-  verbose && enter(verbose, "Downsampling FASTQ data set");
+  verbose && enter(verbose, "Downsampling BAM data set");
 
   ds <- getInputDataSet(this);
 
-  if (isPaired(ds)) {
-    throw(sprintf("%s does not yet support paired-end FASTQ data sets: %s",
-                  class(this)[1L], getPathname(ds)));
-  }
-
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Apply aligner to each of the FASTQ files
+  # Apply aligner to each of the BAM files
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   dsApply(ds, FUN=function(df, sampler, path, ..., skip=TRUE, verbose=FALSE) {
     R.utils::use("R.utils, aroma.seq");
@@ -108,7 +103,7 @@ setMethodS3("process", "FastqDownsampler", function(this, ..., force=FALSE, verb
     # Validate arguments
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Argument 'df':
-    df <- Arguments$getInstanceOf(df, "FastqDataFile");
+    df <- Arguments$getInstanceOf(df, "BamDataFile");
 
     # Argument 'sampler':
     stopifnot(is.function(sampler));
@@ -127,7 +122,7 @@ setMethodS3("process", "FastqDownsampler", function(this, ..., force=FALSE, verb
     }
 
 
-    verbose && enter(verbose, "FASTQ downsampling of one sample");
+    verbose && enter(verbose, "BAM downsampling of one sample");
 
     fullname <- getFullName(df);
     ext <- getFilenameExtension(df);
@@ -146,7 +141,7 @@ setMethodS3("process", "FastqDownsampler", function(this, ..., force=FALSE, verb
       file.remove(pathname);
     }
 
-    dfT <- writeSample(df, n=n, ordered=FALSE, pathname=pathname);
+    dfT <- writeSample(df, n=n, pathname=pathname);
     verbose && print(verbose, dfT);
 
     # Not needed anymore
@@ -171,15 +166,5 @@ setMethodS3("process", "FastqDownsampler", function(this, ..., force=FALSE, verb
 ############################################################################
 # HISTORY:
 # 2014-04-18
-# o BUG FIX: FastqDownsampler did not respect fullname translators.
-# 2013-11-16
-# o CLEANUP: Dropped several methods now taken care of by super class.
-# 2013-09-12
-# o Now process() for FastqDownsampler utilizes dsApply().
-# o CLEANUP: Improved previous "mockup" code of FastqDownsampler.
-# 2013-09-03
-# o ROBUSTNESS: Now process() for FastqDownsampler gives an error
-#   if the data set is paired-end; will implement later.
-# 2013-07-01
-# o Created.
+# o Created from FastqDownsampler.R.
 ############################################################################

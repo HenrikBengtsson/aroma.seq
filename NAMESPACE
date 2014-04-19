@@ -344,7 +344,6 @@ S3method("setSamReadGroup", "FastqDataSet")
 S3method("validate", "FastqDataSet")
 
 # FastqDownsampler
-S3method("as.character", "FastqDownsampler")
 S3method("getAsteriskTags", "FastqDownsampler")
 S3method("getOutputDataSet", "FastqDownsampler")
 S3method("getRootPath", "FastqDownsampler")

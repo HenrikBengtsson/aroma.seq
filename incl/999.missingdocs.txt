@@ -184,7 +184,7 @@ getOutputPath.FastqDownsampler getOutputRootPath
 getOutputRootPath.FastqDownsampler getSampleSize
 getSampleSize.FastqDownsampler process.FastqDownsampler
 writeSample writeSample.FastqDataFile
-  as.character.FastqDownsampler getAsteriskTags.FastqDownsampler
+   getAsteriskTags.FastqDownsampler
   getPath.FastqDownsampler
   getTags.FastqDownsampler
 
@@ -289,3 +289,7 @@ getDefaultFullName.AromaSeqDataFileSet
 getOrganism.AromaSeqDataFile getOrganism.AromaSeqDataFileSet
 buildDictionary
 isPaired.FastqDataFile
+ getAsteriskTags.BamDownsampler
+getRootPath.BamDownsampler
+getSampleSize.BamDownsampler process.BamDownsampler
+writeSample.BamDataFile
