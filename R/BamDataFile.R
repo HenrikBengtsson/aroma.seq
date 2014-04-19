@@ -663,7 +663,7 @@ setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, seed=NULL,
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Sample what to keep
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  yieldSize <- 100e3;
+  yieldSize <- 1e6;
 
   progress <- isVisible(verbose);
   verbose && cat(verbose, "Displaying progress: ", progress);
@@ -688,17 +688,21 @@ setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, seed=NULL,
     filter <- FilterRules(list(sampler=function(x) {
       # Display progress?
       if (progress) {
-        if (cprogress %% dprogress == 0L) message(sprogress, appendLF=FALSE);
+        if (cprogress %% dprogress == 0L) {
+          message(sprogress, appendLF=FALSE);
+          cprogress <<- cprogress + 1L;
+        }
       }
 
       n <- nrow(x);
+##      message(sprintf("n=%d",n))
 
       # Nothing to do?
       if (n == 0L) return(logical(0L));
 
       # Available indices
       res <- keep[offset + seq_len(n)];
-
+##      message(sprintf("n2=%d",length(res)))
       # Sanity check
       stopifnot(length(res) == n);
 
@@ -706,11 +710,9 @@ setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, seed=NULL,
       offset <<- offset + n;
 
       if (progress) {
-        cprogress <<- cprogress + 1L;
         if (cprogress == 100L) {
           message(" [100%]", appendLF=TRUE);
           cprogress <<- 0L;
-          keep <<- NULL; # Not needed anymore
         }
       }
 
