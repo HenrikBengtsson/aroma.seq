@@ -665,21 +665,24 @@ setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, seed=NULL,
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   yieldSize <- 100e3;
 
-  verbose && enter(verbose, "Sample read indexed to keep");
   progress <- isVisible(verbose);
   verbose && cat(verbose, "Displaying progress: ", progress);
+  cprogress <- 0L;
+  dprogress <- ceiling(nMax/yieldSize/100);
+  sprogress <- paste(rep(".", times=max(min(100/dprogress, 100),1), collapse="");
 
+  verbose && enter(verbose, "Sampling read indexed to keep");
   if (n < nMax) {
+    # FIXME: For a BAM file with, say, 2*10^9 reads, here we
+    # allocate a vector of 8GB just to keep track of which
+    # reads to keep. /HB 2014-04-19
+    verbose && printf(verbose, "Allocating logical vector of length %d: %g GB\n", nMax, (4*nMax)/1024^3);
     keep <- logical(length=nMax);
     keep[sample(nMax, size=n, replace=FALSE)] <- TRUE;
-    verbose && print(verbose, table(keep));
+##    verbose && print(verbose, table(keep));
 
     # Offset
     offset <- 0L;
-
-    cprogress <- 0L;
-    dprogress <- ceiling(nMax/yieldSize/100);
-    sprogress <- paste(rep(".", times=max(nMax/dprogress, 100)), collapse="");
 
     # TODO: Added ram/buffer size option. /HB 2013-07-01
     filter <- FilterRules(list(sampler=function(x) {
@@ -707,6 +710,7 @@ setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, seed=NULL,
         if (cprogress == 100L) {
           message(" [100%]", appendLF=TRUE);
           cprogress <<- 0L;
+          keep <<- NULL; # Not needed anymore
         }
       }
 
@@ -719,8 +723,8 @@ setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, seed=NULL,
   }
   verbose && exit(verbose);
 
-  verbose && enter(verbose, "Filtering");
 
+  verbose && enter(verbose, "Filtering");
   # Input file
   pathnameBAM <- getPathname(this);
 
@@ -735,6 +739,7 @@ setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, seed=NULL,
 
   if (progress) message("[0%] ", appendLF=FALSE);
   pathname2 <- filterBam(bam, destination=pathnameT, filter=filter, indexDestination=TRUE);
+  keep <- NULL; # Not needed anymore
   if (progress && cprogress < 100L) message(" [100%]", appendLF=TRUE);
 
   verbose && cat(verbose, "Created: ", pathname2);
