@@ -138,9 +138,10 @@ setMethodS3("getReadCounts", "BamDataFile", function(this, ...) {
 
 
 setMethodS3("nbrOfReads", "BamDataFile", function(this, ...) {
-## Does always work. /HB 2014-04-18
-## Maybe 'samtools flagstat' is better?
-##  counts <- getReadCounts(this, ...);
+  ## Does always work. /HB 2014-04-18
+  ## Maybe 'samtools flagstat' is better?
+  counts <- getReadCounts(this, ...);
+  ## Very slow?!? /HB 2014-04-19
   counts <- Rsamtools::countBam(getPathname(this))$records;
   sum(counts, na.rm=TRUE);
 })
@@ -262,14 +263,35 @@ setMethodS3("getProgram", "BamDataFile", function(this, ...) {
   pgList;
 }, protected=TRUE)
 
-setMethodS3("getProgramString", "BamDataFile", function(this, ...) {
-  pg <- getProgram(this, ...);
+setMethodS3("getProgramString", "BamDataFile", function(this, full=FALSE, ...) {
+  pgs <- getPrograms(this, ...);
   res <- c();
-  if (is.element("PN", names(pg))) res <- c(res, pg["PN"]);
-  if (is.element("VN", names(pg))) res <- c(res, sprintf("v%s", pg["VN"]));
-  if (is.element("CL", names(pg))) res <- c(res, sprintf("(call: %s)", pg["CL"]));
-  if (is.element("DS", names(pg))) res <- c(res, sprintf("[%s]", pg["DS"]));
-  res <- paste(res, collapse=" ");
+  for (kk in seq_along(pgs)) {
+    pg <- pgs[[kk]];
+    name <- names(pgs)[kk];
+    resK <- sprintf("(%d)", kk);
+
+    # Program name
+    pn <- c();
+    if (!is.null(name)) pn <- c(pn, gsub("[.][0-9]+$", "", name));
+    if (is.element("PN", names(pg))) pn <- c(pn, pg["PN"]);
+    if (length(pn) == 2L) {
+      pattern <- sprintf("^%s", pn[2]);
+      pn[1] <- gsub(pattern, "", pn[1]);
+      pn <- pn[nzchar(pn)];
+    }
+    pn <- paste(pn, collapse=" ");
+    resK <- c(resK, pn);
+
+    if (is.element("VN", names(pg))) resK <- c(resK, sprintf("v%s", pg["VN"]));
+    if (full) {
+      if (is.element("CL", names(pg))) resK <- c(resK, sprintf("(call: %s)", pg["CL"]));
+      if (is.element("DS", names(pg))) resK <- c(resK, sprintf("[%s]", pg["DS"]));
+    }
+    resK <- paste(resK, collapse=" ");
+    res <- c(res, resK);
+  }
+  res <- paste(res, collapse="; ");
   res;
 }, protected=TRUE)
 
@@ -675,7 +697,8 @@ setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, ordered=FA
   pathnameT <- pushTemporaryFile(pathname);
   pathnameIT <- sprintf("%s.bai", pathnameT);
 
-  pathname2 <- filterBam(pathnameBAM, destination=pathnameT, filter=filter, indexDestination=TRUE);
+  bam <- BamFile(pathnameBAM, yieldSize=100e3);
+  pathname2 <- filterBam(bam, destination=pathnameT, filter=filter, indexDestination=TRUE);
 
   bam2 <- newInstance(this, pathname2);
   stopifnot(nbrOfReads(bam2) == n);
@@ -693,6 +716,11 @@ setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, ordered=FA
 
 ############################################################################
 # HISTORY:
+# 2014-04-19
+# o Now getProgramString() for BamDataFile returns information on all
+#   programs used, not just the first one.  By default, it no longer
+#   reports on the full calls. It also does a better job on presenting
+#   and cleaning up the software names.
 # 2014-04-18
 # o Added writeSample() for BamDataFile utilizing Rsamtools::filterBam().
 # 2014-03-09

@@ -5,6 +5,10 @@ Version: 0.5.2 [2014-04-18]
 o Added doDownsample() for BamDataSet and FastqDataSet.
 o Added BamDownsampler analogously to FastqDownsampler.
 o Added writeSample() for BamDataFile utilizing Rsamtools::filterBam().
+o Now getProgramString() for BamDataFile returns information on all
+  programs used, not just the first one.  By default, it no longer
+  reports on the full calls. It also does a better job on presenting
+  and cleaning up the software names.
 o BUG FIX: FastqDownsampler did not respect fullname translators.
 o BUG FIX: process() for HTSeqCounting and TopHat2Alignment would
   remove the temporary uncompressed GTF file on exit, even if
