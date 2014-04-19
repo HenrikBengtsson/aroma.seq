@@ -142,7 +142,7 @@ setMethodS3("nbrOfReads", "BamDataFile", function(this, ...) {
   ## Maybe 'samtools flagstat' is better?
   counts <- getReadCounts(this, ...);
   ## Very slow?!? /HB 2014-04-19
-  counts <- Rsamtools::countBam(getPathname(this))$records;
+##  counts <- Rsamtools::countBam(getPathname(this))$records;
   sum(counts, na.rm=TRUE);
 })
 
