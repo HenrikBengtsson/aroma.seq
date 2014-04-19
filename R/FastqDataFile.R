@@ -131,7 +131,7 @@ setMethodS3("getSamReadGroup", "FastqDataFile", function(this, ...) {
 })
 
 
-setMethodS3("writeSample", "FastqDataFile", function(this, pathname, n, ordered=FALSE, ..., full=FALSE) {
+setMethodS3("writeSample", "FastqDataFile", function(this, pathname, n, ordered=FALSE, seed=NULL, ..., full=FALSE) {
   require("ShortRead") || throw("Package not loaded: ShortRead");
 
   # Argument 'pathname':
@@ -143,13 +143,36 @@ setMethodS3("writeSample", "FastqDataFile", function(this, pathname, n, ordered=
   # Argument 'ordered':
   ordered <- Arguments$getLogical(ordered);
 
+  # Argument 'seed':
+  if (!is.null(seed)) seed <- Arguments$getInteger(seed);
+
   # Argument 'full':
   full <- Arguments$getLogical(full);
 
 
-  pathnameFQ <- getPathname(this);
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Set the random seed
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (!is.null(seed)) {
+    verbose && enter(verbose, "Setting (temporary) random seed");
+    oldRandomSeed <- NULL;
+    if (exists(".Random.seed", mode="integer")) {
+      oldRandomSeed <- get(".Random.seed", mode="integer");
+    }
+    on.exit({
+      if (!is.null(oldRandomSeed)) {
+        .Random.seed <<- oldRandomSeed;
+      }
+    }, add=TRUE);
+    verbose && cat(verbose, "The random seed will be reset to its original state afterward.");
+    verbose && cat(verbose, "Seed: ", seed);
+    set.seed(seed);
+    verbose && exit(verbose);
+  }
+
 
   # TODO: Added ram/buffer size option. /HB 2013-07-01
+  pathnameFQ <- getPathname(this);
   fs <- FastqSampler(pathnameFQ, n=n, ordered=ordered, ...);
   on.exit({
     if (!is.null(fs)) close(fs);

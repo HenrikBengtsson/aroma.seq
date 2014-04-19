@@ -37,13 +37,16 @@ extends \emph{\link[aroma.seq]{AromaSeqTransform}}\cr
 }
 
 \usage{
-FastqDownsampler(dataSet=NULL, subset=1e+06, ...)
+FastqDownsampler(dataSet=NULL, subset=1e+06, seed=NULL, ...)
 }
 
 \arguments{
  \item{dataSet}{An \code{\link{FastqDataSet}}.}
  \item{subset}{An \code{\link[base]{integer}} specifying the total number of reads to sample,
    or a \code{\link[base]{double}} specifying the fraction of total number of reads to sample.}
+ \item{seed}{An (optional) \code{\link[base]{integer}} specifying the random seed to be
+    set before sampling indices.  The random seed is set to its original
+    state when exiting.  If \code{\link[base]{NULL}}, it is not set.}
  \item{...}{Additional arguments passed to \code{\link{AromaSeqTransform}}.}
 }
 

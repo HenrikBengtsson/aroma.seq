@@ -15,6 +15,9 @@
 #  \item{dataSet}{An @see "FastqDataSet".}
 #  \item{subset}{An @integer specifying the total number of reads to sample,
 #    or a @double specifying the fraction of total number of reads to sample.}
+#  \item{seed}{An (optional) @integer specifying the random seed to be
+#     set before sampling indices.  The random seed is set to its original
+#     state when exiting.  If @NULL, it is not set.}
 #  \item{...}{Additional arguments passed to @see "AromaSeqTransform".}
 # }
 #
@@ -28,7 +31,7 @@
 #
 # @author "HB"
 #*/###########################################################################
-setConstructorS3("FastqDownsampler", function(dataSet=NULL, subset=1e6, ...) {
+setConstructorS3("FastqDownsampler", function(dataSet=NULL, subset=1e6, seed=NULL, ...) {
   # Validate arguments
   if (!is.null(dataSet)) {
     # Argument 'dataSet':
@@ -46,9 +49,12 @@ setConstructorS3("FastqDownsampler", function(dataSet=NULL, subset=1e6, ...) {
       throw("Not yet implemented.");
       subset <- Arguments$getIndex(subset);
     }
+
+    # Argument 'seed':
+    if (!is.null(seed)) seed <- Arguments$getInteger(seed);
   } # if (!is.null(dataSet))
 
-  extend(AromaSeqTransform(dataSet=dataSet, subset=subset, ...), "FastqDownsampler");
+  extend(AromaSeqTransform(dataSet=dataSet, subset=subset, seed=seed, ...), "FastqDownsampler");
 })
 
 
@@ -89,19 +95,23 @@ setMethodS3("process", "FastqDownsampler", function(this, ..., force=FALSE, verb
 
 
   verbose && enter(verbose, "Downsampling FASTQ data set");
-
   ds <- getInputDataSet(this);
+  verbose && print(verbose, ds);
+
+  params <- getParameters(this);
+  seed <- params$seed;
+  verbose && cat(verbose, "Random seed: ", seed);
 
   if (isPaired(ds)) {
     throw(sprintf("%s does not yet support paired-end FASTQ data sets: %s",
-                  class(this)[1L], getPathname(ds)));
+                  class(this)[1L], getPath(ds)));
   }
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Apply aligner to each of the FASTQ files
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  dsApply(ds, FUN=function(df, sampler, path, ..., skip=TRUE, verbose=FALSE) {
+  dsApply(ds, FUN=function(df, sampler, seed=NULL, path, ..., skip=TRUE, verbose=FALSE) {
     R.utils::use("R.utils, aroma.seq");
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -112,6 +122,9 @@ setMethodS3("process", "FastqDownsampler", function(this, ..., force=FALSE, verb
 
     # Argument 'sampler':
     stopifnot(is.function(sampler));
+
+    # Argument 'seed':
+    if (!is.null(seed)) seed <- Arguments$getInteger(seed);
 
     # Argument 'path':
     path <- Arguments$getWritablePath(path);
@@ -130,7 +143,7 @@ setMethodS3("process", "FastqDownsampler", function(this, ..., force=FALSE, verb
     verbose && enter(verbose, "FASTQ downsampling of one sample");
 
     fullname <- getFullName(df);
-    ext <- getFilenameExtension(df);
+    ext <- tools::file_ext(getFilename(df));
     filename <- sprintf("%s.%s", fullname, ext);
     pathname <- Arguments$getWritablePathname(filename, path=path, mustNotExist=FALSE);
     if (skip && isFile(pathname)) {
@@ -146,7 +159,7 @@ setMethodS3("process", "FastqDownsampler", function(this, ..., force=FALSE, verb
       file.remove(pathname);
     }
 
-    dfT <- writeSample(df, n=n, ordered=FALSE, pathname=pathname);
+    dfT <- writeSample(df, n=n, ordered=FALSE, seed=seed, pathname=pathname);
     verbose && print(verbose, dfT);
 
     # Not needed anymore
@@ -155,7 +168,7 @@ setMethodS3("process", "FastqDownsampler", function(this, ..., force=FALSE, verb
     verbose && exit(verbose);
 
     invisible(list(pathnameFQ=pathname, n=n));
-  }, sampler=function(df) { getSampleSize(this, df) }, path=getPath(this), skip=!force, verbose=verbose) # dsApply()
+  }, sampler=function(df) { getSampleSize(this, df) }, seed=seed, path=getPath(this), skip=!force, verbose=verbose) # dsApply()
 
   # Not needed anymore
   ds <- NULL;

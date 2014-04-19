@@ -58,6 +58,7 @@ FastqDataSet(files=NULL, ..., paired=FALSE, struct=NULL)
  \tab \code{byName} \tab  -\cr
  \tab \code{doBWA} \tab  -\cr
  \tab \code{doBowtie2} \tab  -\cr
+ \tab \code{doDownsample} \tab  -\cr
  \tab \code{doQDNAseq} \tab  -\cr
  \tab \code{doTopHat2} \tab  -\cr
  \tab \code{findByName} \tab  -\cr

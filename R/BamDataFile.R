@@ -589,7 +589,7 @@ setMethodS3("validate", "BamDataFile", function(this, method=c("picard"), ..., v
 
 
 
-setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, ordered=FALSE, ..., full=FALSE) {
+setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, ordered=FALSE, seed=NULL, ..., full=FALSE) {
   require("Rsamtools") || throw("Package not loaded: Rsamtools");
 
   # Argument 'pathname':
@@ -605,13 +605,36 @@ setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, ordered=FA
   # Argument 'ordered':
   ordered <- Arguments$getLogical(ordered);
 
+  # Argument 'seed':
+  if (!is.null(seed)) seed <- Arguments$getInteger(seed);
+
   # Argument 'full':
   full <- Arguments$getLogical(full);
 
 
-  pathnameBAM <- getPathname(this);
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Set the random seed
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (!is.null(seed)) {
+    verbose && enter(verbose, "Setting (temporary) random seed");
+    oldRandomSeed <- NULL;
+    if (exists(".Random.seed", mode="integer")) {
+      oldRandomSeed <- get(".Random.seed", mode="integer");
+    }
+    on.exit({
+      if (!is.null(oldRandomSeed)) {
+        .Random.seed <<- oldRandomSeed;
+      }
+    }, add=TRUE);
+    verbose && cat(verbose, "The random seed will be reset to its original state afterward.");
+    verbose && cat(verbose, "Seed: ", seed);
+    set.seed(seed);
+    verbose && exit(verbose);
+  }
 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Sample what to keep
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (n < nMax) {
     keep <- logical(length=nMax);
     keep[sample(nMax, size=n, replace=FALSE)] <- TRUE;
@@ -641,6 +664,9 @@ setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, ordered=FA
     # Nothing to filter; keep everything
     filter <- NULL;
   }
+
+  # Input file
+  pathnameBAM <- getPathname(this);
 
   # Index file
   pathnameI <- sprintf("%s.bai", pathname);

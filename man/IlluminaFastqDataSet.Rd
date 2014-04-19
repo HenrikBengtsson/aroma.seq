@@ -57,7 +57,7 @@ IlluminaFastqDataSet(...)
 
 
  \bold{Methods inherited from FastqDataSet}:\cr
-as.character, byName, byPath, doBWA, doBowtie2, doQDNAseq, doTopHat2, findByName, findRspReportTemplate, getDefaultSamReadGroup, getDepth, getFilePairs, getOrganism, getSamReadGroup, isPaired, report, setSamReadGroup, validate
+as.character, byName, byPath, doBWA, doBowtie2, doDownsample, doQDNAseq, doTopHat2, findByName, findRspReportTemplate, getDefaultSamReadGroup, getDepth, getFilePairs, getOrganism, getSamReadGroup, isPaired, report, setSamReadGroup, validate
 
  \bold{Methods inherited from AromaSeqDataFileSet}:\cr
 getDefaultFullName

@@ -50,4 +50,24 @@ stopifnot(identical(getFullNames(bamsS), getFullNames(bams)))
 nS <- sapply(bamsS, FUN=nbrOfReads)
 stopifnot(all(nS == 0.10*n))
 
+md5S0 <- sapply(bamsS, FUN=getChecksum)
+print(md5S0)
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Reproducibility
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bamsS <- doDownsample(bams, subset=0.10, seed=0xBEEF, tags=c("*", "seed=0xBEEF"))
+print(bamsS)
+md5S1 <- sapply(bamsS, FUN=getChecksum)
+print(md5S1)
+
+bamsS <- doDownsample(bams, subset=0.10, seed=0xBEEF, tags=c("*", "seed=0xBEEF", "r2"))
+print(bamsS)
+md5S2 <- sapply(bamsS, FUN=getChecksum)
+print(md5S2)
+
+# Sanity check
+stopifnot(all(md5S2 == md5S1))
+
 } # if (fullTest)

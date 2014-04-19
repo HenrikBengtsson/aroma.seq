@@ -2,6 +2,7 @@ Package: aroma.seq
 ==================
 
 Version: 0.5.2 [2014-04-18]
+o Added doDownsample() for BamDataSet and FastqDataSet.
 o Added BamDownsampler analogously to FastqDownsampler.
 o Added writeSample() for BamDataFile utilizing Rsamtools::filterBam().
 o BUG FIX: FastqDownsampler did not respect fullname translators.
