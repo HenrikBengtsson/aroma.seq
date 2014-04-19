@@ -54,7 +54,7 @@ setConstructorS3("FastqDownsampler", function(dataSet=NULL, subset=1e6, ...) {
 
 setMethodS3("getSampleSize", "FastqDownsampler", function(this, df, ...) {
   params <- getParameters(this);
-  subset <- parmas$subset;
+  subset <- params$subset;
   if (subset <= 1) {
     n <- subset * nbrOfSeqs(df);
     n <- Arguments$getInteger(n);
