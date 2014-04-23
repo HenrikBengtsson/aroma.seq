@@ -460,7 +460,7 @@ setMethodS3("replaceAllReadGroups", "BamDataFile", function(this, rg="*", ..., v
 
 # See help("scanBam", package="Rsamtools") for definition of 'pos'.
 setMethodS3("extractReadStartPositions", "BamDataFile", function(this, param=ScanBamParam(what=c("rname", "pos")), flag=scanBamFlag(isUnmappedQuery=FALSE, isDuplicate=FALSE), ..., verbose=FALSE) {
-  require("Rsamtools") || throw("Package not loaded: Rsamtools");
+  use("Rsamtools")
 
   pathname <- getPathname(this);
 
@@ -473,7 +473,7 @@ setMethodS3("extractReadStartPositions", "BamDataFile", function(this, param=Sca
 
 
 setMethodS3("readDataFrame", "BamDataFile", function(this, fields=NULL, flag=scanBamFlag(isUnmappedQuery=FALSE, isDuplicate=FALSE), which=which, ..., verbose=FALSE) {
-  require("Rsamtools") || throw("Package not loaded: Rsamtools");
+  use("Rsamtools")
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -526,7 +526,7 @@ setMethodS3("readDataFrame", "BamDataFile", function(this, fields=NULL, flag=sca
 
 
 setMethodS3("readReadPositions", "BamDataFile", function(this, ..., flag=scanBamFlag(isUnmappedQuery=FALSE, isDuplicate=FALSE), verbose=FALSE) {
-  require("Rsamtools") || throw("Package not loaded: Rsamtools");
+  use("Rsamtools")
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -612,7 +612,7 @@ setMethodS3("validate", "BamDataFile", function(this, method=c("picard"), ..., v
 
 
 setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, seed=NULL, ..., verbose=FALSE) {
-  require("Rsamtools") || throw("Package not loaded: Rsamtools");
+  use("Rsamtools")
 
   # Argument 'pathname':
   pathname <- Arguments$getWritablePathname(pathname, mustNotExist=TRUE);

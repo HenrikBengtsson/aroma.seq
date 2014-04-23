@@ -22,7 +22,7 @@
 # @author "HB"
 #*/###########################################################################
 setConstructorS3("TotalCnBinnedCounting", function(..., .reqSetClass="BamDataSet") {
-  require("aroma.cn") || throw("Package not loaded: aroma.cn");
+  use("aroma.cn")
 
   extend(TotalCnSmoothing(..., .reqSetClass=.reqSetClass), "TotalCnBinnedCounting");
 })
@@ -332,7 +332,7 @@ setMethodS3("process", "TotalCnBinnedCounting", function(this, ..., force=FALSE,
 
 
 setMethodS3("extractRawCopyNumbers", "BamDataFile", function(this, chromosome, ..., verbose=FALSE) {
-  require("GenomicRanges") || throw("Package not loaded: GenomicRanges");
+  use("GenomicRanges")
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments

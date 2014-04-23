@@ -195,7 +195,7 @@ setMethodS3("byName", "HTSeqCountDataSet", function(static, name, tags=NULL, org
 # @author "HB"
 #*/###########################################################################
 setMethodS3("readDGE", "HTSeqCountDataSet", function(this, labels=getFullNames(this), ...) {
-  require("edgeR") || throw("Package not loaded: edgeR");
+  use("edgeR")
   ns <- getNamespace("edgeR");
   readDGE <- get("readDGE", envir=ns, mode="function");
 

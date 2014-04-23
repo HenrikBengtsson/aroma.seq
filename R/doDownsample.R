@@ -55,7 +55,7 @@ setMethodS3("doDownsample", "BamDataSet", function(dataSet, subset=1e6, ..., ver
 }) # doDownsample()
 
 
-setMethodS3("doDownsample", "FastqDataSet", function(dataSet, subset=subset, ..., verbose=FALSE) {
+setMethodS3("doDownsample", "FastqDataSet", function(dataSet, subset=1e6, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -67,7 +67,7 @@ setMethodS3("doDownsample", "FastqDataSet", function(dataSet, subset=subset, ...
   }
 
   verbose && enter(verbose, "Downsampling");
-  ds <- FastqDownsampler(dataSet, ...);
+  ds <- FastqDownsampler(dataSet, subset=subset, ...);
   verbose && print(verbose, ds);
   dsOut <- process(ds, verbose=verbose);
   verbose && print(verbose, dsOut);
@@ -84,6 +84,8 @@ setMethodS3("doDownsample", "default", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2014-04-23
+# o BUG FIX: doDownsample() for FastqDataSet ignored argument 'subset'.
 # 2014-04-18
 # o Added doDownsample() for BamDataSet and FastqDataSet.
 # o Created.

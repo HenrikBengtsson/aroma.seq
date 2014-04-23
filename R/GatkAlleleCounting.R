@@ -4,7 +4,7 @@
 ## print(dsC);
 
 setConstructorS3("GatkAlleleCounting", function(dataSet=NULL, targetUgp=NULL, fa=NULL, dropEmpty=TRUE, ..., .reqSetClass="BamDataSet") {
-  require("aroma.cn") || throw("Package not loaded: aroma.cn");
+  use("aroma.cn")
 
   # Argument 'targetUgp':
   if (!is.null(targetUgp)) {

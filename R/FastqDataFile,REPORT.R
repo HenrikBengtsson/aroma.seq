@@ -1,5 +1,5 @@
 setMethodS3("report", "FastqDataFile", function(this, dataSet, ..., flavor="qrqc", type="md", outPath=".", verbose=FALSE) {
-  require("R.rsp") || throw("Package not loaded: R.rsp");
+  use("R.rsp")
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -58,7 +58,7 @@ setMethodS3("report", "FastqDataFile", function(this, dataSet, ..., flavor="qrqc
 
 
 setMethodS3("report", "FastqDataSet", function(this, dataSet=getFullName(this), ..., flavor="qrqc", type="md", outPath=file.path("reports", fullname(dataSet, tags=flavor)), verbose=FALSE) {
-  require("R.rsp") || throw("Package not loaded: R.rsp");
+  use("R.rsp")
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments

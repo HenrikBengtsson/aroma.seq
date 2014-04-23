@@ -281,7 +281,7 @@ setMethodS3("buildIndex", "FastaReferenceFile", function(this, ..., skip=TRUE, v
   pathnameFAI <- Arguments$getWritablePathname(pathnameFAI, mustNotExist=FALSE);
   if (!skip || !isFile(pathnameFAI)) {
     verbose && enter(verbose, "Building index using Rsamtools");
-    require("Rsamtools") || throw("Package not loaded: Rsamtools");
+    use("Rsamtools")
     pathnameD <- indexFa(file=pathname);
     verbose && cat(verbose, "Generated file: ", pathname);
     verbose && exit(verbose);

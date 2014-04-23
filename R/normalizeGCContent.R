@@ -42,7 +42,7 @@
 #*/###########################################################################
 setMethodS3("normalizeGcContent", "default", function(y, gcContent, targetFcn=NULL, subsetToFit=NULL, onMissing=c("ignore", "median"), .isLogged=TRUE, ..., .returnFit=FALSE) {
   # predict() for 'lowess' is defined in aroma.light
-  require("aroma.light") || throw("Package not loaded: aroma.light");
+  use("aroma.light")
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

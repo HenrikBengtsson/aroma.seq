@@ -76,7 +76,7 @@ setMethodS3("convertToBam", "SamDataFile", function(this, path=getPath(this), sk
 
   # Converting SAM to BAM, sort and create an index (*.bai)
   verbose && enter(verbose, "Converting using Rsamtools");
-  require("Rsamtools") || throw("Package not loaded: Rsamtools");
+  use("Rsamtools")
   pathnameBAMx <- gsub("[.]bam$", "", pathnameBAM);
   verbose && cat(verbose, "BAM destination: ", pathnameBAMx);
   # NB: Rsamtools::asBam() already writes atomically.

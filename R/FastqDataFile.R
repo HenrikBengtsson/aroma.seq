@@ -132,7 +132,7 @@ setMethodS3("getSamReadGroup", "FastqDataFile", function(this, ...) {
 
 
 setMethodS3("writeSample", "FastqDataFile", function(this, pathname, n, ordered=FALSE, seed=NULL, ..., full=FALSE) {
-  require("ShortRead") || throw("Package not loaded: ShortRead");
+  use("ShortRead")
 
   # Argument 'pathname':
   pathname <- Arguments$getWritablePathname(pathname, mustNotExist=TRUE);

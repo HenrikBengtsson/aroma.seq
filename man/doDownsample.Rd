@@ -21,7 +21,7 @@
 \usage{
   doDownsample(...)
   \method{doDownsample}{BamDataSet}(dataSet, subset=1e+06, ..., verbose=FALSE)
-  \method{doDownsample}{FastqDataSet}(dataSet, subset=subset, ..., verbose=FALSE)
+  \method{doDownsample}{FastqDataSet}(dataSet, subset=1e+06, ..., verbose=FALSE)
 }
 
 \arguments{

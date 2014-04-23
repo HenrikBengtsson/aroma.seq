@@ -117,7 +117,7 @@ setMethodS3("getPlatformUnit", "IlluminaFastqDataFile", function(this, ...) {
 })
 
 setMethodS3("getFirstSequenceInfo", "IlluminaFastqDataFile", function(this, force=FALSE, ...) {
-  require("ShortRead") || throw("Package not loaded: ShortRead");
+  use("ShortRead")
 
   info <- this$.info;
 
