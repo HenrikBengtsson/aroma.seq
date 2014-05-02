@@ -31,7 +31,7 @@ setFullNamesTranslator(bs, function(names, ...) {
 print(bs);
 
 
-chrLabels <- names(getTargets(getFile(bs,1)));
+chrLabels <- names(getTargets(bs[[1]]));
 chrMap <- c(1:25);
 labels <- sprintf("chr%d", chrMap);
 labels[23:25] <- sprintf("chr%s", c("X", "Y", "M"));
@@ -57,8 +57,8 @@ bsT <- extract(bs, sapply(bs, hasTag, "T"));
 bsN <- extract(bs, sapply(bs, hasTag, "N"));
 
 # Extract one pair
-bfT <- getFile(bsT, 1);
-bfN <- getFile(bsN, 1);
+bfT <- bsT[[1]];
+bfN <- bsN[[1]];
 print(bfT);
 print(bfN);
 

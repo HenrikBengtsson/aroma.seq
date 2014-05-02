@@ -16,7 +16,7 @@ ds <- IlluminaFastqDataSet$byPath(path);
 print(ds);
 
 
-df <- getFile(ds, 1);
+df <- ds[[1]];
 print(df);
 
 rg <- getSamReadGroup(df);

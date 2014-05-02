@@ -40,7 +40,7 @@ bs <- process(alg, verbose=-20);
 print(bs);
 
 # Display an example BAM file
-bf <- getFile(bs, 1);
+bf <- bs[[1]];
 print(bf);
 
 

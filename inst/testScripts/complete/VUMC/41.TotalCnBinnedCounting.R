@@ -27,7 +27,7 @@ setFullNamesTranslator(bs, function(names, ...) {
 print(bs);
 
 
-chrLabels <- names(getTargets(getFile(bs,1)));
+chrLabels <- names(getTargets(bs[[1]]));
 chrMap <- c(1:25);
 labels <- sprintf("chr%d", chrMap);
 labels[23:25] <- sprintf("chr%s", c("X", "Y", "M"));

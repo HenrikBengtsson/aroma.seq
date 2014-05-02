@@ -1,12 +1,12 @@
-# 
+#
 # Prototype RNA-seq pipeline script
-# 
+#
 # This script is a pipeline for performing RNA-seq read quantification in aroma.seq.
 # It starts with fastq files and ends with a read count matrix on transcript features.
 # Sample code to set up the aroma.seq package and other suggested R packages, and download
 # reference genome and transcript annotations are included for convenience.
 # External binaries bowtie2 and tophat must exist on the user's path (setup described elsewhere).
-# 
+#
 # This script builds (or assumes) a directory structure as follows:
 #   ./annotationData/organisms/<organism>/
 #     - This contains (or will contain) reference annotation .fa, .gtf, bowtie2/bwa indices, etc.
@@ -94,17 +94,17 @@ refFas <- FastaReferenceSet$byPath(path=pathLocalAnnots, pattern="[.](fa|fasta)$
 # Download reference files, gunzip, move to standard location, if needed
 if (length(refFas) < 1)
 {
-  
+
   # Get list of reference URLs from the package
   source(file.path(pathExData, "ReferenceGenomes.R"))
-  
+
   RefUrls <- RefUrlsList[[config$organism]]
   sapply(RefUrls, function(loc)
   {
     fnameGZ <- basename(loc)
     fname <- sub(".gz", "", fnameGZ)   # [ Cludgey on two counts: assuming .gz suffix, assuming gzip'd in the first place ]
     # TODO:  Make this agnostic to .gz or .bz2 or uncompressed
-    
+
     # Download file if it has not been downloaded already
     if (!isFile(file.path(pathLocalAnnots, fnameGZ)) && !isFile(file.path(pathLocalAnnots, fname)))
     {
@@ -119,7 +119,7 @@ if (length(refFas) < 1)
   })
 }
 ## [ LIMITATION: Presuming there is only one reference fasta file ]
-refFasta <- getFile(refFas, 1)
+refFasta <- refFas[[1]]
 print(refFasta)
 
 
@@ -164,13 +164,13 @@ if (FALSE) {  # Skip for now
   if (!bPairedEnd)
   {
     # NB: For now, the following overwrites the fastq dataset
-    
+
     # adapter trim first
     fqs <- doScythe(fqs, "pairedEnd")
-    
+
     # quality trim reads
     fqs <- doSickle(fqs, "pairedEnd")
-    
+
   } else {
     pdfList <- sapply(fqs, report)    ### Uses qrqc; this could take a while...probably should make verbose
     fqs <- sapply(fqs, doScythe)
@@ -244,15 +244,15 @@ if (FALSE) {
   # Load the htseq count files as a TabularTextFileSet
   db <- TabularTextFileSet$byPath(path=getPath(ta), pattern="[.]count$", recursive=TRUE)
   ## [ ISSUE:  This drops the first row, since treated as column names ]
-  
+
   # Get the 2nd column from each htseq count table
   mat <-
     sapply(seq_along(db), function(i) {
-      ttf <- getFile(db, i)
+      ttf <- db[[i]]
       col2 <- readColumns(ttf,2)
     }, simplify=TRUE)
   mat <- sapply(mat, function(x) x)  # Silly but works to convert list to matrix (...)
-  rns <- readColumns(getFile(db, 1), 1)[,1]
+  rns <- readColumns(db[[1]], 1)[,1]
   rownames(mat) <- rns
   bDrop <- rns %in% c("no_feature", "ambiguous", "too_low_aQual", "not_aligned", "alignment_not_unique")
   mat <- mat[!bDrop,]

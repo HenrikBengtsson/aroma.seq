@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.5.5 [2014-05-02]
+o CLEANUP: Now using ds[[idx]] instead of getFile(ds, idx) everywhere.
+
+
 Version: 0.5.4 [2014-04-23]
 o Non-installed suggested packages are now automatically installed when
   needed.  This is achieved by using R.utils::use() instead of require().

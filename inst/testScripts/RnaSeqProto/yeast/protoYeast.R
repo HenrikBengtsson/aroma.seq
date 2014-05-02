@@ -39,8 +39,8 @@ save(config, file="config_000.RData")
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 refFas <- FastaReferenceSet$byPath(path=config$pathLocalAnnots, pattern="[.](fa|fasta)$")
-refFasta <- getFile(refFas, 1)  # Presuming there is only one reference fasta file
-stIndex <- 
+refFasta <- refFas[[1]]  # Presuming there is only one reference fasta file
+stIndex <-
   system.time({
     iSet <- buildBowtie2IndexSet(refFasta, verbose=10)
   })
@@ -75,7 +75,7 @@ print(getFullNames(fqsPE))
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 if (length(fqsPE) > 0) {
-  stDoTopHatPE <- 
+  stDoTopHatPE <-
     system.time({
       ta <- TopHat2Alignment(fqsPE, groupBy="name", indexSet=iSet, transcripts=gtf)
       bamsPE <- process(ta)
@@ -95,7 +95,7 @@ if (exists("bamsSE")) {
       lapply(bamsSE, function(bam, gtfFile) {
         pathname <- getPathnames(bam)
         htseqCount(pathnameS=pathname, gff=gtfFile)
-      }, gtfFile=getPathname(gtf)) 
+      }, gtfFile=getPathname(gtf))
   })
   save(stHCSE, file="stHCSE_000.RData")
 }
@@ -105,7 +105,7 @@ if (exists("bamsPE")) {
       lapply(bamsPE, function(bam, gtfFile) {
         pathname <- getPathname(bam)
         htseqCount(pathnameS=pathname, gff=gtfFile)
-      }, gtfFile=getPathname(gtf)) 
+      }, gtfFile=getPathname(gtf))
   })
   save(stHCPE, file="stHCPE_000.RData")
 }
