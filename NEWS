@@ -1,6 +1,11 @@
 Package: aroma.seq
 ==================
 
+Version: 0.5.6 [2014-05-11]
+o Added argument 'jvmArgs' to systemJava() to make it simple to call
+  Java as 'java -Xmx1024m ..." etc.
+
+
 Version: 0.5.5 [2014-05-02]
 o CLEANUP: Now using ds[[idx]] instead of getFile(ds, idx) everywhere.
 

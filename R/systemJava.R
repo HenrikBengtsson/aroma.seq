@@ -21,12 +21,18 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("systemJava", "default", function(..., .fmtArg=c("( |=)$"="%s%s", ".*"="%s %s"), .fake=FALSE, verbose=FALSE) {
+setMethodS3("systemJava", "default", function(..., jvmArgs=Sys.getenv("JVM_ARGS"), .fmtArg=c("( |=)$"="%s%s", ".*"="%s %s"), .fake=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Arguments '...':
   args <- list(...);
+
+  # Arguments 'jvmArgs':
+  if (is.character(jvmArgs)) {
+    jvmArgs <- trim(jvmArgs);
+    jvmArgs <- jvmArgs[nzchar(jvmArgs)];
+  }
 
   # Argument 'autoDash':
   .fmtArg <- Arguments$getCharacters(.fmtArg, useNames=TRUE);
@@ -65,6 +71,8 @@ setMethodS3("systemJava", "default", function(..., .fmtArg=c("( |=)$"="%s%s", ".
   verbose && cat(verbose, "Arguments passed to java:");
   verbose && str(verbose, args);
 
+  verbose && cat(verbose, "JVM arguments passed to java:");
+  verbose && str(verbose, jvmArgs);
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Adjust command line switches
@@ -127,6 +135,9 @@ setMethodS3("systemJava", "default", function(..., .fmtArg=c("( |=)$"="%s%s", ".
       break;
   } # for (kk ...)
   if (verbose) verbose <- more(verbose, 10);
+
+  # Prepend JVM_ARGS
+  options <- c(jvmArgs, options);
 
   options <- trim(options);
   options <- options[nchar(options) > 0L];
@@ -195,6 +206,9 @@ setMethodS3("systemJavaJar", "default", function(pathname, ...) {
 
 ############################################################################
 # HISTORY:
+# 2014-05-11
+# o Added argument 'jvmArgs' to systemJava() to make it simple to call
+#   Java as 'java -Xmx1024m ..." etc.
 # 2012-09-28
 # o Created.
 ############################################################################
