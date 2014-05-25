@@ -222,6 +222,7 @@ setMethodS3("process", "FastQCReporter", function(this, ..., skip=TRUE, force=FA
 
     # Identify the output subdirectory that 'fastqc' created
     dirT <- list.files(path=pathDT, pattern="_fastqc$", full.names=FALSE);
+    stopifnot(length(dirT) > 0L);
     pathT <- file.path(pathDT, dirT);
     stopifnot(isDirectory(pathT));
 
