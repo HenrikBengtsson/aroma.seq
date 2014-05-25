@@ -61,26 +61,35 @@ setConstructorS3("AromaSeq", function(...) {
 #
 #*/###########################################################################
 setMethodS3("capabilitiesOf", "AromaSeq", function(static, what=NULL, force=FALSE, ...) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Local functions
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  supports <- function(fcn, ...) {
+    tryCatch({
+      !is.null(fcn(mustExist=FALSE))
+    }, error = function(ex) FALSE);
+  } # supports()
+
   res <- static$.capabilities;
   if (force || is.null(res)) {
     res <- list();
 
     # General software frameworks
-    res$java <- !is.null(findJava(mustExist=FALSE));
-    res$perl <- !is.null(findPerl(mustExist=FALSE));
-    res$python <- !is.null(findPython(mustExist=FALSE));
+    res$java <- supports(findJava);
+    res$perl <- supports(findPerl);
+    res$python <- supports(findPython);
 
     # Sequencing tools
-    res$bowtie2 <- !is.null(findBowtie2(mustExist=FALSE));
-    res$bwa <- !is.null(findBWA(mustExist=FALSE));
-    res$gatk <- !is.null(findGATK(mustExist=FALSE));
-    res$picard <- !is.null(findPicard(mustExist=FALSE));
-    res$fastqc <- !is.null(findFastQC(mustExist=FALSE));
-    res$fastqDump <- !is.null(findFastqDump(mustExist=FALSE));
-    res$samtools <- !is.null(findSamtools(mustExist=FALSE));
-    res$tophat1 <- !is.null(findTopHat1(mustExist=FALSE));
-    res$tophat2 <- !is.null(findTopHat2(mustExist=FALSE));
-    res$htseq <- !is.null(findHTSeq(mustExist=FALSE));
+    res$bowtie2 <- supports(findBowtie2);
+    res$bwa <- supports(findBWA);
+    res$gatk <- supports(findGATK);
+    res$picard <- supports(findPicard);
+    res$fastqc <- supports(findFastQC);
+    res$fastqDump <- supports(findFastqDump);
+    res$samtools <- supports(findSamtools);
+    res$tophat1 <- supports(findTopHat1);
+    res$tophat2 <- supports(findTopHat2);
+    res$htseq <- supports(findHTSeq);
 
     # Order lexicographically
     o <- order(names(res));
@@ -193,6 +202,9 @@ setMethodS3("skeleton", "AromaSeq", function(static, dataSet="MyDatSet", organis
 
 ############################################################################
 # HISTORY:
+# 2014-05-24
+# o ROBUSTNESS: capabilitiesOf() always returns even if one of the
+#   "find" functions gives an error.
 # 2014-03-20
 # o Added 'fastq-dump' to capabilities.
 # 2014-02-28

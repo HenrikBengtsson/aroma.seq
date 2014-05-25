@@ -1,6 +1,13 @@
 Package: aroma.seq
 ==================
 
+Version: 0.5.7 [2014-05-24]
+o ROBUSTNESS: capabilitiesOf() always returns even if one of the
+  "find" functions gives an error.
+o ROBUSTNESS: Now findFastQC(mustExist=FALSE) returns NULL if
+  'fastqc --version' fails although 'fastqc' is found.
+
+
 Version: 0.5.6 [2014-05-11]
 o Added argument 'jvmArgs' to systemJava() to make it simple to call
   Java as 'java -Xmx1024m ..." etc.

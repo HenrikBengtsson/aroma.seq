@@ -92,7 +92,13 @@ findFastQC <- function(mustExist=TRUE, ..., verbose=FALSE) {
   res <- system2(perl, args=cmd, stdout=resfile);
   verbose && cat(verbose, "Result code: ", res);
   if (res != 0L) {
-    throw("Failed to run 'fastqc --version'.");
+    msg <- "Found 'fastqc', but failed to run 'fastqc --version'.";
+    if (mustExist) {
+      throw(msg);
+    } else {
+      warning(msg);
+      return(NULL);
+    }
   }
 
   # Pool file every 0.1 seconds for 5 seconds.
@@ -131,6 +137,9 @@ findFastQC <- function(mustExist=TRUE, ..., verbose=FALSE) {
 
 ############################################################################
 # HISTORY:
+# 2014-05-24
+# o ROBUSTNESS: Now findFastQC(mustExist=FALSE) returns NULL if
+#   'fastqc --version' fails although 'fastqc' is found.
 # 2014-02-28
 # o Created from findPicard().
 ############################################################################
