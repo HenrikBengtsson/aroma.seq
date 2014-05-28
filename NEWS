@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.5.8 [2014-05-28]
+o Added 'Recommends' field to DESCRIPTION.
+
+
 Version: 0.5.7 [2014-05-24]
 o ROBUSTNESS: capabilitiesOf() always returns even if one of the
   "find" functions gives an error.
