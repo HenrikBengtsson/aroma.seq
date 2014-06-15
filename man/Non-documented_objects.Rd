@@ -524,6 +524,8 @@
 \alias{getSampleSize.BamDownsampler}
 \alias{process.BamDownsampler}
 \alias{writeSample.BamDataFile}
+\alias{countNucleotides}
+\alias{countNucleotides.BamDataFile}
 
 \description{
   This page contains aliases for all "non-documented" objects that

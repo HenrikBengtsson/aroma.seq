@@ -15,7 +15,7 @@
 
 
 \description{
-  Simple, flexible and distributed processing of very large-scale HT-Seq data - available at the R prompt. [VERY EARLY VERSION/STUB]
+  Simple, flexible and distributed processing of very large-scale HT-Seq data - available at the R prompt. [RATHER EARLY VERSION]
 }
 
 \section{Requirements}{
@@ -45,7 +45,7 @@
  Bengtsson H, Olshen A and Tokuyasu T (2014).
 \emph{aroma.seq: High-throughput sequence (HT-Seq) analysis in the Aroma
 framework}.
-R package version 0.5.5.
+R package version 0.5.8.
 }
 
 \section{License}{

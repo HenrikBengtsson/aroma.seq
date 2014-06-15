@@ -293,3 +293,4 @@ isPaired.FastqDataFile
 getRootPath.BamDownsampler
 getSampleSize.BamDownsampler process.BamDownsampler
 writeSample.BamDataFile
+countNucleotides countNucleotides.BamDataFile
