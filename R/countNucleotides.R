@@ -1,5 +1,10 @@
 setMethodS3("countNucleotides", "BamDataFile", function(bam, loci, ..., verbose=FALSE) {
   use("Rsamtools");
+  use("Biostrings");
+
+  # Need to use S4 generic as.matrix() instead of S3 one in 'base'
+  ns <- getNamespace("Biostrings");
+  as.matrix <- get("as.matrix", envir=ns, mode="function");
 
   # Arguments 'loci':
   loci <- Arguments$getInstanceOf(loci, "data.frame");
