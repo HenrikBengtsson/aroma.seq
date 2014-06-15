@@ -4,15 +4,32 @@ setMethodS3("countNucleotides", "BamDataFile", function(bam, loci, ..., verbose=
   # Arguments 'loci':
   loci <- Arguments$getInstanceOf(loci, "data.frame");
 
-  pathnameBAM <- getPathname(bam);
-  if (!isFile(pathnameBAM)) {
-    throw("BAM file does not exist: ", pathnameBAM);
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
   }
+
+  verbose && enter(verbose, "Counting nucleotides in BAM file");
+
+  pathname <- getPathname(bam);
+  verbose && cat(verbose, "BAM pathname: ", pathname);
+  if (!isFile(pathname)) {
+    throw("BAM file does not exist: ", pathname);
+  }
+
+  verbose && cat(verbose, "Loci to inspect:");
+  verbose && str(verbose, loci);
 
   # Get (chromosome, position)
   chr <- loci[,1L,drop=TRUE];
   pos <- loci[,2L,drop=TRUE];
   names <- rownames(loci);
+  chr <- as.character(chr);
+  if (!is.numeric(pos)) {
+    throw("Second column of argument 'loci' is not numeric: ", mode(pos));
+  }
 
   # Allocate allele counts for A, C, G, T and unknowns ("N")
   bases <- c("A", "C", "G", "T", "N")
@@ -28,6 +45,12 @@ setMethodS3("countNucleotides", "BamDataFile", function(bam, loci, ..., verbose=
   }
 
   chrCC <- chr[1L];
+  verbose && cat(verbose, "Chromosome: ", chrCC);
+
+  knownChromosomes <- getTargetNames(bam);
+  if (!is.element(chrCC, knownChromosomes)) {
+    throw(sprintf("Target sequence/chromosome '%s' is not among the known ones: %s", chrCC, hpaste(knownChromosomes)));
+  }
 
   # Look a the loci for the chromosome of interest
   idxsCC <- which(chr == chrCC);
@@ -36,18 +59,29 @@ setMethodS3("countNucleotides", "BamDataFile", function(bam, loci, ..., verbose=
 
   # Setup RangesList for SNPs on chromosome of interest
   which <- RangesList(IRanges(start=posCC, width=1L, names=namesCC));
-  names(which)[1L] <- sprintf("%d", chrCC);
+  names(which)[1L] <- chrCC;
 
   # Scan BAM file
+  verbose && enter(verbose, "Calling scanBam()");
   params <- ScanBamParam(which=which, what=scanBamWhat());
-  res <- scanBam(pathnameBAM, param=params);
+  verbose && cat(verbose, "Parameters to scanBam():");
+  verbose && print(verbose, params);
+  res <- scanBam(pathname, param=params);
+  verbose && cat(verbose, "Number of positions read: ", length(res));
+  # Sanity check
+  stopifnot(length(res) == length(posCC));
+  verbose && exit(verbose);
 
   # Count alleles
+  verbose && writeRaw(verbose, "Counting alleles: [0%]");
   for (jj in seq_along(res)) {
+    if (verbose && (jj %% 100 == 0)) writeRaw(verbose, ".");
     resT <- res[[jj]];
+
     offset <- posCC[jj] - resT$pos + 1L;
     if (length(offset) > 0L) {
-      seq <- as.matrix(resT$seq);
+      seq <- resT$seq;
+      seq <- as.matrix(seq);
       alleles <- rowCollapse(seq, idxs=offset);
       alleles <- factor(alleles, levels=bases);
       countsJJ <- table(alleles, dnn=NULL);
@@ -59,6 +93,13 @@ setMethodS3("countNucleotides", "BamDataFile", function(bam, loci, ..., verbose=
     res[[jj]] <- NA;
     resT <- NULL;
   } # for (jj ...)
+  res <- NULL; # Not needed anymore
+  verbose && writeRaw(verbose, "[100%]\n");
+
+  verbose && cat(verbose, "Allele counts:");
+  verbose && str(verbose, counts);
+
+  verbose && exit(verbose);
 
   counts;
 }) # countNucleotides()

@@ -2,7 +2,7 @@ Package: aroma.seq
 ==================
 
 Version: 0.5.8 [2014-06-14]
-o Added countNucleotides() for BamDataFile.
+o Added countNucleotides() for BamDataFile with a package system test.
 o Bumped package dependencies.
 
 
