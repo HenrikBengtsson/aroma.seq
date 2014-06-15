@@ -1,9 +1,9 @@
 # R package: aroma.seq
 
-Stable release available via [CRAN](http://cran.r-project.org/package=aroma.seq).  Install in R as:
+This package is not on CRAN.  Install in R as:
 
 ```s
-install.packages('aroma.seq')
+source('http://aroma-project.org/R/install#HenrikBengtsson/aroma.seq')
 ```
 
 R CMD check status: <a href="https://travis-ci.org/HenrikBengtsson/aroma.seq"><img src="https://travis-ci.org/HenrikBengtsson/aroma.seq.svg?branch=master" alt="Build status"></a>
