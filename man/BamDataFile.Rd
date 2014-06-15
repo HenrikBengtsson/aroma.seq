@@ -53,6 +53,7 @@ BamDataFile(...)
 \tabular{rll}{
  \tab \code{buildIndex} \tab  -\cr
  \tab \code{convertToSam} \tab  -\cr
+ \tab \code{countNucleotides} \tab  -\cr
  \tab \code{doQDNAseq} \tab  -\cr
  \tab \code{extractReadStartPositions} \tab  -\cr
  \tab \code{getChipType} \tab  -\cr

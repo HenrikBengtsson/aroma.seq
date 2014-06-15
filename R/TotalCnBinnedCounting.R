@@ -84,7 +84,10 @@ setMethodS3("smoothRawCopyNumbers", "TotalCnBinnedCounting", function(this, rawC
   args <- c(list(), params, list(x=x, bx=bx), ...);
 
   # Keep only known arguments
-  knownArguments <- names(formals(matrixStats::binCounts.default));
+  ns <- getNamespace("matrixStats");
+  binCounts <- get("binCounts.default", envir=ns, mode="function");
+  knownArguments <- names(formals(binCounts));
+  rm(list="binCounts");
   keep <- is.element(names(args), knownArguments);
   args <- args[keep];
 
