@@ -10,4 +10,10 @@
 ^smoothCnData$
 ^tophat2Data$
 ^reports$
-
+^nohup.*$
+^.travis.yml$
+^.svn
+^.git
+^.check
+^.test
+README.md
