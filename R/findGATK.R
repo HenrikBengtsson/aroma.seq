@@ -64,7 +64,7 @@ findGATK <- function(mustExist=TRUE, ..., verbose=FALSE) {
     if (mustExist) {
       throw(sprintf("Failed to located GATK home directory"));
     }
-    return(FALSE);
+    return(NULL);
   }
 
   path <- Arguments$getReadablePath(path, mustWork=FALSE);
@@ -93,6 +93,9 @@ findGATK <- function(mustExist=TRUE, ..., verbose=FALSE) {
 
 ############################################################################
 # HISTORY:
+# 2014-06-16
+# o BUG FIX: findGATK(mustExist=FALSE) would return FALSE instead of NULL
+#   if GATK was not found.
 # 2014-03-14
 # o Now findGATK() also returns the version of GATK.
 # 2012-10-01
