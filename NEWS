@@ -1,6 +1,11 @@
 Package: aroma.seq
 ==================
 
+Version: 0.5.10 [2014-06-25]
+o Added missing nucleotide type ('N') to AromaUnitNucleotideCountsFile
+  and added argument 'na.rm' to getGcContent() for that class.
+
+
 Version: 0.5.9 [2014-06-16]
 o Updated startup message on how to install devel version of package.
 o BUG FIX: findGATK(mustExist=FALSE) would return FALSE instead of NULL

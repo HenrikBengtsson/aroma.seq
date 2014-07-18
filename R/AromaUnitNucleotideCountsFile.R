@@ -26,14 +26,26 @@ setMethodS3("getExtensionPattern", "AromaUnitNucleotideCountsFile", function(sta
 
 
 setMethodS3("getDefaultColumnNames", "AromaUnitNucleotideCountsFile", function(this, ...) {
-  c("A", "C", "G", "T");
+  c("A", "C", "G", "T", "N");
 })
 
-setMethodS3("getGcContent", "AromaUnitNucleotideCountsFile", function(this, ..., fields=c("G", "C")) {
+setMethodS3("getGcContent", "AromaUnitNucleotideCountsFile", function(this, ..., fields=c("G", "C"), na.rm=TRUE) {
   data <- readDataFrame(this, ...);
+
+  # Drop unknown nucleotides?
+  if (na.rm) {
+    data <- data[setdiff(colnames(data), "N")];
+  }
+
+  # GC count
   y <- Reduce("+", data[fields])
+
+  # Total count
   total <- Reduce("+", data);
+
+  # GC fraction
   y <- y / total;
+
   y;
 })
 
@@ -41,11 +53,12 @@ setMethodS3("getGcContent", "AromaUnitNucleotideCountsFile", function(this, ...,
 setMethodS3("allocateFromUgp", "AromaUnitNucleotideCountsFile", function(static, ugp=NULL, createdOn=Sys.time(), createdBy=NULL, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'ugp':
   ugp <- Arguments$getInstanceOf(ugp, "AromaUgpFile");
 
-  unc <- AromaUnitNucleotideCountsFile$allocateFromUnitAnnotationDataFile(ugp, ..., types=rep("integer", times=4L), sizes=rep(4L, times=4L));
+  nbrOfCols <- length(getDefaultColumnNames(static));
+  unc <- AromaUnitNucleotideCountsFile$allocateFromUnitAnnotationDataFile(ugp, ..., types=rep("integer", times=nbrOfCols), sizes=rep(4L, times=nbrOfCols));
 
   ftr <- readFooter(unc);
   ftr$sources <- list(
@@ -67,7 +80,7 @@ setMethodS3("allocateFromUgp", "AromaUnitNucleotideCountsFile", function(static,
 setMethodS3("importFromBSgenome", "AromaUnitNucleotideCountsFile", function(this, db, ugp=NULL, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'db':
   db <- Arguments$getInstanceOf(db, "BSgenome");
 
@@ -82,7 +95,7 @@ setMethodS3("importFromBSgenome", "AromaUnitNucleotideCountsFile", function(this
     pushState(verbose);
     on.exit(popState(verbose));
   }
-  
+
 
   verbose && enter(verbose, "Importing nucleotide counts from BSGenome");
 
@@ -124,39 +137,39 @@ setMethodS3("importFromBSgenome", "AromaUnitNucleotideCountsFile", function(this
     chr <- chromosomes[kk];
     chrLabel <- names(chromosomes)[kk];
     verbose && enter(verbose, sprintf("Chromosome #%d ('%s') of %d", kk, chrLabel, length(chromosomes)));
-  
+
     units <- getUnitsOnChromosome(ugp, chromosome=chr);
     verbose && cat(verbose, "Units on this chromosome:");
     verbose && str(verbose, units);
-  
+
     # Nothing todo?
     if (length(units) == 0L) {
       verbose && cat(verbose, "No units. Skipping.");
       verbose && exit(verbose);
       next;
     }
-  
+
     xOut <- getPositions(ugp, units=units);
     verbose && cat(verbose, "Number of bins: ", length(xOut));
     if (is.null(by)) {
       by <- median(diff(sort(xOut)), na.rm=TRUE);
       verbose && cat(verbose, "Inferred 'by': ", by);
     }
-    bx <- c(xOut[1]-by/2, xOut+by/2); 
-  
+    bx <- c(xOut[1]-by/2, xOut+by/2);
+
     verbose && cat(verbose, "Nucleotide sequence:");
     seq <- db[[chrLabel]];
     verbose && print(verbose, seq);
-  
+
     verbose && enter(verbose, "Binned counting of nucleotides");
     countsKK <- binTabulate(seq, bx=bx);
     verbose && exit(verbose);
-  
+
     this[units,] <- countsKK;
-  
+
     # Not needed anymore
     rm(seq, bx, xOut, countsKK, units);
-  
+
     verbose && exit(verbose);
   } # for (kk ...)
 
@@ -205,6 +218,9 @@ setConstructorS3("AromaUncFile", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2014-06-24
+# o Added argument 'na.rm' to getGcContent().
+# o Now this file type also allocates and 'N' column.
 # 2012-10-18
 # o Added getGcContent().
 # 2012-10-16
