@@ -220,9 +220,13 @@ setMethodS3("process", "FastQCReporter", function(this, ..., skip=TRUE, force=FA
     # Sanity check
     stopifnot(isDirectory(pathDT));
 
+    # FIXME: Do we need to pool here?  Does fastQC() return before output
+    # directory is created/available on the file system? /HB 2014-07-18.
     # Identify the output subdirectory that 'fastqc' created
     dirT <- list.files(path=pathDT, pattern="_fastqc$", full.names=FALSE);
-    stopifnot(length(dirT) > 0L);
+    if (length(dirT) == 0L) {
+      throw(sprintf("None of the subdirectories of %s match *_fastqc/: %s", sQuote(pathDT), paste(sQuote(dirT), collapse=", ")));
+    }
     pathT <- file.path(pathDT, dirT);
     stopifnot(isDirectory(pathT));
 
@@ -300,6 +304,9 @@ setMethodS3("validateGroups", "FastQCReporter", function(this, groups, ...) {
 
 ############################################################################
 # HISTORY:
+# 2014-07-18
+# o The error message when FastQC fail to generate a '*_fastqc'
+#   subdirectory is now more informative.
 # 2014-04-13 [HB]
 # o CLEANUP: Now FastQCReporter outputs sample directories without the
 #   default and auxillary '_fastqc' suffix.

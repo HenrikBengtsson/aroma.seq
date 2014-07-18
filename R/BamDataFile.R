@@ -131,9 +131,29 @@ setMethodS3("getIndexStats", "BamDataFile", function(this, ..., force=FALSE) {
 
 
 setMethodS3("getReadCounts", "BamDataFile", function(this, ...) {
-  stats <- getIndexStats(this, ...);
-  counts <- colSums(stats[,c("mapped", "unmapped")], na.rm=TRUE);
-  counts;
+  if (isCapableOf(aroma.seq, "samtools")) {
+    # Alt 1. samtools indexstats
+    stats <- getIndexStats(this, ...)
+    counts <- colSums(stats[,c("mapped", "unmapped")], na.rm=TRUE)
+  } else {
+    # Alt 1. Rsamtools
+    use("Rsamtools")
+    pathname <- getPathname(this)
+    stats <- captureOutput({
+      quickBamFlagSummary(pathname, index=pathname, main.groups.only=FALSE)
+    })
+    stats <- grep("record is", stats, value=TRUE)
+    stopifnot(length(stats) == 2L)
+    stats <- strsplit(stats, split="|", fixed=TRUE)
+    stats <- sapply(stats, FUN=function(x) x[2L])
+    counts <- as.integer(stats)
+    names(counts) <- c("mapped", "unmapped")
+  }
+
+  # Sanity check
+  stopifnot(length(counts) == 2L)
+
+  counts
 })
 
 
@@ -767,6 +787,10 @@ setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, seed=NULL,
 
 ############################################################################
 # HISTORY:
+# 2014-07-18
+# o GENERALIZATION: Now getReadCounts() for BamDataFile falls back to
+#   use Rsamtools::quickBamFlagSummary() if 'samtools indexstats' is
+#   not available.  Thanks Pierre Neuvial for point this out.
 # 2014-04-19
 # o Now getProgramString() for BamDataFile returns information on all
 #   programs used, not just the first one.  By default, it no longer

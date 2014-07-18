@@ -1,6 +1,12 @@
 Package: aroma.seq
 ==================
 
+Version: 0.5.11 [2014-07-18]
+o GENERALIZATION: Now getReadCounts() for BamDataFile falls back to
+  use Rsamtools::quickBamFlagSummary() if 'samtools indexstats' is
+  not available.
+
+
 Version: 0.5.10 [2014-06-25]
 o Added missing nucleotide type ('N') to AromaUnitNucleotideCountsFile
   and added argument 'na.rm' to getGcContent() for that class.
