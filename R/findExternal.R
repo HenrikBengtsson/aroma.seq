@@ -197,14 +197,14 @@ findExternal <- function(mustExist=TRUE, command, version=NULL, versionPattern=N
         if (ver < version[1L] || ver >= version[2L]) {
           pathname <- NULL;
           if (mustExist) {
-            throw(sprintf("Failed to located '%s' with version in [%s,%s): %s", command, version[1L], version[2L], ver));
+            throw(sprintf("Failed to locate external executable '%s' with version in [%s,%s): %s", command, version[1L], version[2L], ver));
           }
         }
         verbose && exit(verbose);
       }
     }
   } else if (mustExist) {
-    throw(sprintf("Failed to located external executable '%s'", command));
+    throw(sprintf("Failed to locate external executable '%s'", command));
   }
 
   .findCache(name=command, version=version, path=pathname);
