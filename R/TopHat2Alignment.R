@@ -186,7 +186,20 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   isPaired <- isPaired(ds);
   verbose && cat(verbose, "Paired-end analysis: ", isPaired);
 
-  is <- getIndexSet(this);
+  outPath <- getPath(this);
+  verbose && cat(verbose, "Output directory: ", outPath);
+
+  # Additional alignment parameters
+  params <- getParameters(this);
+  verbose && cat(verbose, "Parameters:");
+  verbose && str(verbose, params);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Retrieving/building Bowtie2 index set
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  verbose && enter(verbose, "Retrieving/building Bowtie2 index set");
+  is <- getIndexSet(this, verbose=less(verbose, 10));
   verbose && cat(verbose, "Aligning using index set:");
   verbose && print(verbose, is);
 
@@ -201,25 +214,21 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   verbose && print(verbose, faT);
   stopifnot(getPath(faT) == getPath(is));
   pathT <- fa <- pathnameT <- faT <- NULL;
-
-  outPath <- getPath(this);
-  verbose && cat(verbose, "Output directory: ", outPath);
+  verbose && exit(verbose);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Additional alignment parameters
+  # Retrieving/building TopHat2 transcriptome index set?
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  params <- getParameters(this);
-  verbose && cat(verbose, "Parameters:");
-  verbose && str(verbose, params);
-
-
   # Align with known transcripts?
   transcripts <- params$transcripts;
+  tis <- NULL;
   if (!is.null(transcripts)) {
+    verbose && enter(verbose, "Retrieving/building TopHat2 transcriptome index set");
     verbose && cat(verbose, "Using transcripts:");
     verbose && print(verbose, transcripts);
-    # Workaround for *gzipped* GTF files (not supported by TopHat binaries)
+
+    # (a) Workaround for *gzipped* GTF files (not supported by TopHat binaries)
     if (isGzipped(transcripts)) {
       verbose && enter(verbose, "Temporary uncompressing file");
       pathnameZ <- getPathname(transcripts)
@@ -235,6 +244,14 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
     }
     # Sanity check
     stopifnot(!isGzipped(transcripts));
+
+    # (b) Build transcriptome index set
+    verbose && enter(verbose, "Building transcriptome index set");
+    outPathT <- file.path(getParent(getPath(is)), "tophat2");
+    tis <- buildTopHat2TranscriptomeIndexSet(is, gtf=transcripts, outPath=outPathT, verbose=less(verbose, 10))
+    verbose && print(verbose, tis);
+
+    verbose && exit(verbose);
   }
 
 
@@ -255,7 +272,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && cat(verbose, "Number of files: ", length(ds));
   verbose && cat(verbose, "Number of groups: ", length(groups));
-  dsApply(ds, IDXS=groups[todo], DROP=FALSE, FUN=function(dfListR1, isPaired=FALSE, indexSet, transcripts=NULL, outPath, ..., skip=TRUE, verbose=FALSE) {
+  dsApply(ds, IDXS=groups[todo], DROP=FALSE, FUN=function(dfListR1, isPaired=FALSE, indexSet, transcriptomeIndexSet=NULL, outPath, ..., skip=TRUE, verbose=FALSE) {
     R.utils::use("R.utils, aroma.seq, Rsamtools");
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -271,6 +288,11 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
 
     # Argument 'indexSet':
     indexSet <- Arguments$getInstanceOf(indexSet, "Bowtie2IndexSet");
+
+    # Argument 'transcriptomeIndexSet':
+    if (!is.null(transcriptomeIndexSet)) {
+      transcriptomeIndexSet <- Arguments$getInstanceOf(transcriptomeIndexSet, "Bowtie2IndexSet");
+    }
 
     # Argument 'skip':
     skip <- Arguments$getLogical(skip);
@@ -291,9 +313,6 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
     verbose && enter(verbose, "Sample name ", sQuote(sampleName));
     stopifnot(length(sampleName) == 1L);
 
-    gtf <- NULL;
-    if (!is.null(transcripts)) gtf <- getPathname(transcripts);
-
     reads1 <- sapply(dfListR1, FUN=getPathname);
     verbose && printf(verbose, "R1 FASTQ files: [%d] %s\n", length(reads1), hpaste(sQuote(reads1)));
 
@@ -303,7 +322,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
       bowtieRefIndexPrefix=getIndexPrefix(indexSet),
       reads1=reads1,
       reads2=NULL,
-      gtf=gtf,
+      transcriptomeIndexPrefix=NULL,
       ...,
       outPath=outPathS
     );
@@ -313,6 +332,10 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
       reads2 <- sapply(dfListR2, FUN=getPathname);
       verbose && printf(verbose, "R2 FASTQ files: [%d] %s\n", length(reads2), hpaste(sQuote(reads2)));
       args$reads2 <- reads2;
+    }
+
+    if (!is.null(transcriptomeIndexSet)) {
+      args$transcriptomeIndexPrefix <- getIndexPrefix(transcriptomeIndexSet)
     }
 
 
@@ -345,7 +368,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
     verbose && exit(verbose);
 
     invisible(list(res=res));
-  }, isPaired=isPaired, indexSet=is, transcripts=transcripts, outPath=getPath(this), args=args, skip=skip, verbose=verbose) # dsApply()
+  }, isPaired=isPaired, indexSet=is, transcriptomeIndexSet=tis, outPath=getPath(this), args=args, skip=skip, verbose=verbose) # dsApply()
 
   # All calls are completed
   done <- TRUE;

@@ -22,9 +22,9 @@
 }
 
 \usage{
- \method{tophat}{default}(bowtieRefIndexPrefix, reads1=NULL, reads2=NULL, gtf=NULL, mateInnerDist=NULL,
-  mateStdDev=NULL, optionsVec=NULL, ..., outPath="tophat/", command="tophat",
-  verbose=FALSE)
+ \method{tophat}{default}(bowtieRefIndexPrefix, reads1=NULL, reads2=NULL, gtf=NULL,
+  transcriptomeIndexPrefix=NULL, mateInnerDist=NULL, mateStdDev=NULL, optionsVec=NULL,
+  ..., outPath="tophat/", command="tophat", verbose=FALSE)
  \method{tophat1}{default}(..., command="tophat")
  \method{tophat2}{default}(..., command="tophat2")
 }

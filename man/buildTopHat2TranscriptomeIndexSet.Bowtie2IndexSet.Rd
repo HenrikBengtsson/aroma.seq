@@ -22,7 +22,6 @@
 \arguments{
   \item{gtf}{GtfDataFile to be indexed}
   \item{outPath}{(optional) Output directory for index and log file.}
-  \item{tiPrefix}{(optional) Prefix for transcriptome index.}
   \item{...}{Arguments passed to tophat().}
   \item{skip}{If \code{\link[base:logical]{TRUE}}, the index files are not rebuilt if already available.}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}

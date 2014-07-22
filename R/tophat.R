@@ -47,7 +47,7 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, reads2=NULL, gtf=NULL, mateInnerDist=NULL, mateStdDev=NULL, optionsVec=NULL, ..., outPath="tophat/", command="tophat", verbose=FALSE) {
+setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, reads2=NULL, gtf=NULL, transcriptomeIndexPrefix=NULL, mateInnerDist=NULL, mateStdDev=NULL, optionsVec=NULL, ..., outPath="tophat/", command="tophat", verbose=FALSE) {
   # Make sure to evaluate registered onExit() statements
   on.exit(eval(onExit()));
 
@@ -98,6 +98,16 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
     }
   }
 
+  # Argument 'transcriptomeIndexPrefix'
+  # (and the existence of the corresponding directory)
+  if (!is.null(transcriptomeIndexPrefix)) {
+    transcriptomeIndexPrefix <- Arguments$getCharacter(transcriptomeIndexPrefix, length=c(1L,1L));
+    transcriptomeIndexPath <- dirname(transcriptomeIndexPrefix);
+    transcriptomeIndexName <- basename(transcriptomeIndexPrefix);
+    transcriptomeIndexPath <- Arguments$getReadablePath(transcriptomeIndexPath, absolute=TRUE);
+  }
+
+
   # Argument 'mateInnerDist' & 'mateStdDev':
   if (!is.null(mateInnerDist)) {
     if (!isPaired) {
@@ -125,11 +135,13 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
   }
 
   verbose && enter(verbose, "Running tophat()");
-  verbose && cat(verbose, "R1 FASTQ files:");
-  verbose && print(verbose, sapply(reads1, FUN=getRelativePath));
-  if (isPaired) {
-    verbose && cat(verbose, "R2 FASTQ files:");
-    verbose && print(verbose, sapply(reads2, FUN=getRelativePath));
+  if (length(reads1) > 0L) {
+    verbose && cat(verbose, "R1 FASTQ files:");
+    verbose && print(verbose, sapply(reads1, FUN=getRelativePath));
+    if (isPaired) {
+      verbose && cat(verbose, "R2 FASTQ files:");
+      verbose && print(verbose, sapply(reads2, FUN=getRelativePath));
+    }
   }
   verbose && cat(verbose, "Bowtie2 reference index prefix: ", bowtieRefIndexPrefix);
   verbose && cat(verbose, "Output directory: ", outPath);
@@ -210,21 +222,29 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
     link <- NULL;  # Not needed anymore
   }
 
+  # (2c) Link to the tophat2 transcriptome index directory
+  #      (such that tophat sees no commas)
+  link <- file.path(inPath, "transIndex");
+  transcriptomeIndexPath <- createLink(link=link, target=transcriptomeIndexPath);
+  onExit({ file.remove(transcriptomeIndexPath) });
+  link <- NULL;  # Not needed anymore
+  transcriptomeIndexPrefix <- file.path(transcriptomeIndexPath, basename(transcriptomeIndexPrefix));
+  assertNoCommas(transcriptomeIndexPrefix);
 
   # (3a) Link to the FASTQ 'R1'
   #      (such that tophat sees no commas)
-  reads1 <- sapply(reads1, FUN=function(pathname) {
-    link <- file.path(inPath, basename(pathname));
-    assertNoCommas(link);
-    createLink(link=link, target=pathname);
-  })
   if (length(reads1) > 0L) {
+    reads1 <- sapply(reads1, FUN=function(pathname) {
+      link <- file.path(inPath, basename(pathname));
+      assertNoCommas(link);
+      createLink(link=link, target=pathname);
+    })
     onExit({ file.remove(reads1) })
   }
 
   # (3b) Link to the (optional) FASTQ 'R2'
   #      (such that tophat sees no commas)
-  if (isPaired) {
+  if (length(reads2) > 0L) {
     reads2 <- sapply(reads2, FUN=function(pathname) {
       link <- file.path(inPath, basename(pathname));
       assertNoCommas(link);
@@ -251,6 +271,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
 
   # Append optional arguments
   if (!is.null(gtf)) opts <- c(opts, "-G"=shQuote(gtf));
+  if (!is.null(transcriptomeIndexPrefix)) opts <- c(opts, "--transcriptome-index"=shQuote(transcriptomeIndexPrefix));
   if (!is.null(mateInnerDist)) opts <- c(opts, "--mate-inner-dist"=mateInnerDist);
   if (!is.null(mateStdDev)) opts <- c(opts, "--mate-std-dev"=mateStdDev);
 
@@ -262,10 +283,10 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
   opts <- c(opts, shQuote(bowtieRefIndexPrefix));
 
   # (b) Append the R1 FASTQ files
-  opts <- c(opts, shQuote(paste(reads1, collapse=",")));
+  if (length(reads1) > 0L) opts <- c(opts, shQuote(paste(reads1, collapse=",")));
 
   # (c) Paired-end analysis?  Then append the R2 FASTQ files
-  if (isPaired) opts <- c(opts, shQuote(paste(reads2, collapse=",")));
+  if (length(reads2) > 0L) opts <- c(opts, shQuote(paste(reads2, collapse=",")));
 
   # Assert no duplicated options
   names <- names(opts);
@@ -317,6 +338,10 @@ setMethodS3("tophat2", "default", function(..., command="tophat2") {
 
 ############################################################################
 # HISTORY:
+# 2014-07-23 [HB]
+# o Added argument 'transcriptomeIndexSet' to tophat().
+# 2014-07-22 [HB]
+# o BUG FIX: tophat(reads1=NULL, gtf) would generate an error.
 # 2014-03-10 [HB]
 # o ROBUSTNESS: Now tophat() uses shQuote() for all pathnames.
 # 2014-03-07 [HB]
