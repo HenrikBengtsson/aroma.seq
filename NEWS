@@ -1,6 +1,12 @@
 Package: aroma.seq
 ==================
 
+Version: 0.5.12 [2014-07-22]
+o BUG FIX: tophat(reads1=NULL, gtf) would generate an error.
+o ROBUSTNESS: Now buildTopHat2TranscriptomeIndexSet() asserts that the
+  Bowtie2 index set and GTF have compatible sequence names.
+
+
 Version: 0.5.11 [2014-07-18]
 o GENERALIZATION: Now getReadCounts() for BamDataFile falls back to
   use Rsamtools::quickBamFlagSummary() if 'samtools indexstats' is

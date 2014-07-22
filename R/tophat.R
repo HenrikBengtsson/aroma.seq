@@ -125,11 +125,13 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
   }
 
   verbose && enter(verbose, "Running tophat()");
-  verbose && cat(verbose, "R1 FASTQ files:");
-  verbose && print(verbose, sapply(reads1, FUN=getRelativePath));
-  if (isPaired) {
-    verbose && cat(verbose, "R2 FASTQ files:");
-    verbose && print(verbose, sapply(reads2, FUN=getRelativePath));
+  if (length(reads1) > 0L) {
+    verbose && cat(verbose, "R1 FASTQ files:");
+    verbose && print(verbose, sapply(reads1, FUN=getRelativePath));
+    if (isPaired) {
+      verbose && cat(verbose, "R2 FASTQ files:");
+      verbose && print(verbose, sapply(reads2, FUN=getRelativePath));
+    }
   }
   verbose && cat(verbose, "Bowtie2 reference index prefix: ", bowtieRefIndexPrefix);
   verbose && cat(verbose, "Output directory: ", outPath);
@@ -213,18 +215,18 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
 
   # (3a) Link to the FASTQ 'R1'
   #      (such that tophat sees no commas)
-  reads1 <- sapply(reads1, FUN=function(pathname) {
-    link <- file.path(inPath, basename(pathname));
-    assertNoCommas(link);
-    createLink(link=link, target=pathname);
-  })
   if (length(reads1) > 0L) {
+    reads1 <- sapply(reads1, FUN=function(pathname) {
+      link <- file.path(inPath, basename(pathname));
+      assertNoCommas(link);
+      createLink(link=link, target=pathname);
+    })
     onExit({ file.remove(reads1) })
   }
 
   # (3b) Link to the (optional) FASTQ 'R2'
   #      (such that tophat sees no commas)
-  if (isPaired) {
+  if (length(reads2) > 0L) {
     reads2 <- sapply(reads2, FUN=function(pathname) {
       link <- file.path(inPath, basename(pathname));
       assertNoCommas(link);
@@ -262,10 +264,10 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
   opts <- c(opts, shQuote(bowtieRefIndexPrefix));
 
   # (b) Append the R1 FASTQ files
-  opts <- c(opts, shQuote(paste(reads1, collapse=",")));
+  if (length(reads1) > 0L) opts <- c(opts, shQuote(paste(reads1, collapse=",")));
 
   # (c) Paired-end analysis?  Then append the R2 FASTQ files
-  if (isPaired) opts <- c(opts, shQuote(paste(reads2, collapse=",")));
+  if (length(reads2) > 0L) opts <- c(opts, shQuote(paste(reads2, collapse=",")));
 
   # Assert no duplicated options
   names <- names(opts);
@@ -317,6 +319,8 @@ setMethodS3("tophat2", "default", function(..., command="tophat2") {
 
 ############################################################################
 # HISTORY:
+# 2014-07-22 [HB]
+# o BUG FIX: tophat(reads1=NULL, gtf) would generate an error.
 # 2014-03-10 [HB]
 # o ROBUSTNESS: Now tophat() uses shQuote() for all pathnames.
 # 2014-03-07 [HB]
