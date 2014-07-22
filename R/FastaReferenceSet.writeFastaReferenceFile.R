@@ -120,6 +120,10 @@ setMethodS3("writeFastaReferenceFile", "FastaReferenceSet", function(this, filen
   res <- FastaReferenceFile(pathname);
   verbose && print(verbose, res);
 
+  # Make sure to checksum file exists
+  resZ <- getChecksumFile(res)
+  verbose && print(verbose, resZ);
+
   verbose && exit(verbose);
 
   res;
@@ -128,6 +132,8 @@ setMethodS3("writeFastaReferenceFile", "FastaReferenceSet", function(this, filen
 
 ############################################################################
 # HISTORY:
-# 2014-02-20 [HB]
+# 2014-06-19
+# o Now writeFastaReferenceFile() creates checksum file by default.
+# 2014-02-20
 # o Created.
 ############################################################################
