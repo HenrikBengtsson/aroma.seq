@@ -1,6 +1,6 @@
 Package: aroma.seq
 ==================
-
+ 
 Version: 0.5.12 [2014-07-23]
 o SPEEDUP: Now Tophat2Alignment() prebuilds the transcriptome index
   set and reuses it for all samples.  Requires Tophat (>= 2.0.10).
