@@ -224,12 +224,14 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
 
   # (2c) Link to the tophat2 transcriptome index directory
   #      (such that tophat sees no commas)
-  link <- file.path(inPath, "transIndex");
-  transcriptomeIndexPath <- createLink(link=link, target=transcriptomeIndexPath);
-  onExit({ file.remove(transcriptomeIndexPath) });
-  link <- NULL;  # Not needed anymore
-  transcriptomeIndexPrefix <- file.path(transcriptomeIndexPath, basename(transcriptomeIndexPrefix));
-  assertNoCommas(transcriptomeIndexPrefix);
+  if (!is.null(transcriptomeIndexPrefix)) {
+    link <- file.path(inPath, "transIndex");
+    transcriptomeIndexPath <- createLink(link=link, target=transcriptomeIndexPath);
+    onExit({ file.remove(transcriptomeIndexPath) });
+    link <- NULL;  # Not needed anymore
+    transcriptomeIndexPrefix <- file.path(transcriptomeIndexPath, basename(transcriptomeIndexPrefix));
+    assertNoCommas(transcriptomeIndexPrefix);
+  }
 
   # (3a) Link to the FASTQ 'R1'
   #      (such that tophat sees no commas)
