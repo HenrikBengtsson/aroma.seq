@@ -59,6 +59,8 @@
 #      @see "base::gsub" regular expression to extraction the version
 #      where there name is the command-line option specifying how
 #      to call the external for retrieving the version output.}
+#   \item{expectedStatus}{An @integer @vector of expected status codes
+#      returned when querying the executable for the version.}
 #   \item{force}{If @TRUE, cached results are ignored, otherwise not.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 #   \item{...}{Additional arguments passed to @see "findExternal", or ignored.}
@@ -83,7 +85,7 @@
 #
 # @keyword internal
 #*/###########################################################################
-findExternal <- function(mustExist=TRUE, command, version=NULL, versionPattern=NULL, force=FALSE, verbose=FALSE, ...) {
+findExternal <- function(mustExist=TRUE, command, version=NULL, versionPattern=NULL, expectedStatus=c(0L, 1L), force=FALSE, verbose=FALSE, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -110,6 +112,9 @@ findExternal <- function(mustExist=TRUE, command, version=NULL, versionPattern=N
     throw("Argument 'versionPattern' must be specified if 'version' is: ", version);
   }
 
+  # Argument 'expectedStatus':
+  expectedStatus <- Arguments$getIntegers(expectedStatus);
+
   # Argument 'force':
   force <- Arguments$getLogical(force);
 
@@ -131,7 +136,7 @@ findExternal <- function(mustExist=TRUE, command, version=NULL, versionPattern=N
 
   # Check for cached results
   if (!force) {
-    res <- .findCache(name=command, version=version);
+    res <- .findCache(name=command, version=version, versionPattern=versionPattern);
     if (!is.null(res)) {
       pathname <- res$path;
       if (!is.null(pathname)) {
@@ -155,6 +160,18 @@ findExternal <- function(mustExist=TRUE, command, version=NULL, versionPattern=N
       suppressWarnings({
         res <- system2(pathname, args=verOpt, stdout=TRUE, stderr=TRUE);
       });
+
+      # Status code
+      status <- attr(res, "status");
+      verbose && cat(verbose, "Return status: ", status);
+
+      # Validate return status code
+      if (length(status) > 0L && length(expectedStatus) > 0L) {
+        if (!is.element(status, expectedStatus)) {
+          throw(sprintf("Unexpected return status code when calling %s: %d != (%s)",
+                        sQuote(pathname), status, paste(expectedStatus, collapse=", ")));
+        }
+      }
 
       # Parse
       resT <- paste(res, collapse=" ");  # Search across newlines
@@ -207,7 +224,7 @@ findExternal <- function(mustExist=TRUE, command, version=NULL, versionPattern=N
     throw(sprintf("Failed to locate external executable '%s'", command));
   }
 
-  .findCache(name=command, version=version, path=pathname);
+  .findCache(name=command, version=version, versionPattern=versionPattern, path=pathname);
 
   verbose && exit(verbose);
 
@@ -217,6 +234,8 @@ findExternal <- function(mustExist=TRUE, command, version=NULL, versionPattern=N
 
 ############################################################################
 # HISTORY:
+# 2014-07-24
+# o ROBUSTNESS: Added 'versionPattern' to the set of cache keys.
 # 2014-03-09
 # o Now findExternal() drops trailing periods and trims too.
 # 2013-04-02

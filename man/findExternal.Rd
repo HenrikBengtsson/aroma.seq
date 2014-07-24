@@ -28,8 +28,8 @@
 
 \usage{
   # The generic internal function used
-  findExternal(mustExist=TRUE, command, version=NULL, versionPattern=NULL, force=FALSE,
-  verbose=FALSE, ...)
+  findExternal(mustExist=TRUE, command, version=NULL, versionPattern=NULL,
+  expectedStatus=c(0L, 1L), force=FALSE, verbose=FALSE, ...)
 
   # Programming environments
   findJava(...)
@@ -71,6 +71,8 @@
      \code{\link[base]{gsub}}() regular expression to extraction the version
      where there name is the command-line option specifying how
      to call the external for retrieving the version output.}
+  \item{expectedStatus}{An \code{\link[base]{integer}} \code{\link[base]{vector}} of expected status codes
+     returned when querying the executable for the version.}
   \item{force}{If \code{\link[base:logical]{TRUE}}, cached results are ignored, otherwise not.}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
   \item{...}{Additional arguments passed to \code{\link{findExternal}}(), or ignored.}

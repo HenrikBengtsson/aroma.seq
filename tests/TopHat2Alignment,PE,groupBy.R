@@ -3,6 +3,8 @@ setOption("R.filesets/parallel", "none")
 
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 fullTest <- fullTest && isCapableOf(aroma.seq, "bowtie2")
+## Disable test because the GTF and FASTA files are incompatible.
+fullTest <- fullTest && FALSE
 if (fullTest) {
 
 dataset <- "YeastTest"
