@@ -64,6 +64,12 @@ setMethodS3("getOutputDataSet", "AbstractAlignment", function(this, onMissing=c(
   fullnames <- getFullNames(ds);
   bams <- extract(bams, fullnames, onMissing=onMissing);
 
+  ## Sanity check
+  if (length(bams) > length(this)) {
+    throw(sprintf("Identified more output (%d) than input files (%d): %s",
+          length(bams), length(this), sQuote(getPath(bams))));
+  }
+
   bams;
 }) # getOutputDataSet() for AbstractAlignment
 
@@ -175,6 +181,10 @@ setMethodS3("getOutputDataSet", "TotalCnBinnedCounting", function(this, onMissin
 
 ############################################################################
 # HISTORY:
+# 2014-07-24
+# o ROBUSTNESS: Now getOutputDataSet() for AbstractAlignment asserts
+#   that the output data set contains at most the same number of items
+#   as the input data set.
 # 2013-11-15
 # o CLEANUP: The different getOutputDataSet() methods no longer have to
 #   workaround the special case where the output data set is empty. They

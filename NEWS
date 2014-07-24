@@ -1,7 +1,10 @@
 Package: aroma.seq
 ==================
- 
-Version: 0.5.12 [2014-07-23]
+
+Version: 0.5.12 [2014-07-24]
+o ROBUSTNESS: Now getOutputDataSet() for AbstractAlignment asserts
+  that the output data set contains at most the same number of items
+  as the input data set.
 o SPEEDUP: Now Tophat2Alignment() prebuilds the transcriptome index
   set and reuses it for all samples.  Requires Tophat (>= 2.0.10).
 o Added argument 'transcriptomeIndexSet' to tophat().

@@ -35,11 +35,11 @@ setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(thi
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   hasCommas <- function(pathnames, ...) {
     (regexpr(",", pathnames, fixed=TRUE) != -1L);
-  } # hasCommas() 
+  } # hasCommas()
 
   assertNoCommas <- function(pathnames, ...) {
     stopifnot(!any(hasCommas(pathnames)));
-  } # assertNoCommas() 
+  } # assertNoCommas()
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -104,7 +104,7 @@ setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(thi
   verbose && str(verbose, common)
   # Sanity check
   if (length(common) == 0L) {
-    throw(sprintf("The sequence names of the Bowtie2 index set ('%s') and the GTF file ('%s') are incompatible, because they have none in common.", getPath(this), getPathname(gtf)))
+    throw(sprintf("The sequence names of the Bowtie2 index set ('%s') and the GTF file ('%s') are incompatible, because they have no names in common.", getPath(this), getPathname(gtf)))
   }
   verbose && exit(verbose)
 

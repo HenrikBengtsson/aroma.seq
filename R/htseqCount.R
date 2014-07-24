@@ -11,7 +11,7 @@
 #
 # \arguments{
 #   \item{pathnameS}{An input BAM or SAM file containing aligned reads.}
-#   \item{gff}{The gene feature file, in GFF/GTF format}
+#   \item{gff}{The gene feature file, in GFF/GTF format.}
 #   \item{orderedBy}{A @character string specifying how the input file has
 #    been sorted, if at all.}
 #   \item{sortByName}{A @character string specifying when the BAM/SAM file
@@ -29,8 +29,8 @@
 #
 # \section{Backward compatibility}{
 #   \code{htseq-count} (< 0.6.0) requires (i) a SAM file as input
-#   that (ii) is sorted by name.  However, this method will take of that
-#   internally, iff needed.  That is, it will created a temporary SAM
+#   that (ii) is sorted by name.  However, this method will take care of
+#   that internally, iff needed.  That is, it will created a temporary SAM
 #   file that is sorted by query name before passing it to \code{htseq-count}.
 # }
 #
