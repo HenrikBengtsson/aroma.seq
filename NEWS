@@ -2,6 +2,9 @@ Package: aroma.seq
 ==================
 
 Version: 0.5.12 [2014-07-24]
+o GENERALIZATION: Now argument 'organism' can also be a file or a data
+  set in addition to a character string for most methods, e.g.
+  FastqDataSet(name, organism=fa) where 'fa' is a FastaReferenceFile.
 o ROBUSTNESS: Now getOutputDataSet() for AbstractAlignment asserts
   that the output data set contains at most the same number of items
   as the input data set.

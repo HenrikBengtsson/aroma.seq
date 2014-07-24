@@ -147,13 +147,24 @@ setMethodS3("getKnownOrganisms", "AromaSeq", function(static, ...) {
 }, protected=TRUE)
 
 
-setMethodS3("getOrganism", "Arguments", function(static, organism, ...) {
-  # Argument 'organism':
+setMethodS3("getOrganism", "Arguments", function(static, organism, mustBeKnown=FALSE, ...) {
+  # If an (aroma.*) file or a data set it passed, get the organism
+  # string for that object.
+  if (inherits(organism, "GenericDataFile") ||
+      inherits(organism, "GenericDataFileSet")) {
+    organism <- getOrganism(organism);
+  }
+
+  # Assert a single character string
   organism <- Arguments$getCharacter(organism, length=c(1L,1L));
-  knownOrganisms <- getKnownOrganisms(aroma.seq);
-  unknown <- organism[!is.element(organism, knownOrganisms)];
-  if (length(unknown) > 0L) {
-    throw("Unknown organism: ", organism);
+
+  # Assert a known organism?
+  if (mustBeKnown) {
+    knownOrganisms <- getKnownOrganisms(aroma.seq);
+    unknown <- organism[!is.element(organism, knownOrganisms)];
+    if (length(unknown) > 0L) {
+      throw("Unknown organism: ", organism);
+    }
   }
 
   organism;
@@ -168,8 +179,7 @@ setMethodS3("skeleton", "AromaSeq", function(static, dataSet="MyDatSet", organis
   dataSet <- Arguments$getCharacter(dataSet);
 
   # Argument 'organism':
-  knownOrganisms <- getKnownOrganisms(static);
-  organism <- Arguments$getOrganism(organism);
+  organism <- Arguments$getOrganism(organism, ...);
 
   if (dataSet == organism) {
     warning("Did you really mean to name the data set the same as the organism?: ", dataSet);
