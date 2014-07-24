@@ -294,3 +294,4 @@ getRootPath.BamDownsampler
 getSampleSize.BamDownsampler process.BamDownsampler
 writeSample.BamDataFile
 countNucleotides countNucleotides.BamDataFile
+getSeqNames.Bowtie2IndexSet

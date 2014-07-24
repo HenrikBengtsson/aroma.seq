@@ -66,7 +66,7 @@ setMethodS3("getSummary", "Bowtie2IndexSet", function(this, ...) {
 })
 
 
-setMethodS3("getSequenceNames", "Bowtie2IndexSet", function(this, ...) {
+setMethodS3("getSeqNames", "Bowtie2IndexSet", function(this, ...) {
   stopifnot(isComplete(this));
   stopifnot(isCapableOf(aroma.seq, "bowtie2"));
   prefix <- getIndexPrefix(this);
@@ -76,8 +76,17 @@ setMethodS3("getSequenceNames", "Bowtie2IndexSet", function(this, ...) {
 })
 
 
+setMethodS3("getSequenceNames", "Bowtie2IndexSet", function(this, ...) {
+  .Deprecated("getSeqNames")
+  getSeqNames(this, ...)
+}, protected=TRUE, deprecated=TRUE)
+
+
 ############################################################################
 # HISTORY:
+# 2014-07-24
+# o CONSISTENCY: Renamed getSequenceNames() to getSeqNames() for
+#   Bowtie2IndexSet.  Deprecated the old version.
 # 2014-04-10
 # o BUG FIX: getSequenceNames() for Bowtie2IndexSet returned nothing.
 # 2012-09-27

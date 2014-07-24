@@ -526,6 +526,7 @@
 \alias{writeSample.BamDataFile}
 \alias{countNucleotides}
 \alias{countNucleotides.BamDataFile}
+\alias{getSeqNames.Bowtie2IndexSet}
 
 \description{
   This page contains aliases for all "non-documented" objects that

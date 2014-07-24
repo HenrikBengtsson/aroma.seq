@@ -1,5 +1,4 @@
 library("aroma.seq")
-setOption("R.filesets/parallel", "none")
 
 # Setup (writable) local data directory structure
 setupExampleData()
@@ -12,4 +11,5 @@ print(gtf)
 names <- getSeqNames(gtf)
 str(names)
 print(gtf)
+
 

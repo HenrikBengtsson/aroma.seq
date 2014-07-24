@@ -155,10 +155,15 @@ setMethodS3("byOrganism", "GtfDataFile", function(static, organism, ...) {
 
 
 setMethodS3("getSeqNames", "GtfDataFile", function(this, unique=FALSE, onlyIfCached=FALSE, force=FALSE, ...) {
-  seqNames <- this$.seqNames;
+  pathname <- getPathname(this);
+
+  # Check for cached results
+  dirs <- c("aroma.seq", getOrganism(this));
+  key <- list(method="getSeqNames", class=class(this), pathname=pathname);
+  seqNames <- loadCache(key=key, dirs=dirs);
+
   if (force || is.null(seqNames)) {
     if (!onlyIfCached) {
-      pathname <- getPathname(this);
       con <- gzfile(pathname, open="r");
       on.exit(close(con));
       seqNames <- NULL;
@@ -166,9 +171,11 @@ setMethodS3("getSeqNames", "GtfDataFile", function(this, unique=FALSE, onlyIfCac
         bfr <- gsub("\t.*", "", bfr);
         seqNames <- c(seqNames, bfr);
       }
-      this$.seqNames <- seqNames;
     }
   }
+
+  # Cache
+  saveCache(seqNames, key=key, dirs=dirs);
 
   if (unique && length(seqNames) > 1L) {
     seqNames <- unique(seqNames);
@@ -183,6 +190,8 @@ setMethodS3("getSeqNames", "GtfDataFile", function(this, unique=FALSE, onlyIfCac
 
 ############################################################################
 # HISTORY:
+# 2014-07-24
+# o SPEEDUP: Now getSeqNames() for GtfDataFile memoized results.
 # 2014-03-10
 # o Added getSeqNames() for GtfDataFile, which now as.character() reports
 #   on, iff already parsed.

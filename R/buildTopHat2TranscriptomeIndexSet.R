@@ -93,15 +93,18 @@ setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(thi
 
   # Assert compatible sequence names
   verbose && enter(verbose, "Asserting compatible sequence names")
-  seqNames <- getSequenceNames(this)
+  seqNames <- getSeqNames(this)
   verbose && cat(verbose, "Bowtie2 index set sequence names:")
   verbose && str(verbose, seqNames)
+
   seqNamesGTF <- getSeqNames(gtf, unique=TRUE)
   verbose && cat(verbose, "GTF sequence names:")
   verbose && str(verbose, seqNamesGTF)
+
   common <- intersect(seqNames, seqNamesGTF)
   verbose && cat(verbose, "Sequence names in common:")
   verbose && str(verbose, common)
+
   # Sanity check
   if (length(common) == 0L) {
     throw(sprintf("The sequence names of the Bowtie2 index set ('%s') and the GTF file ('%s') are incompatible, because they have no names in common.", getPath(this), getPathname(gtf)))
