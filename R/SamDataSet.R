@@ -53,7 +53,7 @@ setMethodS3("findByName", "SamDataSet", function(static, name, tags=NULL, organi
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'organism':
   if (!is.null(organism)) {
-    organism <- Arguments$getCharacter(organism);
+    organism <- Arguments$getOrganism(organism);
   }
 
   NextMethod("findByPath", subdirs=organism, paths=paths, pattern=pattern);
@@ -67,7 +67,7 @@ setMethodS3("byName", "SamDataSet", function(static, name, tags=NULL, organism=N
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'organism':
   if (!is.null(organism)) {
-    organism <- Arguments$getCharacter(organism);
+    organism <- Arguments$getOrganism(organism);
   }
 
   # Argument 'verbose':

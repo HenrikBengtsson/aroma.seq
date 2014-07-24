@@ -218,7 +218,7 @@ setMethodS3("findByName", "FastqDataSet", function(static, name, tags=NULL, orga
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'organism':
   if (!is.null(organism)) {
-    organism <- Arguments$getCharacter(organism);
+    organism <- Arguments$getOrganism(organism);
   }
 
   NextMethod("findByPath", subdirs=organism, paths=paths, pattern=pattern);
@@ -232,7 +232,7 @@ setMethodS3("byName", "FastqDataSet", function(static, name, tags=NULL, organism
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'organism':
   if (!is.null(organism)) {
-    organism <- Arguments$getCharacter(organism);
+    organism <- Arguments$getOrganism(organism);
   }
 
   # Argument 'verbose':

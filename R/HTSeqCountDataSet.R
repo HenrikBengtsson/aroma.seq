@@ -78,7 +78,7 @@ setMethodS3("findByName", "HTSeqCountDataSet", function(static, name, tags=NULL,
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'organism':
   if (!is.null(organism)) {
-    organism <- Arguments$getCharacter(organism);
+    organism <- Arguments$getOrganism(organism);
   }
 
   NextMethod("findByPath", subdirs=organism, paths=paths, pattern=pattern);
@@ -92,7 +92,7 @@ setMethodS3("byName", "HTSeqCountDataSet", function(static, name, tags=NULL, org
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'organism':
   if (!is.null(organism)) {
-    organism <- Arguments$getCharacter(organism);
+    organism <- Arguments$getOrganism(organism);
   }
 
   # Argument 'verbose':
