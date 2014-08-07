@@ -1,6 +1,11 @@
 Package: aroma.seq
 ==================
 
+Version: 0.5.14 [2014-08-07]
+o Now it is possible to specify the "home" directory of each external
+  software used via system environment variables, e.g. 'BOWTIE2_HOME'.
+
+
 Version: 0.5.13 [2014-08-07]
 o BUG FIX: Now FastQCReporter also works with FastQC (>= 0.11.1).
 

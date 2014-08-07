@@ -9,6 +9,7 @@
 \name{findExternal}
 \alias{findExternal}
 
+\alias{getExternalHome}
 \alias{findJava}
 \alias{findPerl}
 \alias{findPython}
@@ -28,7 +29,7 @@
 
 \usage{
   # The generic internal function used
-  findExternal(mustExist=TRUE, command, version=NULL, versionPattern=NULL,
+  findExternal(mustExist=TRUE, command, path=NULL, version=NULL, versionPattern=NULL,
   expectedStatus=c(0L, 1L), force=FALSE, verbose=FALSE, ...)
 
   # Programming environments
@@ -48,7 +49,7 @@
   # Bowtie and TopHat
   findBowtie2(..., command=c("bowtie2", "bowtie2-align", "bowtie2-build",
   "bowtie2-inspect"))
-  findTopHat(..., command="tophat")
+  findTopHat(..., command="tophat", path=NULL)
   findTopHat1(..., command="tophat", version=c(1, 2))
   findTopHat2(..., command="tophat2", version=c(2, 3))
 

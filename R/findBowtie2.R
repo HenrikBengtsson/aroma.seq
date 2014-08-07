@@ -5,8 +5,11 @@ findBowtie2 <- function(..., command=c("bowtie2", "bowtie2-align", "bowtie2-buil
   # Argument 'command':
   command <- match.arg(command);
 
+  # Aroma-specific variable
+  path <- getExternalHome("BOWTIE2_HOME");
+
   versionPattern <- c("-version"=".*version ([0-9.]+).*");
-  findExternal(command=command, versionPattern=versionPattern, ...);
+  findExternal(command=command, path=path, versionPattern=versionPattern, ...);
 } # findBowtie2()
 
 
