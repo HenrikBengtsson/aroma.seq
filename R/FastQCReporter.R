@@ -220,33 +220,52 @@ setMethodS3("process", "FastQCReporter", function(this, ..., skip=TRUE, force=FA
     # Sanity check
     stopifnot(isDirectory(pathDT));
 
+
     # FIXME: Do we need to pool here?  Does fastQC() return before output
     # directory is created/available on the file system? /HB 2014-07-18.
-    # Identify the output subdirectory that 'fastqc' created
-    dirT <- list.files(path=pathDT, pattern="_fastqc$", full.names=FALSE);
-    if (length(dirT) == 0L) {
-      throw(sprintf("None of the subdirectories of %s match *_fastqc/: %s", sQuote(pathDT), paste(sQuote(dirT), collapse=", ")));
+
+    # Scan for output files or output directories (depending on version)
+
+    # (a) FastQC (>= 0.11.1; 2014-06-02)
+    #     output is now a self-contained HTML file
+    filesT <- list.files(path=pathDT, pattern="_fastqc.html$",
+                         ignore.case=TRUE, full.names=FALSE);
+
+    # (b) FastQC (<= 0.10.1; 2012-05-03)
+    #     output is a multi-file directory
+    dirT <- list.files(path=pathDT, pattern="_fastqc$",
+                       ignore.case=TRUE, full.names=FALSE);
+
+    if (length(filesT) > 0L) {
+      # FastQC (>= 0.11.1)
+      # Nothing more to do...
+    } else if (length(dirT) > 0L) {
+      # FastQC (<= 0.10.1)
+      pathT <- file.path(pathDT, dirT);
+      stopifnot(isDirectory(pathT));
+
+      # Sanity check
+      pathnameDT <- file.path(pathT, filenameD);
+      Arguments$getReadablePathname(pathnameDT);
+
+      # CLEANUP: Remove zip file
+      filenameDTZ <- sprintf("%s.zip", dirT);
+      pathnameDTZ <- file.path(pathDT, filenameDTZ);
+      if (isFile(pathnameDTZ)) {
+        file.remove(pathnameDTZ);
+      }
+
+      # Move output subdirectory
+      file.rename(pathT, pathD);
+
+      # Sanity check
+      stopifnot(!isDirectory(pathT));
+    } else {
+      throw(sprintf("Directories %s contains neither *_fastqc/ directories nor *_fastqc.html files: %s", sQuote(pathDT), paste(sQuote(list.files(path=pathDT, full.names=FALSE)), collapse=", ")));
     }
-    pathT <- file.path(pathDT, dirT);
-    stopifnot(isDirectory(pathT));
-
-    # Sanity check
-    pathnameDT <- file.path(pathT, filenameD);
-    Arguments$getReadablePathname(pathnameDT);
-
-    # CLEANUP: Remove zip file
-    filenameDTZ <- sprintf("%s.zip", dirT);
-    pathnameDTZ <- file.path(pathDT, filenameDTZ);
-    if (isFile(pathnameDTZ)) {
-      file.remove(pathnameDTZ);
-    }
-
-    # Move output subdirectory
-    file.rename(pathT, pathD);
 
     # Sanity check
     stopifnot(isDirectory(pathD));
-    stopifnot(!isDirectory(pathT));
 
     # CLEANUP
     removeDirectory(pathDT);
@@ -256,7 +275,6 @@ setMethodS3("process", "FastQCReporter", function(this, ..., skip=TRUE, force=FA
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # END: ATOMIC PROCESSING
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 
     verbose && cat(verbose, "Generated FASTQ report: ", pathD);
     # Sanity checks
@@ -304,6 +322,8 @@ setMethodS3("validateGroups", "FastQCReporter", function(this, groups, ...) {
 
 ############################################################################
 # HISTORY:
+# 2014-08-07
+# o BUG FIX: Now FastQCReporter also works with FastQC (>= 0.11.1).
 # 2014-07-18
 # o The error message when FastQC fail to generate a '*_fastqc'
 #   subdirectory is now more informative.

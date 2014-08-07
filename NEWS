@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.5.13 [2014-08-07]
+o BUG FIX: Now FastQCReporter also works with FastQC (>= 0.11.1).
+
+
 Version: 0.5.12 [2014-07-24]
 o GENERALIZATION: Now argument 'organism' can also be a file or a data
   set in addition to a character string for most methods, e.g.
