@@ -12,6 +12,7 @@
 \alias{getOutputDataSet.AromaSeqTransform}
 \alias{getOutputDataSet.AbstractAlignment}
 \alias{getOutputDataSet.BamDownsampler}
+\alias{getOutputDataSet.Bowtie2Alignment}
 \alias{getOutputDataSet.FastqDownsampler}
 \alias{getOutputDataSet.PicardDuplicateRemoval}
 \alias{getOutputDataSet.TopHat2Alignment}
@@ -26,6 +27,7 @@
 \usage{
  \method{getOutputDataSet}{AromaSeqTransform}(...)
  \method{getOutputDataSet}{AbstractAlignment}(this, onMissing=c("drop", "NA", "error"), ...)
+ \method{getOutputDataSet}{Bowtie2Alignment}(this, onMissing=c("drop", "NA", "error"), ...)
  \method{getOutputDataSet}{FastqDownsampler}(this, ...)
  \method{getOutputDataSet}{PicardDuplicateRemoval}(this, onMissing=c("drop", "NA", "error"), ...)
  \method{getOutputDataSet}{TopHat2Alignment}(this, onMissing=c("drop", "NA", "error"), ...)

@@ -527,6 +527,8 @@
 \alias{countNucleotides}
 \alias{countNucleotides.BamDataFile}
 \alias{getSeqNames.Bowtie2IndexSet}
+\alias{getSampleNames.Bowtie2Alignment}
+\alias{validateGroups.Bowtie2Alignment}
 
 \description{
   This page contains aliases for all "non-documented" objects that

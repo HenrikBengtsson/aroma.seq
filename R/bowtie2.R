@@ -166,10 +166,10 @@ bowtie2 <- function(reads1, reads2=NULL, indexPrefix, pathnameSAM, ..., gzAllowe
   verbose && cat(verbose, "Index path: ", indexPath);
   args <- list("-x"=shQuote(indexPrefix))
   if (isPaired) {
-    args[["-1"]] <- shQuote(reads1);
-    args[["-2"]] <- shQuote(reads2);
+    args[["-1"]] <- shQuote(paste(reads1, collapse=","));
+    args[["-2"]] <- shQuote(paste(reads2, collapse=","));
   } else {
-    args[["-U"]] <- shQuote(reads1);
+    args[["-U"]] <- shQuote(paste(reads1, collapse=","));
   }
   args[["-S"]] <- shQuote(pathnameSAM);
   args <- c(args, list(...));

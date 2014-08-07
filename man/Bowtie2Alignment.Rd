@@ -25,13 +25,15 @@
 \code{~~~~~~~~~~~~|}\cr
 \code{~~~~~~~~~~~~+--}\code{\link[aroma.seq]{AbstractAlignment}}\cr
 \code{~~~~~~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~~~~~~+--}\code{Bowtie2Alignment}\cr
+\code{~~~~~~~~~~~~~~~~~+--}\code{\link[aroma.seq]{FileGroupsInterface}}\cr
+\code{~~~~~~~~~~~~~~~~~~~~~~|}\cr
+\code{~~~~~~~~~~~~~~~~~~~~~~+--}\code{Bowtie2Alignment}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
 
 public static class \bold{Bowtie2Alignment}\cr
-extends \emph{\link[aroma.seq]{AbstractAlignment}}\cr
+extends \link[aroma.seq]{FileGroupsInterface}\cr
 
 
 
@@ -39,20 +41,26 @@ extends \emph{\link[aroma.seq]{AbstractAlignment}}\cr
 }
 
 \usage{
-Bowtie2Alignment(..., indexSet=NULL)
+Bowtie2Alignment(..., groupBy=NULL, indexSet=NULL)
 }
 
 \arguments{
  \item{...}{Arguments passed to \code{\link{AbstractAlignment}}.}
+ \item{groupBy}{A \code{\link[base]{character}} string or an explicit named \code{\link[base]{list}},
+  specifying which input files should be processed together.}
  \item{indexSet}{An \code{\link{Bowtie2IndexSet}}.}
 }
 
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
+ \tab \code{getOutputDataSet} \tab  -\cr
  \tab \code{\link[aroma.seq:process.Bowtie2Alignment]{process}} \tab Runs the aligner.\cr
 }
 
+
+ \bold{Methods inherited from FileGroupsInterface}:\cr
+getGroupBy, getGroupNames, getGroups, getInputDataSet, nbrOfGroups, validateGroups
 
  \bold{Methods inherited from AbstractAlignment}:\cr
 as.character, getAcronym, getAsteriskTags, getIndexSet, getOrganism, getOutputDataSet, getRootPath, isPaired

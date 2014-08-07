@@ -13,6 +13,8 @@
 #
 # \arguments{
 #  \item{...}{Arguments passed to @see "AbstractAlignment".}
+#  \item{groupBy}{A @character string or an explicit named @list,
+#   specifying which input files should be processed together.}
 #  \item{indexSet}{An @see "Bowtie2IndexSet".}
 # }
 #
@@ -31,8 +33,21 @@
 #      \url{http://bowtie-bio.sourceforge.net/bowtie2/}
 # }
 #*/###########################################################################
-setConstructorS3("Bowtie2Alignment", function(..., indexSet=NULL) {
+setConstructorS3("Bowtie2Alignment", function(..., groupBy=NULL, indexSet=NULL) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'groupBy':
+  if (is.null(groupBy)) {
+  } else if (is.character(groupBy)) {
+    groupBy <- match.arg(groupBy, choices=c("name"));
+  } else if (is.list(groupBy)) {
+    # Validated below
+  } else {
+    throw("Invalid argument 'groupBy': ", mode(groupBy));
+  }
+
+  # Argument 'indexSet':
   if (!is.null(indexSet)) {
     indexSet <- Arguments$getInstanceOf(indexSet, "Bowtie2IndexSet");
   }
@@ -40,8 +55,20 @@ setConstructorS3("Bowtie2Alignment", function(..., indexSet=NULL) {
   # Arguments '...':
   args <- list(...);
 
-  extend(AbstractAlignment(..., indexSet=indexSet), "Bowtie2Alignment");
+  this <- extend(AbstractAlignment(..., indexSet=indexSet, groupBy=groupBy), c("Bowtie2Alignment", uses("FileGroupsInterface")));
+
+  # Argument 'groupBy':
+  if (is.list(groupBy)) {
+    validateGroups(this, groups=groupBy);
+  }
+
+  this;
 })
+
+
+setMethodS3("getSampleNames", "Bowtie2Alignment", function(this, ...) {
+  getGroupNames(this, ...);
+}, protected=TRUE)
 
 
 ###########################################################################/**
@@ -116,28 +143,64 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 
 
   verbose && enter(verbose, "Bowtie2 alignment");
-
   ds <- getInputDataSet(this);
   verbose && cat(verbose, "Input data set:");
   verbose && print(verbose, ds);
 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Get groups of items to be processed at the same time
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  verbose && enter(verbose, "Grouping input data set");
+  groups <- getGroups(this);
+  verbose && printf(verbose, "Merging into %d groups: %s\n", length(groups), hpaste(names(groups)));
+  verbose && str(verbose, head(groups));
+  verbose && cat(verbose, "Number of items per groups:");
+  ns <- sapply(groups, FUN=length);
+  t <- table(ns);
+  names(t) <- sprintf("n=%s", names(t));
+  verbose && print(verbose, t);
+  verbose && exit(verbose);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Identify groups to be processed
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (force) {
-    todo <- seq_along(ds);
+    todo <- seq_along(groups);
   } else {
-    todo <- findFilesTodo(this, verbose=less(verbose, 1));
-    # Already done?
-    if (length(todo) == 0L) {
-      verbose && cat(verbose, "Already done. Skipping.");
-      res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1));
-      verbose && exit(verbose);
-      return(invisible(res));
-    }
+    bams <- getOutputDataSet(this, onMissing="NA", verbose=less(verbose, 1));
+    todo <- which(!sapply(bams, FUN=isFile));
+  }
+  verbose && cat(verbose, "Number of groups to process: ", length(todo));
+
+  # Already done?
+  if (!force && length(todo) == 0L) {
+    verbose && cat(verbose, "Already processed.");
+    verbose && print(verbose, bams);
+    verbose && exit(verbose);
+    return(bams);
   }
 
+  isPaired <- isPaired(ds);
+  verbose && cat(verbose, "Paired-end analysis: ", isPaired);
+
+  outPath <- getPath(this);
+  verbose && cat(verbose, "Output directory: ", outPath);
+
+  # Additional alignment parameters
+  params <- getParameters(this);
+  verbose && cat(verbose, "Parameters:");
+  verbose && str(verbose, params);
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Retrieving/building Bowtie2 index set
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  verbose && enter(verbose, "Retrieving/building Bowtie2 index set");
   is <- getIndexSet(this);
   verbose && cat(verbose, "Aligning using index set:");
   verbose && print(verbose, is);
   indexPrefix <- getIndexPrefix(is);
+  verbose && exit(verbose);
 
   rgSet <- this$.rgSet;
   if (!is.null(rgSet)) {
@@ -146,29 +209,35 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
     validate(rgSet);
   }
 
-  # Indicates whether gzipped FASTQ files are supported or not.
-  params <- getParameters(this);
-  verbose && cat(verbose, "Additional bowtie2 arguments:");
-  verbose && str(verbose, params);
 
-  verbose && cat(verbose, "Number of files: ", length(ds));
-
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # User arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  args <- params;
+  # Drop already used parameters
+  args$groupBy <- NULL;
+  verbose && cat(verbose, "User arguments:");
+  verbose && str(verbose, args);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Apply aligner to each of the FASTQ files
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  dsApply(ds[todo], FUN=function(df, paired=FALSE, indexPrefix, rgSet, params, path, ...., skip=TRUE, verbose=FALSE) {
-    R.utils::use("R.utils, aroma.seq");
+  verbose && cat(verbose, "Number of files: ", length(ds));
+  verbose && cat(verbose, "Number of groups: ", length(groups));
+  dsApply(ds, IDXS=groups[todo], DROP=FALSE, FUN=function(dfListR1, isPaired=FALSE, indexPrefix, rgSet, outPath, ...., skip=TRUE, verbose=FALSE) {
+    R.utils::use("R.utils, aroma.seq, Rsamtools");
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Validate arguments
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Argument 'df':
-    df <- Arguments$getInstanceOf(df, "FastqDataFile");
+    # Argument 'dfListR1':
+    dfListR1 <- Arguments$getInstanceOf(dfListR1, "list");
+    dfListR1 <- Arguments$getVector(dfListR1, length=c(1,Inf));
+    lapply(dfListR1, FUN=Arguments$getInstanceOf, "FastqDataFile");
 
-    # Argument 'paired':
-    paired <- Arguments$getLogical(paired);
+    # Argument 'isPaired':
+    isPaired <- Arguments$getLogical(isPaired);
 
     # Argument 'indexPrefix':
     indexPrefix <- Arguments$getCharacter(indexPrefix);
@@ -176,8 +245,8 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
     # Argument 'skip':
     skip <- Arguments$getLogical(skip);
 
-    # Argument 'path':
-    path <- Arguments$getWritablePath(path);
+    # Argument 'outPath':
+    outPath <- Arguments$getWritablePath(outPath);
 
     # Argument 'verbose':
     verbose <- Arguments$getVerbose(verbose);
@@ -188,39 +257,49 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 
     verbose && enter(verbose, "Bowtie2 alignment of one sample");
 
-    # Paired-end?
-    if (paired) {
-      reads1 <- getPathname(df);
-      verbose && cat(verbose, "FASTQ R1 pathname: ", reads1);
-      reads2 <- getPathname(getMateFile(df));
-      verbose && cat(verbose, "FASTQ R2 pathname: ", reads2);
-    } else {
-      reads1 <- getPathname(df);
-      reads2 <- NULL;
-      verbose && cat(verbose, "FASTQ pathname: ", reads1);
-    }
+    # Get the group name
+    sampleName <- attr(dfListR1, "name", exact=TRUE);
+    verbose && enter(verbose, "Sample name ", sQuote(sampleName));
+    stopifnot(length(sampleName) == 1L);
 
     # The SAM and BAM files to be generated
-    fullname <- getFullName(df);
+    fullname <- sampleName;
     filename <- sprintf("%s.sam", fullname);
-    pathnameSAM <- Arguments$getWritablePathname(filename, path=path);
+    pathnameSAM <- Arguments$getWritablePathname(filename, path=outPath);
     verbose && cat(verbose, "SAM pathname: ", pathnameSAM);
     filename <- sprintf("%s.bam", fullname);
-    pathnameBAM <- Arguments$getWritablePathname(filename, path=path);
+    pathnameBAM <- Arguments$getWritablePathname(filename, path=outPath);
     verbose && cat(verbose, "BAM pathname: ", pathnameBAM);
 
     done <- (skip && isFile(pathnameBAM));
     if (done) {
       verbose && cat(verbose, "Already aligned. Skipping");
     } else {
-      verbose && print(verbose, df);
-
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # (a) Generate SAM file
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       if (!isFile(pathnameSAM)) {
+        reads1 <- sapply(dfListR1, FUN=getPathname);
+        verbose && printf(verbose, "R1 FASTQ files: [%d] %s\n", length(reads1), hpaste(sQuote(reads1)));
+    
+        # Final sample-specific output directory
+        args <- list(
+          indexPrefix=indexPrefix,
+          reads1=reads1,
+          reads2=NULL,
+          ...,
+          pathnameSAM=pathnameSAM
+        );
+    
+        if (isPaired) {
+          dfListR2 <- lapply(dfListR1, FUN=getMateFile);
+          reads2 <- sapply(dfListR2, FUN=getPathname);
+          verbose && printf(verbose, "R2 FASTQ files: [%d] %s\n", length(reads2), hpaste(sQuote(reads2)));
+          args$reads2 <- reads2;
+        }
+
         # Extract sample-specific read group
-        rgII <- getSamReadGroup(df);
+        rgII <- getSamReadGroup(dfListR1[[1L]]);
         if (length(rgSet) > 0L) {
           rgII <- merge(rgSet, rgII);
         }
@@ -231,15 +310,7 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
         verbose && print(verbose, rgArgs);
         rgII <- NULL; # Not needed anymore
 
-        args <- list(
-          reads1=reads1,
-          reads2=reads2,
-          indexPrefix=indexPrefix,
-          pathnameSAM=pathnameSAM
-        );
-        if (!paired) args$reads2 <- NULL;
         args <- c(args, rgArgs);
-        args <- c(args, params);
         verbose && cat(verbose, "Arguments:");
         verbose && str(verbose, args);
         args$verbose <- less(verbose, 5);
@@ -265,22 +336,51 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 
     verbose && exit(verbose);
 
-    res <- list(reads1=reads1, reads2=reads2, pathnameSAM=pathnameSAM, pathnameBAM=pathnameBAM);
-    if (!paired) res$reads2 <- NULL;
+    res <- list(dfListR1=dfListR1, pathnameSAM=pathnameSAM, pathnameBAM=pathnameBAM);
     invisible(res);
-  }, paired=isPaired(this), indexPrefix=indexPrefix, rgSet=rgSet, params=params, path=getPath(this), skip=skip, verbose=verbose) # dsApply()
+  }, isPaired=isPaired(this), indexPrefix=indexPrefix, rgSet=rgSet, outPath=getPath(this), args=args, skip=skip, verbose=verbose) # dsApply()
 
-  res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1));
+  bams <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1));
+  verbose && print(verbose, bams);
+
+  # Sanity check
+  stopifnot(all(sapply(bams, FUN=isFile)));
 
   verbose && exit(verbose);
 
-  invisible(res);
+  bams;
 })
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# TO DROP
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+setMethodS3("validateGroups", "Bowtie2Alignment", function(this, groups, ...) {
+  # Input data set
+  ds <- getInputDataSet(this);
+  nbrOfFiles <- length(ds);
+
+  # Sanity checks
+  idxs <- unlist(groups, use.names=FALSE);
+  idxs <- Arguments$getIndices(idxs, max=nbrOfFiles);
+  if (length(idxs) < nbrOfFiles) {
+    throw("One or more input FASTQ files is not part of any group.");
+  } else if (length(idxs) > nbrOfFiles) {
+    throw("One or more input FASTQ files is part of more than one group.");
+  }
+
+  if (is.null(names(groups))) {
+    throw("The list of groups does not have names.");
+  }
+
+  invisible(groups);
+}, protected=TRUE)
 
 
 ############################################################################
 # HISTORY:
 # 2014-08-07
+# o Added support for argument 'groupBy' to Bowtie2Alignment.
 # o BUG FIX: Now Bowtie2Alignment escapes spaces in SAM Read Group
 #   values before passing to Bowtie2.
 # 2013-11-16

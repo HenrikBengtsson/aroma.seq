@@ -3,6 +3,7 @@
 # @alias getOutputDataSet.AromaSeqTransform
 # @alias getOutputDataSet.AbstractAlignment
 # @alias getOutputDataSet.BamDownsampler
+# @alias getOutputDataSet.Bowtie2Alignment
 # @alias getOutputDataSet.FastqDownsampler
 # @alias getOutputDataSet.PicardDuplicateRemoval
 # @alias getOutputDataSet.TopHat2Alignment
@@ -17,6 +18,7 @@
 # \usage{
 #  @usage getOutputDataSet,AromaSeqTransform
 #  @usage getOutputDataSet,AbstractAlignment
+#  @usage getOutputDataSet,Bowtie2Alignment
 #  @usage getOutputDataSet,FastqDownsampler
 #  @usage getOutputDataSet,PicardDuplicateRemoval
 #  @usage getOutputDataSet,TopHat2Alignment
@@ -131,12 +133,31 @@ setMethodS3("getOutputDataSet", "TopHat2Alignment", function(this, onMissing=c("
   bfList <- lapply(pathnames, FUN=BamDataFile, mustExist=FALSE);
   bams <- BamDataSet(bfList);
   bams <- setFullNamesTranslator(bams, function(names, file, ...) basename(getPath(file)));
+
   groups  <- getGroups(this);
   fullnames <- names(groups);
   bams <- extract(bams, fullnames, onMissing=onMissing);
 
   bams;
 }) # getOutputDataSet() for TopHat2Alignment
+
+
+setMethodS3("getOutputDataSet", "Bowtie2Alignment", function(this, onMissing=c("drop", "NA", "error"), ...) {
+  # Argument 'onMissing':
+  onMissing <- match.arg(onMissing);
+
+  path <- getPath(this);
+  filenames <- sprintf("%s.bam", getSampleNames(this))
+  pathnames <- file.path(path, filenames);
+  bfList <- lapply(pathnames, FUN=BamDataFile, mustExist=FALSE);
+  bams <- BamDataSet(bfList);
+
+  groups  <- getGroups(this);
+  fullnames <- names(groups);
+  bams <- extract(bams, fullnames, onMissing=onMissing);
+
+  bams;
+}) # getOutputDataSet() for Bowtie2Alignment
 
 
 setMethodS3("getOutputDataSet", "HTSeqCounting", function(this, onMissing=c("drop", "NA", "error"), ...) {

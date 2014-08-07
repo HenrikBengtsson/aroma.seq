@@ -2,6 +2,8 @@ Package: aroma.seq
 ==================
 
 Version: 0.5.14 [2014-08-07]
+o Added argument 'groupBy' to Bowtie2Alignment, which can be used to
+  specify which FASTQ files should be processed together.
 o Now bowtie2() supports multiple FASTQ files/file pairs.
 o Now it is possible to specify the "home" directory of each external
   software used via system environment variables, e.g. 'BOWTIE2_HOME'.
