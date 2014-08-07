@@ -1,6 +1,5 @@
 ###########################################################################/**
-# @RdocDefault bowtie2
-# @alias bowtie2_hb
+# @RdocFunction bowtie2
 #
 # @title "Calls the Bowtie2 executable to align input reads"
 #
@@ -11,108 +10,221 @@
 # @synopsis
 #
 # \arguments{
-#   \item{bowtieRefIndexPrefix}{bowtie2 reference index (partial pathname, minus the .1.bt2 suffix)}
-#   \item{reads1}{Vector of fastq files to align, paired with reads2}
-#   \item{reads2}{Vector of fastq files to align, paired with reads1}
-#   \item{readsU}{Vector of fastq files to align (at least one of reads1 or readsU must be non-null}
-#   \item{samFile}{Output file name}
-#   \item{optionsVec}{Vector of named options (do not include names x, 1, 2, U, or S)}
+#   \item{reads1}{(required) A @vector of FASTQ pathnames of reads.}
+#   \item{reads2}{(optional; paired-end only) A @vector of FASTQ pathnames of mate reads.}
+#   \item{indexPrefix}{Bowtie2 reference index prefix.}
+#   \item{pathnameSAM}{Output SAM file.}
 #   \item{...}{...}
-#   \item{commandName}{Name of executable}
+#   \item{gzAllowed}{A @logical specifying whether gzipped FASTQ files are supported or not.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
+# \value{
+#   Returns ...
+# }
 #
-# @author "TT, HB"
+# @author "HB"
 #
 # @keyword internal
 #*/###########################################################################
+bowtie2 <- function(reads1, reads2=NULL, indexPrefix, pathnameSAM, ..., gzAllowed=NA, verbose=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Local functions
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  hasCommas <- function(pathnames, ...) {
+    (regexpr(",", pathnames, fixed=TRUE) != -1L);
+  } # hasCommas()
 
-## TODO:  This function has not been tested; the logic may not be complete; etc.
+  assertNoCommas <- function(pathnames, ...) {
+    stopifnot(!any(hasCommas(pathnames)));
+  } # assertNoCommas()
 
-setMethodS3("bowtie2", "default", function(bowtieRefIndexPrefix=NULL, ##  ## Index filename prefix (i.e. minus trailing .X.bt2)
-                                           reads1=NULL,  ## vector of pathnames, #1 mates
-                                           reads2=NULL,  ## vector of pathnames, #2 mates
-                                           readsU=NULL,  ## vector of pathnames, unpaired reads
-                                           samFile=NULL,  ## SAM file for output
-                                           optionsVec,
-                                           ...,
-                                           commandName='bowtie2',
-                                           verbose=FALSE) {
+		       
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Argument 'bowtieRefIndexPrefix'
-  # - check for bowtie2 reference index  ## TODO: ADD SUPPORT FOR BOWTIE1 INDICES
-  if (!is.null(bowtieRefIndexPrefix)) {
-    bowtieRefIndex1 <- paste(bowtieRefIndexPrefix, ".1.bt2", sep="")  ## (<<< assumes bowtie2)
-    bowtieRefIndex1 <- Arguments$getReadablePathname(bowtieRefIndex1);
-  } else {
-    throw("Argument bowtieRefIndexPrefix is empty; supply (prefix of) bowtie reference index")
+  # Argument 'reads1'
+  reads1 <- Arguments$getReadablePathnames(reads1, absolute=TRUE);
+  assertNoDuplicated(reads1);
+
+  # Argument 'reads2'
+  isPaired <- (length(reads2) > 0L);
+  if (isPaired) {
+    stopifnot(length(reads2) == length(reads1));
+    reads2 <- Arguments$getReadablePathnames(reads2, absolute=TRUE);
+    assertNoDuplicated(reads2);
+  } 
+
+  # Argument 'indexPrefix':
+  indexPrefix <- Arguments$getCharacter(indexPrefix);
+
+  # Argument 'pathnameSAM':
+  pathnameSAM <- Arguments$getWritablePathname(pathnameSAM);
+  assertNoDuplicated(pathnameSAM);
+
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+     pushState(verbose);
+     on.exit(popState(verbose), add=TRUE);
   }
 
-  # Argument 'reads1', 'reads2', 'readsU'
-  if ((is.null(reads1) && is.null(reads2)) &&
-      is.null(readsU)) {
-    throw("Arguments ('reads1' and 'reads2') and 'readsU' cannot all be empty; specify paired and/or unpaired reads")
+
+  verbose && enter(verbose, "Running bowtie2()");
+
+  verbose && cat(verbose, "R1 FASTQ files:");
+  verbose && print(verbose, sapply(reads1, FUN=getRelativePath));
+  if (isPaired) {
+     verbose && cat(verbose, "R2 FASTQ files:");
+     verbose && print(verbose, sapply(reads2, FUN=getRelativePath));
+  } 
+  verbose && cat(verbose, "Paired alignment: ", isPaired);
+  verbose && cat(verbose, "Reference index prefix: ", indexPrefix);
+  outPath <- dirname(pathnameSAM);
+  verbose && cat(verbose, "Output directory: ", outPath);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Handle gzip'ed FASTQ files
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  pathnameFQ <- c(reads1, reads2);
+  assertNoDuplicated(pathnameFQ);
+  isGzipped <- any(sapply(pathnameFQ, FUN=isGzipped));
+  if (isGzipped) {
+    verbose && enter(verbose, "Detected gzipped FASTQ files");
+
+    if (is.na(gzAllowed)) {
+      gzAllowed <- queryBowtie2("support:fastq.gz");
+    }
+
+    if (!gzAllowed) {
+      verbose && enter(verbose, "Temporarily decompressing gzipped FASTQ files");
+
+      decompress <- getOption(aromaSettings, "devel/fastq.gz/decompress", TRUE);
+      if (!decompress) {
+        why <- attr(gzAllowed, "why");
+        throw(sprintf("Cannot align reads in '%s': %s", getPathname(df), why));
+      }
+
+      # If not, temporarily decompress (=remove when done)
+      pathnameFQ <- sapply(pathnameFQ, FUN=gunzip, temporary=TRUE, remove=FALSE);
+      pathnameFQtmpA <- pathnameFQ;
+      on.exit({
+        # Make sure to remove temporary file
+        lapply(pathnameFQtmpA, FUN=function(pathname) {
+          if (isFile(pathname)) file.remove(pathname);
+        });
+      }, add=TRUE);
+
+      # Sanity check
+      isGzipped <- any(sapply(pathnameFQ, FUN=isGzipped));
+      stopifnot(!isGzipped);
+
+      verbose && exit(verbose);
+    }
+
+    verbose && exit(verbose);
+  } # if (isGzipped)
+
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # WORKAROUND: Bowtie2() does not support commas in the FASTQ
+  # pathname.  If so, use a temporary filename without commas.
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  hasComma <- (regexpr(",", pathnameFQ, fixed=TRUE) != -1L);
+  if (any(hasComma)) {
+    pathnameFQ[hasComma] <- sapply(pathnameFQ[hasComma], FUN=function(pathname) {
+      ext <- if (isGzipped(pathname)) ".fq.gz" else ".fq";
+      pathnameT <- tempfile(fileext=ext);
+      createLink(pathnameT, target=pathname);
+      pathnameT;
+    });
+
+    # Remove temporary files
+    on.exit({
+      file.remove(pathnameFQ[hasComma]);
+    }, add=TRUE);
   }
-  # Argument 'reads1' and 'reads2'
-  if (!is.null(reads1)) {
-    reads1 <- Arguments$getReadablePathnames(reads1);
-    assertNoDuplicated(reads1);
-    if (!is.null(reads2)) {
-      reads2 <- Arguments$getReadablePathnames(reads2);
-      assertNoDuplicated(reads2);
-    } else {
-      throw("Argument 'reads2' is empty; supply reads2 when using reads1 (or just supply readsU)")
+
+  # Split up in reads1 and reads2 again
+  n <- length(reads1);
+  reads1 <- pathnameFQ[seq_len(n)];
+  if (isPaired) {
+    reads2 <- pathnameFQ[-seq_len(n)];
+    # Sanity check
+    stopifnot(length(reads1) == length(reads2));
+  }
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Call Bowtie2 executable
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  verbose && exit(verbose, "Calling systemBowtie2()");
+
+  indexPath <- Arguments$getReadablePath(getParent(indexPrefix));
+  verbose && cat(verbose, "Index path: ", indexPath);
+  args <- list("-x"=shQuote(indexPrefix))
+  if (isPaired) {
+    args[["-1"]] <- shQuote(reads1);
+    args[["-2"]] <- shQuote(reads2);
+  } else {
+    args[["-U"]] <- shQuote(reads1);
+  }
+  args[["-S"]] <- shQuote(pathnameSAM);
+  args <- c(args, list(...));
+  verbose && cat(verbose, "Arguments:");
+  verbose && print(verbose, args); 
+  res <- systemBowtie2(args=args, verbose=verbose);
+  status <- attr(res, "status"); if (is.null(status)) status <- 0L;
+  verbose && cat(verbose, "Results:");
+  verbose && str(verbose, res);
+  verbose && cat(verbose, "Status:");
+  verbose && str(verbose, status); 
+
+  verbose && exit(verbose);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # In case bowtie2 generates empty SAM files
+  # /HB 2012-10-01 (still to be observed)
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (isFile(pathnameSAM)) {
+    if (file.info(pathnameSAM)$size == 0L) {
+      verbose && cat(verbose, "Removing empty SAM file falsely created by Bowtie2: ", pathnameSAM);
+      file.remove(pathnameSAM);
     }
   }
-  # Argument 'readsU'
-  if (!is.null(readsU)) {
-    readsU <- Arguments$getReadablePathnames(readsU);
-    assertNoDuplicated(readsU);
-  }
 
-  # Argument 'samFile'
-  if (!is.null(samFile)) {
-    samFile <- Arguments$getWritablePathname(samFile)
-  } else {
-    throw("Argument 'samFile' is empty; supply an output file name")
-  }
+  verbose && exit(verbose);
 
-  ## Combine the above into "bowtie2 arguments"
-  ## - Cf. usage:  "bowtie2 [options]* -x <bt2-idx> {-1 <m1> -2 <m2> | -U <r>} [-S <sam>]"
-  bowtie2Args <- NULL  ## bowtie2 does not use 'arguments', just 'options'
-  bowtie2Options <- c(x=bowtieRefIndexPrefix)
-  if (!is.null(reads1)) {
-    bowtie2Options <- c(bowtie2Options, '1'=unname(reads1))
-    if (!is.null(reads2)) {
-      bowtie2Options <- c(bowtie2Options, '2'=unname(reads2))
-    }
-  }
-  if (!is.null(readsU)) {
-    bowtie2Options <- c(bowtie2Options, 'U'=unname(reads1))
-  }
-  bowtie2Options <- c(bowtie2Options, 'S'=unname(samFile))
-
-  ## Add dashes as appropriate to names of "bowtie2 options"
-  bowtie2Options <- c(optionsVec, bowtie2Options)
-  nms <- names(bowtie2Options)
-  names(bowtie2Options) <- paste(ifelse(nchar(nms) == 1, "-", "--"), nms, sep="")
-
-  res <- do.call(what=systemBowtie2, args=list(command=commandName, args=c(bowtie2Options, bowtie2Args)))
-
-  res
-}) # bowtie2()
+  res;
+} # bowtie2()
 
 
 ############################################################################
 # HISTORY:
+# 2014-08-07 [HB]
+# o Now using arguments 'reads1' and 'reads2', cf. tophat().
+# o Added verbose output.
+# 2014-03-10 [HB]
+# o ROBUSTNESS: Now bowtie2() uses shQuote() for all pathnames.
 # 2014-01-14 [HB]
 # o ROBUSTNESS: Now bowtie2() tests for duplicated entries in 'reads1'
 #   and 'reads2' and gives an informative errors message if detected.
-# 2013-03-08
-# o TT:  Completely rewritten to follow tophat template
-# 2012-07-11
-# o Created bowtie2() stub.
+# 2013-08-24
+# o Now bowtie2() will do paired-end alignment if length(pathnameFQ) == 2.
+# 2013-08-23
+# o BUG FIX: Read Group options ('--rg' and '--rg-id') passed to 'bowtie2'
+#   by the Bowtie2Aligment class missed the preceeding '--'.  Also, if
+#   the Read Group ID was missing NULL was used - now it is set to 1.
+# 2013-07-18
+# o Now bowtie2() handles if there are commas in the pathname of
+#   the FASTQ file by using a tempory file link without commas.  This
+#   is needed because the bowtie2 executable does not support commas.
+# 2013-06-27
+# o Now bowtie2() temporarily decompresses gzipped FASTQ files in case
+#   the installed bowtie2 does not support gzip files.
+# 2012-09-27
+# o Created.
 ############################################################################

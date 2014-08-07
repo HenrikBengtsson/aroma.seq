@@ -190,12 +190,14 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 
     # Paired-end?
     if (paired) {
-      pathnameFQ <- sapply(list(R1=df, R2=getMateFile(df)), FUN=getPathname);
-      verbose && cat(verbose, "FASTQ R1 pathname: ", pathnameFQ[1L]);
-      verbose && cat(verbose, "FASTQ R2 pathname: ", pathnameFQ[2L]);
+      reads1 <- getPathname(df);
+      verbose && cat(verbose, "FASTQ R1 pathname: ", reads1);
+      reads2 <- getPathname(getMateFile(df));
+      verbose && cat(verbose, "FASTQ R2 pathname: ", reads2);
     } else {
-      pathnameFQ <- getPathname(df);
-      verbose && cat(verbose, "FASTQ pathname: ", pathnameFQ);
+      reads1 <- getPathname(df);
+      reads2 <- NULL;
+      verbose && cat(verbose, "FASTQ pathname: ", reads1);
     }
 
     # The SAM and BAM files to be generated
@@ -230,17 +232,19 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
         rgII <- NULL; # Not needed anymore
 
         args <- list(
-          pathnameFQ,
+          reads1=reads1,
+          reads2=reads2,
           indexPrefix=indexPrefix,
           pathnameSAM=pathnameSAM
         );
+        if (!paired) args$reads2 <- NULL;
         args <- c(args, rgArgs);
         args <- c(args, params);
         verbose && cat(verbose, "Arguments:");
         verbose && str(verbose, args);
         args$verbose <- less(verbose, 5);
 
-        res <- do.call(bowtie2_hb, args=args);
+        res <- do.call(bowtie2, args=args);
         verbose && cat(verbose, "System result code: ", res);
       } # if (!isFile(pathnameSAM))
 
@@ -261,7 +265,9 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 
     verbose && exit(verbose);
 
-    invisible(list(pathnameFQ=pathnameFQ, pathnameSAM=pathnameSAM, pathnameBAM=pathnameBAM));
+    res <- list(reads1=reads1, reads2=reads2, pathnameSAM=pathnameSAM, pathnameBAM=pathnameBAM);
+    if (!paired) res$reads2 <- NULL;
+    invisible(res);
   }, paired=isPaired(this), indexPrefix=indexPrefix, rgSet=rgSet, params=params, path=getPath(this), skip=skip, verbose=verbose) # dsApply()
 
   res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1));

@@ -248,7 +248,6 @@ S3method("directoryItems", "character")
 S3method("directoryStructure", "character")
 
 # default
-S3method("bowtie2", "default")
 S3method("bowtie2Build", "default")
 S3method("bowtie2IndexPrefix", "default")
 S3method("bwaAln", "default")
