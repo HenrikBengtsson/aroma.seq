@@ -230,45 +230,60 @@ setMethodS3("process", "FastQCReporter", function(this, ..., skip=TRUE, force=FA
     #     output is now a self-contained HTML file
     filesT <- list.files(path=pathDT, pattern="_fastqc.html$",
                          ignore.case=TRUE, full.names=FALSE);
-
-    # (b) FastQC (<= 0.10.1; 2012-05-03)
-    #     output is a multi-file directory
-    dirT <- list.files(path=pathDT, pattern="_fastqc$",
-                       ignore.case=TRUE, full.names=FALSE);
-
     if (length(filesT) > 0L) {
+      # Sanity check
+      stopifnot(length(filesT) == 1L);
+
       # FastQC (>= 0.11.1)
-      # Nothing more to do...
-    } else if (length(dirT) > 0L) {
-      # FastQC (<= 0.10.1)
-      pathT <- file.path(pathDT, dirT);
-      stopifnot(isDirectory(pathT));
+      # Unzip *_fastqc.zip file
+      filenameDTZ <- gsub(".html", ".zip", filesT, fixed=TRUE);
+      pathnameDTZ <- Arguments$getReadablePathname(filenameDTZ, path=pathDT);
 
-      # Sanity check
-      pathnameDT <- file.path(pathT, filenameD);
-      Arguments$getReadablePathname(pathnameDT);
+      dirT <- gsub(".html", "", filesT, fixed=TRUE);
+      pathDT <- Arguments$getWritablePath(pathDT);
+      unzip(pathnameDTZ, exdir=pathDT);
 
-      # CLEANUP: Remove zip file
-      filenameDTZ <- sprintf("%s.zip", dirT);
-      pathnameDTZ <- file.path(pathDT, filenameDTZ);
-      if (isFile(pathnameDTZ)) {
-        file.remove(pathnameDTZ);
-      }
-
-      # Move output subdirectory
-      file.rename(pathT, pathD);
-
-      # Sanity check
-      stopifnot(!isDirectory(pathT));
+      # CLEANUP: Remove self-contained HTML files
+      file.remove(file.path(pathDT, filesT));
     } else {
-      throw(sprintf("Directories %s contains neither *_fastqc/ directories nor *_fastqc.html files: %s", sQuote(pathDT), paste(sQuote(list.files(path=pathDT, full.names=FALSE)), collapse=", ")));
+      # (b) FastQC (<= 0.10.1; 2012-05-03)
+      #     output is a multi-file directory
+      dirT <- list.files(path=pathDT, pattern="_fastqc$",
+                         ignore.case=TRUE, full.names=FALSE);
+      if (length(dirT) == 0L) {
+        throw(sprintf("Directory %s contains neither a *_fastqc.html file nor a *_fastqc/ directory: %s", sQuote(pathDT), paste(sQuote(list.files(path=pathDT, full.names=FALSE)), collapse=", ")));
+      }
     }
 
     # Sanity check
-    stopifnot(isDirectory(pathD));
+    stopifnot(length(dirT) > 0L);
+    stopifnot(length(dirT) == 1L);
+
+    pathT <- file.path(pathDT, dirT);
+    stopifnot(isDirectory(pathT));
+
+    # Sanity check
+    pathnameDT <- file.path(pathT, filenameD);
+    Arguments$getReadablePathname(pathnameDT);
+
+    # CLEANUP
+    filenameDTZ <- sprintf("%s.zip", dirT);
+    pathnameDTZ <- file.path(pathDT, filenameDTZ);
+    if (isFile(pathnameDTZ)) {
+      file.remove(pathnameDTZ);
+    }
+
+    # Move output subdirectory
+    file.rename(pathT, pathD);
+
+    # Sanity check
+    stopifnot(!isDirectory(pathT));
 
     # CLEANUP
     removeDirectory(pathDT);
+
+    # Sanity check
+    stopifnot(isDirectory(pathD));
     stopifnot(!isDirectory(pathDT));
 
     verbose && exit(verbose);
