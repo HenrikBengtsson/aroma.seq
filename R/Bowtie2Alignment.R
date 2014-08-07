@@ -88,7 +88,8 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
     rgArgs <- asString(rg, fmtstr="%s:%s");
     rgArgs <- rgArgs[regexpr("^ID:", rgArgs) == -1L];
 
-    # Don't forget to put within quotation marks
+    # Don't forget to escape spaces and put within quotation marks
+    rgArgs <- gsub(" ", "\\ ", rgArgs, fixed=TRUE);
     rgArgs <- sprintf("\"%s\"", rgArgs);
 
     rgArgs <- as.list(rgArgs);
@@ -223,7 +224,7 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
         }
         verbose && cat(verbose, "Writing SAM Read Groups:");
         verbose && print(verbose, rgII);
-        verbose && cat(verbose, "Bowtie2 parameter:");
+        verbose && cat(verbose, "Bowtie2 parameters:");
         rgArgs <- asBowtie2Parameters(rgII);
         verbose && print(verbose, rgArgs);
         rgII <- NULL; # Not needed anymore
@@ -273,6 +274,9 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 
 ############################################################################
 # HISTORY:
+# 2014-08-07
+# o BUG FIX: Now Bowtie2Alignment escapes spaces in SAM Read Group
+#   values before passing to Bowtie2.
 # 2013-11-16
 # o CLEANUP: Dropped getParameters() now taken care of by super class.
 # 2013-11-11
