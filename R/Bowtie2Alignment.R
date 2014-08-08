@@ -264,9 +264,6 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 
     # The SAM and BAM files to be generated
     fullname <- sampleName;
-    filename <- sprintf("%s.sam", fullname);
-    pathnameSAM <- Arguments$getWritablePathname(filename, path=outPath);
-    verbose && cat(verbose, "SAM pathname: ", pathnameSAM);
     filename <- sprintf("%s.bam", fullname);
     pathnameBAM <- Arguments$getWritablePathname(filename, path=outPath);
     verbose && cat(verbose, "BAM pathname: ", pathnameBAM);
@@ -278,10 +275,13 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # (a) Generate SAM file
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      filename <- sprintf("%s.sam", fullname);
+      pathnameSAM <- Arguments$getWritablePathname(filename, path=outPath);
+      verbose && cat(verbose, "Temporary/intermediate SAM pathname: ", pathnameSAM);
       if (!isFile(pathnameSAM)) {
         reads1 <- sapply(dfListR1, FUN=getPathname);
         verbose && printf(verbose, "R1 FASTQ files: [%d] %s\n", length(reads1), hpaste(sQuote(reads1)));
-    
+
         # Final sample-specific output directory
         args <- list(
           indexPrefix=indexPrefix,
@@ -290,7 +290,7 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
           ...,
           pathnameSAM=pathnameSAM
         );
-    
+
         if (isPaired) {
           dfListR2 <- lapply(dfListR1, FUN=getMateFile);
           reads2 <- sapply(dfListR2, FUN=getPathname);
@@ -332,11 +332,16 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
       }
       # Sanity check
       Arguments$getReadablePathname(pathnameBAM);
+
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      # (c) Remove temporary/intermediate SAM file
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      file.remove(pathnameSAM);
     } # if (done)
 
     verbose && exit(verbose);
 
-    res <- list(dfListR1=dfListR1, pathnameSAM=pathnameSAM, pathnameBAM=pathnameBAM);
+    res <- list(dfListR1=dfListR1, pathnameBAM=pathnameBAM);
     invisible(res);
   }, isPaired=isPaired(this), indexPrefix=indexPrefix, rgSet=rgSet, outPath=getPath(this), args=args, skip=skip, verbose=verbose) # dsApply()
 
@@ -379,6 +384,8 @@ setMethodS3("validateGroups", "Bowtie2Alignment", function(this, groups, ...) {
 
 ############################################################################
 # HISTORY:
+# 2014-08-08
+# o CLEANUP: Bowtie2Alignment no longer keeps intermediate SAM file.
 # 2014-08-07
 # o Added support for argument 'groupBy' to Bowtie2Alignment.
 # o BUG FIX: Now Bowtie2Alignment escapes spaces in SAM Read Group

@@ -14,6 +14,31 @@ assertNoSpaces <- function(s, ...) {
   stopifnot(!any(hasSpaces(s)));
 }
 
+assertNoDuplicated <- function(x, .name=NULL, ...) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument '.name':
+  if (is.null(.name)) {
+    .name <- as.character(deparse(substitute(x)));
+  }
+
+  # Argument 'x':
+  x <- Arguments$getVector(x, .name=.name);
+
+  # Nothing todo?
+  if (length(x) == 1L) return(x);
+
+
+  # No duplicates?
+  if (!anyDuplicated(x)) return(x);
+
+  # Has duplicates!
+  dups <- x[duplicated(x)];
+  throw(sprintf("Detected %d duplicated entries in argument '%s': %s", length(dups), .name, hpaste(sQuote(dups))));
+} # assertNoDuplicated()
+
+
 setMethodS3("getBowtie2Option", "Arguments", function(static, value, ..., .name=NULL) {
   .name <- as.character(deparse(substitute(value)));
   nok <- hasCommas(value);
@@ -47,6 +72,7 @@ setMethodS3("getTopHat2Option", "Arguments", function(static, value, ..., .name=
 # o Added static getBowtie2Option() and getTopHat2Option() for
 #    Arguments.
 # o Added tests for spaces.
+# 2014-01-14
+# o Added assertNoDuplicated().
+# o Created.
 ############################################################################
-
-

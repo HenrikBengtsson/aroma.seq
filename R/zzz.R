@@ -9,7 +9,7 @@
 
   msg <- c(
     'During developing phase, install/update using:',
-    ' source("http://aroma-project.org/R/install#aroma.seq")'
+    'source("http://aroma-project.org/R/install#aroma.seq")'
   );
 
   # Enable automate parallel processing via BatchJobs?

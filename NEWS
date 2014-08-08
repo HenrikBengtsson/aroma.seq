@@ -1,14 +1,14 @@
 Package: aroma.seq
 ==================
 
-Version: 0.5.14 [2014-08-07]
+Version: 0.5.14 [2014-08-08]
 o Added argument 'groupBy' to Bowtie2Alignment, which can be used to
   specify which FASTQ files should be processed together.
-o Now bowtie2() supports multiple FASTQ files/file pairs.
-o ROBUSTNESS: Now bowtie2() and tophat2() asserts that no option
-  passed to the executable contains commas nor spaces.
+o ROBUSTNESS: Now bowtie2() supports multiple FASTQ files/file pairs
+  and commas and spaces in directory names (but not filenames).
 o Now it is possible to specify the "home" directory of each external
   software used via system environment variables, e.g. 'BOWTIE2_HOME'.
+o CLEANUP: Bowtie2Alignment no longer keeps intermediate SAM file.
 o BUG FIX: Now Bowtie2Alignment escapes spaces in SAM Read Group
   values before passing to Bowtie2.
 

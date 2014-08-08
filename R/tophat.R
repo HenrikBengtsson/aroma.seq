@@ -182,7 +182,8 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Workaround the fact that tophat2 binary does not support commas
-  # in input pathnames, e.g. reference index files and FASTQ files.
+  # nor spaces in input pathnames, e.g. reference index files and
+  # FASTQ files.
   #
   # NOTE: The current workaround only adjusts for commas in the path
   # names, not in the filenames.  If the filenames have commas,
@@ -197,7 +198,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
   #      (such that tophat sees no commas)
   link <- file.path(inPath, "refIndex");
   bowtieRefIndexPath <- createLink(link=link, target=bowtieRefIndexPath);
-  onExit({ file.remove(bowtieRefIndexPath) });
+  onExit({ removeDirectory(bowtieRefIndexPath) });
   link <- NULL;  # Not needed anymore
   bowtieRefIndexPrefix <- file.path(bowtieRefIndexPath, basename(bowtieRefIndexPrefix));
   bowtieRefIndexPrefix <- Arguments$getTopHat2Option(bowtieRefIndexPrefix);
@@ -216,7 +217,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
   if (!is.null(transcriptomeIndexPrefix)) {
     link <- file.path(inPath, "transIndex");
     transcriptomeIndexPath <- createLink(link=link, target=transcriptomeIndexPath);
-    onExit({ file.remove(transcriptomeIndexPath) });
+    onExit({ removeDirectory(transcriptomeIndexPath) });
     link <- NULL;  # Not needed anymore
     transcriptomeIndexPrefix <- file.path(transcriptomeIndexPath, basename(transcriptomeIndexPrefix));
     transcriptomeIndexPrefix <- Arguments$getTopHat2Option(transcriptomeIndexPrefix);
@@ -298,15 +299,6 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
   verbose && cat(verbose, "Arguments:");
   verbose && print(verbose, args);
 
-  # Assert no commas nor spaces in command-line arguments
-  # Note: It's not enough to put within quotation marks
-  # because 'tophat2 ...' calls 'perl tophat2 ...' which
-  # drops such quotation marks.  Maybe one can use double
-  # sets of quotation marks? /HB 2014-08-08
-  for (name in intersect(names(args), c("-G", "--transcriptome-index"))) {
-    Arguments$getTopHat2Option(args[name], .name=name);
-  }
-
   args$verbose <- less(verbose, 10);
   res <- do.call(systemTopHat, args=args);
   status <- attr(res, "status"); if (is.null(status)) status <- 0L;
@@ -341,6 +333,8 @@ setMethodS3("tophat2", "default", function(..., command="tophat2") {
 
 ############################################################################
 # HISTORY:
+# 2014-08-08 [HB]
+# o BUG FIX: tophat() failed to remove directory links on Windows.
 # 2014-07-23 [HB]
 # o Added argument 'transcriptomeIndexSet' to tophat().
 # 2014-07-22 [HB]
