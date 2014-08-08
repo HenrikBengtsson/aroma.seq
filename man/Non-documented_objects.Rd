@@ -529,6 +529,14 @@
 \alias{getSeqNames.Bowtie2IndexSet}
 \alias{getSampleNames.Bowtie2Alignment}
 \alias{validateGroups.Bowtie2Alignment}
+\alias{assertNoCommas}
+\alias{assertNoSpaces}
+\alias{getBowtie2Option}
+\alias{getBowtie2Option.Arguments}
+\alias{getTopHat2Option}
+\alias{getTopHat2Option.Arguments}
+\alias{hasCommas}
+\alias{hasSpaces}
 
 \description{
   This page contains aliases for all "non-documented" objects that

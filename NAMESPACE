@@ -112,6 +112,8 @@ S3method("isComplete", "AbstractIndexSet")
 
 # Arguments
 S3method("getOrganism", "Arguments")
+S3method("getBowtie2Option", "Arguments")
+S3method("getTopHat2Option", "Arguments")
 
 # AromaSeq
 S3method("capabilitiesOf", "AromaSeq")
