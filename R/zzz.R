@@ -18,7 +18,8 @@
       setOption("R.filesets/parallel", "BiocParallel::BatchJobs");
       msg <- c(msg,
         '',
-        'Parallel processing enabled (via \'./.BatchJobs.R\')'
+        'Parallel processing enabled (via \'./.BatchJobs.R\')',
+        'To disable: setOption("R.filesets/parallel", "none")'
       );
     }
   }

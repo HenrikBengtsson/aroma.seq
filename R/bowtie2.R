@@ -29,18 +29,6 @@
 #*/###########################################################################
 bowtie2 <- function(reads1, reads2=NULL, indexPrefix, pathnameSAM, ..., gzAllowed=NA, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Local functions
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  hasCommas <- function(pathnames, ...) {
-    (regexpr(",", pathnames, fixed=TRUE) != -1L);
-  } # hasCommas()
-
-  assertNoCommas <- function(pathnames, ...) {
-    stopifnot(!any(hasCommas(pathnames)));
-  } # assertNoCommas()
-
-		       
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'reads1'
@@ -57,6 +45,7 @@ bowtie2 <- function(reads1, reads2=NULL, indexPrefix, pathnameSAM, ..., gzAllowe
 
   # Argument 'indexPrefix':
   indexPrefix <- Arguments$getCharacter(indexPrefix);
+  assertNoCommas(indexPrefix);
 
   # Argument 'pathnameSAM':
   pathnameSAM <- Arguments$getWritablePathname(pathnameSAM);
@@ -132,7 +121,7 @@ bowtie2 <- function(reads1, reads2=NULL, indexPrefix, pathnameSAM, ..., gzAllowe
   # WORKAROUND: Bowtie2() does not support commas in the FASTQ
   # pathname.  If so, use a temporary filename without commas.
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  hasComma <- (regexpr(",", pathnameFQ, fixed=TRUE) != -1L);
+  hasComma <- hasCommas(pathnameFQ);
   if (any(hasComma)) {
     pathnameFQ[hasComma] <- sapply(pathnameFQ[hasComma], FUN=function(pathname) {
       ext <- if (isGzipped(pathname)) ".fq.gz" else ".fq";
@@ -164,17 +153,33 @@ bowtie2 <- function(reads1, reads2=NULL, indexPrefix, pathnameSAM, ..., gzAllowe
 
   indexPath <- Arguments$getReadablePath(getParent(indexPrefix));
   verbose && cat(verbose, "Index path: ", indexPath);
+  indexPrefix <- Arguments$getBowtie2Option(indexPrefix);
   args <- list("-x"=shQuote(indexPrefix))
   if (isPaired) {
+    reads1 <- Arguments$getBowtie2Option(reads1);
+    reads2 <- Arguments$getBowtie2Option(reads2);
     args[["-1"]] <- shQuote(paste(reads1, collapse=","));
     args[["-2"]] <- shQuote(paste(reads2, collapse=","));
   } else {
+    reads1 <- Arguments$getBowtie2Option(reads1);
     args[["-U"]] <- shQuote(paste(reads1, collapse=","));
   }
+  pathnameSAM <- Arguments$getBowtie2Option(pathnameSAM);
   args[["-S"]] <- shQuote(pathnameSAM);
   args <- c(args, list(...));
+
   verbose && cat(verbose, "Arguments:");
   verbose && print(verbose, args); 
+
+  # Assert no commas nor spaces in command-line arguments
+  # Note: It's not enough to put within quotation marks
+  # because 'bowtie2 ...' calls 'perl bowtie2 ...' which
+  # drops such quotation marks.  Maybe one can use double
+  # sets of quotation marks? /HB 2014-08-08
+  for (name in intersect(names(args), c("-1", "-2", "-U", "-x", "-S"))) {
+    Arguments$getBowtie2Option(args[name], .name=name);
+  }
+
   res <- systemBowtie2(args=args, verbose=verbose);
   status <- attr(res, "status"); if (is.null(status)) status <- 0L;
   verbose && cat(verbose, "Results:");

@@ -52,18 +52,6 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
   on.exit(eval(onExit()));
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Local functions
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  hasCommas <- function(pathnames, ...) {
-    (regexpr(",", pathnames, fixed=TRUE) != -1L);
-  } # hasCommas()
-
-  assertNoCommas <- function(pathnames, ...) {
-    stopifnot(!any(hasCommas(pathnames)));
-  } # assertNoCommas()
-
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'outPath'
@@ -212,7 +200,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
   onExit({ file.remove(bowtieRefIndexPath) });
   link <- NULL;  # Not needed anymore
   bowtieRefIndexPrefix <- file.path(bowtieRefIndexPath, basename(bowtieRefIndexPrefix));
-  assertNoCommas(bowtieRefIndexPrefix);
+  bowtieRefIndexPrefix <- Arguments$getTopHat2Option(bowtieRefIndexPrefix);
 
   # (2b) Link to the GTF file
   if (!is.null(gtf)) {
@@ -220,6 +208,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
     gtf <- createLink(link=link, target=gtf);
     onExit({ file.remove(gtf) })
     link <- NULL;  # Not needed anymore
+    gtf <- Arguments$getTopHat2Option(gtf);
   }
 
   # (2c) Link to the tophat2 transcriptome index directory
@@ -230,7 +219,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
     onExit({ file.remove(transcriptomeIndexPath) });
     link <- NULL;  # Not needed anymore
     transcriptomeIndexPrefix <- file.path(transcriptomeIndexPath, basename(transcriptomeIndexPrefix));
-    assertNoCommas(transcriptomeIndexPrefix);
+    transcriptomeIndexPrefix <- Arguments$getTopHat2Option(transcriptomeIndexPrefix);
   }
 
   # (3a) Link to the FASTQ 'R1'
@@ -242,6 +231,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
       createLink(link=link, target=pathname);
     })
     onExit({ file.remove(reads1) })
+    reads1 <- Arguments$getTopHat2Option(reads1);
   }
 
   # (3b) Link to the (optional) FASTQ 'R2'
@@ -253,6 +243,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
       createLink(link=link, target=pathname);
     })
     onExit({ file.remove(reads2) })
+    reads2 <- Arguments$getTopHat2Option(reads2);
   }
 
 
@@ -306,6 +297,16 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
   args <- list(command=command, args=opts);
   verbose && cat(verbose, "Arguments:");
   verbose && print(verbose, args);
+
+  # Assert no commas nor spaces in command-line arguments
+  # Note: It's not enough to put within quotation marks
+  # because 'tophat2 ...' calls 'perl tophat2 ...' which
+  # drops such quotation marks.  Maybe one can use double
+  # sets of quotation marks? /HB 2014-08-08
+  for (name in intersect(names(args), c("-G", "--transcriptome-index"))) {
+    Arguments$getTopHat2Option(args[name], .name=name);
+  }
+
   args$verbose <- less(verbose, 10);
   res <- do.call(systemTopHat, args=args);
   status <- attr(res, "status"); if (is.null(status)) status <- 0L;
