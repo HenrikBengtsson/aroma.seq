@@ -89,7 +89,7 @@ setMethodS3("findByOrganism", "GtfDataFile", function(static, organism, tags=NUL
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'organism':
-  organism <- Arguments$getCharacter(organism);
+  organism <- Arguments$getOrganism(organism);
 
   # Argument 'prefix':
   if (!is.null(prefix)) {
@@ -137,6 +137,9 @@ setMethodS3("findByOrganism", "GtfDataFile", function(static, organism, tags=NUL
 
 
 setMethodS3("byOrganism", "GtfDataFile", function(static, organism, ...) {
+  # Argument 'organism':
+  organism <- Arguments$getOrganism(organism);
+
   # Locate GTF file
   pathname <- findByOrganism(static, organism, ...);
   if (length(pathname) == 0L)
