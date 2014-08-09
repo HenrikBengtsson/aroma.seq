@@ -163,7 +163,7 @@ setMethodS3("findByOrganism", "FastaReferenceFile", function(static, organism, t
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'organism':
-  organism <- Arguments$getCharacter(organism);
+  organism <- Arguments$getOrganism(organism);
 
   # Argument 'prefix':
   if (!is.null(prefix)) {
