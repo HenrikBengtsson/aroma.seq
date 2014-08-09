@@ -213,6 +213,9 @@ setMethodS3("findByOrganism", "FastaReferenceFile", function(static, organism, t
 
 
 setMethodS3("byOrganism", "FastaReferenceFile", function(static, organism, ...) {
+  # Argument 'organism':
+  organism <- Arguments$getOrganism(organism);
+
   # Locate FASTA file
   pathname <- findByOrganism(static, organism, ...);
   if (length(pathname) == 0L)
