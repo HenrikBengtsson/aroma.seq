@@ -91,7 +91,7 @@ setMethodS3("getSeqNames", "FastaReferenceFile", function(this, ...) {
 
   # From http://en.wikipedia.org/wiki/FASTA_format:
   # "The **word** following the ">" symbol is the identifier of the
-  # sequence, and the rest of the line is the description [...]", e.g
+  # sequence, and the rest of the line is the description [...]", e.g.
   # >I dna:chromosome chromosome:EF4:I:1:230218:1 REF
   # => ID/name: 'I'
   # => Description: 'dna:chromosome chromosome:EF4:I:1:230218:1 REF'

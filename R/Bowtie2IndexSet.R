@@ -70,9 +70,19 @@ setMethodS3("getSeqNames", "Bowtie2IndexSet", function(this, ...) {
   stopifnot(isComplete(this));
   stopifnot(isCapableOf(aroma.seq, "bowtie2"));
   prefix <- getIndexPrefix(this);
-  res <- system2("bowtie2-inspect", args=c("--names", prefix), stdout=TRUE);
-  res <- trim(res);
-  res;
+  names <- system2("bowtie2-inspect", args=c("--names", prefix), stdout=TRUE);
+
+  names <- trim(names);
+
+  # From http://en.wikipedia.org/wiki/FASTA_format:
+  # "The **word** following the ">" symbol is the identifier of the
+  # sequence, and the rest of the line is the description [...]", e.g.
+  # >I dna:chromosome chromosome:EF4:I:1:230218:1 REF
+  # => ID/name: 'I'
+  # => Description: 'dna:chromosome chromosome:EF4:I:1:230218:1 REF'
+  names <- gsub(" .*", "", names); 
+
+  names;
 })
 
 
@@ -84,6 +94,9 @@ setMethodS3("getSequenceNames", "Bowtie2IndexSet", function(this, ...) {
 
 ############################################################################
 # HISTORY:
+# 2014-08-11
+# o BUG FIX: getSeqNames() for Bowtie2IndexSet would return the
+#   sequence description in addition to the ID as part of the name. 
 # 2014-07-24
 # o CONSISTENCY: Renamed getSequenceNames() to getSeqNames() for
 #   Bowtie2IndexSet.  Deprecated the old version.

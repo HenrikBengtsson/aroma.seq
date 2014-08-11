@@ -2,8 +2,9 @@ Package: aroma.seq
 ==================
 
 Version: 0.5.16 [2014-08-11]
-o BUG FIX: getSeqNames() for FastaReferenceFile would return the
-  sequence description in addition to the ID as part of the name.
+o BUG FIX: getSeqNames() for Bowtie2IndexSet and FastaReferenceFile
+  would return the sequence description in addition to the ID as part
+  of the name.
 
 
 Version: 0.5.15 [2014-08-09]
