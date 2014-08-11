@@ -149,7 +149,7 @@ setMethodS3("htseqCount", "default", function(pathnameS, gff, orderedBy=c("none"
   # Sort by query name?
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (sortByName == "always") {
-    verbose && enter(verbose, "Making sure to provide with a BAM/SAM file sorted by query name [EXPENSIVE WORKAROUND]");
+    verbose && enter(verbose, "Making sure to provide HTSeq with a BAM/SAM file sorted by query name [EXPENSIVE WORKAROUND]");
 
     # (a) Create/setup BAM input for sorting, iff SAM file is passed
     if (isSAM(pathnameS)) {
