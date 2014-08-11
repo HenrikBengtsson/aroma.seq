@@ -31,7 +31,7 @@
 # @author "HB"
 #
 # \seealso{
-#   ...
+#   [1] \url{http://www.wikipedia.org/wiki/FASTA_format}
 # }
 #*/###########################################################################
 setConstructorS3("FastaReferenceFile", function(...) {
@@ -76,7 +76,7 @@ setMethodS3("getSeqLengths", "FastaReferenceFile", function(this, force=FALSE, .
 
 setMethodS3("getTotalSeqLengths", "FastaReferenceFile", function(this, ...) {
   seqLengths <- getSeqLengths(this, ...);
-  if (is.null(seqLengths)) return(as.integer(NA));
+  if (is.null(seqLengths)) return(NA_integer_);
   res <- sum(as.numeric(seqLengths));
   if (res < .Machine$integer.max) {
     res <- as.integer(res);
@@ -86,13 +86,23 @@ setMethodS3("getTotalSeqLengths", "FastaReferenceFile", function(this, ...) {
 
 setMethodS3("getSeqNames", "FastaReferenceFile", function(this, ...) {
   seqLengths <- getSeqLengths(this, ...);
-  if (is.null(seqLengths)) return(as.character(NA));
-  names(seqLengths);
+  if (is.null(seqLengths)) return(NA_character_);
+  names <- names(seqLengths);
+
+  # From http://en.wikipedia.org/wiki/FASTA_format:
+  # "The **word** following the ">" symbol is the identifier of the
+  # sequence, and the rest of the line is the description [...]", e.g
+  # >I dna:chromosome chromosome:EF4:I:1:230218:1 REF
+  # => ID/name: 'I'
+  # => Description: 'dna:chromosome chromosome:EF4:I:1:230218:1 REF'
+  names <- gsub(" .*", "", names);
+
+  names;
 })
 
 setMethodS3("nbrOfSeqs", "FastaReferenceFile", function(this, ...) {
   seqLengths <- getSeqLengths(this, ...);
-  if (is.null(seqLengths)) return(as.integer(NA));
+  if (is.null(seqLengths)) return(NA_integer_);
   length(seqLengths);
 })
 
@@ -623,6 +633,9 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
 
 ############################################################################
 # HISTORY:
+# 2014-08-11
+# o BUG FIX: getSeqNames() for FastaReferenceFile would return the
+#   sequence description in addition to the ID as part of the name.
 # 2014-04-16
 # o SPEEDUP: Now readSeqLengths() for FastaReferenceFile memoizes results.
 # 2014-04-13

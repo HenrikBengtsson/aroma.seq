@@ -84,6 +84,6 @@ $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCa
 \author{Henrik Bengtsson}
 
 \seealso{
-  ...
+  [1] \url{http://www.wikipedia.org/wiki/FASTA_format}
 }
 \keyword{classes}
