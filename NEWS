@@ -1,7 +1,9 @@
 Package: aroma.seq
 ==================
 
-Version: 0.5.16 [2014-08-11]
+Version: 0.5.16 [2014-08-12]
+o ROBUSTNESS: Now Bowtie2Alignment asserts that SAM read groups to
+  be written do not contain spaces.
 o BUG FIX: getSeqNames() for Bowtie2IndexSet and FastaReferenceFile
   would return the sequence description in addition to the ID as part
   of the name.

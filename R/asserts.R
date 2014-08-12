@@ -39,28 +39,15 @@ assertNoDuplicated <- function(x, .name=NULL, ...) {
 } # assertNoDuplicated()
 
 
-setMethodS3("getBowtie2Option", "Arguments", function(static, value, ..., .name=NULL) {
+setMethodS3("getTuxedoOption", "Arguments", function(static, value, ..., .name=NULL) {
   .name <- as.character(deparse(substitute(value)));
   nok <- hasCommas(value);
   if (any(nok)) {
-    throw(sprintf("Bowtie2 option %s must not contain commas: %s", sQuote(.name), hpaste(sQuote(value[nok]), collapse=", ")));
+    throw(sprintf("Tuxedo (Bowtie, TopHat, ...) option %s must not contain commas: %s", sQuote(.name), hpaste(sQuote(value[nok]), collapse=", ")));
   }
   nok <- hasSpaces(value);
   if (any(nok)) {
-    throw(sprintf("Bowtie2 option %s must not contain spaces: %s", sQuote(.name), hpaste(sQuote(value[nok]), collapse=", ")));
-  }
-  value
-}, static=TRUE)
-
-setMethodS3("getTopHat2Option", "Arguments", function(static, value, ..., .name=NULL) {
-  .name <- as.character(deparse(substitute(value)));
-  nok <- hasCommas(value);
-  if (any(nok)) {
-    throw(sprintf("TopHat2 option %s must not contain commas: %s", sQuote(.name), hpaste(sQuote(value[nok]), collapse=", ")));
-  }
-  nok <- hasSpaces(value);
-  if (any(nok)) {
-    throw(sprintf("TopHat2 option %s must not contain spaces: %s", sQuote(.name), hpaste(sQuote(value[nok]), collapse=", ")));
+    throw(sprintf("Tuxedo (Bowtie, TopHat, ...) option %s must not contain spaces: %s", sQuote(.name), hpaste(sQuote(value[nok]), collapse=", ")));
   }
   value
 }, static=TRUE)
@@ -69,8 +56,7 @@ setMethodS3("getTopHat2Option", "Arguments", function(static, value, ..., .name=
 ############################################################################
 # HISTORY:
 # 2014-08-08
-# o Added static getBowtie2Option() and getTopHat2Option() for
-#    Arguments.
+# o Added static getTuxedoOption() for Arguments.
 # o Added tests for spaces.
 # 2014-01-14
 # o Added assertNoDuplicated().

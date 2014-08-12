@@ -115,9 +115,18 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
     rgArgs <- asString(rg, fmtstr="%s:%s");
     rgArgs <- rgArgs[regexpr("^ID:", rgArgs) == -1L];
 
-    # Don't forget to escape spaces and put within quotation marks
-    rgArgs <- gsub(" ", "\\ ", rgArgs, fixed=TRUE);
+    # Don't forget to put within quotation marks
     rgArgs <- sprintf("\"%s\"", rgArgs);
+
+    # Escape spaces [NOT ENOUGH, because bowtie2 calls 'perl bowtie2'
+    # and in the latter step it is all lost. /HB 2014-08-11]
+    ## rgArgs <- gsub(" ", "\\ ", rgArgs, fixed=TRUE);
+
+    # Sanity check
+    nok <- hasCommas(rgArgs);
+    if (any(nok)) {
+      throw("SAM Read Group options must not contain spaces (=not supported by Bowtie2): ", hpaste(sQuote(rgArgs[nok])));
+    }
 
     rgArgs <- as.list(rgArgs);
     names(rgArgs) <- rep("--rg", times=length(rgArgs));
@@ -384,6 +393,9 @@ setMethodS3("validateGroups", "Bowtie2Alignment", function(this, groups, ...) {
 
 ############################################################################
 # HISTORY:
+# 2014-08-12
+# o ROBUSTNESS: Now Bowtie2Alignment asserts that SAM read groups to be
+#   written does not contain spaces.
 # 2014-08-08
 # o CLEANUP: Bowtie2Alignment no longer keeps intermediate SAM file.
 # 2014-08-07
