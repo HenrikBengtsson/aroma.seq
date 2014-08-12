@@ -531,10 +531,8 @@
 \alias{validateGroups.Bowtie2Alignment}
 \alias{assertNoCommas}
 \alias{assertNoSpaces}
-\alias{getBowtie2Option}
-\alias{getBowtie2Option.Arguments}
-\alias{getTopHat2Option}
-\alias{getTopHat2Option.Arguments}
+\alias{getTuxedoOption}
+\alias{getTuxedoOption.Arguments}
 \alias{hasCommas}
 \alias{hasSpaces}
 
