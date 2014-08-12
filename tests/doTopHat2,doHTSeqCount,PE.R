@@ -5,8 +5,6 @@ fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 fullTest <- fullTest && isCapableOf(aroma.seq, "bowtie2")
 fullTest <- fullTest && isCapableOf(aroma.seq, "tophat2")
 fullTest <- fullTest && isCapableOf(aroma.seq, "htseq")
-## Disable test because the GTF and FASTA files are incompatible.
-fullTest <- fullTest && FALSE
 if (fullTest) {
 
 # Setup (writable) local data directory structure
