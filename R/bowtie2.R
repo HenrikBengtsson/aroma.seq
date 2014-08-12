@@ -135,7 +135,7 @@ bowtie2 <- function(reads1, reads2=NULL, indexPrefix, pathnameSAM, ..., gzAllowe
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   outPathOrg <- outPath;
   filenameSAM <- basename(pathnameSAM);
-  filenameSAM <- Arguments$getBowtie2Option(filenameSAM);
+  filenameSAM <- Arguments$getTuxedoOption(filenameSAM);
   dirT <- tools::file_path_sans_ext(filenameSAM);
   outPath <- file.path(outPath, dirT);
   outPath <- sprintf("%s.TMP", outPath);
@@ -193,7 +193,7 @@ bowtie2 <- function(reads1, reads2=NULL, indexPrefix, pathnameSAM, ..., gzAllowe
   onExit({ removeDirectory(indexPath) });
   link <- NULL;  # Not needed anymore
   indexPrefix <- file.path(indexPath, basename(indexPrefix));
-  indexPrefix <- Arguments$getTopHat2Option(indexPrefix);
+  indexPrefix <- Arguments$getTuxedoOption(indexPrefix);
 
   # (3a) Link to the FASTQ 'R1'
   #      (such that tophat sees no commas)
@@ -204,7 +204,7 @@ bowtie2 <- function(reads1, reads2=NULL, indexPrefix, pathnameSAM, ..., gzAllowe
       createLink(link=link, target=pathname);
     })
     onExit({ file.remove(reads1) })
-    reads1 <- Arguments$getTopHat2Option(reads1);
+    reads1 <- Arguments$getTuxedoOption(reads1);
   }
 
   # (3b) Link to the (optional) FASTQ 'R2'
@@ -216,7 +216,7 @@ bowtie2 <- function(reads1, reads2=NULL, indexPrefix, pathnameSAM, ..., gzAllowe
       createLink(link=link, target=pathname);
     })
     onExit({ file.remove(reads2) })
-    reads2 <- Arguments$getTopHat2Option(reads2);
+    reads2 <- Arguments$getTuxedoOption(reads2);
   }
 
   # When reaching this point, 'bowtie' will not be able to tell whether
@@ -233,15 +233,15 @@ bowtie2 <- function(reads1, reads2=NULL, indexPrefix, pathnameSAM, ..., gzAllowe
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && exit(verbose, "Calling systemBowtie2()");
 
-  indexPrefix <- Arguments$getBowtie2Option(indexPrefix);
+  indexPrefix <- Arguments$getTuxedoOption(indexPrefix);
   args <- list("-x"=shQuote(indexPrefix))
   if (isPaired) {
-    reads1 <- Arguments$getBowtie2Option(reads1);
-    reads2 <- Arguments$getBowtie2Option(reads2);
+    reads1 <- Arguments$getTuxedoOption(reads1);
+    reads2 <- Arguments$getTuxedoOption(reads2);
     args[["-1"]] <- shQuote(paste(reads1, collapse=","));
     args[["-2"]] <- shQuote(paste(reads2, collapse=","));
   } else {
-    reads1 <- Arguments$getBowtie2Option(reads1);
+    reads1 <- Arguments$getTuxedoOption(reads1);
     args[["-U"]] <- shQuote(paste(reads1, collapse=","));
   }
   args[["-S"]] <- shQuote(filenameSAM);

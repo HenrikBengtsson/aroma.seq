@@ -201,7 +201,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
   onExit({ removeDirectory(bowtieRefIndexPath) });
   link <- NULL;  # Not needed anymore
   bowtieRefIndexPrefix <- file.path(bowtieRefIndexPath, basename(bowtieRefIndexPrefix));
-  bowtieRefIndexPrefix <- Arguments$getTopHat2Option(bowtieRefIndexPrefix);
+  bowtieRefIndexPrefix <- Arguments$getTuxedoOption(bowtieRefIndexPrefix);
 
   # (2b) Link to the GTF file
   if (!is.null(gtf)) {
@@ -209,7 +209,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
     gtf <- createLink(link=link, target=gtf);
     onExit({ file.remove(gtf) })
     link <- NULL;  # Not needed anymore
-    gtf <- Arguments$getTopHat2Option(gtf);
+    gtf <- Arguments$getTuxedoOption(gtf);
   }
 
   # (2c) Link to the tophat2 transcriptome index directory
@@ -220,7 +220,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
     onExit({ removeDirectory(transcriptomeIndexPath) });
     link <- NULL;  # Not needed anymore
     transcriptomeIndexPrefix <- file.path(transcriptomeIndexPath, basename(transcriptomeIndexPrefix));
-    transcriptomeIndexPrefix <- Arguments$getTopHat2Option(transcriptomeIndexPrefix);
+    transcriptomeIndexPrefix <- Arguments$getTuxedoOption(transcriptomeIndexPrefix);
   }
 
   # (3a) Link to the FASTQ 'R1'
@@ -232,7 +232,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
       createLink(link=link, target=pathname);
     })
     onExit({ file.remove(reads1) })
-    reads1 <- Arguments$getTopHat2Option(reads1);
+    reads1 <- Arguments$getTuxedoOption(reads1);
   }
 
   # (3b) Link to the (optional) FASTQ 'R2'
@@ -244,7 +244,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
       createLink(link=link, target=pathname);
     })
     onExit({ file.remove(reads2) })
-    reads2 <- Arguments$getTopHat2Option(reads2);
+    reads2 <- Arguments$getTuxedoOption(reads2);
   }
 
 

@@ -297,6 +297,5 @@ countNucleotides countNucleotides.BamDataFile
 getSeqNames.Bowtie2IndexSet
 getSampleNames.Bowtie2Alignment
 validateGroups.Bowtie2Alignment
-assertNoCommas assertNoSpaces getBowtie2Option
-getBowtie2Option.Arguments getTopHat2Option
-getTopHat2Option.Arguments hasCommas hasSpaces
+assertNoCommas assertNoSpaces getTuxedoOption
+getTuxedoOption.Arguments hasCommas hasSpaces
