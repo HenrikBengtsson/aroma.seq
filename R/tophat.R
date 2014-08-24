@@ -311,6 +311,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
   # Successful?
   if (status == 0L) {
     # If we get this far, assume it was all successful.
+
     # Allow the temporary output path to be renamed to the
     # intended output path instead of the "error" one.
     outPathFinal <- outPathOrg;

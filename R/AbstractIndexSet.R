@@ -65,6 +65,10 @@ setMethodS3("getFastaReferenceFile", "AbstractIndexSet", function(this, ...) {
   prefix <- getIndexPrefix(this);
   fullname <- basename(prefix);
   fa <- FastaReferenceFile$byOrganism(organism, prefix=fullname);
+
+  # Assert compatibility
+  isCompatibleWith(fa, this, mustWork=TRUE);
+
   fa;
 })
 
@@ -74,6 +78,8 @@ setMethodS3("isComplete", "AbstractIndexSet", abstract=TRUE);
 
 ############################################################################
 # HISTORY:
+# 2014-08-23
+# o ROBUSTNESS: Now getFastaReferenceFile() now asserts compatibility.
 # 2014-01-18
 # o Added getFastaReferenceFile() for AbstractIndexSet.
 # 2013-11-17

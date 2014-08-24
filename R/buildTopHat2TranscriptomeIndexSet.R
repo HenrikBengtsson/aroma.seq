@@ -26,10 +26,7 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(this,
-                                                                             gtf,
-                                                                             outPath=NULL,
-                                                                             ..., skip=TRUE, verbose=FALSE) {
+setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(this, gtf, fa=NULL, outPath=NULL, ..., skip=TRUE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Local functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -49,6 +46,11 @@ setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(thi
   pathnameGTF <- getPathname(gtf)
   pathnameGTF <- Arguments$getReadablePathname(pathnameGTF)
   assertNoCommas(getFullName(gtf))
+
+  # Argument 'fa':
+  if (!is.null(fa)) {
+    fa <- Arguments$getInstanceOf(fa, "FastaReferenceFile");
+  }
 
   # Argument 'outPath':
   if (is.null(outPath)) outPath <- file.path(getParent(getPath(is)), "tophat2")
@@ -89,7 +91,7 @@ setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(thi
     verbose && print(verbose, tis)
 
     # Assert compatibility
-    isCompatibleWith(this, tis, mustWork=TRUE, verbose=less(verbose, 50))
+    isCompatibleWith(tis, gtf, mustWork=TRUE, verbose=less(verbose, 50))
 
     verbose && exit(verbose)
 
@@ -99,14 +101,26 @@ setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(thi
   # Assert compatibility
   isCompatibleWith(this, gtf, mustWork=TRUE, verbose=less(verbose, 50))
 
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Call TopHat executable
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Assert TopHat and that it is of a sufficient version
   stopifnot(isCapableOf(aroma.seq, "tophat2"))
   verT <- attr(findTopHat2(), "version")
   if (verT < '2.0.10') throw("TopHat version >= 2.0.10 required")
 
-  # Call TopHat executable
+  # Link to existing FASTA file (avoids having tophat2 to recreate it)
+  if (is.null(fa)) fa <- getFastaReferenceFile(this);
+  verbose && cat(verbose, "FASTA:");
+  verbose && print(verbose, fa);
+  linkTo(fa, path=getPath(this));  
+
+  # Output to temporary directory
+  outPathT <- sprintf("%s.tmp", outPath);
+
   # (Pre-existing) index for the reference genome
-  res <- tophat(getIndexPrefix(this), gtf=pathnameGTF, outPath=outPath,
+  res <- tophat(getIndexPrefix(this), gtf=pathnameGTF, outPath=outPathT,
                 optionsVec=c("--transcriptome-index"="."),
                 ..., verbose=less(verbose, 10))
   status <- attr(res, "status"); if (is.null(status)) status <- 0L;
@@ -114,12 +128,55 @@ setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(thi
   verbose && str(verbose, res);
   verbose && cat(verbose, "Status: ", status);
 
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Cleanup
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Remove local tmp/ directory, if exists and empty
+  pathT <- file.path(outPathT, "tmp");
+  if (isDirectory(pathT) && length(listDirectory(pathT, private=TRUE)) == 0L) {
+    removeDirectory(pathT);
+  }
+
+  # Rename any remaining local directories
+  dirs <- listDirectory(outPathT, private=TRUE, fullNames=TRUE);
+  dirs <- dirs[isDirectory(dirs)];
+  for (pathT in dirs) {
+    dirTT <- sprintf("%s.%s", getFullName(gtf), basename(pathT));
+    pathTT <- file.path(outPathT, dirTT);
+    file.rename(pathT, pathTT);
+  }
+
+  # Try to setup index set
+  prefixT <- file.path(outPathT, prefixName)
+  tis <- Bowtie2IndexSet$byPrefix(prefixT)
+  # Assert compatibility
+  isCompatibleWith(tis, gtf, mustWork=TRUE, verbose=less(verbose, 50))
+
+  # Move all files and directories one by one to final destination
+  for (filename in listDirectory(path=outPathT, private=TRUE)) {
+    pathnameS <- file.path(outPathT, filename);
+    pathnameD <- file.path(outPath, filename);
+    renameFile(pathnameS, pathnameD, overwrite=FALSE);
+  }
+
+  # Assert that all files have been moved
+  stopifnot(length(listDirectory(outPathT, private=TRUE)) == 0L);
+
+  # Remove temporary directory
+  removeDirectory(outPathT);
+
+  
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Results
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Locate index set to return
   tis <- Bowtie2IndexSet$byPrefix(prefix)
   verbose && print(verbose, tis)
 
   # Assert compatibility
-  isCompatibleWith(this, tis, mustWork=TRUE, verbose=less(verbose, 50))
+  isCompatibleWith(tis, gtf, mustWork=TRUE, verbose=less(verbose, 50))
 
   verbose && exit(verbose)
 
@@ -130,6 +187,11 @@ setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(thi
 
 ############################################################################
 # HISTORY:
+# 2014-08-23 [HB]
+# o BUG FIX: buildTopHat2TranscriptomeIndexSet() would give an error
+#   if the final destination directory already existed.
+# o CLEANUP: Now any logs/ directory is renamed to <fullname>.logs/.
+# o CLEANUP: Now any empty tmp/ directories are removed at the end.
 # o ROBUSTNESS: Now buildTopHat2TranscriptomeIndexSet() asserts that the
 #   returned index set is compatible with the input index set file.
 # 2014-07-22 [HB]

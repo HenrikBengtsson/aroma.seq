@@ -1,3 +1,4 @@
+isTopHat2IndexSet isTopHat2IndexSet.Bowtie2IndexSet
 isCompatibleWith.Bowtie2IndexSet
 isCompatibleWith.FastaReferenceFile isCompatibleWithBySeqNames
 isCompatibleWithBySeqNames.default

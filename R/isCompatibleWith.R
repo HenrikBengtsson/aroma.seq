@@ -49,7 +49,7 @@ setMethodS3("isCompatibleWithBySeqNames", "default", function(this, other, mustW
 
   # Sanity check
   if (length(common) == 0L) {
-    msg <- sprintf("The sequence names of the %s ('%s') and the %s set ('%s') are incompatible, because they have no names in common.", label, labelO);
+    msg <- sprintf("The sequence names of the %s ('%s') and the %s set ('%s') are incompatible, because they have no names in common.", class(this)[1L], class(other)[1L], label, labelO);
     verbose && cat(verbose, msg)
     # Assertion?
     if (mustWork) throw(msg)
@@ -70,8 +70,27 @@ setMethodS3("isCompatibleWith", "FastaReferenceFile", function(this, other, ...)
   isCompatibleWithBySeqNames(this, other, ...)
 })
 
-setMethodS3("isCompatibleWith", "Bowtie2IndexSet", function(this, other, ...) {
-  isCompatibleWithBySeqNames(this, other, ...)
+setMethodS3("isTopHat2IndexSet", "Bowtie2IndexSet", function(this, ...) {
+  # AD HOC
+  path <- getPath(this);
+  grepl("tophat2", path, fixed=TRUE);
+}, protected=TRUE)
+
+setMethodS3("isCompatibleWith", "Bowtie2IndexSet", function(this, other, mustWork=FALSE, ...) {
+  if (isTopHat2IndexSet(this)) {
+    if (inherits(other, "GtfDataFile")) {
+      gtf <- other;
+      fullname <- basename(getIndexPrefix(this));
+      fullnameGTF <- getFullName(gtf);
+      if (fullnameGTF != fullname) {
+        msg <- sprintf("%s (%s) is incompatible with %s (%s) because their fullnames does not match: %s != %s", class(this)[1L], class(other)[1L], getPath(this), getPathname(gtf), fullname, fullnameGTF);
+        if (mustWork) throw(msg);
+        return(FALSE);
+      }
+    }
+  } else {
+    isCompatibleWithBySeqNames(this, other, mustWork=mustWork, ...)
+  }
 })
 
 
