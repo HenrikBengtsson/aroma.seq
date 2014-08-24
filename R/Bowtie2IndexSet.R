@@ -80,7 +80,7 @@ setMethodS3("getSeqNames", "Bowtie2IndexSet", function(this, ...) {
   # >I dna:chromosome chromosome:EF4:I:1:230218:1 REF
   # => ID/name: 'I'
   # => Description: 'dna:chromosome chromosome:EF4:I:1:230218:1 REF'
-  names <- gsub(" .*", "", names); 
+  names <- gsub(" .*", "", names);
 
   names;
 })
@@ -94,9 +94,12 @@ setMethodS3("getSequenceNames", "Bowtie2IndexSet", function(this, ...) {
 
 ############################################################################
 # HISTORY:
+# 2014-08-23
+# o ROBUSTNESS: Now buildBowtie2IndexSet() asserts that the returned
+#   index set is compatible with the FASTA file.
 # 2014-08-11
 # o BUG FIX: getSeqNames() for Bowtie2IndexSet would return the
-#   sequence description in addition to the ID as part of the name. 
+#   sequence description in addition to the ID as part of the name.
 # 2014-07-24
 # o CONSISTENCY: Renamed getSequenceNames() to getSeqNames() for
 #   Bowtie2IndexSet.  Deprecated the old version.

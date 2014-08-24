@@ -595,15 +595,18 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
   verbose && cat(verbose, "Prefix for index files: ", prefix);
 
   # Locate existing index set
-  res <- tryCatch({
+  is <- tryCatch({
     Bowtie2IndexSet$byPrefix(prefix);
   }, error=function(ex) Bowtie2IndexSet());
 
   # Nothing todo?
-  if (skip && isComplete(res)) {
+  if (skip && isComplete(is)) {
     verbose && cat(verbose, "Already done. Skipping.");
+    verbose && print(verbose, is)
+    # Assert compatibility
+    isCompatibleWith(this, is, mustWork=TRUE, verbose=less(verbose, 50))
     verbose && exit(verbose);
-    return(res);
+    return(is);
   }
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -624,15 +627,20 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
   # Sanity check
   stopifnot(!is.null(is));
 
+  # Assert compatibility
+  isCompatibleWith(this, is, mustWork=TRUE, verbose=less(verbose, 50))
+
   verbose && exit(verbose);
 
   is;
 }) # buildBowtie2IndexSet()
 
 
-
 ############################################################################
 # HISTORY:
+# 2014-08-23
+# o ROBUSTNESS: Now buildBowtie2IndexSet() asserts that the returned
+#   index set is compatible with the FASTA file.
 # 2014-08-11
 # o BUG FIX: getSeqNames() for FastaReferenceFile would return the
 #   sequence description in addition to the ID as part of the name.

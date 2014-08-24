@@ -87,29 +87,17 @@ setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(thi
   if (skip && isComplete(tis)) {
     verbose && cat(verbose, "Transcriptome indexing already done. Skipping.")
     verbose && print(verbose, tis)
+
+    # Assert compatibility
+    isCompatibleWith(this, tis, mustWork=TRUE, verbose=less(verbose, 50))
+
     verbose && exit(verbose)
+
     return(tis)
   }
 
-  # Assert compatible sequence names
-  verbose && enter(verbose, "Asserting compatible sequence names")
-  seqNames <- getSeqNames(this)
-  verbose && cat(verbose, "Bowtie2 index set sequence names:")
-  verbose && str(verbose, seqNames)
-
-  seqNamesGTF <- getSeqNames(gtf, unique=TRUE)
-  verbose && cat(verbose, "GTF sequence names:")
-  verbose && str(verbose, seqNamesGTF)
-
-  common <- intersect(seqNames, seqNamesGTF)
-  verbose && cat(verbose, "Sequence names in common:")
-  verbose && str(verbose, common)
-
-  # Sanity check
-  if (length(common) == 0L) {
-    throw(sprintf("The sequence names of the Bowtie2 index set ('%s') and the GTF file ('%s') are incompatible, because they have no names in common.", getPath(this), getPathname(gtf)))
-  }
-  verbose && exit(verbose)
+  # Assert compatibility
+  isCompatibleWith(this, gtf, mustWork=TRUE, verbose=less(verbose, 50))
 
   # Assert TopHat and that it is of a sufficient version
   stopifnot(isCapableOf(aroma.seq, "tophat2"))
@@ -130,6 +118,9 @@ setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(thi
   tis <- Bowtie2IndexSet$byPrefix(prefix)
   verbose && print(verbose, tis)
 
+  # Assert compatibility
+  isCompatibleWith(this, tis, mustWork=TRUE, verbose=less(verbose, 50))
+
   verbose && exit(verbose)
 
   tis
@@ -139,6 +130,8 @@ setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(thi
 
 ############################################################################
 # HISTORY:
+# o ROBUSTNESS: Now buildTopHat2TranscriptomeIndexSet() asserts that the
+#   returned index set is compatible with the input index set file.
 # 2014-07-22 [HB]
 # o ROBUSTNESS: Now buildTopHat2TranscriptomeIndexSet() asserts that the
 #   Bowtie2 index set and GTF have compatible sequence names and that

@@ -1,6 +1,12 @@
 Package: aroma.seq
 ==================
 
+Version: 0.5.17 [2014-08-23]
+o ROBUSTNESS: Now buildTopHat2TranscriptomeIndexSet() and
+  buildBowtie2IndexSet() assert that the returned index set is
+  compatible with the input data.
+
+
 Version: 0.5.16 [2014-08-12]
 o ROBUSTNESS: Now Bowtie2Alignment asserts that SAM read groups to
   be written do not contain spaces.
