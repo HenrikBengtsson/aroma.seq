@@ -1,3 +1,6 @@
+isCompatibleWith.Bowtie2IndexSet
+isCompatibleWith.FastaReferenceFile isCompatibleWithBySeqNames
+isCompatibleWithBySeqNames.default
 AromaPathnameInterface directoryStructure.AromaPathnameInterface
 getOrganism.AromaPathnameInterface
 as.character.GtfDataFile getSeqNames.GtfDataFile

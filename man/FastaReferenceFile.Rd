@@ -56,6 +56,7 @@ FastaReferenceFile(...)
  \tab \code{getSeqLengths} \tab  -\cr
  \tab \code{getSeqNames} \tab  -\cr
  \tab \code{getTotalSeqLengths} \tab  -\cr
+ \tab \code{isCompatibleWith} \tab  -\cr
  \tab \code{nbrOfSeqs} \tab  -\cr
 }
 

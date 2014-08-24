@@ -12,6 +12,10 @@
 
 
 % Other missing docs
+\alias{isCompatibleWith.Bowtie2IndexSet}
+\alias{isCompatibleWith.FastaReferenceFile}
+\alias{isCompatibleWithBySeqNames}
+\alias{isCompatibleWithBySeqNames.default}
 \alias{AromaPathnameInterface}
 \alias{directoryStructure.AromaPathnameInterface}
 \alias{getOrganism.AromaPathnameInterface}

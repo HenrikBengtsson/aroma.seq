@@ -52,6 +52,7 @@ Bowtie2IndexSet(...)
  \tab \code{\link[aroma.seq:buildTopHat2TranscriptomeIndexSet.Bowtie2IndexSet]{buildTopHat2TranscriptomeIndexSet}} \tab Calls TopHat to build a transcriptome index.\cr
  \tab \code{getSeqNames} \tab  -\cr
  \tab \code{getSummary} \tab  -\cr
+ \tab \code{isCompatibleWith} \tab  -\cr
  \tab \code{isComplete} \tab  -\cr
 }
 
