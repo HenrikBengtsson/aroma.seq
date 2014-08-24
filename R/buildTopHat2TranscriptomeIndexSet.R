@@ -114,7 +114,7 @@ setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(thi
   if (is.null(fa)) fa <- getFastaReferenceFile(this);
   verbose && cat(verbose, "FASTA:");
   verbose && print(verbose, fa);
-  linkTo(fa, path=getPath(this));  
+  linkTo(fa, path=getPath(this));
 
   # Output to temporary directory
   outPathT <- sprintf("%s.tmp", outPath);
@@ -153,20 +153,23 @@ setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(thi
   # Assert compatibility
   isCompatibleWith(tis, gtf, mustWork=TRUE, verbose=less(verbose, 50))
 
-  # Move all files and directories one by one to final destination
-  for (filename in listDirectory(path=outPathT, private=TRUE)) {
+  # Move all related files and directories one by one to final destination
+  pattern <- sprintf("^%s[.]", prefixName);
+  for (filename in listDirectory(path=outPathT, pattern=pattern)) {
     pathnameS <- file.path(outPathT, filename);
     pathnameD <- file.path(outPath, filename);
     renameFile(pathnameS, pathnameD, overwrite=FALSE);
   }
 
   # Assert that all files have been moved
-  stopifnot(length(listDirectory(outPathT, private=TRUE)) == 0L);
+  stopifnot(length(listDirectory(outPathT, pattern=pattern)) == 0L);
 
-  # Remove temporary directory
-  removeDirectory(outPathT);
+  # Remove temporary directory, if empty
+  if (length(listDirectory(outPathT, private=TRUE)) == 0L) {
+    removeDirectory(outPathT);
+  }
 
-  
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Results
