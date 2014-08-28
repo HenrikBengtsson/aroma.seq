@@ -541,6 +541,9 @@
 \alias{getTuxedoOption.Arguments}
 \alias{hasCommas}
 \alias{hasSpaces}
+\alias{extractCounts.HTSeqCountDataFile}
+\alias{extractCounts.HTSeqCountDataSet}
+\alias{extractCounts}
 
 \description{
   This page contains aliases for all "non-documented" objects that

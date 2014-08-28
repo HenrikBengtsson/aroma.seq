@@ -395,6 +395,9 @@ S3method("byOrganism", "GtfDataFile")
 S3method("findByOrganism", "GtfDataFile")
 S3method("getOrganism", "GtfDataFile")
 
+# HTSeqCountDataFile
+S3method("extractCounts", "HTSeqCountDataFile")
+
 # HTSeqCountDataSet
 S3method("byName", "HTSeqCountDataSet")
 S3method("byPath", "HTSeqCountDataSet")
@@ -403,6 +406,7 @@ S3method("findByName", "HTSeqCountDataSet")
 S3method("getDepth", "HTSeqCountDataSet")
 S3method("getOrganism", "HTSeqCountDataSet")
 S3method("readDGE", "HTSeqCountDataSet")
+S3method("extractCounts", "HTSeqCountDataSet")
 
 # HTSeqCounting
 S3method("getOutputDataSet", "HTSeqCounting")

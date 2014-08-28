@@ -303,3 +303,6 @@ getSampleNames.Bowtie2Alignment
 validateGroups.Bowtie2Alignment
 assertNoCommas assertNoSpaces getTuxedoOption
 getTuxedoOption.Arguments hasCommas hasSpaces
+extractCounts.HTSeqCountDataFile
+extractCounts.HTSeqCountDataSet
+extractCounts

@@ -204,7 +204,15 @@ setMethodS3("readDGE", "HTSeqCountDataSet", function(this, labels=getFullNames(t
   # Argument 'labels':
   labels <- Arguments$getCharacters(labels, length=rep(length(pathnames), times=2L));
 
-  readDGE(pathnames, labels=labels, ...);
+  # Read
+  data <- readDGE(pathnames, labels=labels, ...);
+
+  # Drop "__no_feature" etc.
+  genes <- rownames(data);
+  genes <- genes[!grepl("^__", genes)];
+  data <- data[genes,];
+
+  data;
 }, protected=TRUE)
 
 
@@ -213,9 +221,50 @@ setMethodS3("extractDGEList", "HTSeqCountDataSet", function(this, ...) {
 })
 
 
+setMethodS3("extractCounts", "HTSeqCountDataFile", function(this, ..., drop=FALSE) {
+  data <- readDataFrame(this, colClasses=c("character", "integer"), ...)
+  genes <- data[,1L,drop=TRUE]
+
+  # SPECIAL: Drop "__no_feature" etc.
+  idxs <- grep("^__", genes, invert=TRUE)
+  genes <- genes[idxs]
+
+  data <- data[idxs,2L,drop=TRUE]
+
+  if (!drop) {
+    data <- as.matrix(data)
+    rownames(data) <- genes
+    colnames(data) <- getName(this)
+  }
+
+  data;
+})
+
+setMethodS3("extractCounts", "HTSeqCountDataSet", function(this, rows=NULL, ...) {
+  genes <- extractMatrix(this[[1L]], column=1L, colClass="character", rows=rows, ...)
+
+  # SPECIAL
+  if (is.null(rows)) {
+    # Drop "__no_feature" etc.
+    rows <- grep("^__", genes, invert=TRUE)
+    genes <- genes[rows]
+  }
+
+  data <- extractMatrix(this, column=2L, colClass="integer", rows=rows, ...)
+  rownames(data) <- genes;
+
+  data;
+})
+
+
 
 ############################################################################
 # HISTORY:
+# 2014-08-27
+# o Added extractCounts() for HTSeqCountDataFile and HTSeqCountDataSet.
+# o BUG FIX/ROBUSTNESS: Now extractMatrix() and readDGE() for
+#   HTSeqCountDataSet drops "genes" with prefix '__' in case they exists,
+#   e.g. "__no_feature", "__ambiguous", etc.
 # 2014-01-24
 # o Created.
 ############################################################################

@@ -1,6 +1,13 @@
 Package: aroma.seq
 ==================
 
+Version: 0.5.18 [2014-08-27]
+o Added extractCounts() for HTSeqCountDataFile and HTSeqCountDataSet.
+o BUG FIX/ROBUSTNESS: Now extractMatrix() and readDGE() for
+  HTSeqCountDataSet drops "genes" with prefix '__' in case they exists,
+  e.g. "__no_feature", "__ambiguous", etc.
+
+
 Version: 0.5.17 [2014-08-23]
 o ROBUSTNESS: Now getFastaReferenceFile() now asserts compatibility.
 o ROBUSTNESS: Now buildTopHat2TranscriptomeIndexSet() and

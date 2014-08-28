@@ -56,7 +56,9 @@ HTSeqCountDataFile(...)
 
 \section{Fields and Methods}{
  \bold{Methods:}\cr
-\emph{No methods defined}.
+\tabular{rll}{
+ \tab \code{extractCounts} \tab  -\cr
+}
 
 
  \bold{Methods inherited from AromaSeqDataFile}:\cr
