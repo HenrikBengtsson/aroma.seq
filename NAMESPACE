@@ -16,6 +16,7 @@ importFrom("R.oo", "trim")
 
 ## Importing Class:es
 importFrom("R.oo", "BasicObject")
+importFrom("R.oo", "Class")
 importFrom("R.oo", "Object")
 importFrom("R.oo", "Interface")
 importFrom("R.filesets", "GenericDataFile")
@@ -26,6 +27,7 @@ importFrom("R.filesets", "TabularTextFile")
 importFrom("R.filesets", "TabularTextFileSet")
 
 ## Importing generics
+importFrom("R.oo", "equals")
 importFrom("R.filesets", "byPath")
 importFrom("R.filesets", "findByName")
 importFrom("R.filesets", "byName")
@@ -48,11 +50,13 @@ importFrom("R.filesets", "setTags")
 ## Importing functions
 importFrom("matrixStats", "binCounts")
 importFrom("matrixStats", "rowAnys")
+importFrom("matrixStats", "rowCollapse")
 importFrom("matrixStats", "rowOrderStats")
 importFrom("R.cache", "loadCache")
 importFrom("R.cache", "saveCache")
 importFrom("R.filesets", "extractMatrix")
 importFrom("R.filesets", "fullname")
+importFrom("R.filesets", "getExtension")
 importFrom("R.filesets", "getChecksum") ## Multi-sources: R.filesets, R.cache
 importFrom("R.filesets", "getChecksumFile")
 importFrom("R.filesets", "getFile") ## Multi-sources: R.filesets, R.rsp

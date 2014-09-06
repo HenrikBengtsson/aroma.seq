@@ -42,7 +42,7 @@ setMethodS3("report", "FastqDataFile", function(this, dataSet, ..., flavor="qrqc
   filename <- basename(pathname);
   filenameT <- gsub("^[^,]*", getFullName(this), filename);
   pathnameT <- file.path(outPath, filenameT);
-  copyFile(pathname, pathnameT, overwrite=TRUE);
+  copyFile(pathname, pathnameT, copy.mode=FALSE, overwrite=TRUE);
   verbose && cat(verbose, "Report template (renamed): ", pathnameT);
 
   # Generate PDF report

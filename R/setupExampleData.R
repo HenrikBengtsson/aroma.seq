@@ -46,7 +46,7 @@ setupExampleData <- function(dirs=c("annotationData", "bamData", "fastqData*"), 
         createLink(link=file.path(dir, dirSS), target=file.path(dirS, dirSS));
       }
     } else {
-      copyDirectory(dirS, to=dir, overwrite=FALSE);
+      copyDirectory(dirS, to=dir, copy.mode=FALSE, overwrite=FALSE);
     }
 
     # Sanity check
@@ -70,7 +70,7 @@ setupExampleData <- function(dirs=c("annotationData", "bamData", "fastqData*"), 
         path <- Arguments$getWritablePath(path);
         pathnames <- dir(path=srcPath, pattern="^exampleFASTA[.]", full.names=TRUE);
         sapply(pathnames, FUN=function(pathname) {
-          copyFile(pathname, file.path(path, basename(pathname)), skip=TRUE);
+          copyFile(pathname, file.path(path, basename(pathname)), copy.mode=FALSE, skip=TRUE);
         })
       }
 
@@ -80,7 +80,7 @@ setupExampleData <- function(dirs=c("annotationData", "bamData", "fastqData*"), 
 
         pathnames <- dir(path=srcPath, pattern="^exampleBAM[.]", full.names=TRUE)
         sapply(pathnames, FUN=function(pathname) {
-          copyFile(pathname, file.path(path, basename(pathname)), skip=TRUE)
+          copyFile(pathname, file.path(path, basename(pathname)), copy.mode=FALSE, skip=TRUE)
         })
       }
     } # if (isDirectory(srcPath))
