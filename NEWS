@@ -1,8 +1,13 @@
 Package: aroma.seq
 ==================
 
+Version: 0.5.20 [2014-09-09]
+o BUG FIX: getGroups() for FileGroupsInterface would drop suffixes
+  _1 and _R2, which should be there, from fullnames.
+
+
 Version: 0.5.19 [2014-09-05]
-o ROBUSTNESS: When copying files the file permissions of the 
+o ROBUSTNESS: When copying files the file permissions of the
   destination files are now reset.
 o Added a few missing NAMESPACE imports.
 

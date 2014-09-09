@@ -20,8 +20,6 @@ setMethodS3("getGroups", "FileGroupsInterface", function(this, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ds <- getInputDataSet(this);
   fullnames <- getFullNames(ds);
-  # FIXME: Dropping "R1" suffix should really be done by the data set/files.
-  fullnames <- sub("_(1|R1)$", "", fullnames);
 
   groups <- getGroupBy(this);
   if (is.null(groups)) {
@@ -93,6 +91,9 @@ setMethodS3("validateGroups", "FileGroupsInterface", function(this, ...) {
 
 ############################################################################
 # HISTORY:
+# 2014-09-09
+# o BUG FIX: getGroups() for FileGroupsInterface would drop suffixes
+#   _1 and _R2, which should be there, from fullnames.
 # 2014-01-16 [HB]
 # o Using this Interface for BamMerger and TopHat2Alignment.
 # o Added FileGroupsInterface.
