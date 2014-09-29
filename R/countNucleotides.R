@@ -1,4 +1,4 @@
-setMethodS3("countNucleotides", "BamDataFile", function(bam, loci, ..., verbose=FALSE) {
+setMethodS3("countNucleotides", "BamDataFile", function(bam, loci, ..., cache=FALSE, force=!cache, verbose=FALSE) {
   use("Rsamtools");
   use("Biostrings");
 
@@ -6,6 +6,10 @@ setMethodS3("countNucleotides", "BamDataFile", function(bam, loci, ..., verbose=
   ns <- getNamespace("Biostrings");
   as.matrix <- get("as.matrix", envir=ns, mode="function");
 
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Arguments 'loci':
   loci <- Arguments$getInstanceOf(loci, "data.frame");
 
@@ -15,6 +19,7 @@ setMethodS3("countNucleotides", "BamDataFile", function(bam, loci, ..., verbose=
     pushState(verbose);
     on.exit(popState(verbose));
   }
+
 
   verbose && enter(verbose, "Counting nucleotides in BAM file");
 
@@ -26,6 +31,23 @@ setMethodS3("countNucleotides", "BamDataFile", function(bam, loci, ..., verbose=
 
   verbose && cat(verbose, "Loci to inspect:");
   verbose && str(verbose, loci);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Check for memoized results
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (cache) {
+    bamZ <- getChecksumFile(bam)
+    key <- list(method="countNucleotides", class=class(bam)[1L], bam=readChecksum(bamZ), loci=loci)
+    dirs <- c("aroma.seq", "countNucleotides", getOrganism(bam))
+    counts <- loadCache(key=key, dirs=dirs);
+    if (!force) {
+      verbose && cat(verbose, "Found cached results. Skipping.");
+      verbose && exit(verbose);
+      return(counts);
+    }
+  }
+
 
   # Get (chromosome, position)
   chr <- loci[,1L,drop=TRUE];
@@ -104,6 +126,10 @@ setMethodS3("countNucleotides", "BamDataFile", function(bam, loci, ..., verbose=
   verbose && cat(verbose, "Allele counts:");
   verbose && str(verbose, counts);
 
+  if (cache) {
+    saveCache(counts, key=key, dirs=dirs);
+  }
+
   verbose && exit(verbose);
 
   counts;
@@ -112,6 +138,8 @@ setMethodS3("countNucleotides", "BamDataFile", function(bam, loci, ..., verbose=
 
 ############################################################################
 # HISTORY:
+# 2014-09-28
+# o Added support for memoization to countNucleotides() for BamDataFile.
 # 2014-06-14
 # o Added to aroma.seq.
 # o Created from BAF,chr{{chr}}.md.rsp.
