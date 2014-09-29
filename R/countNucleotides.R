@@ -41,7 +41,7 @@ setMethodS3("countNucleotides", "BamDataFile", function(bam, loci, ..., cache=FA
     key <- list(method="countNucleotides", class=class(bam)[1L], bam=readChecksum(bamZ), loci=loci)
     dirs <- c("aroma.seq", "countNucleotides", getOrganism(bam))
     counts <- loadCache(key=key, dirs=dirs);
-    if (!force) {
+    if (!force && !is.null(counts)) {
       verbose && cat(verbose, "Found cached results. Skipping.");
       verbose && exit(verbose);
       return(counts);
