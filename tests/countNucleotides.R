@@ -31,7 +31,7 @@ print(bams)
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Count nucleotides
+# Count nucleotides (single file)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bam <- bams[[1]]
 print(bam)
@@ -41,11 +41,24 @@ loci <- data.frame(chromosome=chrs[1L], pos=1:100)
 counts <- countNucleotides(bam, loci=loci, verbose=-10)
 print(counts)
 
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Count nucleotides (multiple files)
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+print(bams)
+
+chrs <- getTargetNames(bams[[1]])
+loci <- data.frame(chromosome=chrs[1L], pos=1:100)
+counts <- countNucleotides(bams, loci=loci, verbose=-10)
+print(counts)
+
 } # if (fullTest)
 
 
 ############################################################################
 # HISTORY:
+# 2014-09-28
+# o Added test for countNucleotides() on sets.
 # 2014-06-15
 # o Created.
 ############################################################################

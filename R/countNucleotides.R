@@ -136,9 +136,61 @@ setMethodS3("countNucleotides", "BamDataFile", function(bam, loci, ..., cache=FA
 }) # countNucleotides()
 
 
+setMethodS3("countNucleotides", "BamDataSet", function(bams, loci, ..., verbose=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Arguments 'loci':
+  loci <- Arguments$getInstanceOf(loci, "data.frame")
+
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose)
+  if (verbose) {
+    pushState(verbose)
+    on.exit(popState(verbose))
+  }
+
+
+  verbose && enter(verbose, "Counting nucleotides in BAM set")
+  verbose && print(verbose, bams)
+
+  verbose && cat(verbose, "Loci to inspect:")
+  verbose && str(verbose, loci)
+
+  counts <- NULL
+
+  for (ii in seq_along(bams)) {
+    bam <- bams[[ii]]
+    verbose && enterf(verbose, "File #%d ('%s') of %d", ii, getName(bam), length(bams))
+    verbose && print(verbose, bam)
+
+    countsII <- countNucleotides(bam, loci=loci, ..., verbose=less(verbose, 5))
+
+    if (is.null(counts)) {
+      counts <- countsII
+    } else {
+      stopifnot(identical(dim(countsII), dim(counts)))
+      counts <- counts + countsII
+    }
+
+    countsII <- NULL # Not needed anymore
+
+    verbose && exit(verbose)
+  } # for (ii ...)
+
+  verbose && cat(verbose, "Allele counts:")
+  verbose && str(verbose, counts)
+
+  verbose && exit(verbose)
+
+  counts;
+}) # countNucleotides()
+
+
 ############################################################################
 # HISTORY:
 # 2014-09-28
+# o Added countNucleotides() for BamDataSet.
 # o Added support for memoization to countNucleotides() for BamDataFile.
 # 2014-06-14
 # o Added to aroma.seq.
