@@ -12,6 +12,8 @@
 
 
 % Other missing docs
+\alias{countNucleotides.BamDataSetâiewâ}
+\alias{w.BamDataFile}
 \alias{isTopHat2IndexSet}
 \alias{isTopHat2IndexSet.Bowtie2IndexSet}
 \alias{isCompatibleWith.Bowtie2IndexSet}

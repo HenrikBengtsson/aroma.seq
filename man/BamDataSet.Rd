@@ -55,6 +55,7 @@ BamDataSet(files=NULL, ...)
  \tab \code{byName} \tab  -\cr
  \tab \code{byPath} \tab  -\cr
  \tab \code{convertToSam} \tab  -\cr
+ \tab \code{countNucleotides} \tab  -\cr
  \tab \code{doDownsample} \tab  -\cr
  \tab \code{doHTSeqCount} \tab  -\cr
  \tab \code{doQDNAseq} \tab  -\cr
