@@ -1,10 +1,10 @@
 Package: aroma.seq
 ==================
 
-
 Version: 0.5.22 [2014-09-29]
 o Start adding support for the SRA Toolkit and SRA files.
   Added SRADataFile, SRADataSet, and systemSraToolkit().
+o Added tview() for BamDataFile.
 
 
 Version: 0.5.21 [2014-09-28]

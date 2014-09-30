@@ -165,18 +165,24 @@ setMethodS3("countNucleotides", "BamDataSet", function(bams, loci, ..., verbose=
     verbose && print(verbose, bam)
 
     countsII <- countNucleotides(bam, loci=loci, ..., verbose=less(verbose, 5))
+    dimII <- dim(countsII)
 
     if (is.null(counts)) {
-      counts <- countsII
-    } else {
-      stopifnot(identical(dim(countsII), dim(counts)))
-      counts <- counts + countsII
+      counts <- matrix(0L, nrow=dimII[1L], ncol=dimII[2L])
+      dimnames(counts) <- dimnames(countsII)
     }
+    stopifnot(identical(dimII, dim(counts)))
+
+    countsII[is.na(countsII)] <- 0L
+    counts <- counts + countsII
 
     countsII <- NULL # Not needed anymore
 
     verbose && exit(verbose)
   } # for (ii ...)
+
+  total <- rowSums(counts, na.rm=TRUE)
+  counts[(total == 0L),] <- NA_integer_
 
   verbose && cat(verbose, "Allele counts:")
   verbose && str(verbose, counts)

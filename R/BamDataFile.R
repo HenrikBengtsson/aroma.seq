@@ -784,9 +784,71 @@ setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, seed=NULL,
 }, protected=TRUE)
 
 
+setMethodS3("tview", "BamDataFile", function(this, reference=NULL, chromosome=NULL, position=1L, ..., verbose=FALSE) {
+  # Argument 'reference':
+  if (!is.null(reference)) {
+    if (inherits(reference, "FastaReferenceFile")) {
+      pathnameR <- getPathname(reference)
+      pathnameR <- Arguments$getReadablePathname(pathnameR)
+    } else {
+      pathnameR <- Arguments$getReadablePathname(reference)
+    }
+  }
+
+  # Argument 'chromosome' & 'position':
+  if (!is.null(chromosome)) {
+    chromosome <- Arguments$getCharacter(chromosome)
+    position <- Arguments$getInteger(position, range=c(1L, Inf))
+  }
+
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose)
+  if (verbose) {
+    pushState(verbose)
+    on.exit(popState(verbose))
+  }
+
+  verbose && enter(verbose, "Interactive display of BAM file using samtools tview")
+  verbose && print(verbose, this)
+  pathname <- getPathname(this)
+  pathname <- Arguments$getReadablePathname(pathname)
+  args <- list("tview", pathname)
+
+  if (!is.null(reference)) {
+    verbose && cat(verbose, "Using reference:")
+    verbose && print(verbose, reference)
+    args <- c(args, pathnameR)
+
+    if (inherits(reference, "FastaReferenceFile")) {
+      pathnameRI <- buildIndex(reference, verbose=verbose)
+    }
+  }
+
+  # Initial genomic position
+  if (!is.null(chromosome)) {
+    pos <- sprintf("%s:%d", chromosome, position)
+    verbose && cat(verbose, "Initial position: %s", pos)
+    args <- c(args, sprintf("-p %s", pos))
+  }
+
+  # Additional options
+  args <- c(args, list(...))
+
+  verbose && enter(verbose, "Calling samtools tview")
+  verbose && str(verbose, args)
+  res <- do.call(systemSamtools, args=args)
+  verbose && exit(verbose)
+
+  verbose && exit(verbose)
+
+  invisible(res)
+})
+
 
 ############################################################################
 # HISTORY:
+# 2014-09-29
+# o Added tview() for BamDataFile.
 # 2014-07-18
 # o GENERALIZATION: Now getReadCounts() for BamDataFile falls back to
 #   use Rsamtools::quickBamFlagSummary() if 'samtools indexstats' is

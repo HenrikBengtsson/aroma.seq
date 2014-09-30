@@ -81,6 +81,7 @@ BamDataFile(...)
  \tab \code{sort} \tab  -\cr
  \tab \code{sortByName} \tab  -\cr
  \tab \code{sortByPosition} \tab  -\cr
+ \tab \code{tview} \tab  -\cr
 }
 
 
