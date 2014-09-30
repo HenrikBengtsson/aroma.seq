@@ -43,21 +43,24 @@ setMethodS3("as.character", "SraDataFile", function(x, ...) {
 }, protected=TRUE)
 
 
-setMethodS3("fastqDump", "SraDataFile", function(this, ..., skip=TRUE, overwrite=!skip, verbose=FALSE) {
+setMethodS3("fastqDump", "SraDataFile", function(this, path=".", ..., skip=TRUE, overwrite=!skip, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'path':
+  path <- Arguments$getWritablePath(path)
+
   # Argument 'skip':
-  skip <- Arguments$getLogical(skip);
+  skip <- Arguments$getLogical(skip)
 
   # Argument 'overwrite':
-  overwrite <- Arguments$getLogical(overwrite);
+  overwrite <- Arguments$getLogical(overwrite)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
@@ -66,15 +69,19 @@ setMethodS3("fastqDump", "SraDataFile", function(this, ..., skip=TRUE, overwrite
   verbose && print(verbose, this)
   pathnameSRA <- getPathname(this)
   pathnameSRA <- Arguments$getReadablePathname(pathnameSRA)
-  verbose && cat(verbose, "Input pathname:", pathnameFQ)
 
-  path <- getPath(this)
-  filenameFQ <- sprintf("%s.fq", getFullName(this))
+  fullname <- getFullName(this)
+  filenameFQ <- sprintf("%s.fastq", fullname)
   pathnameFQ <- Arguments$getWritablePathname(filenameFQ, path=path, mustNotExist=FALSE)
-  verbose && cat(verbose, "Output pathname:", pathnameFQ)
+  verbose && cat(verbose, "Output pathname: ", pathnameFQ)
+
+  pathnameSRA <- getAbsolutePath(pathnameSRA)
+  pathnameFQ <- getAbsolutePath(pathnameFQ)
 
   if (isFile(pathnameFQ)) {
-    if (!skip) {
+    if (skip) {
+      verbose && cat(verbose, "Detected existing FASTQ file. Skipping.")
+    } else {
       if (overwrite) {
         verbose && cat(verbose, "Deleting existing FASTQ file (overwrite=TRUE): ", pathnameFQ)
         file.remove(pathnameFQ)
@@ -82,14 +89,36 @@ setMethodS3("fastqDump", "SraDataFile", function(this, ..., skip=TRUE, overwrite
         throw("Output FASTQ file already exists: ", pathnameFQ)
       }
     }
+  } else {
+    skip <- FALSE
   }
 
   if (!skip) {
     verbose && enter(verbose, "Calling fastq-dump of the SRA Toolkit")
+    
+    pathT <- file.path(path, sprintf("%s.fastq.tmp", fullname))
+    pathT <- Arguments$getWritablePath(pathT)
+
+    opwd <- setwd(pathT)
+    on.exit({
+      setwd(opwd)
+    }, add=TRUE)
+
     res <- systemSraToolkit("fastq-dump", pathnameSRA, ..., verbose=verbose)
+
     verbose && cat(verbose, "Result code:")
     verbose && str(verbose, res)
     verbose && exit(verbose)
+
+    # Assert output
+    pathnameFQT <- Arguments$getReadablePathname(filenameFQ)
+
+    # Renam temporary path
+    renameFile(pathnameFQT, pathnameFQ, overwrite=TRUE)
+    
+    setwd(opwd)
+
+    removeDirectory(pathT)
   }
 
   fq <- FastqDataFile(pathnameFQ)

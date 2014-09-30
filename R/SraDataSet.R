@@ -37,8 +37,13 @@ setMethodS3("getOrganism", "SraDataSet", function(this, depth=getDepth(this)-1L,
 
 
 setMethodS3("getDepth", "SraDataSet", function(this, ...) {
-  1L;
-}, protected=TRUE);
+  path <- getPath(this, absolute=FALSE)
+  parts <- unlist(strsplit(path, split="/", fixed=TRUE))
+  nparts <- length(parts)
+  depth <- nparts - 2L
+  depth <- Arguments$getInteger(depth, range=c(0,Inf))
+  depth
+}, protected=TRUE)
 
 
 setMethodS3("byPath", "SraDataSet", function(static, ..., pattern="[.](sra|SRA)$") {
@@ -141,6 +146,37 @@ setMethodS3("byName", "SraDataSet", function(static, name, tags=NULL, organism=N
 
   res;
 }, static=TRUE)
+
+
+
+setMethodS3("fastqDump", "SraDataSet", function(this, path=".", ..., verbose=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'path':
+  path <- Arguments$getWritablePath(path)
+
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose)
+  if (verbose) {
+    pushState(verbose)
+    on.exit(popState(verbose))
+  }
+
+
+  verbose && enter(verbose, "Writing SRA set as FASTQ set")
+  verbose && cat(verbose, "Input set:")
+  verbose && print(verbose, this)
+  verbose && cat(verbose, "Output path: ", path)
+
+  fqs <- lapply(this, FUN=fastqDump, path=path, ..., verbose=verbose)
+  fqs <- FastqDataSet(fqs)
+  verbose && print(verbose, fqs)
+
+  verbose && exit(verbose)
+
+  fqs
+})
 
 
 ############################################################################

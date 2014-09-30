@@ -12,6 +12,15 @@
 
 
 % Other missing docs
+\alias{as.character.SraDataFile}
+\alias{byName.SraDataSet}
+\alias{byPath.SraDataSet}
+\alias{fastqDump.SraDataFile}
+\alias{fastqDump.SraDataSet}
+\alias{findByName.SraDataSet}
+\alias{findSraToolkit}
+\alias{getDepth.SraDataSet}
+\alias{getOrganism.SraDataSet}
 \alias{countNucleotides.BamDataSet}
 \alias{tview}
 \alias{tview.BamDataFile}

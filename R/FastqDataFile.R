@@ -42,9 +42,9 @@ setMethodS3("as.character", "FastqDataFile", function(x, ...) {
   this <- x;
   s <- NextMethod("as.character");
   s <- c(s, sprintf("Is paired: %s", isPaired(this)));
-  n <- nbrOfSeqs(this);
+  n <- nbrOfSeqs(this, fast=TRUE);
   s <- c(s, sprintf("Number of sequences: %s", n));
-  s <- c(s, sprintf("Common width of sequences: %d", getCommonSeqWidth(this)));
+  s <- c(s, sprintf("Common width of sequences: %d", getCommonSeqWidth(this, fast=TRUE)));
   s;
 }, protected=TRUE)
 
@@ -81,8 +81,12 @@ setMethodS3("getCommonSeqWidth", "FastqDataFile", function(this, ...) {
 })
 
 
-setMethodS3("getGeometry", "FastqDataFile", function(this, force=FALSE, ...) {
+setMethodS3("getGeometry", "FastqDataFile", function(this, force=FALSE, fast=FALSE, ...) {
   geometry <- this$.geometry;
+
+  # If not cached, return NAs immediately?
+  if (is.null(geometry) && fast) geometry <- c(NA_integer_, NA_integer_)
+
   if (force || is.null(geometry)) {
     geometry <- readGeometry(this, ...);
     if (!Biobase::anyMissing(geometry)) {
@@ -103,8 +107,10 @@ setMethodS3("readGeometry", "FastqDataFile", function(this, ...) {
   if (isGzipped(this)) {
     return(naValue);
   }
+
   pathname <- getPathname(this);
   geometry <- memoizedCall2(this, function(this, ...) Biostrings::fastq.geometry(pathname));
+
   geometry;
 }, private=TRUE)
 
