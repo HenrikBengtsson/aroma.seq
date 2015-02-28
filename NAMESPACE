@@ -28,6 +28,7 @@ importFrom("R.filesets", "TabularTextFileSet")
 
 ## Importing generics
 importFrom("R.oo", "equals")
+importFrom("R.oo", "isVisible")
 importFrom("R.filesets", "byPath")
 importFrom("R.filesets", "findByName")
 importFrom("R.filesets", "byName")
@@ -75,10 +76,35 @@ importFrom("R.filesets", "readLines") ## Multi-sources: R.filesets, base
 importFrom("R.filesets", "setAttributesByTags")
 importFrom("R.filesets", "setFullNamesTranslator")
 
-
 import("R.utils")
 import("aroma.core")
-# importFrom("Biobase", "anyMissing")
+
+importFrom("GenomeInfoDb", "seqnames")
+importFrom("Biostrings", "unmasked")
+importFrom("S4Vectors", "Rle")
+importFrom("GenomicRanges", "GRanges")
+importFrom("IRanges", "FilterRules")
+importFrom("IRanges", "IRanges")
+importFrom("IRanges", "RangesList")
+importFrom("Rsamtools", "BamFile")
+importFrom("Rsamtools", "asBam")
+importFrom("Rsamtools", "asSam")
+importFrom("Rsamtools", "filterBam")
+importFrom("Rsamtools", "indexFa")
+importFrom("Rsamtools", "indexBam")
+importFrom("Rsamtools", "mergeBam")
+importFrom("Rsamtools", "quickBamFlagSummary")
+importFrom("Rsamtools", "scanBam")
+importFrom("Rsamtools", "scanBamFlag")
+importFrom("Rsamtools", "ScanBamParam")
+importFrom("Rsamtools", "scanBamWhat")
+importFrom("Rsamtools", "sortBam")
+
+
+importFrom("ShortRead", "FastqSampler")
+importFrom("ShortRead", "yield")
+importFrom("ShortRead", "writeFastq")
+
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

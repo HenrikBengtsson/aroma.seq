@@ -1,5 +1,7 @@
 setMethodS3("report", "FastqDataFile", function(this, dataSet, ..., flavor="qrqc", type="md", outPath=".", verbose=FALSE) {
   use("R.rsp")
+  rfile <- R.rsp::rfile
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
