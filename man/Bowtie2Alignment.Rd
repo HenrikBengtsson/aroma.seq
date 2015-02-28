@@ -55,7 +55,7 @@ Bowtie2Alignment(..., groupBy=NULL, indexSet=NULL)
  \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{getOutputDataSet} \tab  -\cr
- \tab \code{\link[aroma.seq:process.Bowtie2Alignment]{process}} \tab Runs the aligner.\cr
+ \tab \code{process} \tab  -\cr
 }
 
 

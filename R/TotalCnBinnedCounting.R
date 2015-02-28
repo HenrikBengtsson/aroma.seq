@@ -23,6 +23,7 @@
 #*/###########################################################################
 setConstructorS3("TotalCnBinnedCounting", function(..., .reqSetClass="BamDataSet") {
   use("aroma.cn")
+  TotalCnSmoothing <- aroma.cn::TotalCnSmoothing
 
   extend(TotalCnSmoothing(..., .reqSetClass=.reqSetClass), "TotalCnBinnedCounting");
 })
@@ -85,7 +86,7 @@ setMethodS3("smoothRawCopyNumbers", "TotalCnBinnedCounting", function(this, rawC
 
   # Keep only known arguments
   ns <- getNamespace("matrixStats");
-  binCounts <- get("binCounts.default", envir=ns, mode="function");
+  binCounts <- get("binCounts", envir=ns, mode="function");
   knownArguments <- names(formals(binCounts));
   rm(list="binCounts");
   keep <- is.element(names(args), knownArguments);
@@ -109,6 +110,9 @@ setMethodS3("smoothRawCopyNumbers", "TotalCnBinnedCounting", function(this, rawC
 
 
 setMethodS3("process", "TotalCnBinnedCounting", function(this, ..., force=FALSE, verbose=FALSE) {
+  use("aroma.cn")
+  getTargetPositions <- aroma.cn::getTargetPositions
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

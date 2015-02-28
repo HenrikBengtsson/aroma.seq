@@ -137,7 +137,7 @@ setMethodS3("getSamReadGroup", "FastqDataFile", function(this, ...) {
 })
 
 
-setMethodS3("writeSample", "FastqDataFile", function(this, pathname, n, ordered=FALSE, seed=NULL, ..., full=FALSE) {
+setMethodS3("writeSample", "FastqDataFile", function(this, pathname, n, ordered=FALSE, seed=NULL, ..., full=FALSE, verbose=FALSE) {
   use("ShortRead")
 
   # Argument 'pathname':
@@ -154,6 +154,13 @@ setMethodS3("writeSample", "FastqDataFile", function(this, pathname, n, ordered=
 
   # Argument 'full':
   full <- Arguments$getLogical(full);
+
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

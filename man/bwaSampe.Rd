@@ -22,7 +22,7 @@
 
 \arguments{
   \item{pathnameSAI}{A \code{\link[base]{character}} \code{\link[base]{vector}} of two SAI files.}
-  \item{pathnameFQ}{A \code{\link[base]{character}} \code{\link[base]{vector}} of two FASTQ files.}
+  \item{pathnameFQ}{A \code{\link[base]{character}} \code{\link[base]{vector}} of two FASTQ or BAM files.}
   \item{indexPrefix}{The pathname prefix to the BWA index files.}
   \item{pathnameD}{The destination pathname.}
   \item{...}{Additional arguments specifying BWA 'sampe' switches

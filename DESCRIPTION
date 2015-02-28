@@ -1,13 +1,59 @@
 Package: aroma.seq
-Version: 0.5.22
-Depends: R (>= 3.1.0), R.utils (>= 1.33.0), R.filesets (>= 2.6.0), aroma.core (>= 2.12.1)
-Imports: methods, R.methodsS3 (>= 1.6.1), R.oo (>= 1.18.0), R.cache (>= 0.10.0), matrixStats (>= 0.10.0)
-Suggests: Biobase (>= 2.24.0), Biostrings (>= 2.32.0), ShortRead (>= 1.22.0), Rsamtools (>= 1.16.0), aroma.light (>= 2.0.0), aroma.cn (>= 1.5.0), GenomicRanges (>= 1.16.3), edgeR (>= 3.6.2), QDNAseq (>= 1.0.5), R.devices (>= 2.11.0), R.rsp (>= 0.19.0), markdown (>= 0.7.2), qrqc (>= 1.18.0), BiocParallel (>= 0.6.1), BatchJobs (>= 1.2)
-SuggestsNote: Recommended: Biobase, Biostrings, ShortRead, Rsamtools, aroma.light, aroma.cn, GenomicRanges, edgeR, qrqc, BiocParallel, BatchJobs
-Date: 2014-09-29
-Title: High-throughput sequence (HT-Seq) analysis in the Aroma framework
-Authors@R: c(person("Henrik", "Bengtsson", email = "henrikb@braju.com", role = c("aut", "cre", "cph")), person("Adam B.", "Olshen", role = c("aut")), person("Taku", "Tokuyasu", role = c("aut")))
-Description: Simple, flexible and distributed processing of very large-scale HT-Seq data - available at the R prompt. [RATHER EARLY VERSION]
+Version: 0.6.0
+Depends:
+  R (>= 3.1.2),
+  R.utils (>= 1.34.0),
+  R.filesets (>= 2.7.0),
+  aroma.core (>= 2.13.0)
+Imports:
+  methods,
+  R.methodsS3 (>= 1.7.0),
+  R.oo (>= 1.18.0),
+  R.cache (>= 0.10.0),
+  matrixStats (>= 0.14.0),
+  Biostrings,
+  GenomeInfoDb,
+  S4Vectors,
+  GenomicRanges,
+  IRanges,
+  ShortRead (>= 1.24.0),
+  Rsamtools (>= 1.18.2)
+Suggests:
+  Biobase (>= 2.26.0),
+  aroma.light (>= 2.2.1),
+  aroma.cn (>= 1.6.0),
+  edgeR (>= 3.8.5),
+  QDNAseq (>= 1.2.4),
+  qrqc (>= 1.20.0),
+  BiocParallel (>= 1.0.1),
+  BatchJobs (>= 1.5),
+  R.devices (>= 2.13.0),
+  R.rsp (>= 0.19.0),
+  markdown (>= 0.7.4)
+SuggestsNote:
+  Recommended:
+  Biobase,
+  Biostrings,
+  ShortRead,
+  Rsamtools,
+  aroma.light,
+  aroma.cn,
+  GenomicRanges,
+  edgeR,
+  qrqc,
+  BiocParallel,
+  BatchJobs
+Date: 2015-02-28
+Title: High-Throughput Sequence Analysis using the Aroma Framework
+Authors@R: c(
+  person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
+         email="henrikb@braju.com"),
+  person("Adam B.", "Olshen", role=c("aut")),
+  person("Taku", "Tokuyasu", role=c("aut")))
+Description: Simple, flexible and distributed processing of very large-scale HT-Seq data - available at the R prompt [RATHER EARLY VERSION].
 License: LGPL (>= 2.1)
 LazyLoad: TRUE
 biocViews: Infrastructure, ProprietaryPlatforms, HighThroughputSequencing, DataImport, DataRepresentation, Preprocessing, QualityControl, Visualization, ReportWriting, aCGH, CopyNumberVariants, DifferentialExpression, GeneExpression, SNP, Transcription
+ByteCompile: TRUE
+URL: https://github.com/HenrikBengtsson/aroma.seq
+BugReports: https://github.com/HenrikBengtsson/aroma.seq/issues

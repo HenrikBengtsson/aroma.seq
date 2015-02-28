@@ -11,7 +11,7 @@
 #
 # \arguments{
 #   \item{pathnameSAI}{A @character @vector of two SAI files.}
-#   \item{pathnameFQ}{A @character @vector of two FASTQ files.}
+#   \item{pathnameFQ}{A @character @vector of two FASTQ or BAM files.}
 #   \item{indexPrefix}{The pathname prefix to the BWA index files.}
 #   \item{pathnameD}{The destination pathname.}
 #   \item{...}{Additional arguments specifying BWA 'sampe' switches
