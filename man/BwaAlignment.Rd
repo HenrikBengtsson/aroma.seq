@@ -53,7 +53,7 @@ BwaAlignment(..., indexSet=NULL, flavor=c("backtracking"))
  \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{getAsteriskTags} \tab  -\cr
- \tab \code{\link[aroma.seq:process.BwaAlignment]{process}} \tab Runs the BWA aligner.\cr
+ \tab \code{process} \tab  -\cr
 }
 
 

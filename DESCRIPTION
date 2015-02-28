@@ -7,7 +7,7 @@ SuggestsNote: Recommended: Biobase, Biostrings, ShortRead, Rsamtools, aroma.ligh
 Date: 2015-02-28
 Title: High-throughput Sequence (HT-Seq) Analysis using the Aroma Framework
 Authors@R: c(person("Henrik", "Bengtsson", email = "henrikb@braju.com", role = c("aut", "cre", "cph")), person("Adam B.", "Olshen", role = c("aut")), person("Taku", "Tokuyasu", role = c("aut")))
-Description: Simple, flexible and distributed processing of very large-scale HT-Seq data - available at the R prompt. [RATHER EARLY VERSION]
+Description: Simple, flexible and distributed processing of very large-scale HT-Seq data - available at the R prompt [RATHER EARLY VERSION].
 License: LGPL (>= 2.1)
 LazyLoad: TRUE
 biocViews: Infrastructure, ProprietaryPlatforms, HighThroughputSequencing, DataImport, DataRepresentation, Preprocessing, QualityControl, Visualization, ReportWriting, aCGH, CopyNumberVariants, DifferentialExpression, GeneExpression, SNP, Transcription

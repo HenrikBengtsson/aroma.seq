@@ -45,7 +45,7 @@ AromaSeq(...)
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{\link[aroma.seq:capabilitiesOf.AromaSeq]{capabilitiesOf}} \tab Checks which tools are supported.\cr
+ \tab \code{capabilitiesOf} \tab  -\cr
  \tab \code{isCapableOf} \tab  -\cr
  \tab \code{setupTests} \tab  -\cr
  \tab \code{skeleton} \tab  -\cr
