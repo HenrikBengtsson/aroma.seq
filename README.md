@@ -1,9 +1,17 @@
-# R package: aroma.seq
+# aroma.seq: High-throughput Sequence (HT-Seq) Analysis using the Aroma Framework
 
-This package is not on CRAN.  Install in R as:
 
-```s
-source('http://aroma-project.org/R/install#HenrikBengtsson/aroma.seq')
+## Installation
+R package aroma.seq is only available via [GitHub](https://github.com/HenrikBengtsson/aroma.seq) and can be installed in R as:
+```r
+source('http://callr.org/install#HenrikBengtsson/aroma.seq')
 ```
 
-R CMD check status: <a href="https://travis-ci.org/HenrikBengtsson/aroma.seq"><img src="https://travis-ci.org/HenrikBengtsson/aroma.seq.svg?branch=master" alt="Build status"></a>
+
+## Software quality
+
+| Resource:     | GitHub        | Travis CI        | Appveyor         |
+| ------------- | ------------------- | ---------------- | ---------------- |
+| _Platforms:_  | _Multiple_          | _Linux_          | _Windows_        |
+| R CMD check   |  | <a href="https://travis-ci.org/HenrikBengtsson/aroma.seq"><img src="https://travis-ci.org/HenrikBengtsson/aroma.seq.svg" alt="Build status"></a>    |  |
+| Test coverage |                     | <a href="https://coveralls.io/r/HenrikBengtsson/aroma.seq"><img src="https://coveralls.io/repos/HenrikBengtsson/aroma.seq/badge.png?branch=develop" alt="Coverage Status"/></a> |                  |
