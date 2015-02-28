@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.6.0 [2015-02-28]
+o Importing several core Bioc packages (instead of suggesting them).
+
+
 Version: 0.5.22 [2014-09-29]
 o Start adding support for the SRA Toolkit and SRA files.
   Added SRADataFile, SRADataSet, and systemSraToolkit().
