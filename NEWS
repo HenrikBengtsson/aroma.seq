@@ -1,6 +1,12 @@
 Package: aroma.seq
 ==================
 
+Version: 0.6.0-9000 [2015-04-07]
+o Added default isCompatibleWith() for AromaSeqDataFile object, which
+  uses internal isCompatibleWithBySeqNames().
+o CLEANUP: Now using getSeqNames() everywhere.
+
+
 Version: 0.6.0 [2015-02-28]
 o Importing several core Bioc packages (instead of suggesting them).
 
