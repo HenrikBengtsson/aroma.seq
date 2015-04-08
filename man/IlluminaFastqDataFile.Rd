@@ -70,7 +70,7 @@ IlluminaFastqDataFile(...)
 as.character, findMateFile, findRspReportTemplate, getCommonSeqWidth, getDefaultFullName, getDefaultSamReadGroup, getGeometry, getMateFile, getSamReadGroup, isPaired, nbrOfSeqs, readFASTQSummary, readSeqFile, report, setSamReadGroup, writeSample
 
  \bold{Methods inherited from AromaSeqDataFile}:\cr
-getDefaultFullName
+getDefaultFullName, isCompatibleWith
 
  \bold{Methods inherited from AromaPathnameInterface}:\cr
 directoryStructure, getOrganism
