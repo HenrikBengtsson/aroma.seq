@@ -87,6 +87,7 @@ setMethodS3("capabilitiesOf", "AromaSeq", function(static, what=NULL, force=FALS
     res$fastqc <- supports(findFastQC);
     res$fastqDump <- supports(findFastqDump);
     res$samtools <- supports(findSamtools);
+    res$sratoolkit <- supports(findSraToolkit);
     res$tophat1 <- supports(findTopHat1);
     res$tophat2 <- supports(findTopHat2);
     res$htseq <- supports(findHTSeq);
@@ -212,6 +213,8 @@ setMethodS3("skeleton", "AromaSeq", function(static, dataSet="MyDatSet", organis
 
 ############################################################################
 # HISTORY:
+# 2014-09-30
+# o Added 'sratoolkit' to capabilities.
 # 2014-05-24
 # o ROBUSTNESS: capabilitiesOf() always returns even if one of the
 #   "find" functions gives an error.

@@ -86,12 +86,6 @@ setMethodS3("getSeqNames", "Bowtie2IndexSet", function(this, ...) {
 })
 
 
-setMethodS3("getSequenceNames", "Bowtie2IndexSet", function(this, ...) {
-  .Deprecated("getSeqNames")
-  getSeqNames(this, ...)
-}, protected=TRUE, deprecated=TRUE)
-
-
 ############################################################################
 # HISTORY:
 # 2014-08-23

@@ -231,6 +231,10 @@ setMethodS3("getTargetNames", "BamDataFile", function(this, ...) {
   names(getTargets(this));
 })
 
+setMethodS3("getSeqNames", "BamDataFile", function(this, ...) {
+  getTargetNames(this)
+})
+
 setMethodS3("getTargetLengths", "BamDataFile", function(this, ...) {
   getTargets(this);
 })
