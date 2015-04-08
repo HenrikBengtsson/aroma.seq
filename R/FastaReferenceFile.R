@@ -41,13 +41,13 @@ setConstructorS3("FastaReferenceFile", function(...) {
 })
 
 setMethodS3("as.character", "FastaReferenceFile", function(x, ...) {
-  this <- x;
-  s <- NextMethod("as.character");
-  n <- nbrOfSeqs(this);
-  s <- c(s, sprintf("Total sequence length: %.0f", getTotalSeqLengths(this)));
-  s <- c(s, sprintf("Number of sequences: %d", n));
-  s <- c(s, sprintf("Sequence names: [%d] %s", n, hpaste(getSeqNames(this))));
-  s;
+  this <- x
+  s <- NextMethod("as.character")
+  n <- nbrOfSeqs(this)
+  s <- c(s, sprintf("Total sequence length: %s", pi3(getTotalSeqLengths(this))))
+  s <- c(s, sprintf("Number of sequences: %d", n))
+  s <- c(s, sprintf("Sequence names: [%d] %s", n, hpaste(getSeqNames(this))))
+  s
 }, protected=TRUE)
 
 
