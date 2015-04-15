@@ -1,7 +1,8 @@
 Package: aroma.seq
 ==================
 
-Version: 0.6.0-9000 [2015-04-07]
+Version: 0.6.0-9000 [2015-04-15]
+o Now countNucleotides() handles multiple chromosomes.
 o Added default isCompatibleWith() for AromaSeqDataFile object, which
   uses internal isCompatibleWithBySeqNames().
 o CLEANUP: Now using getSeqNames() everywhere.

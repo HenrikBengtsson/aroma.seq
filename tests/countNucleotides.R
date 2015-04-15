@@ -37,20 +37,27 @@ bam <- bams[[1]]
 print(bam)
 
 chrs <- getTargetNames(bam)
+
+## A single chromosomes
 loci <- data.frame(chromosome=chrs[1L], pos=1:100)
 counts <- countNucleotides(bam, loci=loci, verbose=-10)
-print(counts)
+print(cbind(loci, counts))
+
+## All chromosomes
+loci <- data.frame(chromosome=chrs, pos=1:100)
+counts <- countNucleotides(bam, loci=loci, verbose=-10)
+print(cbind(loci, counts))
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Count nucleotides (multiple files)
+# Count and add nucleotides across multiple files
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 print(bams)
 
 chrs <- getTargetNames(bams[[1]])
 loci <- data.frame(chromosome=chrs[1L], pos=1:100)
 counts <- countNucleotides(bams, loci=loci, verbose=-10)
-print(counts)
+print(cbind(loci, counts))
 
 } # if (fullTest)
 
