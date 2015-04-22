@@ -1,7 +1,9 @@
 Package: aroma.seq
 ==================
 
-Version: 0.6.0-9000 [2015-04-15]
+Version: 0.6.0-9000 [2015-04-21]
+o Added splitUp() for FastqDataFile.
+o Now readGeometry() for FastqDataFile also works for compressed FASTQ files.
 o Now countNucleotides() handles multiple chromosomes.
 o Added default isCompatibleWith() for AromaSeqDataFile object, which
   uses internal isCompatibleWithBySeqNames().

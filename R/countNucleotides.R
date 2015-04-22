@@ -60,13 +60,13 @@ setMethodS3("countNucleotides", "BamDataFile", function(bam, loci, ..., cache=FA
 
   uchrs <- unique(chrs)
   nchrs <- length(uchrs)
-  verbose && cat(verbose, "Chromosomes: [%d] %s", nchrs, hpaste(uchrs))
+  verbose && printf(verbose, "Chromosomes: [%d] %s\n", nchrs, hpaste(uchrs))
 
   # Check for unknown chromosomes
   knownChromosomes <- getTargetNames(bam);
-  unknown <- chrs[!is.element(chrs, knownChromosomes)]
+  unknown <- uchrs[!is.element(uchrs, knownChromosomes)]
   if (length(unknown) > 0L) {
-    throw(sprintf("Unknown target sequences/chromosomes not among the known ones (%s): %s", hpaste(knownChromosomes), hpaste(unknown)));
+    throw(sprintf("Unknown target sequences/chromosomes: (%s) not in (%s)", hpaste(unknown), hpaste(knownChromosomes)));
   }
 
   # Allocate allele counts for A, C, G, T and unknowns ("N")
