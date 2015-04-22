@@ -241,7 +241,7 @@ setMethodS3("findMateFile", "FastqDataFile", function(this, mustExist=FALSE, ...
 
 setMethodS3("getMateFile", "FastqDataFile", function(this, ...) {
   pathnameM <- findMateFile(this, ..., mustExist=TRUE);
-  newInstance(this, pathnameM);
+  newInstance(this, pathnameM, paired=TRUE)
 }, protected=TRUE)
 
 
@@ -292,7 +292,13 @@ setMethodS3("splitUp", "FastqDataFile", function(this, size, path=getPath(this),
 
   pathnameFQ <- getPathname(this)
 
-  filenames <- sprintf("%s_part%04d.fq", getFullName(this), seq_len(nbrOfFiles))
+  if (isPaired(this)) {
+    fullname <- getDefaultFullName(this, paired=FALSE)
+    fmt <- gsub("_(1|2|R1|R2)$", "_part%04d_\\1.fq", fullname)
+  } else {
+    fmt <- sprintf("%s_part%%04d.fq", getFullName(this))
+  }
+  filenames <- sprintf(fmt, seq_len(nbrOfFiles))
   pathnames <- file.path(path, filenames)
 
   clazz <- Class$forName(class(this)[1])
@@ -327,8 +333,8 @@ setMethodS3("splitUp", "FastqDataFile", function(this, size, path=getPath(this),
 
   nlines <- 0L
   for (kk in seq_len(nbrOfFiles)) {
-    verbose && enterf(verbose, "File #%d of %d", kk, nbrOfFiles)
     pathnameT <- pathnamesT[kk]
+    verbose && enterf(verbose, "File #%d ('%s') of %d", kk, pathnameT, nbrOfFiles)
 
     ## Read chunk
     bfr <- readLines(con, n=nlinesPerFile, warn=FALSE, ok=TRUE)
