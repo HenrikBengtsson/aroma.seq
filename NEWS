@@ -1,7 +1,8 @@
 Package: aroma.seq
 ==================
 
-Version: 0.6.0-9000 [2015-04-21]
+Version: 0.6.0-9000 [2015-04-23]
+o Added SeqzFile and SeqzFileSet skeletons.
 o Added splitUp() for FastqDataFile.  Added package tests.
 o Now readGeometry() for FastqDataFile also works for compressed FASTQ files.
 o Now countNucleotides() handles multiple chromosomes.
