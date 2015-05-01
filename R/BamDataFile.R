@@ -47,7 +47,7 @@ setMethodS3("as.character", "BamDataFile", function(x, ...) {
     n <- nbrOfTargets(this)
     s <- c(s, sprintf("Number of targets: %s", n))
     len <- getTotalTargetLength(this)
-    s <- c(s, sprintf("Total target length: %.3gMb (%s bases)", len/1e9, pi3(len)))
+    s <- c(s, sprintf("Total target length: %.3g Gb (%s bases)", len/1e9, pi3(len)))
     names <- getTargetNames(this)
     s <- c(s, sprintf("Targets: [%d] %s", n, hpaste(names)))
 
