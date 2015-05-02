@@ -43,7 +43,7 @@ setMethodS3("as.character", "FastaReferenceIndexFile", function(x, ...) {
 
 setMethodS3("getDefaultFullName", "FastaReferenceIndexFile", function(this, ...) {
   name <- NextMethod("getDefaultFullName")
-  name <- gsub("[.](fai)$", "", name, ignore.case=TRUE)
+  name <- gsub("[.](fa|fasta)[.](fai)$", "", name, ignore.case=TRUE)
   name
 }, protected=TRUE)
 
