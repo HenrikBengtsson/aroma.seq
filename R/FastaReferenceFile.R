@@ -272,7 +272,7 @@ setMethodS3("byOrganism", "FastaReferenceFile", function(static, organism, ...) 
 # }
 #
 # \value{
-#   Returns the pathname to the FASTA index file.
+#   Returns a @FastaReferenceIndexFile.
 # }
 #
 # @author
@@ -307,11 +307,11 @@ setMethodS3("buildIndex", "FastaReferenceFile", function(this, ..., skip=TRUE, v
     verbose && cat(verbose, "Generated file: ", pathname);
     verbose && exit(verbose);
   }
-  pathnameFAI <- Arguments$getReadablePathname(pathnameFAI);
+  fai <- FastaReferenceIndexFile(pathnameFAI)
 
   verbose && exit(verbose);
 
-  invisible(pathnameFAI);
+  invisible(fai)
 }) # buildIndex()
 
 

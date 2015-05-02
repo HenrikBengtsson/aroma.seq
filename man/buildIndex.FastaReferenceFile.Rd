@@ -28,7 +28,7 @@
 }
 
 \value{
-  Returns the pathname to the FASTA index file.
+  Returns a @FastaReferenceIndexFile.
 }
 
 \author{Henrik Bengtsson}

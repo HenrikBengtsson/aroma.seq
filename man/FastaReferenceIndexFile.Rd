@@ -1,21 +1,21 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Do not modify this file since it was automatically generated from:
 % 
-%  FastaReferenceFile.R
+%  FastaReferenceIndexFile.R
 % 
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\name{FastaReferenceFile}
+\name{FastaReferenceIndexFile}
 \docType{class}
-\alias{FastaReferenceFile}
+\alias{FastaReferenceIndexFile}
 
 
-\title{The FastaReferenceFile class}
+\title{The FastaReferenceIndexFile class}
 
 \description{
  Package:  aroma.seq \cr
-\bold{Class FastaReferenceFile}\cr
+\bold{Class FastaReferenceIndexFile}\cr
 
 \code{\link[R.oo]{Object}}\cr
 \code{~~|}\cr
@@ -23,21 +23,22 @@
 \code{~~~~~~~|}\cr
 \code{~~~~~~~+--}\code{\link[R.filesets]{GenericDataFile}}\cr
 \code{~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~+--}\emph{\code{FastaReferenceFile}}\cr
+\code{~~~~~~~~~~~~+--}\emph{\code{FastaReferenceIndexFile}}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
 
-public abstract static class \bold{FastaReferenceFile}\cr
+public abstract static class \bold{FastaReferenceIndexFile}\cr
 extends \emph{\link[R.filesets]{GenericDataFile}}\cr
 
 
 
- A FastaReferenceFile object represents a FASTA reference file.
+ A FastaReferenceIndexFile object represents a
+ FASTA reference index file (FAI).
 }
 
 \usage{
-FastaReferenceFile(...)
+FastaReferenceIndexFile(...)
 }
 
 \arguments{
@@ -47,16 +48,9 @@ FastaReferenceFile(...)
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{buildBowtie2IndexSet} \tab  -\cr
- \tab \code{buildBwaIndexSet} \tab  -\cr
- \tab \code{buildDictionary} \tab  -\cr
- \tab \code{buildIndex} \tab  -\cr
- \tab \code{byOrganism} \tab  -\cr
- \tab \code{getOrganism} \tab  -\cr
  \tab \code{getSeqLengths} \tab  -\cr
  \tab \code{getSeqNames} \tab  -\cr
  \tab \code{getTotalSeqLengths} \tab  -\cr
- \tab \code{isCompatibleWith} \tab  -\cr
  \tab \code{nbrOfSeqs} \tab  -\cr
 }
 
@@ -71,23 +65,6 @@ appendFullNameTranslator, appendFullNameTranslatorByNULL, appendFullNameTranslat
 $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCache, clone, detach, equals, extend, finalize, getEnvironment, getFieldModifier, getFieldModifiers, getFields, getInstantiationTime, getStaticInstance, hasField, hashCode, ll, load, objectSize, print, save, findRspReportTemplate, asThis
 
 
-}
-
-\section{Compression}{
- Currently, the package only supports non-compressed FASTA files.
-}
-
-\section{Filenames}{
- Currently, FASTA files with commas in their filenames should be avoided
- because they are not supported by Bowtie2.
-}
-
-\section{On different FASTA files}{
- Some FASTA files represent nucleotides as
- upper-case letters A, C, G, T (and N), whereas others as
- lower-case letters a, c, g, t (and n).
- The format of the sequence names differ between FASTA file
- (even for the same genome/organism), e.g. 'chr1' versus '1'.
 }
 
 \author{Henrik Bengtsson}
