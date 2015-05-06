@@ -51,6 +51,7 @@ setConstructorS3("FastaReferenceFile", function(...) {
 setMethodS3("as.character", "FastaReferenceFile", function(x, ...) {
   this <- x
   s <- NextMethod("as.character")
+  s <- c(s, sprintf("Has index file (*.bai): %s", hasIndex(this)))
   n <- nbrOfSeqs(this)
   s <- c(s, sprintf("Total sequence length: %s", pi3(getTotalSeqLengths(this))))
   s <- c(s, sprintf("Number of sequences: %d", n))
@@ -313,6 +314,21 @@ setMethodS3("buildIndex", "FastaReferenceFile", function(this, ..., skip=TRUE, v
 
   invisible(fai)
 }) # buildIndex()
+
+
+
+setMethodS3("getIndexFile", "FastaReferenceFile", function(this, ...) {
+  pathname <- getPathname(this)
+  pathnameIDX <- sprintf("%s.fai", pathname)
+  pathnameIDX <- Arguments$getReadablePathname(pathnameIDX, mustExist=FALSE)
+  if (!isFile(pathnameIDX)) return(NULL)
+  FastaReferenceIndexFile(pathnameIDX)
+})
+
+
+setMethodS3("hasIndex", "FastaReferenceFile", function(this, ...) {
+  !is.null(getIndexFile(this));
+})
 
 
 
@@ -642,6 +658,7 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
 
   is;
 }) # buildBowtie2IndexSet()
+
 
 
 ############################################################################
