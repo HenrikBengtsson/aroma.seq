@@ -1,7 +1,7 @@
 Package: aroma.seq
 ==================
 
-Version: 0.6.0-9000 [2015-05-01]
+Version: 0.6.0-9000 [2015-05-05]
 o Added FastaReferenceIndexFile.
 o Added SeqzFile and SeqzFileSet skeletons.
 o Added splitUp() for FastqDataFile.  Added package tests.
@@ -11,7 +11,8 @@ o Added default isCompatibleWith() for AromaSeqDataFile object, which
   uses internal isCompatibleWithBySeqNames().
 o CLEANUP: Now using getSeqNames() everywhere.
 o BUG FIX: Now getMateFile() for FastqDataFile returns a "paired" file.
-
+o Package now requires R (>= 3.1.3) released Match 2015. This allows 
+  us to use BioC (>= 3.0) (October 2014).
 
 Version: 0.6.0 [2015-02-28]
 o Importing several core Bioc packages (instead of suggesting them).

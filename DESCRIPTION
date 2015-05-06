@@ -1,14 +1,14 @@
 Package: aroma.seq
 Version: 0.6.0-9000
 Depends:
-  R (>= 3.1.2),
+  R (>= 3.1.3),
   R.utils (>= 2.0.2),
   R.filesets (>= 2.7.1),
   aroma.core (>= 2.13.0)
 Imports:
   methods,
   R.methodsS3 (>= 1.7.0),
-  R.oo (>= 1.18.0),
+  R.oo (>= 1.19.0),
   R.cache (>= 0.10.0),
   matrixStats (>= 0.14.0),
   Biostrings,
@@ -26,24 +26,25 @@ Suggests:
   QDNAseq (>= 1.2.4),
   qrqc (>= 1.20.0),
   BiocParallel (>= 1.0.1),
-  BatchJobs (>= 1.5),
+  BatchJobs (>= 1.6),
   R.devices (>= 2.13.0),
   R.rsp (>= 0.20.0),
-  markdown (>= 0.7.4)
+  markdown (>= 0.7.7)
 SuggestsNote:
+  BioC (>= 3.0),
   Recommended:
-  Biobase,
-  Biostrings,
-  ShortRead,
-  Rsamtools,
   aroma.light,
   aroma.cn,
-  GenomicRanges,
-  edgeR,
-  qrqc,
-  BiocParallel,
   BatchJobs
-Date: 2015-05-01
+  Biobase,
+  BiocParallel,
+  Biostrings,
+  edgeR,
+  GenomicRanges,
+  Rsamtools,
+  ShortRead,
+  qrqc
+Date: 2015-05-05
 Title: High-Throughput Sequence Analysis using the Aroma Framework
 Authors@R: c(
   person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
