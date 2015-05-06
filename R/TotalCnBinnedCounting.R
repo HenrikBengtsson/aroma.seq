@@ -244,7 +244,7 @@ setMethodS3("process", "TotalCnBinnedCounting", function(this, ..., force=FALSE,
       }
       verbose && cat(verbose, "Skipping already existing output file.");
       verbose && exit(verbose);
-      next;
+      return(invisible(dfOut))
     }
 
     verbose && print(verbose, df);

@@ -2,8 +2,7 @@ library("aroma.seq")
 setOption("R.filesets/parallel", "BiocParallel")
 
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
-fullTest <- fullTest && isCapableOf(aroma.seq, "bwa")
-fullTest <- fullTest && isCapableOf(aroma.seq, "picard")
+fullTest <- fullTest && all(isCapableOf(aroma.seq, c("bwa", "picard")))
 fullTest <- fullTest && isPackageInstalled("QDNAseq")
 fullTest <- fullTest && isDirectory("annotationData,aroma.seq,private");
 fullTest <- fullTest && isDirectory("fastqData,aroma.seq,private");

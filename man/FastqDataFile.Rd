@@ -61,11 +61,12 @@ FastqDataFile(..., paired=FALSE)
  \tab \code{readSeqFile} \tab  -\cr
  \tab \code{report} \tab  -\cr
  \tab \code{setSamReadGroup} \tab  -\cr
+ \tab \code{splitUp} \tab  -\cr
 }
 
 
  \bold{Methods inherited from AromaSeqDataFile}:\cr
-getDefaultFullName
+getDefaultFullName, isCompatibleWith
 
  \bold{Methods inherited from AromaPathnameInterface}:\cr
 directoryStructure, getOrganism

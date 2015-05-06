@@ -64,6 +64,7 @@ BamDataFile(...)
  \tab \code{getReadCounts} \tab  -\cr
  \tab \code{getReadGroup} \tab  -\cr
  \tab \code{getReadGroups} \tab  -\cr
+ \tab \code{getSeqNames} \tab  -\cr
  \tab \code{getTargetLengths} \tab  -\cr
  \tab \code{getTargetNames} \tab  -\cr
  \tab \code{getTargets} \tab  -\cr
@@ -86,7 +87,7 @@ BamDataFile(...)
 
 
  \bold{Methods inherited from AromaSeqDataFile}:\cr
-getDefaultFullName
+getDefaultFullName, isCompatibleWith
 
  \bold{Methods inherited from AromaPathnameInterface}:\cr
 directoryStructure, getOrganism

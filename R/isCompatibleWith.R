@@ -70,6 +70,10 @@ setMethodS3("isCompatibleWith", "FastaReferenceFile", function(this, other, ...)
   isCompatibleWithBySeqNames(this, other, ...)
 })
 
+setMethodS3("isCompatibleWith", "AromaSeqDataFile", function(this, other, ...) {
+  isCompatibleWithBySeqNames(this, other, ...)
+})
+
 setMethodS3("isTopHat2IndexSet", "Bowtie2IndexSet", function(this, ...) {
   # AD HOC
   path <- getPath(this);

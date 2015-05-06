@@ -1,21 +1,21 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Do not modify this file since it was automatically generated from:
 % 
-%  SraDataFile.R
+%  FastaReferenceIndexFile.R
 % 
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\name{SraDataFile}
+\name{FastaReferenceIndexFile}
 \docType{class}
-\alias{SraDataFile}
+\alias{FastaReferenceIndexFile}
 
 
-\title{The abstract SraDataFile class}
+\title{The FastaReferenceIndexFile class}
 
 \description{
  Package:  aroma.seq \cr
-\bold{Class SraDataFile}\cr
+\bold{Class FastaReferenceIndexFile}\cr
 
 \code{\link[R.oo]{Object}}\cr
 \code{~~|}\cr
@@ -23,25 +23,22 @@
 \code{~~~~~~~|}\cr
 \code{~~~~~~~+--}\code{\link[R.filesets]{GenericDataFile}}\cr
 \code{~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~+--}\code{\link[aroma.seq]{AromaPathnameInterface}}\cr
-\code{~~~~~~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~~~~~~+--}\code{\link[aroma.seq]{AromaSeqDataFile}}\cr
-\code{~~~~~~~~~~~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~~~~~~~~~~~+--}\emph{\code{SraDataFile}}\cr
+\code{~~~~~~~~~~~~+--}\emph{\code{FastaReferenceIndexFile}}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
 
-public abstract static class \bold{SraDataFile}\cr
-extends \link[aroma.seq]{AromaSeqDataFile}\cr
+public abstract static class \bold{FastaReferenceIndexFile}\cr
+extends \emph{\link[R.filesets]{GenericDataFile}}\cr
 
 
 
- A SraDataFile object represents a Sequence Read Archive (SRA) file [1].
+ A FastaReferenceIndexFile object represents a
+ FASTA reference index file (FAI).
 }
 
 \usage{
-SraDataFile(...)
+FastaReferenceIndexFile(...)
 }
 
 \arguments{
@@ -51,15 +48,12 @@ SraDataFile(...)
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{fastqDump} \tab  -\cr
+ \tab \code{getSeqLengths} \tab  -\cr
+ \tab \code{getSeqNames} \tab  -\cr
+ \tab \code{getTotalSeqLengths} \tab  -\cr
+ \tab \code{nbrOfSeqs} \tab  -\cr
 }
 
-
- \bold{Methods inherited from AromaSeqDataFile}:\cr
-getDefaultFullName, isCompatibleWith
-
- \bold{Methods inherited from AromaPathnameInterface}:\cr
-directoryStructure, getOrganism
 
  \bold{Methods inherited from GenericDataFile}:\cr
 as.character, clone, compareChecksum, copyTo, equals, fromFile, getAttribute, getAttributes, getChecksum, getChecksumFile, getCreatedOn, getDefaultFullName, getExtension, getExtensionPattern, getFileSize, getFileType, getFilename, getFilenameExtension, getLastAccessedOn, getLastModifiedOn, getOutputExtension, getPath, getPathname, gunzip, gzip, hasBeenModified, is.na, isFile, isGzipped, linkTo, readChecksum, renameTo, renameToUpperCaseExt, setAttribute, setAttributes, setAttributesBy, setAttributesByTags, setExtensionPattern, testAttributes, validate, validateChecksum, writeChecksum, directoryItem, directoryItems, directoryStructure, directoryStructure<-, getDataSetName, getOrganismName, getSampleName, loadCacheFile, loadCacheFileItem, memoizedCall2, saveCacheFile, saveCacheFileItem, getParentName
@@ -73,15 +67,9 @@ $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCa
 
 }
 
-\references{
- [1] \emph{The Sequence Read Archive (SRA)},
-     \url{http://www.ncbi.nlm.nih.gov/sra/}, 2014.\cr
-}
+\author{Henrik Bengtsson}
 
 \seealso{
-  An object of this class is typically part of an
-  \code{\link{SraDataSet}}.
+  [1] \url{http://www.wikipedia.org/wiki/FASTA_format}
 }
-
-\author{Henrik Bengtsson}
 \keyword{classes}

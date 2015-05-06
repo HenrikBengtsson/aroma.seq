@@ -31,30 +31,30 @@ setMethodS3("samtoolsMpileup", "default", function(refFile, bamFile, pathnameD="
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'pathname':
-  refFile <- Arguments$getReadablePathname(refFile);
-  bamFile <- Arguments$getReadablePathname(bamFile);
+  refFile <- Arguments$getReadablePathname(refFile)
+  bamFile <- Arguments$getReadablePathname(bamFile)
 
   # Argument 'pathnameD':
-  pathnameD <- Arguments$getWritablePathname(pathnameD);
+  pathnameD <- Arguments$getWritablePathname(pathnameD)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Running samtools 'mpileup'");
+  verbose && enter(verbose, "Running samtools 'mpileup'")
 
   # Assert that input files are not overwritten
   stopifnot((getAbsolutePath(pathnameD) != getAbsolutePath(refFile)) &&
-              (getAbsolutePath(pathnameD) != getAbsolutePath(bamFile)));
+              (getAbsolutePath(pathnameD) != getAbsolutePath(bamFile)))
 
-  res <- systemSamtools("mpileup", ..., shQuote(refFile), shQuote(bamFile), "stdout"=shQuote(pathnameD), verbose=less(verbose, 10));
+  res <- systemSamtools("mpileup", f=shQuote(refFile), ..., shQuote(bamFile), stdout=pathnameD, verbose=less(verbose, 10))
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  res;
+  res
 }) # samtoolsMpileup()
 
 

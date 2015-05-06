@@ -28,6 +28,14 @@
 #  because they are not supported by Bowtie2.
 # }
 #
+# \section{On different FASTA files}{
+#  Some FASTA files represent nucleotides as
+#  upper-case letters A, C, G, T (and N), whereas others as
+#  lower-case letters a, c, g, t (and n).
+#  The format of the sequence names differ between FASTA file
+#  (even for the same genome/organism), e.g. 'chr1' versus '1'.
+# }
+#
 # @author "HB"
 #
 # \seealso{
@@ -41,13 +49,13 @@ setConstructorS3("FastaReferenceFile", function(...) {
 })
 
 setMethodS3("as.character", "FastaReferenceFile", function(x, ...) {
-  this <- x;
-  s <- NextMethod("as.character");
-  n <- nbrOfSeqs(this);
-  s <- c(s, sprintf("Total sequence length: %.0f", getTotalSeqLengths(this)));
-  s <- c(s, sprintf("Number of sequences: %d", n));
-  s <- c(s, sprintf("Sequence names: [%d] %s", n, hpaste(getSeqNames(this))));
-  s;
+  this <- x
+  s <- NextMethod("as.character")
+  n <- nbrOfSeqs(this)
+  s <- c(s, sprintf("Total sequence length: %s", pi3(getTotalSeqLengths(this))))
+  s <- c(s, sprintf("Number of sequences: %d", n))
+  s <- c(s, sprintf("Sequence names: [%d] %s", n, hpaste(getSeqNames(this))))
+  s
 }, protected=TRUE)
 
 
@@ -264,7 +272,7 @@ setMethodS3("byOrganism", "FastaReferenceFile", function(static, organism, ...) 
 # }
 #
 # \value{
-#   Returns the pathname to the FASTA index file.
+#   Returns a @FastaReferenceIndexFile.
 # }
 #
 # @author
@@ -299,11 +307,11 @@ setMethodS3("buildIndex", "FastaReferenceFile", function(this, ..., skip=TRUE, v
     verbose && cat(verbose, "Generated file: ", pathname);
     verbose && exit(verbose);
   }
-  pathnameFAI <- Arguments$getReadablePathname(pathnameFAI);
+  fai <- FastaReferenceIndexFile(pathnameFAI)
 
   verbose && exit(verbose);
 
-  invisible(pathnameFAI);
+  invisible(fai)
 }) # buildIndex()
 
 

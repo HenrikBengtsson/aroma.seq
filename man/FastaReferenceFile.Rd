@@ -82,6 +82,14 @@ $, $<-, [[, [[<-, as.character, attach, attachLocally, clearCache, clearLookupCa
  because they are not supported by Bowtie2.
 }
 
+\section{On different FASTA files}{
+ Some FASTA files represent nucleotides as
+ upper-case letters A, C, G, T (and N), whereas others as
+ lower-case letters a, c, g, t (and n).
+ The format of the sequence names differ between FASTA file
+ (even for the same genome/organism), e.g. 'chr1' versus '1'.
+}
+
 \author{Henrik Bengtsson}
 
 \seealso{

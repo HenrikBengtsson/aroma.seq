@@ -103,11 +103,6 @@ setMethodS3("readGeometry", "FastqDataFile", function(this, ...) {
   # Nothing to do?
   if (!isFile(this)) return(naValue);
 
-  # TO DO: Support gzipped files. /HB 2013-06-20
-  if (isGzipped(this)) {
-    return(naValue);
-  }
-
   pathname <- getPathname(this);
   geometry <- memoizedCall2(this, function(this, ...) Biostrings::fastq.geometry(pathname));
 
@@ -246,8 +241,138 @@ setMethodS3("findMateFile", "FastqDataFile", function(this, mustExist=FALSE, ...
 
 setMethodS3("getMateFile", "FastqDataFile", function(this, ...) {
   pathnameM <- findMateFile(this, ..., mustExist=TRUE);
-  newInstance(this, pathnameM);
+  newInstance(this, pathnameM, paired=TRUE)
 }, protected=TRUE)
+
+
+setMethodS3("splitUp", "FastqDataFile", function(this, size, path=getPath(this), ..., gzip=isGzipped(this), maxFileSize=4e9, verbose=FALSE) {
+  # Argument 'size':
+  size <- Arguments$getNumeric(size, range=c(0,Inf))
+
+  # Argument 'path':
+  path <- Arguments$getWritablePath(path)
+  
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose)
+  if (verbose) {
+    pushState(verbose)
+    on.exit(popState(verbose))
+  }
+
+  verbose && enterf(verbose, "Splitting %s into multiple files", class(this)[1])
+  verbose && print(verbose, this)
+  verbose && printf(verbose, "Argument 'size': %g\n", size)
+  nseqs <- nbrOfSeqs(this)
+  if (size < 1) {
+    nseqsPerFile <- ceiling(size*nseqs)
+  } else {
+    nseqsPerFile <- Arguments$getInteger(size, range=c(1,Inf))
+  }
+  verbose && printf(verbose, "Number of sequences/reads per file: %d\n", nseqsPerFile)
+  nlinesPerFile <- 4L*nseqsPerFile
+  verbose && printf(verbose, "Number of lines per file: %d\n", nlinesPerFile)
+  
+  nbrOfFiles <- ceiling(nseqs / nseqsPerFile)
+  verbose && printf(verbose, "Number of files: %d\n", nbrOfFiles)
+  if (nbrOfFiles == 1) {
+    msg <- sprintf("Split of FASTQ file would result in a single file. Skipping.")
+    verbose && cat(verbose, msg)
+    warning(msg)
+    return(this)
+  } else if (nbrOfFiles > 9999) {
+    msg <- sprintf("Split of FASTQ file would result in > 9999 files. Adjust 'size' argument: %g", size)
+    verbose && cat(verbose, msg)
+    throw(msg)
+  }
+  nbrOfBytesPerFile <- ceiling(getFileSize(this) / nbrOfFiles)
+  verbose && printf(verbose, "Average number of bytes per file: %d\n", nbrOfBytesPerFile)
+  if (nbrOfBytesPerFile > maxFileSize) {
+    throw("Average file size exceeds maxFileSize=%d bytes: %d", maxFileSize, nbrOfBytesPerFile)
+  }
+
+  pathnameFQ <- getPathname(this)
+
+  if (isPaired(this)) {
+    fullname <- getDefaultFullName(this, paired=FALSE)
+    fmt <- gsub("_(1|2|R1|R2)$", "_part%04d_\\1.fq", fullname)
+  } else {
+    fmt <- sprintf("%s_part%%04d.fq", getFullName(this))
+  }
+  filenames <- sprintf(fmt, seq_len(nbrOfFiles))
+  pathnames <- file.path(path, filenames)
+
+  clazz <- Class$forName(class(this)[1])
+  
+  ## Already done?
+  isFile <- file_test("-f", pathnames)
+  if (all(isFile)) {
+    verbose && cat(verbose, "Already processed. Skipping.")
+    res <- lapply(pathnames, FUN=clazz)
+    res <- FastqDataSet(res)
+    verbose && print(verbose, res)
+    verbose && exit(verbose)
+    return(res)
+  }
+  
+  if (any(isFile)) {
+    existing <- pathnames[isFile]
+    throw(sprintf("Cannot split FASTQ file (%s). Some of the output files already exists: [%d] %s", length(existing), hpaste(existing)))
+  }
+
+  ## Split atomically
+  pathnamesT <- sapply(pathnames, FUN=pushTemporaryFile)
+
+  ## Gzip output files?
+  outfile <- if (gzip) gzfile else file
+
+  infile <- if (isGzipped(pathnameFQ)) gzfile else file
+  con <- infile(pathnameFQ, open="r")
+  on.exit({
+    if (!is.null(con)) close(con)
+  })
+
+  nlines <- 0L
+  for (kk in seq_len(nbrOfFiles)) {
+    pathnameT <- pathnamesT[kk]
+    verbose && enterf(verbose, "File #%d ('%s') of %d", kk, pathnameT, nbrOfFiles)
+
+    ## Read chunk
+    bfr <- readLines(con, n=nlinesPerFile, warn=FALSE, ok=TRUE)
+    nbfr <- length(bfr)
+    if (nbfr %% 4 != 0) {
+      throw("Read %d lines (after having read %d lines previously), which is not a multiple of four: %s", nbfr, nlines, pathnameFQ)
+    }
+
+    ## Write chunk
+    local({
+      conT <- outfile(pathnameT, open="wb")
+      on.exit(close(conT))
+      writeLines(bfr, con=conT)
+    })
+    
+    bfr <- NULL ## Not need anymore
+    
+    nlines <- nlines + nbfr
+    verbose && printf(verbose, "Total number of lines processed: %d (%g%%) of %d\n", nlines, 100*nlines/(4L*nseqs), 4L*nseqs)
+    verbose && exit(verbose)
+  } # for (kk ...)
+
+  verbose && printf(verbose, "Read/wrote in total %d lines and generated %d files\n", nlines, nbrOfFiles)
+
+  close(con)
+  con <- NULL
+
+  ## Rename temporary files
+  pathnames <- sapply(pathnamesT, FUN=popTemporaryFile)
+  
+  res <- lapply(pathnames, FUN=clazz)
+  res <- FastqDataSet(res)
+  verbose && print(verbose, res)
+
+  verbose && exit(verbose)
+
+  res
+})
 
 
 ############################################################################
