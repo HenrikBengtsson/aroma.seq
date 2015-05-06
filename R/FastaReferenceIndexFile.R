@@ -76,9 +76,6 @@ setMethodS3("readDataFrame", "FastaReferenceIndexFile", function(this, ...) {
   data
 }, private=TRUE)
 
-# \seealso{
-#   Internally, \code{fasta.info()} of \pkg{Biostrings} is used.
-# }
 setMethodS3("readSeqLengths", "FastaReferenceIndexFile", function(this, force=FALSE, ...) {
   data <- readDataFrame(this, ...)
   lens <- data$length

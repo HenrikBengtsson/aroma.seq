@@ -116,7 +116,7 @@ setMethodS3("nbrOfSeqs", "FastaReferenceFile", function(this, ...) {
 
 
 # \seealso{
-#   Internally, \code{fasta.info()} of \pkg{Biostrings} is used.
+#   Internally, \code{fasta.seqlengths()} of \pkg{Biostrings} is used.
 # }
 setMethodS3("readSeqLengths", "FastaReferenceFile", function(this, force=FALSE, ...) {
   pathname <- getPathname(this);
@@ -130,7 +130,7 @@ setMethodS3("readSeqLengths", "FastaReferenceFile", function(this, force=FALSE, 
   }
 
   # Read FASTA file
-  seqLengths <- Biostrings::fasta.info(pathname);
+  seqLengths <- Biostrings::fasta.seqlengths(pathname)
 
   # Cache
   saveCache(seqLengths, key=key, dirs=dirs);
