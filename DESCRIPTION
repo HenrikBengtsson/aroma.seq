@@ -35,7 +35,7 @@ SuggestsNote:
   Recommended:
   aroma.light,
   aroma.cn,
-  BatchJobs
+  BatchJobs,
   Biobase,
   BiocParallel,
   Biostrings,
