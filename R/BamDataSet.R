@@ -144,8 +144,30 @@ setMethodS3("byName", "BamDataSet", function(static, name, tags=NULL, organism=N
 }, static=TRUE)
 
 
+setMethodS3("splitByTargetType", "BamDataSet", function(this, as=c("BamDataSet", "index"), ...) {
+  # Argument 'as':
+  as <- match.arg(as)
+
+  ns <- lapply(this, FUN=getTargetLengths)
+  uns <- unique(ns)
+  sets <- vector("list", length=length(uns))
+  types <- match(ns, table=uns)
+  for (kk in seq_along(uns)) {
+    idxs <- which(is.finite(match(ns, table=uns[kk])))
+    if (as == "BamDataSet") {
+      sets[[kk]] <- this[idxs]
+    } else if (as == "index") {
+      sets[[kk]] <- idxs
+    }
+  }
+  sets
+}) # splitByTargetType()
+
+
 ############################################################################
 # HISTORY:
+# 2015-05-06
+# o Added splitByTargetType() to BamDataSet.
 # 2013-11-11
 # o BUG FIX: BamDataSet$byPath() would include also SAM files.
 # 2013-11-09
