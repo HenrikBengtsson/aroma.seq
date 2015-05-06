@@ -57,6 +57,7 @@ BamDataFile(...)
  \tab \code{doQDNAseq} \tab  -\cr
  \tab \code{extractReadStartPositions} \tab  -\cr
  \tab \code{getChipType} \tab  -\cr
+ \tab \code{getFlagStat} \tab  -\cr
  \tab \code{getHeader} \tab  -\cr
  \tab \code{getIndexFile} \tab  -\cr
  \tab \code{getIndexStats} \tab  -\cr

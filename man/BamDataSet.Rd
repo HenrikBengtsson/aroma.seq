@@ -52,6 +52,7 @@ BamDataSet(files=NULL, ...)
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
+ \tab \code{as.character} \tab  -\cr
  \tab \code{byName} \tab  -\cr
  \tab \code{byPath} \tab  -\cr
  \tab \code{convertToSam} \tab  -\cr
@@ -64,6 +65,7 @@ BamDataSet(files=NULL, ...)
  \tab \code{getPlatform} \tab  -\cr
  \tab \code{sortByName} \tab  -\cr
  \tab \code{sortByPosition} \tab  -\cr
+ \tab \code{splitByTargetType} \tab  -\cr
 }
 
 

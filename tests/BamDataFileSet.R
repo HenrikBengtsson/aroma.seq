@@ -19,8 +19,6 @@ bams <- doBowtie2(fqs, reference=fa, verbose=-20)
 print(bams)
 
 
-> str(uns)
-
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # BAM file
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

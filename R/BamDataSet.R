@@ -26,6 +26,18 @@ setConstructorS3("BamDataSet", function(files=NULL, ...) {
   extend(GenericDataFileSet(files=files, ...), c("BamDataSet", uses("AromaSeqDataFileSet")));
 })
 
+setMethodS3("as.character", "BamDataSet", function(this, ...) {
+  s <- NextMethod("as.character")
+  targetTypes <- splitByTargetType(bams, as="index")
+  n <- length(targetTypes)
+  msg <- sprintf("Number of unique target sequence sets: %d", n)
+  if (n > 1L) {
+    msg <- sprintf("%s [WARNING: unsafe to process if > 1]", msg)
+    warning(sprintf("Processing a BAM data set that consists of (%d) BAM files which have been mapped (%d) different types of target sequences (different FASTA reference files) is unsafe and will likely lead to problems that are hard to troubleshoot: %s", n, length(this), getPath(this)))
+  }
+  s <- c(s, msg)
+  s
+})
 
 setMethodS3("getOrganism", "BamDataSet", function(this, ...) {
   organism <- directoryItem(this, "organism");
