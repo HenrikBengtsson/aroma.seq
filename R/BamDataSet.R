@@ -28,7 +28,7 @@ setConstructorS3("BamDataSet", function(files=NULL, ...) {
 
 setMethodS3("as.character", "BamDataSet", function(this, ...) {
   s <- NextMethod("as.character")
-  targetTypes <- splitByTargetType(bams, as="index")
+  targetTypes <- splitByTargetType(this, as="index")
   n <- length(targetTypes)
   msg <- sprintf("Number of unique target sequence sets: %d", n)
   if (n > 1L) {

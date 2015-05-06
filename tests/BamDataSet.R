@@ -18,6 +18,13 @@ bams <- doBowtie2(fqs, reference=fa, verbose=-20)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 print(bams)
 
+bamsT <- splitByTargetType(bams)
+str(bamsT)
+
+bamsT <- splitByTargetType(bams, as="index")
+str(bamsT)
+
+
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # BAM file
