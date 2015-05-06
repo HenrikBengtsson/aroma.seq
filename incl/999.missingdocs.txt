@@ -324,4 +324,5 @@ readAnnotationData.SeqzFile readAnnotationData.SeqzFileSet
 readDataFrame.FastaReferenceIndexFile
 readSeqLengths.FastaReferenceIndexFile readTotalCNsAndBAFs
 readTotalCNsAndBAFs.SeqzFile splitUp splitUp.FastqDataFile
-
+getIndexFile.FastaReferenceFile hasIndex.FastaReferenceFile
+getFlagStat.BamDataFile

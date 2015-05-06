@@ -16,4 +16,7 @@ print(bams)
 bam <- bams[[1]]
 print(bam)
 
+fs <- getFlagStat(bam)
+print(fs)
+
 } # if (fullTest)

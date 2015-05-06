@@ -582,6 +582,9 @@
 \alias{readTotalCNsAndBAFs.SeqzFile}
 \alias{splitUp}
 \alias{splitUp.FastqDataFile}
+\alias{getIndexFile.FastaReferenceFile}
+\alias{hasIndex.FastaReferenceFile}
+\alias{getFlagStat.BamDataFile}
 
 \description{
   This page contains aliases for all "non-documented" objects that

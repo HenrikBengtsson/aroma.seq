@@ -851,8 +851,38 @@ setMethodS3("tview", "BamDataFile", function(this, reference=NULL, chromosome=NU
 })
 
 
+setMethodS3("getFlagStat", "BamDataFile", function(this, ..., force=FALSE) {
+  stats <- this$.flagStat;
+
+  if (force || is.null(stats)) {
+    pathname <- getPathname(this);
+    if (!hasIndex(this)) {
+      throw("Cannot get index statistics. Index does not exists: ", pathname);
+    }
+    bfr <- systemSamtools("flagstat", shQuote(pathname), stdout=TRUE, ...);
+    bfr <- trim(bfr)
+
+    # Parse
+    pattern <- "([0-9]+)[ ]*[+][ ]*([0-9]+)[ ]+(.*)"
+    stats <- lapply(bfr, FUN=function(x) {
+      counts <- c(gsub(pattern, "\\1", x), gsub(pattern, "\\2", x))
+      counts <- as.integer(counts)
+      description <- gsub(pattern, "\\3", x)
+      data.frame(description=description, passed=counts[1], failed=counts[2], stringsAsFactors=FALSE)
+    })
+    stats <- Reduce(rbind, stats)
+
+    this$.flagStat <- stats;
+  }
+
+  stats;
+})
+
+
 ############################################################################
 # HISTORY:
+# 2015-05-06
+# o Added getFlagStat().
 # 2014-09-29
 # o Added tview() for BamDataFile.
 # 2014-07-18
