@@ -826,7 +826,7 @@ setMethodS3("tview", "BamDataFile", function(this, reference=NULL, chromosome=NU
     args <- c(args, pathnameR)
 
     if (inherits(reference, "FastaReferenceFile")) {
-      pathnameRI <- buildIndex(reference, verbose=verbose)
+      buildIndex(reference, verbose=verbose)
     }
   }
 

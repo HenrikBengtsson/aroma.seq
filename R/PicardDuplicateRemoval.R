@@ -174,7 +174,7 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
 
       if (!skip || !hasIndex(bf)) {
         verbose && enter(verbose, "Creating BAM index");
-        bfi <- buildIndex(bf, skip=skip, overwrite=!skip, verbose=less(verbose, 10));
+        buildIndex(bf, skip=skip, overwrite=!skip, verbose=less(verbose, 10));
         verbose && exit(verbose);
       }
     } # if (done)
