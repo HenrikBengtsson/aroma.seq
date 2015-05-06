@@ -72,16 +72,20 @@ setMethodS3("nbrOfSeqs", "FastaReferenceIndexFile", function(this, ...) {
 setMethodS3("readDataFrame", "FastaReferenceIndexFile", function(this, ...) {
   pathname <- getPathname(this)
   data <- read.table(pathname, sep="\t", colClasses=c("character", rep("integer", 4L)))
-  colnames(data) <- c("sequence", "length", "fileOffset", "lengthPerEntry", "bytesPerEntry")
+  ## Column names as in GATK (suggested in thread 'How can I prepare a
+  ## FASTA file to use as reference?' last edited Sept 2013
+  ## [http://gatkforums.broadinstitute.org/discussion/1601/how-can-i-prepare-a-fasta-file-to-use-as-reference]
+  colnames(data) <- c("contig", "size", "location", "basesPerLine", "bytesPerLine")
   data
 }, private=TRUE)
 
 setMethodS3("readSeqLengths", "FastaReferenceIndexFile", function(this, force=FALSE, ...) {
   data <- readDataFrame(this, ...)
-  lens <- data$length
-  names(lens) <- data$sequence
+  lens <- data$size
+  names(lens) <- data$contig
   lens
 }, private=TRUE)
+
 
 ############################################################################
 # HISTORY:
