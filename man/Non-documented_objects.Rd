@@ -556,6 +556,32 @@
 \alias{extractCounts.HTSeqCountDataFile}
 \alias{extractCounts.HTSeqCountDataSet}
 \alias{extractCounts}
+\alias{GcBaseFile}
+\alias{SeqzFile}
+\alias{SeqzFileSet}
+\alias{as.character.FastaReferenceIndexFile}
+\alias{byName.SeqzFileSet}
+\alias{findByName.SeqzFileSet}
+\alias{getDefaultColumnClassPatterns.SeqzFile}
+\alias{getDefaultFullName.FastaReferenceIndexFile}
+\alias{getSeqLengths.FastaReferenceIndexFile}
+\alias{getSeqNames.BamDataFile}
+\alias{getSeqNames.FastaReferenceIndexFile}
+\alias{getSeqNames.GcBaseFile}
+\alias{getTotalSeqLengths.FastaReferenceIndexFile}
+\alias{isCompatibleWith.AromaSeqDataFile}
+\alias{isCompatibleWith.GcBaseFile}
+\alias{nbrOfSeqs.FastaReferenceIndexFile}
+\alias{pi3}
+\alias{readAnnotationData}
+\alias{readAnnotationData.SeqzFile}
+\alias{readAnnotationData.SeqzFileSet}
+\alias{readDataFrame.FastaReferenceIndexFile}
+\alias{readSeqLengths.FastaReferenceIndexFile}
+\alias{readTotalCNsAndBAFs}
+\alias{readTotalCNsAndBAFs.SeqzFile}
+\alias{splitUp}
+\alias{splitUp.FastqDataFile}
 
 \description{
   This page contains aliases for all "non-documented" objects that
