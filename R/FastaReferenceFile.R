@@ -56,6 +56,8 @@ setMethodS3("as.character", "FastaReferenceFile", function(x, ...) {
   s <- c(s, sprintf("Total sequence length: %s", pi3(getTotalSeqLengths(this))))
   s <- c(s, sprintf("Number of sequences: %d", n))
   s <- c(s, sprintf("Sequence names: [%d] %s", n, hpaste(getSeqNames(this))))
+  scores <- typeOfSeqNamesOrdering(getSeqLengths(this), sort=TRUE, as="humanreadable")
+  s <- c(s, sprintf("Ordering of sequence names (scores): %s (%s)", scores[1], paste(scores[-1], collapse=", ")))
   s
 }, protected=TRUE)
 
@@ -108,6 +110,13 @@ setMethodS3("getSeqNames", "FastaReferenceFile", function(this, ...) {
 
   names;
 })
+
+setMethodS3("getTypeOfSeqNames", "FastaReferenceFile", function(this, ...) {
+  scores <- typeOfSeqNamesOrdering(getSeqNames(this), ...)
+
+  scores
+})
+
 
 setMethodS3("nbrOfSeqs", "FastaReferenceFile", function(this, ...) {
   seqLengths <- getSeqLengths(this, ...);
@@ -658,6 +667,7 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
 
   is;
 }) # buildBowtie2IndexSet()
+
 
 
 

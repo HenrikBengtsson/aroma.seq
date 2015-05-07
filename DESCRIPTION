@@ -11,6 +11,7 @@ Imports:
   R.oo (>= 1.19.0),
   R.cache (>= 0.10.0),
   matrixStats (>= 0.14.0),
+  gtools (>= 3.4.2),
   Biostrings,
   GenomeInfoDb,
   S4Vectors,

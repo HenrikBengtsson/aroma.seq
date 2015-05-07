@@ -101,11 +101,11 @@ importFrom("Rsamtools", "ScanBamParam")
 importFrom("Rsamtools", "scanBamWhat")
 importFrom("Rsamtools", "sortBam")
 
-
 importFrom("ShortRead", "FastqSampler")
 importFrom("ShortRead", "yield")
 importFrom("ShortRead", "writeFastq")
 
+importFrom("gtools", "mixedorder")
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -624,3 +624,6 @@ S3method("splitUp", "FastqDataFile")
 S3method("getIndexFile", "FastaReferenceFile")
 S3method("hasIndex", "FastaReferenceFile")
 S3method("splitByTargetType", "BamDatSet")
+S3method("typeOfSequenceOrdering", "character")
+S3method("typeOfSequenceOrdering", "numeric")
+

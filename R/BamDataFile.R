@@ -50,6 +50,8 @@ setMethodS3("as.character", "BamDataFile", function(x, ...) {
     s <- c(s, sprintf("Total target length: %.3g Gb (%s bases)", len/1e9, pi3(len)))
     names <- getTargetNames(this)
     s <- c(s, sprintf("Targets: [%d] %s", n, hpaste(names)))
+    scores <- typeOfSeqNamesOrdering(getSeqLengths(this), sort=TRUE, as="humanreadable")
+    s <- c(s, sprintf("Ordering of target names (scores): %s (%s)", scores[1], paste(scores[-1], collapse=", ")))
 
     counts <- getReadCounts(this)
     counts <- c(counts, total=sum(counts, na.rm=TRUE))
@@ -235,6 +237,10 @@ setMethodS3("getTargetNames", "BamDataFile", function(this, ...) {
 
 setMethodS3("getSeqNames", "BamDataFile", function(this, ...) {
   getTargetNames(this)
+})
+
+setMethodS3("getSeqLengths", "BamDataFile", function(this, ...) {
+  getTargets(this);
 })
 
 setMethodS3("getTargetLengths", "BamDataFile", function(this, ...) {
