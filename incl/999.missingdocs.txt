@@ -1,3 +1,9 @@
+as.character.BamDataSet getFlagStat getSeqLengths.BamDataFile
+getTypeOfSeqNames getTypeOfSeqNames.FastaReferenceFile
+splitByTargetType splitByTargetType.BamDataSet
+typeOfSequenceOrdering typeOfSequenceOrdering.character
+typeOfSequenceOrdering.numeric
+
 as.character.SraDataFile byName.SraDataSet byPath.SraDataSet
 fastqDump.SraDataFile fastqDump.SraDataSet
 findByName.SraDataSet findSraToolkit getDepth.SraDataSet

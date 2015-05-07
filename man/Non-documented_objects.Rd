@@ -12,6 +12,16 @@
 
 
 % Other missing docs
+\alias{as.character.BamDataSet}
+\alias{getFlagStat}
+\alias{getSeqLengths.BamDataFile}
+\alias{getTypeOfSeqNames}
+\alias{getTypeOfSeqNames.FastaReferenceFile}
+\alias{splitByTargetType}
+\alias{splitByTargetType.BamDataSet}
+\alias{typeOfSequenceOrdering}
+\alias{typeOfSequenceOrdering.character}
+\alias{typeOfSequenceOrdering.numeric}
 \alias{as.character.SraDataFile}
 \alias{byName.SraDataSet}
 \alias{byPath.SraDataSet}
