@@ -2,6 +2,10 @@ Package: aroma.seq
 ==================
 
 Version: 0.6.1-9000 [2015-05-06]
+o ROBUSTNESS: Now print() for BamDataSet warns if there are
+  BAM files that have been aligned to different target sequences,
+  which would indicate that different FASTA reference files have
+  been used.
 o Now FastaReferenceFile and BamDataFile reports on possible ways
   the sequences/chromosomes are ordered.
 o Added getSeqLengths() for BamDataFile.

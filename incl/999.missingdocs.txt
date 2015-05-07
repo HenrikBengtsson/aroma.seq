@@ -326,3 +326,6 @@ readSeqLengths.FastaReferenceIndexFile readTotalCNsAndBAFs
 readTotalCNsAndBAFs.SeqzFile splitUp splitUp.FastqDataFile
 getIndexFile.FastaReferenceFile hasIndex.FastaReferenceFile
 getFlagStat.BamDataFile
+as.character.BamDataSet getFlagStat splitByTargetType
+splitByTargetType.BamDataSet
+  
