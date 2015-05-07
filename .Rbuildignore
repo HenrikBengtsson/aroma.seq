@@ -32,4 +32,4 @@ README[.]md
 ^[.]test
 ^[.]check
 ^.*[.]tar[.]gz$
-^.*Data
+^[a-z]+Data
