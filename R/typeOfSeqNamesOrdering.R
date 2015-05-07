@@ -31,7 +31,13 @@ setMethodS3("typeOfSequenceOrdering", "character", function(values, sort=TRUE, a
   }
 
   if (as == "humanreadable") {
-    scores <- sprintf("%g%% %s", round(100*scores, digits=1L), names(scores))
+    if (n == 0) {
+      scores <- "<any order; empty set>"
+    } else if (n == 1) {
+      scores <- "<any order; a single item>"
+    } else {
+      scores <- sprintf("%g%% %s", round(100*scores, digits=1L), names(scores))
+    }
   }
 
   scores
@@ -64,7 +70,13 @@ setMethodS3("typeOfSequenceOrdering", "numeric", function(values, sort=TRUE, as=
   }
 
   if (as == "humanreadable") {
-    scores <- sprintf("%g%% %s", round(100*scores, digits=1L), names(scores))
+    if (n == 0) {
+      scores <- "<any order; empty set>"
+    } else if (n == 1) {
+      scores <- "<any order; a single item>"
+    } else {
+      scores <- sprintf("%g%% %s", round(100*scores, digits=1L), names(scores))
+    }
   }
 
   scores

@@ -56,8 +56,10 @@ setMethodS3("as.character", "FastaReferenceFile", function(x, ...) {
   s <- c(s, sprintf("Total sequence length: %s", pi3(getTotalSeqLengths(this))))
   s <- c(s, sprintf("Number of sequences: %d", n))
   s <- c(s, sprintf("Sequence names: [%d] %s", n, hpaste(getSeqNames(this))))
-  scores <- typeOfSequenceOrdering(getSeqLengths(this), sort=TRUE, as="humanreadable")
-  s <- c(s, sprintf("Ordering of sequence names (scores): %s (%s)", scores[1], paste(scores[-1], collapse=", ")))
+  if (n > 1) {
+    scores <- typeOfSequenceOrdering(getSeqLengths(this), sort=TRUE, as="humanreadable")
+    s <- c(s, sprintf("Ordering of sequence names (scores): %s (%s)", scores[1], paste(scores[-1], collapse=", ")))
+  }
   s
 }, protected=TRUE)
 
