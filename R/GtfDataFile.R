@@ -155,37 +155,53 @@ setMethodS3("byOrganism", "GtfDataFile", function(static, organism, ...) {
 }, static=TRUE) # byOrganism()
 
 
-setMethodS3("getSeqLengths", "GtfDataFile", function(this, unique=FALSE, onlyIfCached=FALSE, force=FALSE, ...) {
+setMethodS3("getSeqLengths", "GtfDataFile", function(this, unique=FALSE, onlyIfCached=TRUE, force=FALSE, ...) {
+  uniqify <- function(lens, unique=FALSE) {
+    # Cache in memory
+    this$.seqLengths <- lens
+    
+    if (!unique || length(lens) < 1L) return(lens)
+    mstr(1)
+    names <- names(lens)
+    mstr(names)
+    dups <- duplicated(names)
+    mstr(dups)
+    if (any(dups)) lens <- lens[!dups]
+    mstr(lens)
+    lens
+  } # uniqify()
+
   pathname <- getPathname(this)
 
-  # Check for cached results
+  # (a) Check for cached results in memory
+  lens <- this$.seqLengths
+  if (!force && !is.null(lens)) return(uniqify(lens, unique=unique))
+
+  # (b) Check for cached results on file
   dirs <- c("aroma.seq", getOrganism(this))
   key <- list(method="getSeqLengths", class=class(this), pathname=pathname)
-  lens <- loadCache(key=key, dirs=dirs)
-  if (force || is.null(lens)) {
-    if (!onlyIfCached) {
-      con <- gzfile(pathname, open="r")
-      on.exit(close(con))
-      names <- NULL
-      while (length(bfr <- readLines(con, n=10e3)) > 0L) {
-        bfr <- gsub("\t.*", "", bfr)
-        names <- c(names, bfr)
-      }
-      lens <- rep(NA_integer_, times=length(names))
-      names(lens) <- names
-    }
+  if (!force) {
+    lens <- loadCache(key=key, dirs=dirs)
+    if (!is.null(lens)) return(uniqify(lens, unique=unique))
   }
+
+  # (c) Scan file too expensive?
+  if (onlyIfCached) return(NULL)
+  
+  # (d) Scan file?
+  con <- gzfile(pathname, open="r")
+  on.exit(close(con))
+  names <- NULL
+  while (length(bfr <- readLines(con, n=10e3)) > 0L) {
+    bfr <- grep("^#", bfr, value=TRUE, invert=TRUE)
+    bfr <- gsub("\t.*", "", bfr)
+    names <- c(names, bfr)
+  }
+  lens <- rep(NA_integer_, times=length(names))
+  names(lens) <- names
 
   # Cache
   saveCache(lens, key=key, dirs=dirs)
-
-  if (unique && length(lens) > 1L) {
-    names <- names(lens)
-    dups <- duplicated(names)
-    if (any(dups)) {
-      lens <- lens[!dups]
-    }
-  }
 
   lens
 })

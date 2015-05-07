@@ -30,25 +30,33 @@ setMethodS3("getSeqGenericSummary", "SequenceContigsInterface", function(x, ...)
   n <- nbrOfSeqs(x)
   s <- sprintf("Number of sequence contigs: %d", n)
   if (n > 0L) {
-    names <- getSeqNames(x, unique=TRUE)
     dups <- hasDuplicatedSeqs(x)
+    names <- getSeqNames(x, unique=dups)
+
     if (dups) {
-      nu <- nbrOfSeqs(x, unique=TRUE)
+      nu <- length(names)
       msg <- sprintf("Unique sequence names: [%d] %s", nu, hpaste(names))
     } else {
       msg <- sprintf("Sequence names: [%d] %s", n, hpaste(names))
     }
     s <- c(s, msg)
+
     if (hasSeqLengths(x)) {
       lens <- getSeqLengths(x)
       total <- getTotalSeqLength(x)
       s <- c(s, sprintf("Sequence lengths (bp): [%d] %s", n, hpaste(pi3(lens), collapse="; ")))
       s <- c(s, sprintf("Total sequence length (bp): %s", pi3(total)))
     }
+    
     if (n > 1L) {
-      scores <- getSeqOrdering(x, rank=TRUE, as="humanreadable")
+      scores <- getSeqOrdering(x, unique=dups, rank=TRUE, as="humanreadable")
       scores <- paste(scores, collapse=", ")
-      s <- c(s, sprintf("Ordering of sequence names (scores): %s", scores))
+      if (dups) {
+        msg <- sprintf("Ordering of unique sequence contigs (scores): %s", scores)
+      } else {
+        msg <- sprintf("Ordering of sequence contigs (scores): %s", scores)
+      }
+      s <- c(s, msg)
     }
   }
   GenericSummary(s)
@@ -56,7 +64,12 @@ setMethodS3("getSeqGenericSummary", "SequenceContigsInterface", function(x, ...)
 
 setMethodS3("getSeqOrdering", "SequenceContigsInterface", function(this, ...) {
   lens <- getSeqLengths(this)
-  typeOfSequenceOrdering(lens, ...)
+  if (!all(is.na(lens))) {
+    seqOrder <- typeOfSequenceOrdering(lens, ...)
+  } else {
+    seqOrder <- typeOfSequenceOrdering(names(lens), ...)
+  }
+  seqOrder
 }, protected=TRUE)
 
 setMethodS3("getSeqLengths", "SequenceContigsInterface", abstract=TRUE)
@@ -68,7 +81,7 @@ setMethodS3("hasSeqLengths", "SequenceContigsInterface", function(this, ...) {
 
 setMethodS3("getTotalSeqLength", "SequenceContigsInterface", function(this, ...) {
   seqLengths <- getSeqLengths(this, ...)
-  if (is.null(seqLengths)) return(NA_integer_)
+  if (all(is.na(seqLengths))) return(NA_integer_)
   res <- sum(as.numeric(seqLengths), na.rm=TRUE)
   if (res < .Machine$integer.max) res <- as.integer(res)
   res
@@ -82,7 +95,10 @@ setMethodS3("cleanSeqNames", "SequenceContigsInterface", function(this, names, .
   # >I dna:chromosome chromosome:EF4:I:1:230218:1 REF
   # => ID/name: 'I'
   # => Description: 'dna:chromosome chromosome:EF4:I:1:230218:1 REF'
-  names <- gsub(" .*", "", names)
+  unames <- unique(names)
+  map <- match(names, table=unames)
+  cleanUnames <- sub(" .*", "", unames)
+  names <- cleanUnames[map]
   names
 }, protected=TRUE)
 
