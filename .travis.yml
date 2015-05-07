@@ -27,9 +27,7 @@ env:
 
   # R versions r-builder should test on (ignored by r-travis)
   matrix:
-#    - RVERSION=3.0.3
-#    - RVERSION=3.1.2
-    - RVERSION=devel _R_CHECK_FULL_=TRUE
+    - RVERSION=3.2.0
 
 
 before_install:
@@ -44,9 +42,11 @@ before_install:
     fi
 
 install:
-
- - $RENV install_bioc aroma.light Biobase BiocParallel Biostrings edgeR GenomicRanges QDNAseq qrqc Rsamtools ShortRead
- - $RENV install_r aroma.core matrixStats R.cache R.filesets R.methodsS3 R.oo R.utils
+ - $RENV install_bioc aroma.light Biobase BiocParallel Biostrings edgeR GenomicRanges qrqc Rsamtools ShortRead
+ - $RENV install_r aroma.cn BatchJobs
+ - $RENV install_bioc Biostrings GenomeInfoDb GenomicRanges IRanges Rsamtools S4Vectors ShortRead
+ - $RENV install_r aroma.core gtools matrixStats R.cache R.filesets R.methodsS3 R.oo R.utils
+ - $RENV install_bioc aroma.light Biobase BiocParallel edgeR QDNAseq qrqc
  - $RENV install_r aroma.cn BatchJobs markdown R.devices R.rsp
 
 script:
@@ -55,10 +55,12 @@ script:
 
 after_success:
   - $RENV dump_logs_by_extension out
-  - $RENV install_devtools
-  - $RENV install_github HenrikBengtsson/covr
-  - curl -OL https://raw.githubusercontent.com/HenrikBengtsson/covr-utils/master/covr-utils.R
-  - $RENV run_script .coveralls.R
+  - if [ -f ".coveralls.R" ]; then
+      $RENV install_devtools;
+      $RENV install_github HenrikBengtsson/covr;
+      curl -OL https://raw.githubusercontent.com/HenrikBengtsson/covr-utils/master/covr-utils.R;
+      $RENV run_script .coveralls.R;
+    fi
 
 after_failure:
   - $RENV dump_logs

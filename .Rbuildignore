@@ -4,6 +4,7 @@
 ^.svn
 ^.git
 ^.make
+OVERVIEW[.]md
 README[.]md
 
 #----------------------------
@@ -31,5 +32,3 @@ README[.]md
 ^[.]test
 ^[.]check
 ^.*[.]tar[.]gz$
-^[a-z]+Data
-
