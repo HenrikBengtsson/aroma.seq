@@ -155,7 +155,7 @@ setMethodS3("byOrganism", "GtfDataFile", function(static, organism, ...) {
 }, static=TRUE) # byOrganism()
 
 
-setMethodS3("getSeqLengths", "GtfDataFile", function(this, unique=FALSE, onlyIfCached=TRUE, force=FALSE, ...) {
+setMethodS3("getSeqLengths", "GtfDataFile", function(this, unique=FALSE, onlyIfCached=FALSE, force=FALSE, ...) {
   uniqify <- function(lens, unique=FALSE) {
     # Cache in memory
     this$.seqLengths <- lens
@@ -186,7 +186,7 @@ setMethodS3("getSeqLengths", "GtfDataFile", function(this, unique=FALSE, onlyIfC
   }
 
   # (c) Scan file too expensive?
-  if (onlyIfCached) return(NULL)
+  if (!force && onlyIfCached) return(NULL)
   
   # (d) Scan file?
   con <- gzfile(pathname, open="r")

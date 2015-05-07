@@ -29,7 +29,7 @@ setConstructorS3("SequenceContigsInterface", function(...) {
 setMethodS3("getSeqGenericSummary", "SequenceContigsInterface", function(x, ...) {
   n <- nbrOfSeqs(x)
   s <- sprintf("Number of sequence contigs: %d", n)
-  if (n > 0L) {
+  if (!is.na(n) && n > 0L) {
     dups <- hasDuplicatedSeqs(x)
     names <- getSeqNames(x, unique=dups)
 
