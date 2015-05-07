@@ -1,3 +1,20 @@
+ as.character.Bowtie2IndexSet
+  as.character.GcBaseFile cleanSeqNames
+  cleanSeqNames.SequenceContigsInterface getSeqGenericSummary
+  getSeqGenericSummary.SequenceContigsInterface
+  getSeqLengths.Bowtie2IndexSet getSeqLengths.GcBaseFile
+  getSeqLengths.GtfDataFile getSeqLengths.SequenceContigsInterface
+  getSeqNames.SequenceContigsInterface getSeqOrdering
+  getSeqOrdering.SequenceContigsInterface getTotalSeqLength
+  getTotalSeqLength.SequenceContigsInterface hasDuplicatedSeqs
+  hasDuplicatedSeqs.SequenceContigsInterface hasSeqLengths
+  hasSeqLengths.SequenceContigsInterface
+  isCompatibleWithBySeqLengths
+  isCompatibleWithBySeqLengths.SequenceContigsInterface
+  isCompatibleWithBySeqNames.SequenceContigsInterface
+  isCompatibleWithBySeqs
+  isCompatibleWithBySeqs.SequenceContigsInterface
+  nbrOfSeqs.SequenceContigsInterface
 as.character.BamDataSet getFlagStat getSeqLengths.BamDataFile
 getTypeOfSeqNames getTypeOfSeqNames.FastaReferenceFile
 splitByTargetType splitByTargetType.BamDataSet
@@ -334,4 +351,4 @@ getIndexFile.FastaReferenceFile hasIndex.FastaReferenceFile
 getFlagStat.BamDataFile
 as.character.BamDataSet getFlagStat splitByTargetType
 splitByTargetType.BamDataSet
-  
+

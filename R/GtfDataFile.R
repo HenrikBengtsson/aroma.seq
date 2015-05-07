@@ -31,16 +31,14 @@
 # }
 #*/###########################################################################
 setConstructorS3("GtfDataFile", function(..., columnNames=FALSE) {
-  extend(TabularTextFile(..., columnNames=columnNames), "GtfDataFile")
+  extend(TabularTextFile(..., columnNames=columnNames), c("GtfDataFile", uses("SequenceContigsInterface")))
 })
 
 setMethodS3("as.character", "GtfDataFile", function(x, ...) {
-  s <- NextMethod("as.character");
-  seqNames <- getSeqNames(x, unique=TRUE, onlyIfCached=TRUE);
-  s <- c(s, sprintf("Unique sequence names: %s [%d]", hpaste(seqNames), length(seqNames)));
-  s;
-}, protected=TRUE)
-
+  s <- NextMethod("as.character")
+  s <- c(s, getSeqGenericSummary(x, ...))
+  s
+})
 
 setMethodS3("getOrganism", "GtfDataFile", function(this, ...) {
   path <- getPath(this);
@@ -157,38 +155,41 @@ setMethodS3("byOrganism", "GtfDataFile", function(static, organism, ...) {
 }, static=TRUE) # byOrganism()
 
 
-setMethodS3("getSeqNames", "GtfDataFile", function(this, unique=FALSE, onlyIfCached=FALSE, force=FALSE, ...) {
-  pathname <- getPathname(this);
+setMethodS3("getSeqLengths", "GtfDataFile", function(this, unique=FALSE, onlyIfCached=FALSE, force=FALSE, ...) {
+  pathname <- getPathname(this)
 
   # Check for cached results
-  dirs <- c("aroma.seq", getOrganism(this));
-  key <- list(method="getSeqNames", class=class(this), pathname=pathname);
-  seqNames <- loadCache(key=key, dirs=dirs);
-
-  if (force || is.null(seqNames)) {
+  dirs <- c("aroma.seq", getOrganism(this))
+  key <- list(method="getSeqLengths", class=class(this), pathname=pathname)
+  lens <- loadCache(key=key, dirs=dirs)
+  if (force || is.null(lens)) {
     if (!onlyIfCached) {
-      con <- gzfile(pathname, open="r");
-      on.exit(close(con));
-      seqNames <- NULL;
+      con <- gzfile(pathname, open="r")
+      on.exit(close(con))
+      names <- NULL
       while (length(bfr <- readLines(con, n=10e3)) > 0L) {
-        bfr <- gsub("\t.*", "", bfr);
-        seqNames <- c(seqNames, bfr);
+        bfr <- gsub("\t.*", "", bfr)
+        names <- c(names, bfr)
       }
+      lens <- rep(NA_integer_, times=length(names))
+      names(lens) <- names
     }
   }
 
   # Cache
-  saveCache(seqNames, key=key, dirs=dirs);
+  saveCache(lens, key=key, dirs=dirs)
 
-  if (unique && length(seqNames) > 1L) {
-    seqNames <- unique(seqNames);
-    seqNames <- sort(seqNames);
-    o <- order(nchar(seqNames), order(seqNames));
-    seqNames <- seqNames[o];
+  if (unique && length(lens) > 1L) {
+    names <- names(lens)
+    dups <- duplicated(names)
+    if (any(dups)) {
+      lens <- lens[!dups]
+    }
   }
 
-  seqNames;
+  lens
 })
+
 
 
 ############################################################################

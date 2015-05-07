@@ -1,7 +1,7 @@
 ##########################################################################/**
 # @RdocClass BamDataFile
 #
-# @title "The abstract BamDataFile class"
+# @title "The BamDataFile class"
 #
 # \description{
 #  @classhierarchy
@@ -32,7 +32,7 @@
 # }
 #*/###########################################################################
 setConstructorS3("BamDataFile", function(...) {
-  extend(GenericDataFile(...), c("BamDataFile", uses("AromaSeqDataFile")));
+  extend(GenericDataFile(...), c("BamDataFile", uses("AromaSeqDataFile"), uses("SequenceContigsInterface")))
 })
 
 
@@ -44,17 +44,7 @@ setMethodS3("as.character", "BamDataFile", function(x, ...) {
   s <- c(s, sprintf("Has index file (*.bai): %s", hasIndex(this)))
   s <- c(s, sprintf("Is sorted: %s", isSorted(this)))
   if (hasIndex(this)) {
-    n <- nbrOfTargets(this)
-    s <- c(s, sprintf("Number of targets: %s", n))
-    len <- getTotalTargetLength(this)
-    s <- c(s, sprintf("Total target length: %.3g Gb (%s bases)", len/1e9, pi3(len)))
-    names <- getTargetNames(this)
-    s <- c(s, sprintf("Targets: [%d] %s", n, hpaste(names)))
-    if (n > 1) {
-      scores <- typeOfSequenceOrdering(getSeqLengths(this), sort=TRUE, as="humanreadable")
-      s <- c(s, sprintf("Ordering of target names (scores): %s (%s)", scores[1], paste(scores[-1], collapse=", ")))
-    }
-
+    s <- c(s, getSeqGenericSummary(x, ...))
     counts <- getReadCounts(this)
     counts <- c(counts, total=sum(counts, na.rm=TRUE))
     frac <- 100*counts/counts["total"]
@@ -218,40 +208,35 @@ setMethodS3("sort", "BamDataFile", function(x, ..., force=FALSE) {
   throw("Not yet implemented!");
 })
 
-
-setMethodS3("nbrOfSeqs", "BamDataFile", function(this, ...) {
-  nbrOfTargets(this);
-})
-
 setMethodS3("getTargets", "BamDataFile", function(this, ...) {
   hdr <- getHeader(this);
   targets <- hdr$targets;
   targets;
 })
 
+
+setMethodS3("getSeqLengths", "BamDataFile", function(this, ...) {
+  getTargets(this)
+})
+
+## BEGIN: DEPRECATE?
 setMethodS3("nbrOfTargets", "BamDataFile", function(this, ...) {
-  length(getTargets(this));
+  nbrOfSeqs(this, ...)
 })
 
 setMethodS3("getTargetNames", "BamDataFile", function(this, ...) {
-  names(getTargets(this));
-})
-
-setMethodS3("getSeqNames", "BamDataFile", function(this, ...) {
-  getTargetNames(this)
-})
-
-setMethodS3("getSeqLengths", "BamDataFile", function(this, ...) {
-  getTargets(this);
+  getSeqNames(this, ...)
 })
 
 setMethodS3("getTargetLengths", "BamDataFile", function(this, ...) {
-  getTargets(this);
+  getSeqLengths(this, ...)
 })
 
 setMethodS3("getTotalTargetLength", "BamDataFile", function(this, ...) {
-  sum(as.numeric(getTargets(this)));
+  getTotalSeqLength(this, ...)
 })
+## END: DEPRECATE?
+
 
 setMethodS3("getHeader", "BamDataFile", function(this, force=FALSE, ...) {
   header <- this$.header;

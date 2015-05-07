@@ -23,13 +23,15 @@
 \code{~~~~~~~|}\cr
 \code{~~~~~~~+--}\code{\link[R.filesets]{GenericDataFile}}\cr
 \code{~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~+--}\emph{\code{FastaReferenceIndexFile}}\cr
+\code{~~~~~~~~~~~~+--}\code{\link[aroma.seq]{SequenceContigsInterface}}\cr
+\code{~~~~~~~~~~~~~~~~~|}\cr
+\code{~~~~~~~~~~~~~~~~~+--}\emph{\code{FastaReferenceIndexFile}}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
 
 public abstract static class \bold{FastaReferenceIndexFile}\cr
-extends \emph{\link[R.filesets]{GenericDataFile}}\cr
+extends \emph{\link[aroma.seq]{SequenceContigsInterface}}\cr
 
 
 
@@ -49,11 +51,11 @@ FastaReferenceIndexFile(...)
  \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{getSeqLengths} \tab  -\cr
- \tab \code{getSeqNames} \tab  -\cr
- \tab \code{getTotalSeqLengths} \tab  -\cr
- \tab \code{nbrOfSeqs} \tab  -\cr
 }
 
+
+ \bold{Methods inherited from SequenceContigsInterface}:\cr
+cleanSeqNames, getSeqGenericSummary, getSeqLengths, getSeqNames, getSeqOrdering, getTotalSeqLength, hasDuplicatedSeqs, hasSeqLengths, isCompatibleWithBySeqLengths, isCompatibleWithBySeqNames, isCompatibleWithBySeqs, nbrOfSeqs
 
  \bold{Methods inherited from GenericDataFile}:\cr
 as.character, clone, compareChecksum, copyTo, equals, fromFile, getAttribute, getAttributes, getChecksum, getChecksumFile, getCreatedOn, getDefaultFullName, getExtension, getExtensionPattern, getFileSize, getFileType, getFilename, getFilenameExtension, getLastAccessedOn, getLastModifiedOn, getOutputExtension, getPath, getPathname, gunzip, gzip, hasBeenModified, is.na, isFile, isGzipped, linkTo, readChecksum, renameTo, renameToUpperCaseExt, setAttribute, setAttributes, setAttributesBy, setAttributesByTags, setExtensionPattern, testAttributes, validate, validateChecksum, writeChecksum, directoryItem, directoryItems, directoryStructure, directoryStructure<-, getDataSetName, getOrganismName, getSampleName, loadCacheFile, loadCacheFileItem, memoizedCall2, saveCacheFile, saveCacheFileItem, getParentName

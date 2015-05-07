@@ -43,23 +43,15 @@
 # }
 #*/###########################################################################
 setConstructorS3("FastaReferenceFile", function(...) {
-  extend(GenericDataFile(...), "FastaReferenceFile",
+  extend(GenericDataFile(...), c("FastaReferenceFile", uses("SequenceContigsInterface")),
     .seqLengths=NULL
   );
 })
 
 setMethodS3("as.character", "FastaReferenceFile", function(x, ...) {
-  this <- x
   s <- NextMethod("as.character")
-  s <- c(s, sprintf("Has index file (*.bai): %s", hasIndex(this)))
-  n <- nbrOfSeqs(this)
-  s <- c(s, sprintf("Total sequence length: %s", pi3(getTotalSeqLengths(this))))
-  s <- c(s, sprintf("Number of sequences: %d", n))
-  s <- c(s, sprintf("Sequence names: [%d] %s", n, hpaste(getSeqNames(this))))
-  if (n > 1) {
-    scores <- typeOfSequenceOrdering(getSeqLengths(this), sort=TRUE, as="humanreadable")
-    s <- c(s, sprintf("Ordering of sequence names (scores): %s (%s)", scores[1], paste(scores[-1], collapse=", ")))
-  }
+  s <- c(s, sprintf("Has index file (*.bai): %s", hasIndex(x)))
+  s <- c(s, getSeqGenericSummary(x, ...))
   s
 }, protected=TRUE)
 
@@ -75,49 +67,6 @@ setMethodS3("getOrganism", "FastaReferenceFile", function(this, ...) {
   path <- getPath(this);
   organism <- basename(path);
   organism;
-})
-
-
-setMethodS3("getSeqLengths", "FastaReferenceFile", function(this, force=FALSE, ...) {
-  seqLengths <- this$.seqLengths;
-  if (force || is.null(seqLengths)) {
-    seqLengths <- readSeqLengths(this, ...);
-    this$.seqLengths <- seqLengths;
-  }
-  seqLengths;
-})
-
-setMethodS3("getTotalSeqLengths", "FastaReferenceFile", function(this, ...) {
-  seqLengths <- getSeqLengths(this, ...);
-  if (is.null(seqLengths)) return(NA_integer_);
-  res <- sum(as.numeric(seqLengths));
-  if (res < .Machine$integer.max) {
-    res <- as.integer(res);
-  }
-  res;
-})
-
-setMethodS3("getSeqNames", "FastaReferenceFile", function(this, ...) {
-  seqLengths <- getSeqLengths(this, ...);
-  if (is.null(seqLengths)) return(NA_character_);
-  names <- names(seqLengths);
-
-  # From http://en.wikipedia.org/wiki/FASTA_format:
-  # "The **word** following the ">" symbol is the identifier of the
-  # sequence, and the rest of the line is the description [...]", e.g.
-  # >I dna:chromosome chromosome:EF4:I:1:230218:1 REF
-  # => ID/name: 'I'
-  # => Description: 'dna:chromosome chromosome:EF4:I:1:230218:1 REF'
-  names <- gsub(" .*", "", names);
-
-  names;
-})
-
-
-setMethodS3("nbrOfSeqs", "FastaReferenceFile", function(this, ...) {
-  seqLengths <- getSeqLengths(this, ...);
-  if (is.null(seqLengths)) return(NA_integer_);
-  length(seqLengths);
 })
 
 
@@ -144,6 +93,14 @@ setMethodS3("readSeqLengths", "FastaReferenceFile", function(this, force=FALSE, 
   seqLengths;
 }, private=TRUE)
 
+setMethodS3("getSeqLengths", "FastaReferenceFile", function(this, force=FALSE, ...) {
+  seqLengths <- this$.seqLengths;
+  if (force || is.null(seqLengths)) {
+    seqLengths <- readSeqLengths(this, ...);
+    this$.seqLengths <- seqLengths;
+  }
+  seqLengths;
+})
 
 
 
@@ -511,7 +468,7 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method=c("b
     verbose && printf(verbose, "FASTA filesize: %.f bytes\n", size);
     maxNbrOfBases <- 2e9;
     if (size > maxNbrOfBases) {
-      nbrOfBases <- getTotalSeqLengths(this);
+      nbrOfBases <- getTotalSeqLength(this)
       verbose && printf(verbose, "Number of bases in FASTA reference: %.f\n", nbrOfBases);
       if (nbrOfBases > maxNbrOfBases) {
         throw(sprintf("Cannot build BWA index with method 'is' (consider using 'bwtsw' instead).  There are too many bases in FASTA file (%s): %.0f > %.0f", sQuote(pathnameFA), nbrOfBases, maxNbrOfBases));

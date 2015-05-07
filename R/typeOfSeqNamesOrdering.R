@@ -1,4 +1,4 @@
-setMethodS3("typeOfSequenceOrdering", "character", function(values, sort=TRUE, as=c("scores", "humanreadable"), locale="C", ...) {
+setMethodS3("typeOfSequenceOrdering", "character", function(values, rank=TRUE, as=c("scores", "humanreadable"), locale="C", ...) {
   # Argument 'as':
   as <- match.arg(as)
 
@@ -9,10 +9,12 @@ setMethodS3("typeOfSequenceOrdering", "character", function(values, sort=TRUE, a
     ## (a) Lexicographic ordering, e.g. 1,10,11,...,2,20,21,22,MT,X,Y?
     delta <- diff(order(values))
     counts$lexicograpic <- sum(delta == 1L, na.rm=TRUE)
-   ## (b) Mixed sort ordering, e.g. 1,2,...,10,11,...,21,22,MT,X,Y?
+
+    ## (b) Mixed sort ordering, e.g. 1,2,...,10,11,...,21,22,MT,X,Y?
     delta <- diff(mixedorder(values))
     counts$mixedsort <- sum(delta == 1L, na.rm=TRUE)
-   ## (d) Classical ordering, e.g. 1,2,...,10,11,...,21,22,X,Y,MT?
+
+    ## (c) Classical ordering, e.g. 1,2,...,10,11,...,21,22,X,Y,MT?
     ##     (assumes human or mouse)
     chrs <- suppressWarnings(as.integer(values))
     chrs[is.element(values, "X")] <- 23L
@@ -23,9 +25,9 @@ setMethodS3("typeOfSequenceOrdering", "character", function(values, sort=TRUE, a
   }, category="LC_COLLATE", locale=locale)
 
   counts <- unlist(counts)
-  scores <- counts / (n-1)
+  scores <- (counts + 1L) / n
 
-  if (sort) {
+  if (rank) {
     o <- order(scores, decreasing=TRUE)
     scores <- scores[o]
   }
@@ -44,7 +46,7 @@ setMethodS3("typeOfSequenceOrdering", "character", function(values, sort=TRUE, a
 })
 
 
-setMethodS3("typeOfSequenceOrdering", "numeric", function(values, sort=TRUE, as=c("scores", "humanreadable"), ...) {
+setMethodS3("typeOfSequenceOrdering", "numeric", function(values, rank=TRUE, as=c("scores", "humanreadable"), ...) {
   # Argument 'as':
   as <- match.arg(as)
 
@@ -56,15 +58,15 @@ setMethodS3("typeOfSequenceOrdering", "numeric", function(values, sort=TRUE, as=
   counts$length <- sum(delta == 1L, na.rm=TRUE)
 
   counts <- unlist(counts)
-  scores <- counts / (n-1)
+  scores <- (counts + 1L) / n
 
   names <- names(values)
   if (!is.null(names)) {
-    scoresN <- typeOfSequenceOrdering(names, sort=FALSE, as="scores", ...)
+    scoresN <- typeOfSequenceOrdering(names, rank=FALSE, as="scores", ...)
     scores <- c(scoresN, scores)
   }
 
-  if (sort) {
+  if (rank) {
     o <- order(scores, decreasing=TRUE)
     scores <- scores[o]
   }

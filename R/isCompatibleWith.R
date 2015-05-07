@@ -98,6 +98,18 @@ setMethodS3("isCompatibleWith", "Bowtie2IndexSet", function(this, other, mustWor
 })
 
 
+setMethodS3("isCompatibleWith", "GcBaseFile", function(this, other, ...) {
+  res <- NextMethod("isCompatibleWith")
+  if (!isTRUE(res)) return(res)
+  ## Assert same order
+  idxs <- match(getSeqNames(other), getSeqNames(this))
+  res <- all(diff(idxs) > 0, na.rm=TRUE)
+  if (!res) {
+    attr(res, "reason") <- "The ordering of sequence names does not match."
+  }
+  res
+})
+
 
 ############################################################################
 # HISTORY:
