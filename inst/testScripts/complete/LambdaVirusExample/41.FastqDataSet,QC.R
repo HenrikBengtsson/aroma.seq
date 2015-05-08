@@ -10,7 +10,7 @@ verbose <- Arguments$getVerbose(-10, timestamp=TRUE);
 
 
 dataSet <- "LambdaVirusExample";
-organism <- "LambdaPhage";
+organism <- "Lambda_phage";
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup

@@ -1,27 +1,28 @@
-path <- system.file("testScripts/R", package="aroma.seq");
-pathname <- file.path(path, "downloadUtils.R");
-source(pathname);
+path <- system.file("testScripts/R", package="aroma.seq")
+pathname <- file.path(path, "downloadUtils.R")
+source(pathname)
 
-library("aroma.seq");
-verbose <- Arguments$getVerbose(-8, timestamp=TRUE);
+library("aroma.seq")
+verbose <- Arguments$getVerbose(-8, timestamp=TRUE)
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Local functions
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-verbose && enter(verbose, "Downloading annotation data");
+verbose && enter(verbose, "Downloading annotation data")
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Annotation data
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-path <- "annotationData/organisms/LambdaPhage/";
-filename <- "lambda_virus.fa";
-pathname <- Arguments$getReadablePathname(filename, path=path, mustExist=FALSE);
+path <- "annotationData/organisms/Lambda_phage/"
+filename <- "lambda_virus.fa"
+pathname <- Arguments$getReadablePathname(filename, path=path, mustExist=FALSE)
 
 if (!isFile(pathname)) {
-  downloadBowtie2ExampleData();
+  downloadBowtie2ExampleData()
 }
 
-fa <- FastaReferenceFile(filename, path=path);
-print(fa);
+fa <- FastaReferenceFile(filename, path=path)
+print(fa)
 
-verbose && exit(verbose);
+verbose && exit(verbose)
+

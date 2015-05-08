@@ -9,7 +9,7 @@ fullTest <- fullTest && isDirectory("fastqData,aroma.seq,private");
 if (fullTest) {
 
 dataSet <- "AlbertsonD_2012-SCC,AB042"
-organism <- "HomoSapiens"
+organism <- "Homo_sapiens"
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup FASTA reference file

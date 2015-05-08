@@ -1,2 +1,2 @@
-cluster.functions <- makeClusterFunctionsInteractive();
+cluster.functions <- makeClusterFunctionsInteractive()
 

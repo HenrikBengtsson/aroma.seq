@@ -19,12 +19,12 @@
 # }
 #
 # \examples{\dontrun{
-#   pathnameFA <- "annotationData/organisms/LambdaPhage/lambda_virus.fa"
+#   pathnameFA <- "annotationData/organisms/Lambda_phage/lambda_virus.fa"
 #   bwaIndex(pathnameFA)
 #   indexPrefix <- bwaIndexPrefix(pathnameFA)
-#   bwaAln("fastqData/LambdaVirusExample/Generic/reads_1.fq",
+#   bwaAln("fastqData/LambdaVirusExample/Lambda_phage/reads_1.fq",
 #          indexPrefix=indexPrefix,
-#          pathnameD="fastqData/LambdaVirusExample/Generic/reads_1.sai")
+#          pathnameD="fastqData/LambdaVirusExample/Lambda_phage/reads_1.sai")
 # }}
 #
 # @author "HB"

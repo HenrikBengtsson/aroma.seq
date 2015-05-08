@@ -6,7 +6,7 @@
 library("aroma.seq");
 
 dataSet <- "LambdaVirusExample";
-organism <- "LambdaPhage";
+organism <- "Lambda_phage";
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup

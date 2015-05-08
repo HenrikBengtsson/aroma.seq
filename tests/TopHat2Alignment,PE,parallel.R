@@ -9,7 +9,7 @@ fullTest <- fullTest && isPackageInstalled(aroma.seq, "BatchJobs")
 if (fullTest) {
 
 dataSet <- "YeastTest"
-organism <- "SaccharomycesCerevisiae"
+organism <- "Saccharomyces_cerevisiae"
 
 # Setup (writable) local data directory structure
 setupExampleData()

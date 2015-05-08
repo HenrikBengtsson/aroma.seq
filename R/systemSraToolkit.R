@@ -16,7 +16,7 @@
 # }
 #
 # \examples{\dontrun{
-#   pathnameSRA <- "sraData/DataSetA/HomoSapiens/reads.sra"
+#   pathnameSRA <- "sraData/DataSetA/Homo_sapiens/reads.sra"
 #   res <- systemSraToolkit("fastq-dump", pathnameSRA, ..., stderr=FALSE)
 # }}
 #

@@ -13,7 +13,7 @@ verbose && enter(verbose, "Downloading annotation data");
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Annotation data
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-path <- "annotationData/organisms/LambdaPhage/";
+path <- "annotationData/organisms/Lambda_phage/";
 filename <- "lambda_virus.fa";
 pathname <- Arguments$getReadablePathname(filename, path=path, mustExist=FALSE);
 

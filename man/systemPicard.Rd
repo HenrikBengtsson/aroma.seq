@@ -28,7 +28,7 @@
 }
 
 \examples{\dontrun{
-  pathnameBAM <- "bwaData/LambdaVirusExample,bwa,is/Generic/reads_1.bam"
+  pathnameBAM <- "bwaData/LambdaVirusExample,bwa,is/Lambda_phage/reads_1.bam"
   res <- systemPicard("ValidateSamFile", INPUT=pathnameBAM, stderr=FALSE)
   ## ERROR: Read groups is empty
   print(res)

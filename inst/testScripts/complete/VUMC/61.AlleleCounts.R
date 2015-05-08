@@ -7,7 +7,7 @@ library("aroma.seq");
 
 
 dataSet <- "AlbertsonD_2012-SCC,bwa,is";
-organism <- "HomoSapiens";
+organism <- "Homo_sapiens";
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup

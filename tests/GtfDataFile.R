@@ -3,7 +3,7 @@ library("aroma.seq")
 # Setup (writable) local data directory structure
 setupExampleData()
 
-organism <- "SaccharomycesCerevisiae"
+organism <- "Saccharomyces_cerevisiae"
 
 gtf <- GtfDataFile$byOrganism(organism)
 print(gtf)

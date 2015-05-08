@@ -13,7 +13,7 @@ printf("BWA executable: %s\n", pathname);
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Indexing a reference genome
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-path <- "annotationData/organisms/LambdaPhage";
+path <- "annotationData/organisms/Lambda_phage";
 pathnameFA <- file.path(path, "lambda_virus.fa");
 pathnameFA <- Arguments$getReadablePathname(pathnameFA);
 prefix <- bwaIndexPrefix(pathnameFA, method="bwtsw");

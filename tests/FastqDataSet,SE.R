@@ -8,7 +8,7 @@ setupExampleData()
 
 
 dataSet <- "TopHat-example"
-organism <- "LambdaPhage"
+organism <- "Lambda_phage"
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup FASTA reference file

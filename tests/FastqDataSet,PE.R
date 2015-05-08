@@ -6,7 +6,7 @@ setupExampleData()
 
 
 dataSet <- "TopHat-example"
-organism <- "LambdaPhage"
+organism <- "Lambda_phage"
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup paired-end FASTQ set

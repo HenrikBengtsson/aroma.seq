@@ -1,5 +1,5 @@
 filename <- "reads_1.fq"
-path <- "fastqData/LambdaVirusExample/Generic/"
+path <- "fastqData/LambdaVirusExample/Lambda_phage/"
 df <- FastqDataFile(filename, path=path)
 print(df)
 

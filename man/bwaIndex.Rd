@@ -30,7 +30,7 @@
 }
 
 \examples{\dontrun{
-  bwaIndex("annotationData/organisms/LambdaPhage/lambda_virus.fa")
+  bwaIndex("annotationData/organisms/Lambda_phage/lambda_virus.fa")
 }}
 
 \author{Henrik Bengtsson}

@@ -6,6 +6,6 @@ library("R.utils")
 url <- "ftp://igenome:G3nom3s4u@ussd-ftp.illumina.com/Drosophila_melanogaster/Ensembl/BDGP5.25/Drosophila_melanogaster_Ensembl_BDGP5.25.tar.gz"
 
 # Using UniProt's Organism Mnemomics
-organism <- "DrosophilaMelanogaster"
+organism <- "Drosophila_melanogaster"
 
 

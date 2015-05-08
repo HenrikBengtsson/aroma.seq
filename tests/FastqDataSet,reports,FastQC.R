@@ -7,7 +7,7 @@ fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 setupExampleData()
 
 dataSet <- "TopHat-example"
-organism <- "LambdaPhage"
+organism <- "Lambda_phage"
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup FASTQ set

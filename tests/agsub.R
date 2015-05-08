@@ -4,7 +4,7 @@ library("aroma.seq")
 # Paths
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dataset <- "MyDataSet"
-organism <- "HomoSapiens"
+organism <- "Homo_sapiens"
 samples <- c(A="LH001", B="LH003")
 samplesT <- c(sprintf("Sample_%s", samples), samples)
 samplesT[3] <- gsub("/", "_", samplesT[3], fixed=TRUE)

@@ -31,12 +31,12 @@
 }
 
 \examples{\dontrun{
-  pathnameFA <- "annotationData/organisms/LambdaPhage/lambda_virus.fa"
+  pathnameFA <- "annotationData/organisms/Lambda_phage/lambda_virus.fa"
   bwaIndex(pathnameFA)
 
-  pathnameSAI <- "bwaData/LambdaVirusExample/Generic/reads_1.sai";
-  pathnameFQ <- "fastqData/LambdaVirusExample/Generic/reads_1.fq";
-  pathnameD <- "bwaData/LambdaVirusExample/Generic/reads_1.sam";
+  pathnameSAI <- "bwaData/LambdaVirusExample/Lambda_phage/reads_1.sai";
+  pathnameFQ <- "fastqData/LambdaVirusExample/Lambda_phage/reads_1.fq";
+  pathnameD <- "bwaData/LambdaVirusExample/Lambda_phage/reads_1.sam";
   bwaSamse(pathnameSAI=pathnameSAI, pathnameFQ=pathnameFQ,
            pathnameFA=pathnameFA, pathnameD=pathnameD);
 }}
