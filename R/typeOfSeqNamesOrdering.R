@@ -21,16 +21,17 @@ setMethodS3("typeOfSequenceOrdering", "character", function(values, unique=FALSE
     delta <- diff(o)
     counts$lexicograpic <- sum(delta == 1L, na.rm=TRUE)
 
-    ## (b) Classical ordering, e.g. 1,2,...,10,11,...,21,22,X,Y,MT?
+    ## (b) Canonical ordering, e.g. 1,2,...,10,11,...,21,22,X,Y,MT?
     ##     (assumes human or mouse)
     chrs <- suppressWarnings(as.integer(uvalues))
-    chrs[is.element(uvalues, "X")] <- 23L
-    chrs[is.element(uvalues, "Y")] <- 24L
-    chrs[is.element(uvalues, c("M", "MT"))] <- 25L
+    chrMax <- max(c(0L, chrs), na.rm=TRUE)
+    chrs[is.element(uvalues, "X")] <- chrMax+1L
+    chrs[is.element(uvalues, "Y")] <- chrMax+2L
+    chrs[is.element(uvalues, c("M", "MT"))] <- chrMax+3L
     o <- order(chrs)
     if (!unique) o <- o[map]
     delta <- diff(o)
-    counts$classical <- sum(delta == 1L, na.rm=TRUE)
+    counts$canonical <- sum(delta == 1L, na.rm=TRUE)
     
     ## (c) Mixed sort ordering, e.g. 1,2,...,10,11,...,21,22,MT,X,Y?
     ## Note: Very slow for large number of items
