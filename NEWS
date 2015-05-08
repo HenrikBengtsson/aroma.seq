@@ -1,7 +1,7 @@
 Package: aroma.seq
 ==================
 
-Version: 0.6.1-9000 [2015-05-06]
+Version: 0.6.2 [2015-05-07]
 o Added splitByTargetType() for BamDataSet.
 o Added getFlagStat() for BamDataFile.
 o Added getIndexFile() and hasIndex() to FastaReferenceIndexFile.
