@@ -73,23 +73,47 @@ setMethodS3("getSummary", "Bowtie2IndexSet", function(this, ...) {
 })
 
 
-setMethodS3("getSeqLengths", "Bowtie2IndexSet", function(this, ...) {
+setMethodS3("readSeqLengths", "Bowtie2IndexSet", function(this, force=FALSE, ...) {
   stopifnot(isComplete(this))
   stopifnot(isCapableOf(aroma.seq, "bowtie2"))
 
   prefix <- getIndexPrefix(this)
+
+  # Check for cached results
+  dirs <- c("aroma.seq", getOrganism(this));
+  key <- list(method="readSeqLengths", class=class(this), prefix=prefix);
+  lens <- loadCache(key=key, dirs=dirs);
+  if (!force && !is.null(lens)) {
+    return(lens);
+  }
+
   names <- system2("bowtie2-inspect", args=c("--names", prefix), stdout=TRUE)
   names <- trim(names)
 
   lens <- rep(NA_integer_, times=length(names))
   names(lens) <- names
 
+  # Cache
+  saveCache(lens, key=key, dirs=dirs);
+
+  lens
+}, protected=TRUE)
+
+
+setMethodS3("getSeqLengths", "Bowtie2IndexSet", function(this, force=FALSE, ...) {
+  lens <- this$.seqLengths
+  if (force || is.null(lens)) {
+    lens <- readSeqLengths(this, ...)
+    this$.seqLengths <- lens
+  }
   lens
 })
 
 
 ############################################################################
 # HISTORY:
+# 2015-05-07
+# o Added readSeqLengths() which caches to file.
 # 2014-08-23
 # o ROBUSTNESS: Now buildBowtie2IndexSet() asserts that the returned
 #   index set is compatible with the FASTA file.
