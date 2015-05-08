@@ -31,16 +31,14 @@
 # }
 #*/###########################################################################
 setConstructorS3("GtfDataFile", function(..., columnNames=FALSE) {
-  extend(TabularTextFile(..., columnNames=columnNames), "GtfDataFile")
+  extend(TabularTextFile(..., columnNames=columnNames), c("GtfDataFile", uses("SequenceContigsInterface")))
 })
 
 setMethodS3("as.character", "GtfDataFile", function(x, ...) {
-  s <- NextMethod("as.character");
-  seqNames <- getSeqNames(x, unique=TRUE, onlyIfCached=TRUE);
-  s <- c(s, sprintf("Unique sequence names: %s [%d]", hpaste(seqNames), length(seqNames)));
-  s;
-}, protected=TRUE)
-
+  s <- NextMethod("as.character")
+  s <- c(s, getSeqGenericSummary(x, ...))
+  s
+})
 
 setMethodS3("getOrganism", "GtfDataFile", function(this, ...) {
   path <- getPath(this);
@@ -157,38 +155,57 @@ setMethodS3("byOrganism", "GtfDataFile", function(static, organism, ...) {
 }, static=TRUE) # byOrganism()
 
 
-setMethodS3("getSeqNames", "GtfDataFile", function(this, unique=FALSE, onlyIfCached=FALSE, force=FALSE, ...) {
-  pathname <- getPathname(this);
+setMethodS3("getSeqLengths", "GtfDataFile", function(this, unique=FALSE, onlyIfCached=FALSE, force=FALSE, ...) {
+  uniqify <- function(lens, unique=FALSE) {
+    # Cache in memory
+    this$.seqLengths <- lens
+    
+    if (!unique || length(lens) < 1L) return(lens)
+    mstr(1)
+    names <- names(lens)
+    mstr(names)
+    dups <- duplicated(names)
+    mstr(dups)
+    if (any(dups)) lens <- lens[!dups]
+    mstr(lens)
+    lens
+  } # uniqify()
 
-  # Check for cached results
-  dirs <- c("aroma.seq", getOrganism(this));
-  key <- list(method="getSeqNames", class=class(this), pathname=pathname);
-  seqNames <- loadCache(key=key, dirs=dirs);
+  pathname <- getPathname(this)
 
-  if (force || is.null(seqNames)) {
-    if (!onlyIfCached) {
-      con <- gzfile(pathname, open="r");
-      on.exit(close(con));
-      seqNames <- NULL;
-      while (length(bfr <- readLines(con, n=10e3)) > 0L) {
-        bfr <- gsub("\t.*", "", bfr);
-        seqNames <- c(seqNames, bfr);
-      }
-    }
+  # (a) Check for cached results in memory
+  lens <- this$.seqLengths
+  if (!force && !is.null(lens)) return(uniqify(lens, unique=unique))
+
+  # (b) Check for cached results on file
+  dirs <- c("aroma.seq", getOrganism(this))
+  key <- list(method="getSeqLengths", class=class(this), pathname=pathname)
+  if (!force) {
+    lens <- loadCache(key=key, dirs=dirs)
+    if (!is.null(lens)) return(uniqify(lens, unique=unique))
   }
+
+  # (c) Scan file too expensive?
+  if (!force && onlyIfCached) return(NULL)
+  
+  # (d) Scan file?
+  con <- gzfile(pathname, open="r")
+  on.exit(close(con))
+  names <- NULL
+  while (length(bfr <- readLines(con, n=10e3)) > 0L) {
+    bfr <- grep("^#", bfr, value=TRUE, invert=TRUE)
+    bfr <- gsub("\t.*", "", bfr)
+    names <- c(names, bfr)
+  }
+  lens <- rep(NA_integer_, times=length(names))
+  names(lens) <- names
 
   # Cache
-  saveCache(seqNames, key=key, dirs=dirs);
+  saveCache(lens, key=key, dirs=dirs)
 
-  if (unique && length(seqNames) > 1L) {
-    seqNames <- unique(seqNames);
-    seqNames <- sort(seqNames);
-    o <- order(nchar(seqNames), order(seqNames));
-    seqNames <- seqNames[o];
-  }
-
-  seqNames;
+  lens
 })
+
 
 
 ############################################################################

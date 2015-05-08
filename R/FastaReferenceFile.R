@@ -43,18 +43,15 @@
 # }
 #*/###########################################################################
 setConstructorS3("FastaReferenceFile", function(...) {
-  extend(GenericDataFile(...), "FastaReferenceFile",
+  extend(GenericDataFile(...), c("FastaReferenceFile", uses("SequenceContigsInterface")),
     .seqLengths=NULL
   );
 })
 
 setMethodS3("as.character", "FastaReferenceFile", function(x, ...) {
-  this <- x
   s <- NextMethod("as.character")
-  n <- nbrOfSeqs(this)
-  s <- c(s, sprintf("Total sequence length: %s", pi3(getTotalSeqLengths(this))))
-  s <- c(s, sprintf("Number of sequences: %d", n))
-  s <- c(s, sprintf("Sequence names: [%d] %s", n, hpaste(getSeqNames(this))))
+  s <- c(s, sprintf("Has index file (*.bai): %s", hasIndex(x)))
+  s <- c(s, getSeqGenericSummary(x, ...))
   s
 }, protected=TRUE)
 
@@ -73,50 +70,8 @@ setMethodS3("getOrganism", "FastaReferenceFile", function(this, ...) {
 })
 
 
-setMethodS3("getSeqLengths", "FastaReferenceFile", function(this, force=FALSE, ...) {
-  seqLengths <- this$.seqLengths;
-  if (force || is.null(seqLengths)) {
-    seqLengths <- readSeqLengths(this, ...);
-    this$.seqLengths <- seqLengths;
-  }
-  seqLengths;
-})
-
-setMethodS3("getTotalSeqLengths", "FastaReferenceFile", function(this, ...) {
-  seqLengths <- getSeqLengths(this, ...);
-  if (is.null(seqLengths)) return(NA_integer_);
-  res <- sum(as.numeric(seqLengths));
-  if (res < .Machine$integer.max) {
-    res <- as.integer(res);
-  }
-  res;
-})
-
-setMethodS3("getSeqNames", "FastaReferenceFile", function(this, ...) {
-  seqLengths <- getSeqLengths(this, ...);
-  if (is.null(seqLengths)) return(NA_character_);
-  names <- names(seqLengths);
-
-  # From http://en.wikipedia.org/wiki/FASTA_format:
-  # "The **word** following the ">" symbol is the identifier of the
-  # sequence, and the rest of the line is the description [...]", e.g.
-  # >I dna:chromosome chromosome:EF4:I:1:230218:1 REF
-  # => ID/name: 'I'
-  # => Description: 'dna:chromosome chromosome:EF4:I:1:230218:1 REF'
-  names <- gsub(" .*", "", names);
-
-  names;
-})
-
-setMethodS3("nbrOfSeqs", "FastaReferenceFile", function(this, ...) {
-  seqLengths <- getSeqLengths(this, ...);
-  if (is.null(seqLengths)) return(NA_integer_);
-  length(seqLengths);
-})
-
-
 # \seealso{
-#   Internally, \code{fasta.info()} of \pkg{Biostrings} is used.
+#   Internally, \code{fasta.seqlengths()} of \pkg{Biostrings} is used.
 # }
 setMethodS3("readSeqLengths", "FastaReferenceFile", function(this, force=FALSE, ...) {
   pathname <- getPathname(this);
@@ -130,7 +85,7 @@ setMethodS3("readSeqLengths", "FastaReferenceFile", function(this, force=FALSE, 
   }
 
   # Read FASTA file
-  seqLengths <- Biostrings::fasta.info(pathname);
+  seqLengths <- Biostrings::fasta.seqlengths(pathname)
 
   # Cache
   saveCache(seqLengths, key=key, dirs=dirs);
@@ -138,6 +93,14 @@ setMethodS3("readSeqLengths", "FastaReferenceFile", function(this, force=FALSE, 
   seqLengths;
 }, private=TRUE)
 
+setMethodS3("getSeqLengths", "FastaReferenceFile", function(this, force=FALSE, ...) {
+  seqLengths <- this$.seqLengths;
+  if (force || is.null(seqLengths)) {
+    seqLengths <- readSeqLengths(this, ...);
+    this$.seqLengths <- seqLengths;
+  }
+  seqLengths;
+})
 
 
 
@@ -316,6 +279,21 @@ setMethodS3("buildIndex", "FastaReferenceFile", function(this, ..., skip=TRUE, v
 
 
 
+setMethodS3("getIndexFile", "FastaReferenceFile", function(this, ...) {
+  pathname <- getPathname(this)
+  pathnameIDX <- sprintf("%s.fai", pathname)
+  pathnameIDX <- Arguments$getReadablePathname(pathnameIDX, mustExist=FALSE)
+  if (!isFile(pathnameIDX)) return(NULL)
+  FastaReferenceIndexFile(pathnameIDX)
+})
+
+
+setMethodS3("hasIndex", "FastaReferenceFile", function(this, ...) {
+  !is.null(getIndexFile(this));
+})
+
+
+
 
 ###########################################################################/**
 # @RdocMethod buildDictionary
@@ -490,7 +468,7 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method=c("b
     verbose && printf(verbose, "FASTA filesize: %.f bytes\n", size);
     maxNbrOfBases <- 2e9;
     if (size > maxNbrOfBases) {
-      nbrOfBases <- getTotalSeqLengths(this);
+      nbrOfBases <- getTotalSeqLength(this)
       verbose && printf(verbose, "Number of bases in FASTA reference: %.f\n", nbrOfBases);
       if (nbrOfBases > maxNbrOfBases) {
         throw(sprintf("Cannot build BWA index with method 'is' (consider using 'bwtsw' instead).  There are too many bases in FASTA file (%s): %.0f > %.0f", sQuote(pathnameFA), nbrOfBases, maxNbrOfBases));
@@ -642,6 +620,8 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
 
   is;
 }) # buildBowtie2IndexSet()
+
+
 
 
 ############################################################################

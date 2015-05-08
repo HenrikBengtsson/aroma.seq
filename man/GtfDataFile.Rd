@@ -29,13 +29,15 @@
 \code{~~~~~~~~~~~~~~~~~~~~~~|}\cr
 \code{~~~~~~~~~~~~~~~~~~~~~~+--}\code{\link[R.filesets]{TabularTextFile}}\cr
 \code{~~~~~~~~~~~~~~~~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~~~~~~~~~~~~~~~~+--}\emph{\code{GtfDataFile}}\cr
+\code{~~~~~~~~~~~~~~~~~~~~~~~~~~~+--}\code{\link[aroma.seq]{SequenceContigsInterface}}\cr
+\code{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|}\cr
+\code{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~+--}\emph{\code{GtfDataFile}}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
 
 public abstract static class \bold{GtfDataFile}\cr
-extends \emph{\link[R.filesets]{TabularTextFile}}\cr
+extends \emph{\link[aroma.seq]{SequenceContigsInterface}}\cr
 
 
 
@@ -54,11 +56,15 @@ GtfDataFile(..., columnNames=FALSE)
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
+ \tab \code{as.character} \tab  -\cr
  \tab \code{byOrganism} \tab  -\cr
  \tab \code{getOrganism} \tab  -\cr
- \tab \code{getSeqNames} \tab  -\cr
+ \tab \code{getSeqLengths} \tab  -\cr
 }
 
+
+ \bold{Methods inherited from SequenceContigsInterface}:\cr
+cleanSeqNames, getSeqGenericSummary, getSeqLengths, getSeqNames, getSeqOrdering, getTotalSeqLength, hasDuplicatedSeqs, hasSeqLengths, isCompatibleWithBySeqLengths, isCompatibleWithBySeqNames, isCompatibleWithBySeqs, nbrOfSeqs
 
  \bold{Methods inherited from TabularTextFile}:\cr
 as.character, getCommentChar, getDefaultColumnClassPatterns, getDefaultColumnClasses, getDefaultColumnNames, getHeader, getReadArguments, hasColumnHeader, nbrOfLines, nbrOfRows, readColumnNames, readColumns, readDataFrame, readLines, readRawHeader, setCommentChar

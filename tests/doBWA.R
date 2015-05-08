@@ -53,13 +53,16 @@ bamsZ <- doBWA(fqsZ, reference=fa, verbose=-20)
 print(bamsZ)
 
 
-# Results should be identical with and without gzip'ed FASTQ files
+# Results should be same with and without gzip'ed FASTQ files
 stopifnot(length(bamsZ) == length(bams))
 stopifnot(identical(getFullNames(bamsZ), getFullNames(bams)))
 for (ii in seq_along(bams)) {
   bam <- bams[[ii]]
   bamZ <- bamsZ[[ii]]
-  stopifnot(getChecksum(bamZ) == getChecksum(bam))
+  ## However, checksums may different because read groups
+  ## such as 'CL' contain full system call used, which
+  ## includes full pathnames.
+  ## stopifnot(getChecksum(bamZ) == getChecksum(bam))
 }
 
 

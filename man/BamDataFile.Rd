@@ -11,7 +11,7 @@
 \alias{BamDataFile}
 
 
-\title{The abstract BamDataFile class}
+\title{The BamDataFile class}
 
 \description{
  Package:  aroma.seq \cr
@@ -23,11 +23,13 @@
 \code{~~~~~~~|}\cr
 \code{~~~~~~~+--}\code{\link[R.filesets]{GenericDataFile}}\cr
 \code{~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~+--}\code{\link[aroma.seq]{AromaPathnameInterface}}\cr
+\code{~~~~~~~~~~~~+--}\code{\link[aroma.seq]{SequenceContigsInterface}}\cr
 \code{~~~~~~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~~~~~~+--}\code{\link[aroma.seq]{AromaSeqDataFile}}\cr
+\code{~~~~~~~~~~~~~~~~~+--}\code{\link[aroma.seq]{AromaPathnameInterface}}\cr
 \code{~~~~~~~~~~~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~~~~~~~~~~~+--}\code{BamDataFile}\cr
+\code{~~~~~~~~~~~~~~~~~~~~~~+--}\code{\link[aroma.seq]{AromaSeqDataFile}}\cr
+\code{~~~~~~~~~~~~~~~~~~~~~~~~~~~|}\cr
+\code{~~~~~~~~~~~~~~~~~~~~~~~~~~~+--}\code{BamDataFile}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
@@ -57,6 +59,7 @@ BamDataFile(...)
  \tab \code{doQDNAseq} \tab  -\cr
  \tab \code{extractReadStartPositions} \tab  -\cr
  \tab \code{getChipType} \tab  -\cr
+ \tab \code{getFlagStat} \tab  -\cr
  \tab \code{getHeader} \tab  -\cr
  \tab \code{getIndexFile} \tab  -\cr
  \tab \code{getIndexStats} \tab  -\cr
@@ -64,7 +67,7 @@ BamDataFile(...)
  \tab \code{getReadCounts} \tab  -\cr
  \tab \code{getReadGroup} \tab  -\cr
  \tab \code{getReadGroups} \tab  -\cr
- \tab \code{getSeqNames} \tab  -\cr
+ \tab \code{getSeqLengths} \tab  -\cr
  \tab \code{getTargetLengths} \tab  -\cr
  \tab \code{getTargetNames} \tab  -\cr
  \tab \code{getTargets} \tab  -\cr
@@ -73,7 +76,6 @@ BamDataFile(...)
  \tab \code{isSorted} \tab  -\cr
  \tab \code{nbrOfMappedReads} \tab  -\cr
  \tab \code{nbrOfReads} \tab  -\cr
- \tab \code{nbrOfSeqs} \tab  -\cr
  \tab \code{nbrOfTargets} \tab  -\cr
  \tab \code{nbrOfUnmappedReads} \tab  -\cr
  \tab \code{readDataFrame} \tab  -\cr
@@ -91,6 +93,9 @@ getDefaultFullName, isCompatibleWith
 
  \bold{Methods inherited from AromaPathnameInterface}:\cr
 directoryStructure, getOrganism
+
+ \bold{Methods inherited from SequenceContigsInterface}:\cr
+cleanSeqNames, getSeqGenericSummary, getSeqLengths, getSeqNames, getSeqOrdering, getTotalSeqLength, hasDuplicatedSeqs, hasSeqLengths, isCompatibleWithBySeqLengths, isCompatibleWithBySeqNames, isCompatibleWithBySeqs, nbrOfSeqs
 
  \bold{Methods inherited from GenericDataFile}:\cr
 as.character, clone, compareChecksum, copyTo, equals, fromFile, getAttribute, getAttributes, getChecksum, getChecksumFile, getCreatedOn, getDefaultFullName, getExtension, getExtensionPattern, getFileSize, getFileType, getFilename, getFilenameExtension, getLastAccessedOn, getLastModifiedOn, getOutputExtension, getPath, getPathname, gunzip, gzip, hasBeenModified, is.na, isFile, isGzipped, linkTo, readChecksum, renameTo, renameToUpperCaseExt, setAttribute, setAttributes, setAttributesBy, setAttributesByTags, setExtensionPattern, testAttributes, validate, validateChecksum, writeChecksum, directoryItem, directoryItems, directoryStructure, directoryStructure<-, getDataSetName, getOrganismName, getSampleName, loadCacheFile, loadCacheFileItem, memoizedCall2, saveCacheFile, saveCacheFileItem, getParentName

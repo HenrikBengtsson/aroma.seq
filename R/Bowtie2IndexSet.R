@@ -30,7 +30,14 @@
 # @keyword internal
 #*/###########################################################################
 setConstructorS3("Bowtie2IndexSet", function(...) {
-  extend(AbstractIndexSet(...), "Bowtie2IndexSet");
+  extend(AbstractIndexSet(...), c("Bowtie2IndexSet", uses("SequenceContigsInterface")))
+})
+
+
+setMethodS3("as.character", "Bowtie2IndexSet", function(x, ...) {
+  s <- NextMethod("as.character")
+  s <- c(s, getSeqGenericSummary(x, ...))
+  s
 })
 
 
@@ -66,23 +73,18 @@ setMethodS3("getSummary", "Bowtie2IndexSet", function(this, ...) {
 })
 
 
-setMethodS3("getSeqNames", "Bowtie2IndexSet", function(this, ...) {
-  stopifnot(isComplete(this));
-  stopifnot(isCapableOf(aroma.seq, "bowtie2"));
-  prefix <- getIndexPrefix(this);
-  names <- system2("bowtie2-inspect", args=c("--names", prefix), stdout=TRUE);
+setMethodS3("getSeqLengths", "Bowtie2IndexSet", function(this, ...) {
+  stopifnot(isComplete(this))
+  stopifnot(isCapableOf(aroma.seq, "bowtie2"))
 
-  names <- trim(names);
+  prefix <- getIndexPrefix(this)
+  names <- system2("bowtie2-inspect", args=c("--names", prefix), stdout=TRUE)
+  names <- trim(names)
 
-  # From http://en.wikipedia.org/wiki/FASTA_format:
-  # "The **word** following the ">" symbol is the identifier of the
-  # sequence, and the rest of the line is the description [...]", e.g.
-  # >I dna:chromosome chromosome:EF4:I:1:230218:1 REF
-  # => ID/name: 'I'
-  # => Description: 'dna:chromosome chromosome:EF4:I:1:230218:1 REF'
-  names <- gsub(" .*", "", names);
+  lens <- rep(NA_integer_, times=length(names))
+  names(lens) <- names
 
-  names;
+  lens
 })
 
 

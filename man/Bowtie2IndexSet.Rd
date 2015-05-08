@@ -25,13 +25,15 @@
 \code{~~~~~~~~~~~~|}\cr
 \code{~~~~~~~~~~~~+--}\code{\link[aroma.seq]{AbstractIndexSet}}\cr
 \code{~~~~~~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~~~~~~+--}\code{Bowtie2IndexSet}\cr
+\code{~~~~~~~~~~~~~~~~~+--}\code{\link[aroma.seq]{SequenceContigsInterface}}\cr
+\code{~~~~~~~~~~~~~~~~~~~~~~|}\cr
+\code{~~~~~~~~~~~~~~~~~~~~~~+--}\code{Bowtie2IndexSet}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
 
 public static class \bold{Bowtie2IndexSet}\cr
-extends \emph{\link[aroma.seq]{AbstractIndexSet}}\cr
+extends \emph{\link[aroma.seq]{SequenceContigsInterface}}\cr
 
 
 
@@ -49,13 +51,17 @@ Bowtie2IndexSet(...)
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
+ \tab \code{as.character} \tab  -\cr
  \tab \code{buildTopHat2TranscriptomeIndexSet} \tab  -\cr
- \tab \code{getSeqNames} \tab  -\cr
+ \tab \code{getSeqLengths} \tab  -\cr
  \tab \code{getSummary} \tab  -\cr
  \tab \code{isCompatibleWith} \tab  -\cr
  \tab \code{isComplete} \tab  -\cr
 }
 
+
+ \bold{Methods inherited from SequenceContigsInterface}:\cr
+cleanSeqNames, getSeqGenericSummary, getSeqLengths, getSeqNames, getSeqOrdering, getTotalSeqLength, hasDuplicatedSeqs, hasSeqLengths, isCompatibleWithBySeqLengths, isCompatibleWithBySeqNames, isCompatibleWithBySeqs, nbrOfSeqs
 
  \bold{Methods inherited from AbstractIndexSet}:\cr
 as.character, byPrefix, getFastaReferenceFile, getIndexPrefix, getOrganism, isComplete

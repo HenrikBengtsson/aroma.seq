@@ -1,4 +1,4 @@
-# aroma.seq: High-throughput Sequence (HT-Seq) Analysis using the Aroma Framework
+# aroma.seq: High-Throughput Sequence Analysis using the Aroma Framework
 
 
 ## Installation

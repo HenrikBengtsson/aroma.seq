@@ -12,6 +12,41 @@
 
 
 % Other missing docs
+\alias{as.character.Bowtie2IndexSet}
+\alias{as.character.GcBaseFile}
+\alias{cleanSeqNames}
+\alias{cleanSeqNames.SequenceContigsInterface}
+\alias{getSeqGenericSummary}
+\alias{getSeqGenericSummary.SequenceContigsInterface}
+\alias{getSeqLengths.Bowtie2IndexSet}
+\alias{getSeqLengths.GcBaseFile}
+\alias{getSeqLengths.GtfDataFile}
+\alias{getSeqLengths.SequenceContigsInterface}
+\alias{getSeqNames.SequenceContigsInterface}
+\alias{getSeqOrdering}
+\alias{getSeqOrdering.SequenceContigsInterface}
+\alias{getTotalSeqLength}
+\alias{getTotalSeqLength.SequenceContigsInterface}
+\alias{hasDuplicatedSeqs}
+\alias{hasDuplicatedSeqs.SequenceContigsInterface}
+\alias{hasSeqLengths}
+\alias{hasSeqLengths.SequenceContigsInterface}
+\alias{isCompatibleWithBySeqLengths}
+\alias{isCompatibleWithBySeqLengths.SequenceContigsInterface}
+\alias{isCompatibleWithBySeqNames.SequenceContigsInterface}
+\alias{isCompatibleWithBySeqs}
+\alias{isCompatibleWithBySeqs.SequenceContigsInterface}
+\alias{nbrOfSeqs.SequenceContigsInterface}
+\alias{as.character.BamDataSet}
+\alias{getFlagStat}
+\alias{getSeqLengths.BamDataFile}
+\alias{getTypeOfSeqNames}
+\alias{getTypeOfSeqNames.FastaReferenceFile}
+\alias{splitByTargetType}
+\alias{splitByTargetType.BamDataSet}
+\alias{typeOfSequenceOrdering}
+\alias{typeOfSequenceOrdering.character}
+\alias{typeOfSequenceOrdering.numeric}
 \alias{as.character.SraDataFile}
 \alias{byName.SraDataSet}
 \alias{byPath.SraDataSet}
@@ -582,6 +617,9 @@
 \alias{readTotalCNsAndBAFs.SeqzFile}
 \alias{splitUp}
 \alias{splitUp.FastqDataFile}
+\alias{getIndexFile.FastaReferenceFile}
+\alias{hasIndex.FastaReferenceFile}
+\alias{getFlagStat.BamDataFile}
 
 \description{
   This page contains aliases for all "non-documented" objects that
