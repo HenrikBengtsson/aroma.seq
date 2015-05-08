@@ -2,7 +2,7 @@
 # ftp://hgdownload.cse.ucsc.edu/goldenPath/mm9/chromosomes/
 library("aroma.seq")
 
-organism <- "MusMusculus"
+organism <- "Mus_musculus"
 
 # Setup all FASTA reference files
 path <- dirname(FastaReferenceFile$findByOrganism(organism))
@@ -27,7 +27,7 @@ fas <- sortBy(fas, "lexicographic")
 fas <- extract(fas, order(nchar(getNames(fas)), decreasing=TRUE))
 
 # Merge FASTA files
-fa <- writeFastaReferenceFile(fas, filename="MusMusculus_mm9_chr1-22.fa", verbose=TRUE)
+fa <- writeFastaReferenceFile(fas, filename="Mus_musculus_mm9_chr1-22.fa", verbose=TRUE)
 print(fa)
 
 

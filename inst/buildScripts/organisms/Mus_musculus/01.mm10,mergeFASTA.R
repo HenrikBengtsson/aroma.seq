@@ -1,7 +1,7 @@
 # REFERENCES:
 library("aroma.seq")
 
-organism <- "MusMusculus"
+organism <- "Mus_musculus"
 tag <- "mm10"
 chrs <- c(1:19, "X", "Y", "M")
 nchrs <- length(chrs)

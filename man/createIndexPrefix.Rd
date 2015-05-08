@@ -30,7 +30,7 @@
 }
 
 \examples{
-  pathnameFA <- "annotationData/organisms/LambdaPhage/lambda_virus.fa"
+  pathnameFA <- "annotationData/organisms/Lambda_phage/lambda_virus.fa"
   prefix <- createIndexPrefix(pathnameFA)
   print(prefix)
   prefix <- createIndexPrefix(pathnameFA, tags="*,foo")

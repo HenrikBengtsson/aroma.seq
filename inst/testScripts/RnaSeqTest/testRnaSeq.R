@@ -22,7 +22,7 @@ stopifnot(isCapableOf(aroma.seq, "tophat2"))
 # - - - - - - - - - -
 
 # Set up local annotation dir
-Organism <- "SaccharomycesCerevisiae"
+Organism <- "Saccharomyces_cerevisiae"
 annotsPathLocal <- Arguments$getWritablePath(file.path("annotationData", "organisms", Organism))
 
 # Get gtf file

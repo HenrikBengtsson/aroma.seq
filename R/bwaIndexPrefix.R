@@ -18,7 +18,7 @@
 # }
 #
 # \examples{
-#   pathnameFA <- "annotationData/organisms/LambdaPhage/lambda_virus.fa"
+#   pathnameFA <- "annotationData/organisms/Lambda_phage/lambda_virus.fa"
 #   prefix <- bwaIndexPrefix(pathnameFA)
 #   print(prefix)
 # }

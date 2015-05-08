@@ -8,7 +8,7 @@ if (fullTest) {
 
 setupExampleData()
 
-organism <- "SaccharomycesCerevisiae"
+organism <- "Saccharomyces_cerevisiae"
 fa <- FastaReferenceFile$byOrganism(organism)
 print(fa)
 

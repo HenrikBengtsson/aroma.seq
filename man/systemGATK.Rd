@@ -26,7 +26,7 @@
 }
 
 \examples{\dontrun{
-  pathnameBAM <- "bwaData/LambdaVirusExample,bwa,is/Generic/reads_1.bam"
+  pathnameBAM <- "bwaData/LambdaVirusExample,bwa,is/Lambda_phage/reads_1.bam"
   res <- systemGATK(T="CountReads", ..., stderr=FALSE)
 }}
 

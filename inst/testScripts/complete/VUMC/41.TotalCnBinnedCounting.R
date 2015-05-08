@@ -6,7 +6,7 @@
 library("aroma.seq");
 
 dataSet <- "AlbertsonD_2012-Bladder_VUMC";
-organism <- "HomoSapiens";
+organism <- "Homo_sapiens";
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup

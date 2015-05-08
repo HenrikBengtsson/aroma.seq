@@ -1,5 +1,5 @@
 Package: aroma.seq
-Version: 0.6.2
+Version: 0.6.3
 Depends:
   R (>= 3.1.3),
   R.utils (>= 2.0.2),
@@ -45,7 +45,7 @@ SuggestsNote:
   Rsamtools,
   ShortRead,
   qrqc
-Date: 2015-05-07
+Date: 2015-05-08
 Title: High-Throughput Sequence Analysis using the Aroma Framework
 Authors@R: c(
   person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),

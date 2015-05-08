@@ -139,11 +139,11 @@ setMethodS3("setupTests", "AromaSeq", function(static, path="redundancyTests/", 
 # }
 setMethodS3("getKnownOrganisms", "AromaSeq", function(static, ...) {
   c(
-    "DrosophilaMelanogaster",
-    "EscherichiaColi",
-    "HomoSapiens",
-    "LambdaPhage",
-    "MusMusculus"
+    "Drosophila_melanogaster",
+    "Escherichia_coli",
+    "Homo_sapiens",
+    "Lambda_phage",
+    "Mus_musculus"
   );
 }, protected=TRUE)
 
@@ -172,7 +172,7 @@ setMethodS3("getOrganism", "Arguments", function(static, organism, mustBeKnown=F
 }, protected=TRUE)
 
 
-setMethodS3("skeleton", "AromaSeq", function(static, dataSet="MyDatSet", organism="HomoSapiens", ...) {
+setMethodS3("skeleton", "AromaSeq", function(static, dataSet="MyDatSet", organism="Homo_sapiens", ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -224,7 +224,7 @@ setMethodS3("skeleton", "AromaSeq", function(static, dataSet="MyDatSet", organis
 # o Added 'fastqc' to capabilities.
 # 2013-11-08
 # o Added skeleton() for AromaSeq, e.g.
-#   skeleon(aroma.seq, "MyDataSet", "HomoSapiens").
+#   skeleon(aroma.seq, "MyDataSet", "Homo_sapiens").
 # 2013-10-30
 # o Added 'python' to capabilities.
 # 2013-07-19

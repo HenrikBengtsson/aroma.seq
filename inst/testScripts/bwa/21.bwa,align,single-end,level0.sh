@@ -6,7 +6,7 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Reference genome FASTA file
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-path=annotationData/organisms/LambdaPhage
+path=annotationData/organisms/Lambda_phage
 echo "Annotation path: $path"
 if ! test -d $path; then
   echo "No such path: $path"
@@ -26,7 +26,7 @@ ls -l $path
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Single-end alignment
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bwa aln $pathname fastqData/LambdaVirusExample/Generic/reads_1.fq > foo.sai 2> foo.sai.stderr
+bwa aln $pathname fastqData/LambdaVirusExample/Lambda_phage/reads_1.fq > foo.sai 2> foo.sai.stderr
 
 
 

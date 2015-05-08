@@ -18,7 +18,7 @@ library("aroma.seq")
 setOption("R.filesets/parallel", "BiocParallel::BatchJobs")
 library("BatchJobs")
 
-organism <- "DrosophilaMelanogaster"
+organism <- "Drosophila_melanogaster"
 
 path <- file.path("annotationData", "organisms", organism)
 fa <- FastaReferenceFile("genome.fa", path=path)

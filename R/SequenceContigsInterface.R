@@ -67,7 +67,9 @@ setMethodS3("getSeqOrdering", "SequenceContigsInterface", function(this, ...) {
   if (!all(is.na(lens))) {
     seqOrder <- typeOfSequenceOrdering(lens, ...)
   } else {
-    seqOrder <- typeOfSequenceOrdering(names(lens), ...)
+    names <- names(lens)
+    names <- cleanSeqNames(this, names)
+    seqOrder <- typeOfSequenceOrdering(names, ...)
   }
   seqOrder
 }, protected=TRUE)

@@ -6,7 +6,7 @@ library("aroma.seq");
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Indexing a reference genome
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-path <- "annotationData/organisms/LambdaPhage";
+path <- "annotationData/organisms/Lambda_phage";
 filename <- "lambda_virus.fa";
 pathnameFA <- Arguments$getReadablePathname(filename, path=path);
 res <- bwaIndex(pathnameFA, method="bwtsw");
@@ -20,20 +20,20 @@ print(prefix);
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # The FASTQ file to be aligned
 dataSet <- "LambdaVirusExample";
-platform <- "Generic";
-path <- file.path("fastqData", dataSet, platform);
+organism <- "Lambda_phage";
+path <- file.path("fastqData", dataSet, organism);
 filename <- "reads_1.fq";
 pathnameFQ <- Arguments$getReadablePathname(filename, path=path);
 
 # BWA file
-path <- file.path("bwaData", dataSet, platform);
+path <- file.path("bwaData", dataSet, organism);
 filename <- "reads_1.sai";
 pathnameSAI <- Arguments$getWritablePathname(filename, path=path);
 res <- bwaAln(pathnameFQ, indexPrefix=prefix, pathnameD=pathnameSAI, verbose=TRUE);
 print(res);
 
 # SAM file
-path <- file.path("bwaData", dataSet, platform);
+path <- file.path("bwaData", dataSet, organism);
 filename <- "reads_1.sam";
 pathnameSAM <- Arguments$getWritablePathname(filename, path=path);
 res <- bwaSamse(pathnameSAI=pathnameSAI, pathnameFQ=pathnameFQ, indexPrefix=prefix, pathnameD=pathnameSAM, verbose=TRUE);

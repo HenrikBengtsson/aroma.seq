@@ -5,7 +5,7 @@ setOption("R.filesets/parallel", "none")
 setupExampleData()
 
 dataset <- "TopHat-example"
-organism <- "LambdaPhage"
+organism <- "Lambda_phage"
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

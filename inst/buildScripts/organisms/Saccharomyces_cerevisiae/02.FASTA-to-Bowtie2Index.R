@@ -1,6 +1,6 @@
 library("aroma.seq")
 
-organism <- "SaccharomycesCerevisiae"
+organism <- "Saccharomyces_cerevisiae"
 
 fa <- FastaReferenceFile$byOrganism(organism)
 print(fa)

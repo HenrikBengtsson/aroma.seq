@@ -11,7 +11,7 @@ if (fullTest) {
 setupExampleData()
 
 dataSet <- "YeastTest"
-organism <- "SaccharomycesCerevisiae"
+organism <- "Saccharomyces_cerevisiae"
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

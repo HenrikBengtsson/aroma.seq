@@ -36,14 +36,14 @@ if (bSetupR) {
 config <- list()
 
 # Dir for reference fasta and gtf files; these will be copied locally
-config$pathRef <- "" # E.g. "/data/annotationData/organisms/HomoSapiens"
+config$pathRef <- "" # E.g. "/data/annotationData/organisms/Homo_sapiens"
 
 # Dir for input fastq files; these will be copied locally
 config$pathData <- "" # E.g. "/data/SRA/GSE18508/"
 
 # Dataset metadata
 config$datasetName <- "MyDataSet"
-config$organism <- "HomoSapiens"
+config$organism <- "Homo_sapiens"
 config$bPairedEnd <- FALSE
 config$qualityEncoding <- "illumina" # c("sanger", "solexa", "illumina"); cf. qrqc:ReadSeqFile
 # - This is difficult to determine automatically or for users to obtain, but important

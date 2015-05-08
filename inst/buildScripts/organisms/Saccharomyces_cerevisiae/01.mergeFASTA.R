@@ -2,7 +2,7 @@
 # ftp://hgdownload.cse.ucsc.edu/goldenPath/sacCer2/chromosomes/
 library("aroma.seq")
 
-organism <- "SaccharomycesCerevisiae"
+organism <- "Saccharomyces_cerevisiae"
 ucscLabel <- "sacCer2"
 
 # Setup all FASTA reference files

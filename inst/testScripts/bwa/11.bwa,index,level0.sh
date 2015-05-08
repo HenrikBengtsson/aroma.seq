@@ -6,7 +6,7 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Reference genome FASTA file
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-path=annotationData/organisms/LambdaPhage
+path=annotationData/organisms/Lambda_phage
 echo "Annotation path: $path"
 if ! test -d $path; then
   echo "No such path: $path"

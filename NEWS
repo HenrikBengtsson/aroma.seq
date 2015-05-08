@@ -1,6 +1,11 @@
 Package: aroma.seq
 ==================
 
+Version: 0.6.3 [2015-05-08]
+o Using Emsembl-flavored organism names, e.g. Homo_sapiens
+  and Mus_musculus (was HomoSapiens and MusMusculus).
+
+
 Version: 0.6.2 [2015-05-07]
 o Added splitByTargetType() for BamDataSet.
 o Added getFlagStat() for BamDataFile.

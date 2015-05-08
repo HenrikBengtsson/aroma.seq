@@ -13,7 +13,7 @@
 # REQUIREMENTS:
 # fastqData/
 #  AlbertsonD_2012-SCC/
-#   HomoSapiens/
+#   Homo_sapiens/
 #    <sample>_<barcode>_L[0-9]{3}_R[12]_[0-9]{3}.fastq [private data]
 #
 # annotationData/
@@ -22,7 +22,7 @@
 #    GenericHuman,50kb,HB20090503.ugp [1]
 #    GenericHuman,50kb,HB20121021.unc [1]
 #  organisms/
-#   HomoSapiens/
+#   Homo_sapiens/
 #    human_g1k_v37.fasta [2]
 #
 # REFERENCES:
@@ -48,7 +48,7 @@ if (!is.null(arrays)) {
 print(arrays)
 
 dataSet <- "AlbertsonD_2012-SCC";
-organism <- "HomoSapiens"
+organism <- "Homo_sapiens"
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

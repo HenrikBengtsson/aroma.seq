@@ -6,7 +6,7 @@ library("aroma.seq");
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Indexing a reference genome
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-path <- "annotationData/organisms/LambdaPhage";
+path <- "annotationData/organisms/Lambda_phage";
 fa <- FastaReferenceFile("lambda_virus.fa", path=path);
 print(fa);
 

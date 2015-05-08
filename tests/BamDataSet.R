@@ -8,7 +8,7 @@ if (fullTest) {
 ## Get BAM files
 setupExampleData()
 dataSet <- "TopHat-example"
-organism <- "LambdaPhage"
+organism <- "Lambda_phage"
 fa <- FastaReferenceFile$byOrganism(organism)
 fqs <- FastqDataSet$byName(dataSet, organism=organism)
 bams <- doBowtie2(fqs, reference=fa, verbose=-20)

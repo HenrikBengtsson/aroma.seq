@@ -10,7 +10,7 @@ if (fullTest) {
 setupExampleData()
 
 dataSet <- "TopHat-example"
-organism <- "LambdaPhage"
+organism <- "Lambda_phage"
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Setup FASTA reference file
@@ -44,9 +44,9 @@ size <- 1/4
 for (ii in seq_along(fqs)) {
   fq1 <- fqs[[ii]]
   name <- getFullName(fq1)
-  
+
   fq2 <- getMateFile(fq1)
-  
+
   path <- file.path("fastqData", sprintf("tmp-%s", name), organism)
 
   fqs1M <- splitUp(fq1, size=size, path=path, verbose=TRUE)
@@ -85,7 +85,7 @@ for (ii in seq_along(fqs)) {
   removeDirectory(getPath(fqs1M), recursive=TRUE)
   removeDirectory(getPath(bamsM), recursive=TRUE)
   removeDirectory(pathM, recursive=TRUE)
-  
+
   bams[[ii]] <- bam
 } # for (ii ...)
 

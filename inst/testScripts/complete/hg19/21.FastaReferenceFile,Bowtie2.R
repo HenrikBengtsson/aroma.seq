@@ -3,7 +3,7 @@
 ############################################################################
 library("aroma.seq");
 
-organism <- "HomoSapiens";
+organism <- "Homo_sapiens";
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Indexing a reference genome

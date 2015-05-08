@@ -44,7 +44,7 @@ downloadBowtie2ExampleData <- function(...) {
   filenames <- basename(pathnames);
 
   # Copy FASTA file
-  pathD <- "annotationData/organisms/LambdaPhage/";
+  pathD <- "annotationData/organisms/Lambda_phage/";
   pathD <- Arguments$getWritablePath(pathD);
   filename <- "lambda_virus.fa";
   pathnameS <- pathnames[filenames == filename];
@@ -52,7 +52,7 @@ downloadBowtie2ExampleData <- function(...) {
   if (!isFile(pathnameD)) copyFile(pathnameS, pathnameD);
 
   # Copy FASTQ files
-  pathD <- "fastqData/LambdaVirusExample/Generic/";
+  pathD <- "fastqData/LambdaVirusExample/Lambda_phage/";
   pathD <- Arguments$getWritablePath(pathD);
   pathnamesS <- grep("[.]fq$", pathnames, value=TRUE);
   pathnamesD <- file.path(pathD, basename(pathnamesS));
@@ -69,7 +69,7 @@ downloadBowtie2ExampleData <- function(...) {
 download1000GenomesHumanReferenceFile <- function(...) {
   url <- "ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/technical/reference/human_g1k_v37.fasta.gz";
 
-  path <- "annotationData/organisms/Human/";
+  path <- "annotationData/organisms/Homo_sapiens/";
   filenameGZ <- basename(url);
   filename <- gsub("[.]gz", "", filenameGZ);
   pathname <- Arguments$getReadablePathname(filename, path=path, mustExist=FALSE);
@@ -108,7 +108,7 @@ getHapMapUrlPath <- function(chipType=c("Mapping50K_Hind240", "Mapping50K_Xba240
 
   sprintf("http://hapmap.ncbi.nlm.nih.gov/downloads/raw_data/%s", dir);
 } # getHapMapUrlPath()
- 
+
 
 # url <- getHapMapUrl("CEU_NA06985", chipType="Mapping50K_Hind240");
 getHapMapUrl <- function(sampleName, chipType=c("Mapping50K_Hind240", "Mapping50K_Xba240"), ...) {
@@ -142,7 +142,7 @@ downloadHapMapSample <- function(dataSet, tags=NULL, chipType, sampleName, ..., 
   pathnameGZ <- downloadFile(url, filename=filenameGZ, path=pathD);
   if (regexpr("[.]gz$", pathnameGZ) != -1) {
     gunzip(pathnameGZ);
-  } 
+  }
 
   opwd <- getwd();
   on.exit(if (!is.null(opwd)) setwd(opwd));

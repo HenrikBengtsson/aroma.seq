@@ -8,14 +8,14 @@ library("aroma.seq");
 # Setup
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Reference genome
-path <- "annotationData/organisms/LambdaPhage";
+path <- "annotationData/organisms/Lambda_phage";
 fa <- FastaReferenceFile("lambda_virus.fa", path=path);
 print(fa);
 
 # Data set
 dataSet <- "LambdaVirusExample";
-platform <- "Generic";
-path <- file.path("fastqData", dataSet, platform);
+organism <- "Lambda_phage";
+path <- file.path("fastqData", dataSet, organism);
 ds <- FastqDataSet$byPath(path);
 print(ds);
 
