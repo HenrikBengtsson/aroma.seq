@@ -1,4 +1,5 @@
- as.character.Bowtie2IndexSet
+readSeqLengths.Bowtie2IndexSet
+as.character.Bowtie2IndexSet
   as.character.GcBaseFile cleanSeqNames
   cleanSeqNames.SequenceContigsInterface getSeqGenericSummary
   getSeqGenericSummary.SequenceContigsInterface
