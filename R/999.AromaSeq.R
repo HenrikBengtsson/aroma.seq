@@ -94,8 +94,10 @@ setMethodS3("capabilitiesOf", "AromaSeq", function(static, what=NULL, force=FALS
     res$htseq <- supports(findHTSeq)
 
     # Order lexicographically
-    o <- order(names(res))
-    res <- res[o]
+    withLocale({
+      o <- order(names(res))
+      res <- res[o]
+    }, category="LC_COLLATE", locale="C")
 
     # Coerce into a named character vector
     res <- unlist(res)
