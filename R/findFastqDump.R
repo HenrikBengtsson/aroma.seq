@@ -1,25 +1,3 @@
-###########################################################################/**
-# @RdocFunction findFastqDump
-#
-# @title "Locates the fastq-dump executable"
-#
-# \description{
-#  @get "title" on the current system.
-# }
-#
-# @synopsis
-#
-# \arguments{
-#   \item{...}{Not used.}
-#   \item{commandName}{'fastq-dump'; command name to find}
-#   \item{versionPattern}{regexp to use if version not found properly; default should work}
-#   \item{verbose}{See @see "R.utils::Verbose".}
-# }
-#
-# @author "TT"
-#
-# @keyword internal
-#*/###########################################################################
 findFastqDump <- function(...,
                           commandName='fastq-dump',
                           versionPattern=".*fastq-dump[ ]*:[ ]*([0-9.]+)",

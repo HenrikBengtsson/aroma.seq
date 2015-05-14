@@ -2,6 +2,7 @@ Package: aroma.seq
 ==================
 
 Version: 0.6.3-9000 [2015-05-13]
+o Added findCNVkit() and isCapableOf(aroma.seq, "CNVkit").
 o Added CnvKitCopyNumberRatio(File|Set).
 o BUG FIX: buildTopHat2TranscriptomeIndexSet(..., skip=TRUE)
   would still require write permission and give an error if

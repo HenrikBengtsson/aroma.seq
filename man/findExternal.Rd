@@ -10,11 +10,16 @@
 \alias{findExternal}
 
 \alias{getExternalHome}
+\alias{findFastqDump}
+\alias{findFastQC}
 \alias{findJava}
 \alias{findPerl}
+\alias{findPicard}
 \alias{findPython}
 \alias{findBowtie2}
 \alias{findBWA}
+\alias{findCNVkit}
+\alias{findGATK}
 \alias{findHTSeq}
 \alias{findSamtools}
 \alias{findTopHat}
@@ -37,11 +42,12 @@
   findPerl(...)
   findPython(...)
 
-  # Samtools
-  findSamtools(...)
+  # fastq-dump
+  findFastqDump(..., commandName="fastq-dump",
+  versionPattern=".*fastq-dump[ ]*:[ ]*([0-9.]+)", verbose=FALSE)
 
-  # HTSeq
-  findHTSeq(..., command=c("htseq-count", "htseq-qa"))
+  # FastQC
+  findFastQC(mustExist=TRUE, ..., verbose=FALSE)
 
   # BWA
   findBWA(...)
@@ -53,12 +59,20 @@
   findTopHat1(..., command="tophat", version=c(1, 2))
   findTopHat2(..., command="tophat2", version=c(2, 3))
 
+  # GATK
+  findGATK(mustExist=TRUE, ..., verbose=FALSE)
+
+  # Picard
+  findPicard(mustExist=TRUE, ..., verbose=FALSE)
+
+  # Samtools
+  findSamtools(...)
+
+  # CNVkit
+  findCNVkit(..., command="cnvkit.py")
+
   # HTSeq
   findHTSeq(..., command=c("htseq-count", "htseq-qa"))
-
-  # fastq-dump
-  findFastqDump(..., commandName="fastq-dump",
-  versionPattern=".*fastq-dump[ ]*:[ ]*([0-9.]+)", verbose=FALSE)
 }
 
 \arguments{
