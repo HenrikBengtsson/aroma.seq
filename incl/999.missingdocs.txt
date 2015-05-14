@@ -353,3 +353,11 @@ getFlagStat.BamDataFile
 as.character.BamDataSet getFlagStat splitByTargetType
 splitByTargetType.BamDataSet
 
+CnvKitCopyNumberRatioFile CnvKitCopyNumberRatioFileSet
+byName.CnvKitCopyNumberRatioFileSet
+findByName.CnvKitCopyNumberRatioFileSet
+getDefaultColumnClassPatterns.CnvKitCopyNumberRatioFile
+readDataFrameForPSCBS
+readDataFrameForPSCBS.CnvKitCopyNumberRatioFile
+segmentByCBS.CnvKitCopyNumberRatioFile
+

@@ -1,7 +1,8 @@
 Package: aroma.seq
 ==================
 
-Version: 0.6.3-9000 [2015-05-08]
+Version: 0.6.3-9000 [2015-05-13]
+o Added CnvKitCopyNumberRatio(File|Set).
 o BUG FIX: buildTopHat2TranscriptomeIndexSet(..., skip=TRUE)
   would still require write permission and give an error if
   such do not exist.
