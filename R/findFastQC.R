@@ -1,33 +1,3 @@
-###########################################################################/**
-# @RdocFunction findFastQC
-# \alias{FASTQC_HOME}
-#
-# @title "Locates the FastQC executable"
-#
-# \description{
-#  @get "title" on the current system.
-# }
-#
-# @synopsis
-#
-# \arguments{
-#   \item{mustExist}{If @TRUE, an exception is thrown if the executable
-#      could not be located.}
-#   \item{...}{Not used.}
-#   \item{verbose}{See @see "R.utils::Verbose".}
-# }
-#
-# \details{
-#  The FastQC tools directory is searched for as follows:
-#  \enumerate{
-#   \item \code{Sys.getenv("FASTQC_HOME")}
-#  }
-# }
-#
-# @author "HB"
-#
-# @keyword internal
-#*/###########################################################################
 findFastQC <- function(mustExist=TRUE, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments

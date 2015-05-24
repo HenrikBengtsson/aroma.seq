@@ -1,11 +1,16 @@
 ###########################################################################/**
 # @RdocFunction findExternal
 # @alias getExternalHome
+# @alias findFastqDump
+# @alias findFastQC
 # @alias findJava
 # @alias findPerl
+# @alias findPicard
 # @alias findPython
 # @alias findBowtie2
 # @alias findBWA
+# @alias findCNVkit
+# @alias findGATK
 # @alias findHTSeq
 # @alias findSamtools
 # @alias findTopHat
@@ -27,11 +32,11 @@
 #   @usage findPerl
 #   @usage findPython
 #
-#   # Samtools
-#   @usage findSamtools
+#   # fastq-dump
+#   @usage findFastqDump
 #
-#   # HTSeq
-#   @usage findHTSeq
+#   # FastQC
+#   @usage findFastQC
 #
 #   # BWA
 #   @usage findBWA
@@ -42,11 +47,20 @@
 #   @usage findTopHat1
 #   @usage findTopHat2
 #
+#   # GATK
+#   @usage findGATK
+#
+#   # Picard
+#   @usage findPicard
+#
+#   # Samtools
+#   @usage findSamtools
+#
+#   # CNVkit
+#   @usage findCNVkit
+#
 #   # HTSeq
 #   @usage findHTSeq
-#
-#   # fastq-dump
-#   @usage findFastqDump
 # }
 #
 # \arguments{

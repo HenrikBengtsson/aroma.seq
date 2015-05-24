@@ -12,6 +12,7 @@
 
 
 % Other missing docs
+\alias{readSeqLengths.Bowtie2IndexSet}
 \alias{as.character.Bowtie2IndexSet}
 \alias{as.character.GcBaseFile}
 \alias{cleanSeqNames}
@@ -620,6 +621,14 @@
 \alias{getIndexFile.FastaReferenceFile}
 \alias{hasIndex.FastaReferenceFile}
 \alias{getFlagStat.BamDataFile}
+\alias{CnvKitCopyNumberRatioFile}
+\alias{CnvKitCopyNumberRatioFileSet}
+\alias{byName.CnvKitCopyNumberRatioFileSet}
+\alias{findByName.CnvKitCopyNumberRatioFileSet}
+\alias{getDefaultColumnClassPatterns.CnvKitCopyNumberRatioFile}
+\alias{readDataFrameForPSCBS}
+\alias{readDataFrameForPSCBS.CnvKitCopyNumberRatioFile}
+\alias{segmentByCBS.CnvKitCopyNumberRatioFile}
 
 \description{
   This page contains aliases for all "non-documented" objects that

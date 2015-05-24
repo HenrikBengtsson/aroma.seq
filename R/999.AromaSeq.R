@@ -67,71 +67,74 @@ setMethodS3("capabilitiesOf", "AromaSeq", function(static, what=NULL, force=FALS
   supports <- function(fcn, ...) {
     tryCatch({
       !is.null(fcn(mustExist=FALSE))
-    }, error = function(ex) FALSE);
+    }, error = function(ex) FALSE)
   } # supports()
 
-  res <- static$.capabilities;
+  res <- static$.capabilities
   if (force || is.null(res)) {
-    res <- list();
+    res <- list()
 
     # General software frameworks
-    res$java <- supports(findJava);
-    res$perl <- supports(findPerl);
-    res$python <- supports(findPython);
+    res$java <- supports(findJava)
+    res$perl <- supports(findPerl)
+    res$python <- supports(findPython)
 
     # Sequencing tools
-    res$bowtie2 <- supports(findBowtie2);
-    res$bwa <- supports(findBWA);
-    res$gatk <- supports(findGATK);
-    res$picard <- supports(findPicard);
-    res$fastqc <- supports(findFastQC);
-    res$fastqDump <- supports(findFastqDump);
-    res$samtools <- supports(findSamtools);
-    res$sratoolkit <- supports(findSraToolkit);
-    res$tophat1 <- supports(findTopHat1);
-    res$tophat2 <- supports(findTopHat2);
-    res$htseq <- supports(findHTSeq);
+    res$bowtie2 <- supports(findBowtie2)
+    res$bwa <- supports(findBWA)
+    res$gatk <- supports(findGATK)
+    res$CNVkit <- supports(findCNVkit)
+    res$picard <- supports(findPicard)
+    res$fastqc <- supports(findFastQC)
+    res$fastqDump <- supports(findFastqDump)
+    res$samtools <- supports(findSamtools)
+    res$sratoolkit <- supports(findSraToolkit)
+    res$tophat1 <- supports(findTopHat1)
+    res$tophat2 <- supports(findTopHat2)
+    res$htseq <- supports(findHTSeq)
 
     # Order lexicographically
-    o <- order(names(res));
-    res <- res[o];
+    withLocale({
+      o <- order(names(res))
+      res <- res[o]
+    }, category="LC_COLLATE", locale="C")
 
     # Coerce into a named character vector
-    res <- unlist(res);
+    res <- unlist(res)
 
     # Record
-    static$.capabilities <- res;
+    static$.capabilities <- res
   }
 
   if (!is.null(what)) {
-    res <- res[what];
+    res <- res[what]
   }
 
-  res;
+  res
 }, static=TRUE)
 
 
 setMethodS3("isCapableOf", "AromaSeq", function(static, what, ...) {
-  capabilitiesOf(static, what=what, ...);
+  capabilitiesOf(static, what=what, ...)
 })
 
 
 setMethodS3("setupTests", "AromaSeq", function(static, path="redundancyTests/", ...) {
   # Argument 'path':
-  path <- Arguments$getWritablePath(path);
+  path <- Arguments$getWritablePath(path)
 
   # Get the setup script
-  pathT <- system.file("testScripts", "setup", package=getName(static));
-  pathname <- Arguments$getReadablePathname("00a.setup.R", path=pathT);
+  pathT <- system.file("testScripts", "setup", package=getName(static))
+  pathname <- Arguments$getReadablePathname("00a.setup.R", path=pathT)
 
-  opwd <- getwd();
-  setwd(path);
-  on.exit(setwd(opwd));
+  opwd <- getwd()
+  setwd(path)
+  on.exit(setwd(opwd))
 
   # Setup test directory
-  source(pathname);
+  source(pathname)
 
-  path;
+  path
 })
 
 # \references{
@@ -144,7 +147,7 @@ setMethodS3("getKnownOrganisms", "AromaSeq", function(static, ...) {
     "Homo_sapiens",
     "Lambda_phage",
     "Mus_musculus"
-  );
+  )
 }, protected=TRUE)
 
 
@@ -153,22 +156,22 @@ setMethodS3("getOrganism", "Arguments", function(static, organism, mustBeKnown=F
   # string for that object.
   if (inherits(organism, "GenericDataFile") ||
       inherits(organism, "GenericDataFileSet")) {
-    organism <- getOrganism(organism);
+    organism <- getOrganism(organism)
   }
 
   # Assert a single character string
-  organism <- Arguments$getCharacter(organism, length=c(1L,1L));
+  organism <- Arguments$getCharacter(organism, length=c(1L,1L))
 
   # Assert a known organism?
   if (mustBeKnown) {
-    knownOrganisms <- getKnownOrganisms(aroma.seq);
-    unknown <- organism[!is.element(organism, knownOrganisms)];
+    knownOrganisms <- getKnownOrganisms(aroma.seq)
+    unknown <- organism[!is.element(organism, knownOrganisms)]
     if (length(unknown) > 0L) {
-      throw("Unknown organism: ", organism);
+      throw("Unknown organism: ", organism)
     }
   }
 
-  organism;
+  organism
 }, protected=TRUE)
 
 
@@ -177,37 +180,37 @@ setMethodS3("skeleton", "AromaSeq", function(static, dataSet="MyDatSet", organis
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'dataSet':
-  dataSet <- Arguments$getCharacter(dataSet);
+  dataSet <- Arguments$getCharacter(dataSet)
 
   # Argument 'organism':
-  organism <- Arguments$getOrganism(organism, ...);
+  organism <- Arguments$getOrganism(organism, ...)
 
   if (dataSet == organism) {
-    warning("Did you really mean to name the data set the same as the organism?: ", dataSet);
+    warning("Did you really mean to name the data set the same as the organism?: ", dataSet)
   }
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # annotationData/organisms/<organism>/
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  path <- file.path("annotationData", "organisms", organism);
-  path <- Arguments$getWritablePath(path);
-  pathname <- file.path(path, "README.txt");
+  path <- file.path("annotationData", "organisms", organism)
+  path <- Arguments$getWritablePath(path)
+  pathname <- file.path(path, "README.txt")
   if (!isFile(pathname)) {
-    cat("Copy or link to the FASTA reference file in this directory.\n", file=pathname);
+    cat("Copy or link to the FASTA reference file in this directory.\n", file=pathname)
   }
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # fastqData/<DataSet>/<organism>/
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  path <- file.path("fastqData", dataSet, organism);
-  path <- Arguments$getWritablePath(path);
-  pathname <- file.path(path, "README.txt");
+  path <- file.path("fastqData", dataSet, organism)
+  path <- Arguments$getWritablePath(path)
+  pathname <- file.path(path, "README.txt")
   if (!isFile(pathname)) {
-    cat("Copy or link to the FASTQ read files in this directory.\n", file=pathname);
+    cat("Copy or link to the FASTQ read files in this directory.\n", file=pathname)
   }
 
-  invisible(TRUE);
+  invisible(TRUE)
 }) # skeleton()
 
 
