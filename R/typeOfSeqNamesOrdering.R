@@ -62,9 +62,9 @@ setMethodS3("typeOfSequenceOrdering", "character", function(values, what=c("lexi
           o <- mixedorder(uvalues, numeric.type="decimal")
           if (!unique) o <- o[map]
           delta <- diff(o)
-          counts$mixedorder <- sum(delta == 1L, na.rm=TRUE)
+          counts$mixeddecimal <- sum(delta == 1L, na.rm=TRUE)
         } else {
-          counts$mixedorder <- NA_integer_
+          counts$mixeddecimal <- NA_integer_
         }
       }
     }
@@ -81,9 +81,9 @@ setMethodS3("typeOfSequenceOrdering", "character", function(values, what=c("lexi
           o <- mixedorder(uvalues, numeric.type="roman", roman.case="both")
           if (!unique) o <- o[map]
           delta <- diff(o)
-          counts$mixedorder <- sum(delta == 1L, na.rm=TRUE)
+          counts$mixedroman <- sum(delta == 1L, na.rm=TRUE)
         } else {
-          counts$mixedorder <- NA_integer_
+          counts$mixedroman <- NA_integer_
         }
       }
     }
