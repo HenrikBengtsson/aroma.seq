@@ -11,7 +11,7 @@ Imports:
   R.oo (>= 1.19.0),
   R.cache (>= 0.10.0),
   matrixStats (>= 0.14.0),
-  gtools (>= 3.4.2),
+  gtools (>= 3.5.0),
   Biostrings,
   GenomeInfoDb,
   S4Vectors,
@@ -47,7 +47,7 @@ SuggestsNote:
   Rsamtools,
   ShortRead,
   qrqc
-Date: 2015-05-28
+Date: 2015-06-01
 Title: High-Throughput Sequence Analysis using the Aroma Framework
 Authors@R: c(
   person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),

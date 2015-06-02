@@ -1,11 +1,11 @@
-setMethodS3("typeOfSequenceOrdering", "character", function(values, what=c("lexicographic", "canonical", "mixedorder"), unique=FALSE, rank=TRUE, as=c("scores", "humanreadable"), locale="C", ...) {
+setMethodS3("typeOfSequenceOrdering", "character", function(values, what=c("lexicographic", "canonical", "mixeddecimal", "mixedroman"), unique=FALSE, rank=TRUE, as=c("scores", "humanreadable"), locale="C", ...) {
   # Argument 'as':
   as <- match.arg(as)
 
   # Argument 'what':
   what <- match.arg(what, several.ok=TRUE)
   what0 <- what
-  
+
   ## Check unique values; faster if lots of duplicates
   uvalues <- unique(values)
   if (unique) {
@@ -19,9 +19,9 @@ setMethodS3("typeOfSequenceOrdering", "character", function(values, what=c("lexi
   names_int <- suppressWarnings(as.integer(uvalues))
   all_ints <- !anyNA(names_int)
   if (all_ints) {
-    if (is.element("mixedorder", what)) what <- c(what, "canonical")
+    if (is.element("mixeddecimal", what)) what <- c(what, "canonical")
   }
-  
+
   n <- length(values)
   counts <- list()
 
@@ -49,17 +49,17 @@ setMethodS3("typeOfSequenceOrdering", "character", function(values, what=c("lexi
       delta <- diff(o)
       counts$canonical <- sum(delta == 1L, na.rm=TRUE)
     }
-    
-    ## (c) Mixed sort ordering, e.g. 1,2,...,10,11,...,21,22,MT,X,Y?
-    ## Note: Very slow for large number of items
-    if (is.element("mixedorder", what)) {
+
+    ## (c) Mixed decimal ordering, e.g. 1,2,...,10,11,...,21,22,MT,X,Y?
+    if (is.element("mixeddecimal", what)) {
       if (all_ints) {
         ## Identical to "canonical"
 	counts$mixedorder <- counts$canonical
       } else {
-        ## To expensive to calculate?  gtools::mixedorder() is quite slow for > 10e3 elements
+        ## To expensive to calculate?
+        ## gtools::mixedorder() is quite slow for > 10e3 elements
         if (length(uvalues) < 10e3) {
-          o <- mixedorder(uvalues)
+          o <- mixedorder(uvalues, numeric.type="decimal")
           if (!unique) o <- o[map]
           delta <- diff(o)
           counts$mixedorder <- sum(delta == 1L, na.rm=TRUE)
@@ -68,7 +68,26 @@ setMethodS3("typeOfSequenceOrdering", "character", function(values, what=c("lexi
         }
       }
     }
-  }, category="LC_COLLATE", locale=locale)
+
+    ## (d) Mixed roman-numeral ordering, e.g. I,II,III,IV,...,IX,X,...
+    if (is.element("mixedroman", what)) {
+      if (all_ints) {
+        ## Identical to "canonical"
+	counts$mixedorder <- counts$canonical
+      } else {
+        ## To expensive to calculate?
+        ## gtools::mixedorder() is quite slow for > 10e3 elements
+        if (length(uvalues) < 10e3) {
+          o <- mixedorder(uvalues, numeric.type="roman", roman.case="both")
+          if (!unique) o <- o[map]
+          delta <- diff(o)
+          counts$mixedorder <- sum(delta == 1L, na.rm=TRUE)
+        } else {
+          counts$mixedorder <- NA_integer_
+        }
+      }
+    }
+}, category="LC_COLLATE", locale=locale)
 
   counts <- counts[what0]
   counts <- unlist(counts)
