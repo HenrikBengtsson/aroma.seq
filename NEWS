@@ -1,6 +1,13 @@
 Package: aroma.seq
 ==================
 
+Version: 0.6.4-9000 [2015-05-28]
+o BUG FIX: readDataFrame() for FastaReferenceIndexFile did
+  not handle large genomes such as the human one, because
+  it tried to represent the file offset using 'integer',
+  which was not enough to represent it.
+  
+
 Version: 0.6.4 [2015-05-13]
 o Added findCNVkit() and isCapableOf(aroma.seq, "CNVkit").
 o Added CnvKitCopyNumberRatio(File|Set).
