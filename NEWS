@@ -1,6 +1,16 @@
 Package: aroma.seq
 ==================
 
+Version: 0.6.5 [2015-06-01]
+o Now the scoring/reporting on known orderings of sequences
+  also recognizes mixed ordering with roman numeral (e.g. mouse 
+  chromosomes).
+o BUG FIX: readDataFrame() for FastaReferenceIndexFile did
+  not handle large genomes such as the human one, because
+  it tried to represent the file offset using 'integer',
+  which was not enough to represent it.
+
+
 Version: 0.6.4 [2015-05-13]
 o Added findCNVkit() and isCapableOf(aroma.seq, "CNVkit").
 o Added CnvKitCopyNumberRatio(File|Set).
