@@ -9,7 +9,7 @@
 
   msg <- c(
     'During developing phase, install/update using:',
-    'source("http://aroma-project.org/R/install#aroma.seq")'
+    'source("http://callr.org/install#HenrikBengtsson/aroma.seq")'
   );
 
   # Enable automate parallel processing via BatchJobs?
@@ -25,8 +25,8 @@
   }
 
   startupMessage(pkg, '\n\n',
-    '---------------------- aroma.seq ----------------------\n',
+    '------------------------- aroma.seq -------------------------\n',
     paste(c(msg, ''), collapse="\n"),
-    '-------------------------------------------------------\n'
+    '-------------------------------------------------------------\n'
   );
 } # .onAttach()

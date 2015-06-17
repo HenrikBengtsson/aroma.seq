@@ -1,7 +1,7 @@
 Package: aroma.seq
 ==================
 
-Version: 0.6.4-9000 [2015-06-01]
+Version: 0.6.5 [2015-06-01]
 o Now the scoring/reporting on known orderings of sequences
   also recognizes mixed ordering with roman numeral (e.g. mouse 
   chromosomes).
