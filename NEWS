@@ -1,9 +1,14 @@
 Package: aroma.seq
 ==================
 
+Version: 0.6.9-9000 [2015-10-20]
+o Package now requires R (>= 3.2.2) released August 2015.
+  This allows us to use BioC (>= 3.2) (October 2015).
+
+
 Version: 0.6.5 [2015-06-01]
 o Now the scoring/reporting on known orderings of sequences
-  also recognizes mixed ordering with roman numeral (e.g. mouse 
+  also recognizes mixed ordering with roman numeral (e.g. mouse
   chromosomes).
 o BUG FIX: readDataFrame() for FastaReferenceIndexFile did
   not handle large genomes such as the human one, because
@@ -29,7 +34,7 @@ o Added splitByTargetType() for BamDataSet.
 o Added getFlagStat() for BamDataFile.
 o Added getIndexFile() and hasIndex() to FastaReferenceIndexFile.
   The print() method reports on the existence of the index file.
-o ROBUSTNESS: All SequenceContigsInterface classes report on 
+o ROBUSTNESS: All SequenceContigsInterface classes report on
   possible ways the sequences/chromosomes are ordered.
 o ROBUSTNESS: Now print() for BamDataSet warns if there are
   BAM files that have been aligned to different target sequences,
