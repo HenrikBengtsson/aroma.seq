@@ -7,6 +7,15 @@ R package aroma.seq is only available via [GitHub](https://github.com/HenrikBeng
 source('http://callr.org/install#HenrikBengtsson/aroma.seq')
 ```
 
+### Pre-release version
+
+To install the pre-release version that is available in branch `develop`, use:
+```r
+source('http://callr.org/install#HenrikBengtsson/aroma.seq@develop')
+```
+This will install the package from source.  
+
+
 
 ## Software status
 
