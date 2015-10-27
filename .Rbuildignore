@@ -35,4 +35,4 @@ README[.]md
 ^[.]test
 ^[.]check
 ^.*[.]tar[.]gz$
-^.*Data
+^[a-z0-9]+Data
