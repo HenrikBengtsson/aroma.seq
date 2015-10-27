@@ -50,7 +50,7 @@ before_install:
     fi
 
 install:
- - $RENV install_bioc aroma.light Biobase BiocParallel Biostrings edgeR GenomicRanges qrqc Rsamtools
+ - $RENV install_bioc aroma.light Biobase BiocParallel Biostrings edgeR GenomicRanges qrqc Rsamtools DNAcopy
  - $RENV install_r aroma.cn BatchJobs
  - $RENV install_bioc GenomeInfoDb
  - $RENV install_r gtools
