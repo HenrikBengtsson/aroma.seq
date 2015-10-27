@@ -107,6 +107,10 @@ importFrom("ShortRead", "writeFastq")
 
 importFrom("gtools", "mixedorder")
 
+importFrom("stats", "lowess", "median")
+importFrom("utils", "file_test", "getS3method", "head",
+           "packageVersion", "read.table", "str", "unzip")
+
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # EXPORTS

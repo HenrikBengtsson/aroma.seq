@@ -1,7 +1,8 @@
 Package: aroma.seq
 ==================
 
-Version: 0.6.9-9000 [2015-10-20]
+Version: 0.6.9-9000 [2015-10-26]
+o ROBUSTNESS: Explicitly importing core R functions.
 o Package now requires R (>= 3.2.2) released August 2015.
   This allows us to use BioC (>= 3.2) (October 2015).
 
