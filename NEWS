@@ -7,6 +7,8 @@ o ROBUSTNESS: Now buildIndex() and readHeader() for BamDataFile
   Likewise, print() for BamDataFile no longer give an error
   if BAM file does not exist.
 o ROBUSTNESS: Explicitly importing core R functions.
+o BUG FIX: Adjusted for Bowtie2 2.2.0 (Feb 2014) which no longer
+  has bowtie2-align but bowtie2-align-s and bowtie2-align-l.
 o Package now requires R (>= 3.2.2) released August 2015.
   This allows us to use BioC (>= 3.2) (October 2015).
 

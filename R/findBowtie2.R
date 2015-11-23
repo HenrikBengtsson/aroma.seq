@@ -1,4 +1,4 @@
-findBowtie2 <- function(..., command=c("bowtie2", "bowtie2-align", "bowtie2-build", "bowtie2-inspect")) {
+findBowtie2 <- function(..., command=c("bowtie2", "bowtie2-build", "bowtie2-inspect", "bowtie2-align", "bowtie2-align-l", "bowtie2-align-s")) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

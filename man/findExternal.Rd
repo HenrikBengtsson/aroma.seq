@@ -53,8 +53,8 @@
   findBWA(...)
 
   # Bowtie and TopHat
-  findBowtie2(..., command=c("bowtie2", "bowtie2-align", "bowtie2-build",
-  "bowtie2-inspect"))
+  findBowtie2(..., command=c("bowtie2", "bowtie2-build", "bowtie2-inspect",
+  "bowtie2-align", "bowtie2-align-l", "bowtie2-align-s"))
   findTopHat(..., command="tophat", path=NULL)
   findTopHat1(..., command="tophat", version=c(1, 2))
   findTopHat2(..., command="tophat2", version=c(2, 3))
