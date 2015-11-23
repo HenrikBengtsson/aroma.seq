@@ -1,9 +1,21 @@
 Package: aroma.seq
 ==================
 
+Version: 0.6.6 [2015-11-22]
+o ROBUSTNESS: Now buildIndex() and readHeader() for BamDataFile
+  assert that the BAM file exists before trying to parse it.
+  Likewise, print() for BamDataFile no longer give an error
+  if BAM file does not exist.
+o ROBUSTNESS: Explicitly importing core R functions.
+o BUG FIX: Adjusted for Bowtie2 2.2.0 (Feb 2014) which no longer
+  has bowtie2-align but bowtie2-align-s and bowtie2-align-l.
+o Package now requires R (>= 3.2.2) released August 2015.
+  This allows us to use BioC (>= 3.2) (October 2015).
+
+
 Version: 0.6.5 [2015-06-01]
 o Now the scoring/reporting on known orderings of sequences
-  also recognizes mixed ordering with roman numeral (e.g. mouse 
+  also recognizes mixed ordering with roman numeral (e.g. mouse
   chromosomes).
 o BUG FIX: readDataFrame() for FastaReferenceIndexFile did
   not handle large genomes such as the human one, because
@@ -29,7 +41,7 @@ o Added splitByTargetType() for BamDataSet.
 o Added getFlagStat() for BamDataFile.
 o Added getIndexFile() and hasIndex() to FastaReferenceIndexFile.
   The print() method reports on the existence of the index file.
-o ROBUSTNESS: All SequenceContigsInterface classes report on 
+o ROBUSTNESS: All SequenceContigsInterface classes report on
   possible ways the sequences/chromosomes are ordered.
 o ROBUSTNESS: Now print() for BamDataSet warns if there are
   BAM files that have been aligned to different target sequences,

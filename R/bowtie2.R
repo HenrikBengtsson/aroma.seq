@@ -97,7 +97,7 @@ bowtie2 <- function(reads1, reads2=NULL, indexPrefix, pathnameSAM, ..., gzAllowe
       decompress <- getOption(aromaSettings, "devel/fastq.gz/decompress", TRUE);
       if (!decompress) {
         why <- attr(gzAllowed, "why");
-        throw(sprintf("Cannot align reads in '%s': %s", getPathname(df), why));
+        throw(sprintf("Cannot align reads in '%s': %s", pathnameFQ, why));
       }
 
       # If not, temporarily decompress (=remove when done)

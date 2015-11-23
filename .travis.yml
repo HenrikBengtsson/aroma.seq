@@ -26,8 +26,7 @@ env:
 
   # R versions r-builder should test on (ignored by r-travis)
   matrix:
-    - RVERSION=3.1.3
-    - RVERSION=3.2.0
+    - RVERSION=3.2.2
     - RVERSION=devel _R_COVR_=TRUE _R_CHECK_FULL_=TRUE
 
 
@@ -41,16 +40,21 @@ before_install:
     else
       export R_RSP_COMPILELATEX_FALLBACK="copy-force";
     fi
+  - if [[ "$_R_CHECK_USE_VALGRIND_" == "TRUE" ]]; then
+      export R_BUILD_ARGS="--no-manual --no-build-vignettes";
+      export R_CHECK_ARGS="--no-manual --no-build-vignettes --no-codoc --no-examples --use-valgrind";
+      export _R_CHECK_TIMINGS_=10;
+      sudo apt-get install valgrind;
+      valgrind --version;
+    fi
 
 install:
- - $RENV install_bioc aroma.light Biobase BiocParallel Biostrings edgeR GenomicRanges qrqc Rsamtools ShortRead
- - $RENV install_r aroma.cn BatchJobs PSCBS
-
-
- - $RENV install_bioc Biostrings GenomeInfoDb GenomicRanges IRanges Rsamtools S4Vectors ShortRead
- - $RENV install_r aroma.core gtools matrixStats R.cache R.filesets R.methodsS3 R.oo R.utils
- - $RENV install_bioc aroma.light Biobase BiocParallel edgeR QDNAseq qrqc
- - $RENV install_r aroma.cn BatchJobs markdown PSCBS R.devices R.rsp
+ - $RENV install_bioc aroma.light Biobase BiocParallel Biostrings edgeR GenomicRanges qrqc Rsamtools ShortRead DNAcopy
+ - $RENV install_r aroma.cn BatchJobs
+ - $RENV install_bioc GenomeInfoDb
+ - $RENV install_r gtools
+ - $RENV install_bioc QDNAseq
+ - $RENV install_r markdown
 
 script:
   - $RENV run_build

@@ -108,6 +108,15 @@ stopifnot(identical(getFullNames(bamsZ), getFullNames(bams)))
 for (ii in seq_along(bams)) {
   bam <- bams[[ii]]
   bamZ <- bamsZ[[ii]]
+  
+  ## Index files should be the same
+  bai <- getIndexFile(bam)
+  baiZ <- getIndexFile(bamZ)
+  stopifnot(getChecksum(baiZ) == getChecksum(bai))
+
+  ## However, checksums may different because read groups
+  ## such as 'CL' contain full system call used, which
+  ## includes full pathnames.
 ##  stopifnot(getChecksum(bamZ) == getChecksum(bam))
 }
 

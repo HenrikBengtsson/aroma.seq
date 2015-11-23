@@ -44,6 +44,9 @@ setMethodS3("normalizeGcContent", "default", function(y, gcContent, targetFcn=NU
   # predict() for 'lowess' is defined in aroma.light
   use("aroma.light")
 
+  ## To please R CMD check
+  predict <- get("predict", mode="function", envir=getNamespace("aroma.light"))
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments

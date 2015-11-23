@@ -82,9 +82,9 @@ import("aroma.core")
 
 importFrom("GenomeInfoDb", "seqnames")
 importFrom("Biostrings", "unmasked")
+importFrom("S4Vectors", "FilterRules")
 importFrom("S4Vectors", "Rle")
 importFrom("GenomicRanges", "GRanges")
-importFrom("IRanges", "FilterRules")
 importFrom("IRanges", "IRanges")
 importFrom("IRanges", "RangesList")
 importFrom("Rsamtools", "BamFile")
@@ -106,6 +106,10 @@ importFrom("ShortRead", "yield")
 importFrom("ShortRead", "writeFastq")
 
 importFrom("gtools", "mixedorder")
+
+importFrom("stats", "lowess", "median")
+importFrom("utils", "file_test", "getS3method", "head",
+           "packageVersion", "read.table", "str", "unzip")
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
