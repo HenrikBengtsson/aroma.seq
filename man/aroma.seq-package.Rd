@@ -44,7 +44,7 @@
 \section{How to cite this package}{
  Bengtsson H, Olshen A and Tokuyasu T (????).
 \emph{aroma.seq: High-Throughput Sequence Analysis using the Aroma Framework}.
-R package version 0.6.9-9000, \url{https://github.com/HenrikBengtsson/aroma.seq}.
+R package version 0.6.6, \url{https://github.com/HenrikBengtsson/aroma.seq}.
 }
 
 \section{License}{
