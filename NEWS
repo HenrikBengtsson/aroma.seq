@@ -2,6 +2,10 @@ Package: aroma.seq
 ==================
 
 Version: 0.6.9-9000 [2015-10-26]
+o ROBUSTNESS: Now buildIndex() and readHeader() for BamDataFile
+  assert that the BAM file exists before trying to parse it.
+  Likewise, print() for BamDataFile no longer give an error
+  if BAM file does not exist.
 o ROBUSTNESS: Explicitly importing core R functions.
 o Package now requires R (>= 3.2.2) released August 2015.
   This allows us to use BioC (>= 3.2) (October 2015).
