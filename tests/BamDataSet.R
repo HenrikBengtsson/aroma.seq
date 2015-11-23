@@ -36,3 +36,10 @@ fs <- getFlagStat(bam)
 print(fs)
 
 } # if (fullTest)
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Non-existing BAM file
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bam <- BamDataFile("non-existing.bam", mustExist=FALSE)
+print(bam)
