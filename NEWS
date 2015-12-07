@@ -2,7 +2,7 @@ Package: aroma.seq
 ==================
 
 Version: 0.6.6-9000 [2015-12-07]
-o ...
+o Now SeqzFile also supports gzip'ed files.
 
 
 Version: 0.6.6 [2015-11-22]
