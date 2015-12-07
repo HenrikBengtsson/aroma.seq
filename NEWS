@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.6.6-9000 [2015-12-07]
+o ...
+
+
 Version: 0.6.6 [2015-11-22]
 o ROBUSTNESS: Now buildIndex() and readHeader() for BamDataFile
   assert that the BAM file exists before trying to parse it.
