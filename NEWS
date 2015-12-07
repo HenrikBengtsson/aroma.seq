@@ -2,6 +2,7 @@ Package: aroma.seq
 ==================
 
 Version: 0.6.6-9000 [2015-12-07]
+o Add stubs for MPileupFile and MPileupFileSet.
 o Now SeqzFile also supports gzip'ed files.
 
 
