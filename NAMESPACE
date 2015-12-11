@@ -647,3 +647,6 @@ S3method("readDataFrameForPSCBS", "CnvKitCopyNumberRatioFile")
 S3method("segmentByCBS", "CnvKitCopyNumberRatioFile")
 S3method("findByName", "CnvKitCopyNumberRatioFileSet")
 S3method("byName", "CnvKitCopyNumberRatioFileSet")
+
+S3method("findByName", "MPileupFileSet")
+S3method("getDefaultFullName", "MPileupFile")
