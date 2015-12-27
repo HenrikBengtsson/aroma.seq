@@ -168,7 +168,7 @@ setMethodS3("getOutputDataSet0", "BinnedGcNormalization", function(this, pattern
   verbose && str(verbose, args);
   args$verbose <- less(verbose);
   staticMethod <- clazz$byPath;
-  dsOut <- do.call("staticMethod", args=args);
+  dsOut <- do.call(staticMethod, args=args);
   rm(staticMethod, args); # Not needed anymore
   verbose && exit(verbose);
 
