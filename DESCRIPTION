@@ -26,6 +26,7 @@ Suggests:
   edgeR (>= 3.12.0),
   QDNAseq (>= 1.6.0),
   qrqc (>= 1.24.0),
+  mgcv,
   BiocParallel (>= 1.4.0),
   BatchJobs (>= 1.6),
   PSCBS (>= 0.60.0),
