@@ -26,8 +26,8 @@
 # }
 #
 # \references{
-#  [1] TopHat, University of Maryland, 2013.
-#      \url{http://http://tophat.cbcb.umd.edu/} \cr
+#  [1] TopHat - A spliced read mapper for RNA-Seq, 2015.
+#      \url{http://ccb.jhu.edu/software/tophat/} \cr
 #  [2] Trapnell et al. \emph{Differential gene and transcript expression
 #      analysis of RNA-seq experiments with TopHat and Cufflinks}.
 #      Nat Protoc, 2012.\cr
