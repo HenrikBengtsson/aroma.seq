@@ -30,7 +30,7 @@ Suggests:
   BiocParallel (>= 1.4.0),
   BatchJobs (>= 1.6),
   PSCBS (>= 0.60.0),
-  R.devices (>= 2.13.1),
+  R.devices (>= 2.13.2),
   R.rsp (>= 0.21.0),
   markdown (>= 0.7.7)
 SuggestsNote:
