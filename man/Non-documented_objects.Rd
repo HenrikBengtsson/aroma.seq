@@ -629,6 +629,11 @@
 \alias{readDataFrameForPSCBS}
 \alias{readDataFrameForPSCBS.CnvKitCopyNumberRatioFile}
 \alias{segmentByCBS.CnvKitCopyNumberRatioFile}
+\alias{MPileupFile}
+\alias{MPileupFileSet}
+\alias{findByName.MPileupFileSet}
+\alias{getDefaultFullName.MPileupFile}
+\alias{getDefaultFullName.SeqzFile}
 
 \description{
   This page contains aliases for all "non-documented" objects that

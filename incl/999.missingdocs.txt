@@ -361,3 +361,5 @@ readDataFrameForPSCBS
 readDataFrameForPSCBS.CnvKitCopyNumberRatioFile
 segmentByCBS.CnvKitCopyNumberRatioFile
 
+MPileupFile MPileupFileSet findByName.MPileupFileSet
+  getDefaultFullName.MPileupFile getDefaultFullName.SeqzFile

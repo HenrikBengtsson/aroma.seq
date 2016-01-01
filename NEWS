@@ -1,6 +1,11 @@
 Package: aroma.seq
 ==================
 
+Version: 0.6.7 [2016-01-01]
+o Add stubs for MPileupFile and MPileupFileSet.
+o Now SeqzFile also supports gzip'ed files.
+
+
 Version: 0.6.6 [2015-11-22]
 o ROBUSTNESS: Now buildIndex() and readHeader() for BamDataFile
   assert that the BAM file exists before trying to parse it.

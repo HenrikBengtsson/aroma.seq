@@ -38,7 +38,7 @@ if (fullTest) {
   print(gg)
   gg <- gcPlot(data)
   print(gg)
-  gg <- qualPlot(data)
+  gg <- qualPlot(data)  ## Needs mgcv via ggplot2
   print(gg)
   gg <- seqlenPlot(data)
   print(gg)

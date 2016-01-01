@@ -41,8 +41,8 @@
 # @author "HB,TT"
 #
 # \references{
-#  [1] TopHat, University of Maryland, 2013.
-#      \url{http://http://tophat.cbcb.umd.edu/}
+#  [1] TopHat - A spliced read mapper for RNA-Seq, 2015.
+#      \url{http://ccb.jhu.edu/software/tophat/}
 # }
 #
 # @keyword internal

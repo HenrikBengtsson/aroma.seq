@@ -115,13 +115,13 @@ setMethodS3("findByOrganism", "GtfDataFile", function(static, organism, tags=NUL
     pattern=patternS,
     ...
   );
-  pathname <- do.call("findAnnotationData", args=args);
+  pathname <- do.call(findAnnotationData, args=args);
 
   # If not found, look for Windows shortcuts
   if (is.null(pathname)) {
     # Search for a Windows shortcut
     args$pattern <- sprintf("%s[.]lnk$", args$pattern)
-    pathname <- do.call("findAnnotationData", args=args);
+    pathname <- do.call(findAnnotationData, args=args);
     if (!is.null(pathname)) {
       # ..and expand it
       pathname <- Arguments$getReadablePathname(pathname, mustExist=FALSE);
@@ -159,7 +159,7 @@ setMethodS3("getSeqLengths", "GtfDataFile", function(this, unique=FALSE, onlyIfC
   uniqify <- function(lens, unique=FALSE) {
     # Cache in memory
     this$.seqLengths <- lens
-    
+
     if (!unique || length(lens) < 1L) return(lens)
     mstr(1)
     names <- names(lens)
@@ -187,7 +187,7 @@ setMethodS3("getSeqLengths", "GtfDataFile", function(this, unique=FALSE, onlyIfC
 
   # (c) Scan file too expensive?
   if (!force && onlyIfCached) return(NULL)
-  
+
   # (d) Scan file?
   con <- gzfile(pathname, open="r")
   on.exit(close(con))

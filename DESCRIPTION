@@ -1,8 +1,8 @@
 Package: aroma.seq
-Version: 0.6.6
+Version: 0.6.7
 Depends:
   R (>= 3.2.2),
-  R.utils (>= 2.1.0),
+  R.utils (>= 2.2.0),
   R.filesets (>= 2.9.0),
   aroma.core (>= 2.14.0)
 Imports:
@@ -10,7 +10,7 @@ Imports:
   R.methodsS3 (>= 1.7.0),
   R.oo (>= 1.19.0),
   R.cache (>= 0.12.0),
-  matrixStats (>= 0.15.0),
+  matrixStats (>= 0.50.1),
   gtools (>= 3.5.0),
   Biostrings,
   GenomeInfoDb,
@@ -26,11 +26,12 @@ Suggests:
   edgeR (>= 3.12.0),
   QDNAseq (>= 1.6.0),
   qrqc (>= 1.24.0),
+  mgcv,
   BiocParallel (>= 1.4.0),
   BatchJobs (>= 1.6),
   PSCBS (>= 0.60.0),
-  R.devices (>= 2.13.1),
-  R.rsp (>= 0.20.0),
+  R.devices (>= 2.13.2),
+  R.rsp (>= 0.21.0),
   markdown (>= 0.7.7)
 SuggestsNote:
   BioC (>= 3.2),

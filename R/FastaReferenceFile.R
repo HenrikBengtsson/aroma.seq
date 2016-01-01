@@ -174,13 +174,13 @@ setMethodS3("findByOrganism", "FastaReferenceFile", function(static, organism, t
     pattern=patternS,
     ...
   );
-  pathname <- do.call("findAnnotationData", args=args);
+  pathname <- do.call(findAnnotationData, args=args);
 
   # If not found, look for Windows shortcuts
   if (is.null(pathname)) {
     # Search for a Windows shortcut
     args$pattern <- sprintf("%s[.]lnk$", args$pattern)
-    pathname <- do.call("findAnnotationData", args=args);
+    pathname <- do.call(findAnnotationData, args=args);
     if (!is.null(pathname)) {
       # ..and expand it
       pathname <- Arguments$getReadablePathname(pathname, mustExist=FALSE);
