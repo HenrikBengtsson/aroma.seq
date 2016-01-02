@@ -2,7 +2,9 @@ Package: aroma.seq
 ==================
 
 Version: 0.6.7-9000 [2016-01-01]
-o ...
+o BUG FIX: process() for BwaAlignment() would give error that
+  "if (isPaired) { : argument is not interpretable as logical",
+  which was do to a typo and caught when processed using futures.
 
 
 Version: 0.6.7 [2016-01-01]
