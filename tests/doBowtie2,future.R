@@ -12,9 +12,9 @@ setupExampleData()
 library("future")
 strategies <- c("lazy", "eager")
 if (future::supportsMulticore()) strategies <- c(strategies, "multicore")
-if (require("async")) {
+if (require(pkg <- "async", character.only=TRUE)) {
+  backend("local")
   strategies <- c(strategies, "batchjobs")
-  async::backend("local")
 }
 setOption("R.filesets/parallel", "future")
 
