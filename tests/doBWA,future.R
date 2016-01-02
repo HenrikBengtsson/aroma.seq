@@ -39,6 +39,8 @@ print(fqs)
 # Single-end alignment
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 for (strategy in strategies) {
+  plan(strategy)
+  print(plan())
   bams <- doBWA(fqs, reference=fa, tags=c("*", strategy), verbose=-20)
   print(bams)
 }
