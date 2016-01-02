@@ -18,7 +18,9 @@ Imports:
   GenomicRanges,
   IRanges,
   ShortRead (>= 1.28.0),
-  Rsamtools (>= 1.22.0)
+  Rsamtools (>= 1.22.0),
+  listenv,
+  future
 Suggests:
   Biobase (>= 2.26.0),
   aroma.light (>= 3.0.0),
