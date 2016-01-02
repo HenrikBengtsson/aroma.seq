@@ -203,8 +203,8 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
     # Argument 'df':
     df <- Arguments$getInstanceOf(df, "FastqDataFile");
 
-    # Argument 'paired':
-    paired <- Arguments$getLogical(paired);
+    # Argument 'isPaired':
+    isPaired <- Arguments$getLogical(isPaired);
 
     # Argument 'indexPrefix':
     indexPrefix <- Arguments$getCharacter(indexPrefix);
