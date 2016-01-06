@@ -79,7 +79,7 @@ getInputDataSet.BwaAlignment getName.BwaAlignment
 getRootPath.BwaAlignment getTags.BwaAlignment
 getTargetLengths.SamDataFile getTargetNames.SamDataFile
 getTargets.SamDataFile getTotalTargetLength.SamDataFile
-hasIndex.SamDataFile isComplete isComplete.BwaIndexSet
+hasIndex.SamDataFile isComplete
 isSorted.SamDataFile nbrOfFiles.BwaAlignment
 nbrOfSeqs.SamDataFile nbrOfTargets.SamDataFile
 readHeader.SamDataFile

@@ -1,9 +1,11 @@
 ###########################################################################/**
 # @RdocClass BwaIndexSet
+# @aliasmethod isCompatibleWith
 # @aliasmethod isComplete
 # @aliasmethod getSeqLengths
 # @aliasmethod getSeqNames
 # @aliasmethod readAnnData
+# @aliasmethod as.character
 #
 # @title "The BwaIndexSet class"
 #
@@ -28,8 +30,16 @@
 # @keyword internal
 #*/###########################################################################
 setConstructorS3("BwaIndexSet", function(...) {
-  extend(AbstractIndexSet(...), "BwaIndexSet");
+  extend(AbstractIndexSet(...), c("BwaIndexSet", uses("SequenceContigsInterface")))
 })
+
+
+setMethodS3("as.character", "BwaIndexSet", function(x, ...) {
+  s <- NextMethod("as.character")
+  s <- c(s, getSeqGenericSummary(x, ...))
+  s
+})
+
 
 setMethodS3("isComplete", "BwaIndexSet", function(this, ...) {
   knownExts <- c("amb", "ann", "bwt", "pac", "sa");
@@ -50,11 +60,6 @@ setMethodS3("getSeqLengths", "BwaIndexSet", function(this, ...) {
   lengths <- data$length
   names(lengths) <- data$name
   lengths
-})
-
-
-setMethodS3("getSeqNames", "BwaIndexSet", function(this, ...) {
-  names(getSeqLengths(this))
 })
 
 

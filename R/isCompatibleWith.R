@@ -97,6 +97,10 @@ setMethodS3("isCompatibleWith", "Bowtie2IndexSet", function(this, other, mustWor
   }
 })
 
+setMethodS3("isCompatibleWith", "BwaIndexSet", function(this, other, ...) {
+  res <- isCompatibleWithBySeqNames(this, other, ...)
+})
+
 
 setMethodS3("isCompatibleWith", "GcBaseFile", function(this, other, ...) {
   res <- NextMethod("isCompatibleWith")

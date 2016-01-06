@@ -18,5 +18,7 @@ print(fa)
 is <- buildBwaIndexSet(fa, verbose=-10)
 print(is)
 
+stopifnot(isCompatibleWith(is, fa))
+stopifnot(isCompatibleWith(fa, is))
 
 } # if (fullTest)

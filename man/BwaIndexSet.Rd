@@ -10,6 +10,22 @@
 \docType{class}
 \alias{BwaIndexSet}
 
+\alias{BwaIndexSet.isComplete}
+\alias{isComplete.BwaIndexSet}
+\alias{isComplete,BwaIndexSet-method}
+
+\alias{BwaIndexSet.getSeqLengths}
+\alias{getSeqLengths.BwaIndexSet}
+\alias{getSeqLengths,BwaIndexSet-method}
+
+\alias{BwaIndexSet.getSeqNames}
+\alias{getSeqNames.BwaIndexSet}
+\alias{getSeqNames,BwaIndexSet-method}
+
+\alias{BwaIndexSet.readAnnData}
+\alias{readAnnData.BwaIndexSet}
+\alias{readAnnData,BwaIndexSet-method}
+
 
 \title{The BwaIndexSet class}
 
@@ -49,7 +65,10 @@ BwaIndexSet(...)
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
+ \tab \code{getSeqLengths} \tab  -\cr
+ \tab \code{getSeqNames} \tab  -\cr
  \tab \code{isComplete} \tab  -\cr
+ \tab \code{readAnnData} \tab  -\cr
 }
 
 
@@ -57,7 +76,7 @@ BwaIndexSet(...)
 as.character, byPrefix, getFastaReferenceFile, getIndexPrefix, getOrganism, isComplete
 
  \bold{Methods inherited from GenericDataFileSet}:\cr
-[, [[, anyDuplicated, anyNA, append, appendFiles, appendFullNamesTranslator, appendFullNamesTranslatorByNULL, appendFullNamesTranslatorByTabularTextFile, appendFullNamesTranslatorByTabularTextFileSet, appendFullNamesTranslatorBydata.frame, appendFullNamesTranslatorByfunction, appendFullNamesTranslatorBylist, as.character, as.list, byName, byPath, c, clearCache, clearFullNamesTranslator, clone, copyTo, dsApply, dsApplyInPairs, duplicated, equals, extract, findByName, findDuplicated, getChecksum, getChecksumFileSet, getChecksumObjects, getDefaultFullName, getFile, getFileClass, getFileSize, getFiles, getFullNames, getNames, getOneFile, getPath, getPathnames, getSubdirs, gunzip, gzip, hasFile, indexOf, is.na, na.omit, names, nbrOfFiles, rep, resetFullNames, seq, setFullNamesTranslator, sortBy, unique, update2, updateFullName, updateFullNames, validate, directoryItem, directoryItems, directoryStructure, directoryStructure<-, updateDirectoryStructure, getFullNameTranslatorSet, getParentName
+[, [[, anyDuplicated, anyNA, append, appendFiles, appendFullNamesTranslator, appendFullNamesTranslatorByNULL, appendFullNamesTranslatorByTabularTextFile, appendFullNamesTranslatorByTabularTextFileSet, appendFullNamesTranslatorBydata.frame, appendFullNamesTranslatorByfunction, appendFullNamesTranslatorBylist, as.character, as.list, byName, byPath, c, clearCache, clearFullNamesTranslator, clone, copyTo, dsApply, dsApplyInPairs, duplicated, equals, extract, findByName, findDuplicated, getChecksum, getChecksumFileSet, getChecksumObjects, getDefaultFullName, getFile, getFileClass, getFileSize, getFiles, getFullNames, getNames, getOneFile, getPath, getPathnames, getSubdirs, gunzip, gzip, hasFile, indexOf, is.na, names, nbrOfFiles, rep, resetFullNames, setFullNamesTranslator, sortBy, unique, update2, updateFullName, updateFullNames, validate, directoryItem, directoryItems, directoryStructure, directoryStructure<-, updateDirectoryStructure, getFullNameTranslatorSet, getParentName
 
  \bold{Methods inherited from FullNameInterface}:\cr
 appendFullNameTranslator, appendFullNameTranslatorByNULL, appendFullNameTranslatorByTabularTextFile, appendFullNameTranslatorByTabularTextFileSet, appendFullNameTranslatorBycharacter, appendFullNameTranslatorBydata.frame, appendFullNameTranslatorByfunction, appendFullNameTranslatorBylist, clearFullNameTranslator, clearListOfFullNameTranslators, getDefaultFullName, getFullName, getFullNameTranslator, getListOfFullNameTranslators, getName, getTags, hasTag, hasTags, resetFullName, setFullName, setFullNameTranslator, setListOfFullNameTranslators, setName, setTags, updateFullName

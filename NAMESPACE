@@ -277,7 +277,12 @@ S3method("getParameterSets", "BwaAlignment")
 S3method("process", "BwaAlignment")
 
 # BwaIndexSet
+S3method("as.character", "BwaIndexSet")
+S3method("isCompatibleWith", "BwaIndexSet")
 S3method("isComplete", "BwaIndexSet")
+S3method("getSeqLengths", "BwaIndexSet")
+S3method("getSeqNames", "BwaIndexSet")
+S3method("readAnnData", "BwaIndexSet")
 
 # character
 S3method("directoryItems", "character")

@@ -159,7 +159,6 @@
 \alias{getTotalTargetLength.SamDataFile}
 \alias{hasIndex.SamDataFile}
 \alias{isComplete}
-\alias{isComplete.BwaIndexSet}
 \alias{isSorted.SamDataFile}
 \alias{nbrOfFiles.BwaAlignment}
 \alias{nbrOfSeqs.SamDataFile}
