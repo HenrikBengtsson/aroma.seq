@@ -1,10 +1,10 @@
 Package: aroma.seq
-Version: 0.6.8
+Version: 0.6.8-9000
 Depends:
   R (>= 3.2.2),
   R.utils (>= 2.2.0),
-  R.filesets (>= 2.9.0),
-  aroma.core (>= 2.14.0)
+  R.filesets (>= 2.10.0),
+  aroma.core (>= 3.0.0)
 Imports:
   methods,
   R.methodsS3 (>= 1.7.0),
