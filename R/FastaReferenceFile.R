@@ -50,7 +50,7 @@ setConstructorS3("FastaReferenceFile", function(...) {
 
 setMethodS3("as.character", "FastaReferenceFile", function(x, ...) {
   s <- NextMethod("as.character")
-  s <- c(s, sprintf("Has index file (*.bai): %s", hasIndex(x)))
+  s <- c(s, sprintf("Has index file (*.fai): %s", hasIndex(x)))
   s <- c(s, getSeqGenericSummary(x, ...))
   s
 }, protected=TRUE)

@@ -194,7 +194,7 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Apply aligner to each of the FASTQ files
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  dsApply(ds[todo], FUN=function(df, paired=FALSE, indexPrefix, rgSet, paramsList, path, ...., skip=TRUE, verbose=FALSE) {
+  dsApply(ds[todo], FUN=function(df, isPaired=FALSE, indexPrefix, rgSet, paramsList, path, ...., skip=TRUE, verbose=FALSE) {
     R.utils::use("R.utils, aroma.seq");
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -203,8 +203,8 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
     # Argument 'df':
     df <- Arguments$getInstanceOf(df, "FastqDataFile");
 
-    # Argument 'paired':
-    paired <- Arguments$getLogical(paired);
+    # Argument 'isPaired':
+    isPaired <- Arguments$getLogical(isPaired);
 
     # Argument 'indexPrefix':
     indexPrefix <- Arguments$getCharacter(indexPrefix);
@@ -334,7 +334,7 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
     verbose && exit(verbose);
 
     invisible(list(pathnameFQ=pathnameFQs, pathnameSAM=pathnameSAM, pathnameBAM=pathnameBAM));
-  }, paired=isPaired(this), indexPrefix=indexPrefix, rgSet=rgSet, paramsList=paramsList, path=getPath(this), skip=skip, verbose=verbose) # dsApply()
+  }, isPaired=isPaired(this), indexPrefix=indexPrefix, rgSet=rgSet, paramsList=paramsList, path=getPath(this), skip=skip, verbose=verbose) # dsApply()
 
   res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1));
 

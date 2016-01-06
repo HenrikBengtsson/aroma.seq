@@ -9,6 +9,14 @@ if (fullTest) {
 # Setup (writable) local data directory structure
 setupExampleData()
 
+library("future")
+strategies <- c("lazy", "eager")
+if (future::supportsMulticore()) strategies <- c(strategies, "multicore")
+if (require(pkg <- "async", character.only=TRUE)) {
+  backend("local")
+  strategies <- c(strategies, "batchjobs")
+}
+setOption("R.filesets/parallel", "future")
 
 dataSet <- "TopHat-example"
 organism <- "Lambda_phage"
@@ -30,8 +38,12 @@ print(fqs)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Single-end alignment
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bams <- doBowtie2(fqs, reference=fa, tags=c("*", strategy), verbose=-20)
-print(bams)
+for (strategy in strategies) {
+  plan(strategy)
+  print(plan())
+  bams <- doBowtie2(fqs, reference=fa, tags=c("*", strategy), verbose=-20)
+  print(bams)
+}
 
 } # if (fullTest)
 
