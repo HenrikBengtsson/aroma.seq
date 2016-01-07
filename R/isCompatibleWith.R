@@ -66,11 +66,13 @@ setMethodS3("isCompatibleWithBySeqNames", "default", function(this, other, mustW
 }, protected=TRUE) # isCompatibleWithBySeqNames()
 
 
-setMethodS3("isCompatibleWithBySeqNames", "SequenceContigsInterface", function(this, other, unique=TRUE, ...) {
+setMethodS3("isCompatibleWithBySeqNames", "SequenceContigsInterface", function(this, other, unique=TRUE, mustWork=FALSE, ...) {
   res <- FALSE
   
   if (!inherits(other, "SequenceContigsInterface")) {
-    attr(res, "reason") <- sprintf("The 'other' object is not an SequenceContigsInterface class: %s", class(other)[1L])
+    msg <- sprintf("The 'other' object is not an SequenceContigsInterface class: %s", class(other)[1L])
+    if (mustWork) throw(msg)
+    attr(res, "reason") <- msg
     return(res)
   }
 
@@ -82,40 +84,65 @@ setMethodS3("isCompatibleWithBySeqNames", "SequenceContigsInterface", function(t
   nas <- is.na(idxs)
   if (any(nas)) {
     if (all(nas)) {
-      attr(res, "reason") <- "None of the sequence names matches."
+      msg <- "None of the sequence names matches."
     } else {
       unknown <- names[nas]
-      attr(res, "reason") <- sprintf("Some of the sequence names does not exist in target: [%d] %s", length(unknown), hpaste(sQuote(unknown)))
+      msg <- sprintf("Some of the sequence names does not exist in target: [%d] %s", length(unknown), hpaste(sQuote(unknown)))
     }
+    if (mustWork) throw(msg)
+    attr(res, "reason") <- msg
     return(res)
   }
 
   ## Assert same order
-  if (all(diff(idxs) > 0, na.rm=TRUE)) {
-    attr(res, "reason") <- "The ordering of sequence names does not match."
+  if (!all(diff(idxs) > 0, na.rm=TRUE)) {
+    msg <- "The ordering of sequence names does not match."
+    if (mustWork) throw(msg)
+    attr(res, "reason") <- msg
     return(res)
   }
 
-  res
+  TRUE
 }, protected=TRUE)
 
 
 setMethodS3("isCompatibleWithBySeqLengths", "SequenceContigsInterface", function(this, other, ...) {
+  res <- FALSE
+  
   if (!inherits(other, "SequenceContigsInterface")) {
-    res <- FALSE
-    attr(res, "reason") <- sprintf("The 'other' object is not an SequenceContigsInterface class: %s", class(other)[1L])
+    msg <- sprintf("The 'other' object is not an SequenceContigsInterface class: %s", class(other)[1L])
+    if (mustWork) throw(msg)
+    attr(res, "reason") <- msg
     return(res)
   }
 
   lens <- getSeqLengths(this)
   lensO <- getSeqLengths(other)
+
+  ## Assert same lengths
   idxs <- match(lensO, lens)
-  res <- all(diff(idxs) > 0, na.rm=TRUE)
-  if (!res) {
-    attr(res, "reason") <- "The ordering of sequence lengths does not match."
+  nas <- is.na(idxs)
+  if (any(nas)) {
+    if (all(nas)) {
+      msg <- "None of the sequence lengths matches."
+    } else {
+      unknown <- lens[nas]
+      msg <- sprintf("Some of the sequence lengths does not exist in target: [%d] %s", length(unknown), hpaste(sQuote(unknown)))
+    }
+    if (mustWork) throw(msg)
+    attr(res, "reason") <- msg
+    return(res)
   }
 
-  res
+  ## Assert same order
+  if (!all(diff(idxs) > 0, na.rm=TRUE)) {
+    msg <- "The ordering of sequence lengths does not match."
+    if (mustWork) throw(msg)
+    attr(res, "reason") <- msg
+    return(res)
+  }
+
+  TRUE
 }, protected=TRUE)
 
 
@@ -128,7 +155,7 @@ setMethodS3("isCompatibleWithBySeqs", "SequenceContigsInterface", function(this,
     if (!res) return(res)
   }
 
-  res
+  TRUE
 }, protected=TRUE)
 
 
@@ -165,7 +192,7 @@ setMethodS3("isCompatibleWith", "Bowtie2IndexSet", function(this, other, mustWor
 })
 
 setMethodS3("isCompatibleWith", "BwaIndexSet", function(this, other, ...) {
-  res <- isCompatibleWithBySeqNames(this, other, ...)
+  isCompatibleWithBySeqNames(this, other, ...)
 })
 
 
@@ -178,11 +205,13 @@ setMethodS3("isCompatibleWith", "GcBaseFile", function(this, other, ...) {
   nas <- is.na(idxs)
   if (any(nas)) {
     if (all(nas)) {
-      attr(res, "reason") <- "None of the sequence names matches."
+      msg <- "None of the sequence names matches."
     } else {
       unknown <- names[nas]
-      attr(res, "reason") <- sprintf("Some of the sequence names does not exist in target: [%d] %s", length(unknown), hpaste(sQuote(unknown)))
+      msg <- sprintf("Some of the sequence names does not exist in target: [%d] %s", length(unknown), hpaste(sQuote(unknown)))
     }
+    if (mustWork) throw(msg)
+    attr(res, "reason") <- msg
     return(res)
   }
 
@@ -190,7 +219,9 @@ setMethodS3("isCompatibleWith", "GcBaseFile", function(this, other, ...) {
   idxs <- match(names, getSeqNames(this))
   res <- all(diff(idxs) > 0, na.rm=TRUE)
   if (!res) {
-    attr(res, "reason") <- "The ordering of sequence names does not match."
+    msg <- "The ordering of sequence names does not match."
+    if (mustWork) throw(msg)
+    attr(res, "reason") <- msg
     return(res)
   }
   

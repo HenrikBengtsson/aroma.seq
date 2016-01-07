@@ -490,6 +490,8 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method=c("b
   if (skip && isComplete(res)) {
     verbose && cat(verbose, "Already done. Skipping.");
     verbose && exit(verbose);
+    # Assert compatibility
+    isCompatibleWith(this, res, mustWork=TRUE, verbose=less(verbose, 50))
     return(res);
   }
 
@@ -507,6 +509,9 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method=c("b
 
   # Sanity check
   stopifnot(!is.null(res));
+
+  # Assert compatibility
+  isCompatibleWith(this, res, mustWork=TRUE, verbose=less(verbose, 50))
 
   verbose && exit(verbose);
 

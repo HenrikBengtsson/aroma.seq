@@ -66,7 +66,8 @@ setMethodS3("getSeqLengths", "BwaIndexSet", function(this, ...) {
 setMethodS3("readAnnData", "BwaIndexSet", function(this, ...) {
   ## Identify sequence names and lengths
   pathnames <- getPathnames(this)
-  ann <- is[[grep("[.]ann$", pathnames)]]
+  idx <- grep("[.]ann$", pathnames)
+  ann <- this[[idx]]
 
   pathname <- getPathname(ann)
   data <- readLines(pathname)
