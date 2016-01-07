@@ -53,10 +53,27 @@ setMethodS3("getDefaultFilePatterns", "AbstractIndexSet", function(static, prefi
 }, static=TRUE, protected=TRUE)
 
 
-setMethodS3("byPrefix", "AbstractIndexSet", function(static, prefix, pattern=NULL, ...) {
+setMethodS3("byPrefix", "AbstractIndexSet", function(static, prefix, pattern=NULL, ..., verbose=FALSE) {
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
+  verbose && enterf(verbose, "Locating %s by prefix", class(static)[1])
+
   if (is.null(pattern)) pattern <- getDefaultFilePatterns(static, prefix=prefix)
+  verbose && cat(verbose, "Pattern: ", pattern)
+
   path <- getParent(prefix)
-  byPath(static, path=path, pattern=pattern, ...)
+  verbose && cat(verbose, "Path: ", path)
+
+  res <- byPath(static, path=path, pattern=pattern, ..., verbose=verbose)
+
+  verbose && exit(verbose)
+
+  res
 }, static=TRUE)
 
 

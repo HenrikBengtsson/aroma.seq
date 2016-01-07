@@ -497,6 +497,7 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method=c("b
     verbose && exit(verbose);
     # Assert compatibility
     isCompatibleWith(this, res, mustWork=TRUE, verbose=less(verbose, 50))
+    isCompatibleWith(res, this, mustWork=TRUE, verbose=less(verbose, 50))
     return(res);
   }
 
@@ -517,6 +518,7 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method=c("b
 
   # Assert compatibility
   isCompatibleWith(this, res, mustWork=TRUE, verbose=less(verbose, 50))
+  isCompatibleWith(res, this, mustWork=TRUE, verbose=less(verbose, 50))
 
   verbose && exit(verbose);
 
@@ -601,6 +603,7 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
     verbose && print(verbose, is)
     # Assert compatibility
     isCompatibleWith(this, is, mustWork=TRUE, verbose=less(verbose, 50))
+    isCompatibleWith(is, this, mustWork=TRUE, verbose=less(verbose, 50))
     verbose && exit(verbose);
     return(is);
   }
@@ -625,6 +628,7 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
 
   # Assert compatibility
   isCompatibleWith(this, is, mustWork=TRUE, verbose=less(verbose, 50))
+  isCompatibleWith(is, this, mustWork=TRUE, verbose=less(verbose, 50))
 
   verbose && exit(verbose);
 

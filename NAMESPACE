@@ -269,6 +269,7 @@ S3method("getIndexPrefix", "Bowtie2IndexFile")
 
 # Bowtie2IndexSet
 S3method("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet")
+S3method("getDefaultFilePatterns", "Bowtie2IndexSet")
 S3method("getSummary", "Bowtie2IndexSet")
 S3method("isComplete", "Bowtie2IndexSet")
 

@@ -10,6 +10,10 @@
 \docType{class}
 \alias{Bowtie2IndexSet}
 
+\alias{Bowtie2IndexSet.getDefaultFilePatterns}
+\alias{getDefaultFilePatterns.Bowtie2IndexSet}
+\alias{getDefaultFilePatterns,Bowtie2IndexSet-method}
+
 
 \title{The Bowtie2IndexSet class}
 
@@ -64,7 +68,7 @@ Bowtie2IndexSet(...)
 cleanSeqNames, getSeqGenericSummary, getSeqLengths, getSeqNames, getSeqOrdering, getTotalSeqLength, hasDuplicatedSeqs, hasSeqLengths, isCompatibleWithBySeqLengths, isCompatibleWithBySeqNames, isCompatibleWithBySeqs, nbrOfSeqs
 
  \bold{Methods inherited from AbstractIndexSet}:\cr
-as.character, byPrefix, getFastaReferenceFile, getIndexPrefix, getOrganism, isComplete
+as.character, byPrefix, getDefaultFilePatterns, getFastaReferenceFile, getIndexPrefix, getOrganism, isComplete
 
  \bold{Methods inherited from GenericDataFileSet}:\cr
 [, [[, anyDuplicated, anyNA, append, appendFiles, appendFullNamesTranslator, appendFullNamesTranslatorByNULL, appendFullNamesTranslatorByTabularTextFile, appendFullNamesTranslatorByTabularTextFileSet, appendFullNamesTranslatorBydata.frame, appendFullNamesTranslatorByfunction, appendFullNamesTranslatorBylist, as.character, as.list, byName, byPath, c, clearCache, clearFullNamesTranslator, clone, copyTo, dsApply, dsApplyInPairs, duplicated, equals, extract, findByName, findDuplicated, getChecksum, getChecksumFileSet, getChecksumObjects, getDefaultFullName, getFile, getFileClass, getFileSize, getFiles, getFullNames, getNames, getOneFile, getPath, getPathnames, getSubdirs, gunzip, gzip, hasFile, indexOf, is.na, names, nbrOfFiles, rep, resetFullNames, setFullNamesTranslator, sortBy, unique, update2, updateFullName, updateFullNames, validate, directoryItem, directoryItems, directoryStructure, directoryStructure<-, updateDirectoryStructure, getFullNameTranslatorSet, getParentName

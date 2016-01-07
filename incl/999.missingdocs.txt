@@ -1,6 +1,5 @@
 getDefaultFilePatterns
       readAnnData
-    readSeqLengths.Bowtie2IndexSet
 as.character.Bowtie2IndexSet
   as.character.GcBaseFile cleanSeqNames
   cleanSeqNames.SequenceContigsInterface getSeqGenericSummary
@@ -71,7 +70,7 @@ testSystemBowtie2Build
 isCapableOf
 buildBwaIndexSet
 as.character.BwaAlignment as.character.BwaIndexFile
-as.character.BwaIndexSet as.character.SamDataFile
+as.character.SamDataFile
 getAsteriskTags.BwaAlignment getFlavor.BwaAlignment
 getFullName.BwaAlignment getHeader.SamDataFile getIndexPrefix
 getIndexPrefix.BwaIndexFile getIndexPrefix.BwaIndexSet

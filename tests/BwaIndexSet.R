@@ -4,21 +4,35 @@ fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 fullTest <- fullTest && isCapableOf(aroma.seq, "bwa")
 if (fullTest) {
 
+message("*** BwaIndexSet ...")
+
 ## Setup (writable) local data directory structure
 setupExampleData()
 
-dataset <- "YeastTest"
-organism <- "Saccharomyces_cerevisiae"
+organisms <- c("Lambda_phage", "Saccharomyces_cerevisiae")
 
-## Setup FASTA reference file
-fa <- FastaReferenceFile$byOrganism(organism)
-print(fa)
+for (organism in organisms) {
+  message("Organism: ", organism)
+  fa <- FastaReferenceFile$byOrganism(organism)
+  print(fa)
 
-## Build index set
-is <- buildBwaIndexSet(fa, verbose=-10)
-print(is)
+  message("BWA index set ...")
+  ## Build index set
+  is <- buildBwaIndexSet(fa, verbose=-10)
+  print(is)
+  stopifnot(isCompatibleWith(is, fa))
+  stopifnot(isCompatibleWith(fa, is))
+  message("BWA index set ... DONE")
 
-stopifnot(isCompatibleWith(is, fa))
-stopifnot(isCompatibleWith(fa, is))
+  ## Build index set
+  message("Bowtie2 index set ...")
+  is <- buildBowtie2IndexSet(fa, verbose=-100)
+  print(is)
+  stopifnot(isCompatibleWith(is, fa))
+  stopifnot(isCompatibleWith(fa, is))
+  message("Bowtie2 index set ... DONE")
+}
+
+message("*** BwaIndexSet ... DONE")
 
 } # if (fullTest)

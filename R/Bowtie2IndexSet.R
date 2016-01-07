@@ -1,5 +1,7 @@
 ###########################################################################/**
 # @RdocClass Bowtie2IndexSet
+# @aliasmethod getDefaultFilePatterns
+# @aliasmethod readSeqLengths
 #
 # @title "The Bowtie2IndexSet class"
 #
@@ -39,6 +41,12 @@ setMethodS3("as.character", "Bowtie2IndexSet", function(x, ...) {
   s <- c(s, getSeqGenericSummary(x, ...))
   s
 })
+
+
+setMethodS3("getDefaultFilePatterns", "Bowtie2IndexSet", function(static, prefix, ...) {
+  knownExts <- c("1", "2", "3", "4", "rev.1", "rev.2");
+  sprintf("%s[.](%s)[.]bt2$", basename(prefix), paste(knownExts, collapse="|"))
+}, static=TRUE, protected=TRUE)
 
 
 setMethodS3("isComplete", "Bowtie2IndexSet", function(this, ...) {

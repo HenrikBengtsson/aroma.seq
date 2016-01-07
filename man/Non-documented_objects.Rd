@@ -14,7 +14,6 @@
 % Other missing docs
 \alias{getDefaultFilePatterns}
 \alias{readAnnData}
-\alias{readSeqLengths.Bowtie2IndexSet}
 \alias{as.character.Bowtie2IndexSet}
 \alias{as.character.GcBaseFile}
 \alias{cleanSeqNames}
@@ -139,7 +138,6 @@
 \alias{buildBwaIndexSet}
 \alias{as.character.BwaAlignment}
 \alias{as.character.BwaIndexFile}
-\alias{as.character.BwaIndexSet}
 \alias{as.character.SamDataFile}
 \alias{getAsteriskTags.BwaAlignment}
 \alias{getFlavor.BwaAlignment}
