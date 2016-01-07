@@ -14,6 +14,10 @@
 \alias{getDefaultFilePatterns.Bowtie2IndexSet}
 \alias{getDefaultFilePatterns,Bowtie2IndexSet-method}
 
+\alias{Bowtie2IndexSet.readSeqLengths}
+\alias{readSeqLengths.Bowtie2IndexSet}
+\alias{readSeqLengths,Bowtie2IndexSet-method}
+
 
 \title{The Bowtie2IndexSet class}
 
