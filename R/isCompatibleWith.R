@@ -66,6 +66,73 @@ setMethodS3("isCompatibleWithBySeqNames", "default", function(this, other, mustW
 }, protected=TRUE) # isCompatibleWithBySeqNames()
 
 
+setMethodS3("isCompatibleWithBySeqNames", "SequenceContigsInterface", function(this, other, unique=TRUE, ...) {
+  res <- FALSE
+  
+  if (!inherits(other, "SequenceContigsInterface")) {
+    attr(res, "reason") <- sprintf("The 'other' object is not an SequenceContigsInterface class: %s", class(other)[1L])
+    return(res)
+  }
+
+  names <- getSeqNames(this, unique=unique)
+  namesO <- getSeqNames(other, unique=unique)
+
+  ## Assert same names
+  idxs <- match(names, namesO)
+  nas <- is.na(idxs)
+  if (any(nas)) {
+    if (all(nas)) {
+      attr(res, "reason") <- "None of the sequence names matches."
+    } else {
+      unknown <- names[nas]
+      attr(res, "reason") <- sprintf("Some of the sequence names does not exist in target: [%d] %s", length(unknown), hpaste(sQuote(unknown)))
+    }
+    return(res)
+  }
+
+  ## Assert same order
+  if (all(diff(idxs) > 0, na.rm=TRUE)) {
+    attr(res, "reason") <- "The ordering of sequence names does not match."
+    return(res)
+  }
+
+  res
+}, protected=TRUE)
+
+
+setMethodS3("isCompatibleWithBySeqLengths", "SequenceContigsInterface", function(this, other, ...) {
+  if (!inherits(other, "SequenceContigsInterface")) {
+    res <- FALSE
+    attr(res, "reason") <- sprintf("The 'other' object is not an SequenceContigsInterface class: %s", class(other)[1L])
+    return(res)
+  }
+
+  lens <- getSeqLengths(this)
+  lensO <- getSeqLengths(other)
+  idxs <- match(lensO, lens)
+  res <- all(diff(idxs) > 0, na.rm=TRUE)
+  if (!res) {
+    attr(res, "reason") <- "The ordering of sequence lengths does not match."
+  }
+
+  res
+}, protected=TRUE)
+
+
+setMethodS3("isCompatibleWithBySeqs", "SequenceContigsInterface", function(this, other, ...) {
+  res <- isCompatibleWithBySeqNames(this, other, ...)
+  if (!res) return(res)
+
+  if (hasSeqLengths(this)) {
+    res <- isCompatibleWithBySeqLengths(this, other, ...)
+    if (!res) return(res)
+  }
+
+  res
+}, protected=TRUE)
+
+
+
 setMethodS3("isCompatibleWith", "FastaReferenceFile", function(this, other, ...) {
   isCompatibleWithBySeqNames(this, other, ...)
 })
@@ -105,13 +172,29 @@ setMethodS3("isCompatibleWith", "BwaIndexSet", function(this, other, ...) {
 setMethodS3("isCompatibleWith", "GcBaseFile", function(this, other, ...) {
   res <- NextMethod("isCompatibleWith")
   if (!isTRUE(res)) return(res)
+  
+  ## Assert same names
+  names <- getSeqNames(other)
+  nas <- is.na(idxs)
+  if (any(nas)) {
+    if (all(nas)) {
+      attr(res, "reason") <- "None of the sequence names matches."
+    } else {
+      unknown <- names[nas]
+      attr(res, "reason") <- sprintf("Some of the sequence names does not exist in target: [%d] %s", length(unknown), hpaste(sQuote(unknown)))
+    }
+    return(res)
+  }
+
   ## Assert same order
-  idxs <- match(getSeqNames(other), getSeqNames(this))
+  idxs <- match(names, getSeqNames(this))
   res <- all(diff(idxs) > 0, na.rm=TRUE)
   if (!res) {
     attr(res, "reason") <- "The ordering of sequence names does not match."
+    return(res)
   }
-  res
+  
+  TRUE
 })
 
 
