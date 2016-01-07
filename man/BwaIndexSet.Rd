@@ -10,9 +10,13 @@
 \docType{class}
 \alias{BwaIndexSet}
 
-\alias{BwaIndexSet.isComplete}
-\alias{isComplete.BwaIndexSet}
-\alias{isComplete,BwaIndexSet-method}
+\alias{BwaIndexSet.as.character}
+\alias{as.character.BwaIndexSet}
+\alias{as.character,BwaIndexSet-method}
+
+\alias{BwaIndexSet.getDefaultFilePatterns}
+\alias{getDefaultFilePatterns.BwaIndexSet}
+\alias{getDefaultFilePatterns,BwaIndexSet-method}
 
 \alias{BwaIndexSet.getSeqLengths}
 \alias{getSeqLengths.BwaIndexSet}
@@ -21,6 +25,14 @@
 \alias{BwaIndexSet.getSeqNames}
 \alias{getSeqNames.BwaIndexSet}
 \alias{getSeqNames,BwaIndexSet-method}
+
+\alias{BwaIndexSet.isCompatibleWith}
+\alias{isCompatibleWith.BwaIndexSet}
+\alias{isCompatibleWith,BwaIndexSet-method}
+
+\alias{BwaIndexSet.isComplete}
+\alias{isComplete.BwaIndexSet}
+\alias{isComplete,BwaIndexSet-method}
 
 \alias{BwaIndexSet.readAnnData}
 \alias{readAnnData.BwaIndexSet}
@@ -65,10 +77,7 @@ BwaIndexSet(...)
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{getSeqLengths} \tab  -\cr
- \tab \code{getSeqNames} \tab  -\cr
  \tab \code{isComplete} \tab  -\cr
- \tab \code{readAnnData} \tab  -\cr
 }
 
 

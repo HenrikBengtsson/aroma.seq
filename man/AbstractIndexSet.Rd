@@ -10,6 +10,10 @@
 \docType{class}
 \alias{AbstractIndexSet}
 
+\alias{AbstractIndexSet.getDefaultFilePatterns}
+\alias{getDefaultFilePatterns.AbstractIndexSet}
+\alias{getDefaultFilePatterns,AbstractIndexSet-method}
+
 
 \title{The AbstractIndexSet class}
 

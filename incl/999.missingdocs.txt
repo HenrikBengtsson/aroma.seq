@@ -1,4 +1,6 @@
-readSeqLengths.Bowtie2IndexSet
+getDefaultFilePatterns
+      readAnnData
+    readSeqLengths.Bowtie2IndexSet
 as.character.Bowtie2IndexSet
   as.character.GcBaseFile cleanSeqNames
   cleanSeqNames.SequenceContigsInterface getSeqGenericSummary

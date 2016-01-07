@@ -106,7 +106,7 @@ setMethodS3("isCompatibleWithBySeqNames", "SequenceContigsInterface", function(t
 }, protected=TRUE)
 
 
-setMethodS3("isCompatibleWithBySeqLengths", "SequenceContigsInterface", function(this, other, ...) {
+setMethodS3("isCompatibleWithBySeqLengths", "SequenceContigsInterface", function(this, other, mustWork=FALSE, ...) {
   res <- FALSE
   
   if (!inherits(other, "SequenceContigsInterface")) {
@@ -196,7 +196,7 @@ setMethodS3("isCompatibleWith", "BwaIndexSet", function(this, other, ...) {
 })
 
 
-setMethodS3("isCompatibleWith", "GcBaseFile", function(this, other, ...) {
+setMethodS3("isCompatibleWith", "GcBaseFile", function(this, other, mustWork=FALSE, ...) {
   res <- NextMethod("isCompatibleWith")
   if (!isTRUE(res)) return(res)
   

@@ -12,6 +12,8 @@
 
 
 % Other missing docs
+\alias{getDefaultFilePatterns}
+\alias{readAnnData}
 \alias{readSeqLengths.Bowtie2IndexSet}
 \alias{as.character.Bowtie2IndexSet}
 \alias{as.character.GcBaseFile}

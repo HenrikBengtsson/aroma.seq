@@ -1,11 +1,12 @@
 ###########################################################################/**
 # @RdocClass BwaIndexSet
-# @aliasmethod isCompatibleWith
-# @aliasmethod isComplete
+# @aliasmethod as.character
+# @aliasmethod getDefaultFilePatterns
 # @aliasmethod getSeqLengths
 # @aliasmethod getSeqNames
+# @aliasmethod isCompatibleWith
+# @aliasmethod isComplete
 # @aliasmethod readAnnData
-# @aliasmethod as.character
 #
 # @title "The BwaIndexSet class"
 #
@@ -42,17 +43,20 @@ setMethodS3("as.character", "BwaIndexSet", function(x, ...) {
 
 
 setMethodS3("isComplete", "BwaIndexSet", function(this, ...) {
-  knownExts <- c("amb", "ann", "bwt", "pac", "sa");
-  if (length(this) < length(knownExts)) return(FALSE);
-
-  exts <- sapply(this, getExtension);
-  missing <- setdiff(knownExts, exts);
-  if (any(missing)) {
-    return(FALSE);
-  }
-
-  TRUE;
+  knownExts <- c("amb", "ann", "bwt", "pac", "sa")
+  if (length(this) < length(knownExts)) return(FALSE)
+  exts <- sapply(this, FUN=getExtension)
+  missing <- setdiff(knownExts, exts)
+  if (any(missing)) return(FALSE)
+  TRUE
 })
+
+
+setMethodS3("getDefaultFilePatterns", "BwaIndexSet", function(static, prefix, ...) {
+  knownExts <- c("amb", "ann", "bwt", "pac", "sa")
+  exts <- paste(knownExts, collapse="|")
+  sprintf("%s[.](%s)$", basename(prefix), exts)
+}, static=TRUE, protected=TRUE)
 
 
 setMethodS3("getSeqLengths", "BwaIndexSet", function(this, ...) {
@@ -67,6 +71,8 @@ setMethodS3("readAnnData", "BwaIndexSet", function(this, ...) {
   ## Identify sequence names and lengths
   pathnames <- getPathnames(this)
   idx <- grep("[.]ann$", pathnames)
+  if (length(idx) == 0) return(data.frame())
+  
   ann <- this[[idx]]
 
   pathname <- getPathname(ann)
