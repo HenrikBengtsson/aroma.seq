@@ -30,7 +30,7 @@ print(fqs)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Single-end alignment
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bams <- doBowtie2(fqs, reference=fa, tags=c("*", strategy), verbose=-20)
+bams <- doBowtie2(fqs, reference=fa, tags=c("*", "parallel"), verbose=-20)
 print(bams)
 
 } # if (fullTest)
