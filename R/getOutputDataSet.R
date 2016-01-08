@@ -72,8 +72,17 @@ setMethodS3("getOutputDataSet", "AbstractAlignment", function(this, onMissing=c(
           length(bams), length(this), sQuote(getPath(bams))));
   }
 
-  bams;
-}) # getOutputDataSet() for AbstractAlignment
+  ## Assert compatibility with index set
+  is <- getIndexSet(this)
+  for (ii in seq_along(bams)) {
+    bam <- bams[[ii]]
+    bamExists <- isFile(bam)
+    if (onMissing != "NA") stopifnot(bamExists)
+    if (bamExists) isCompatibleWith(bam, is)
+  }
+
+  bams
+}, protected=TRUE)
 
 
 setMethodS3("getOutputDataSet", "BamDownsampler", function(this, ...) {

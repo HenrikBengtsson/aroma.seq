@@ -357,8 +357,13 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
   bams <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1));
   verbose && print(verbose, bams);
 
-  # Sanity check
-  stopifnot(all(sapply(bams, FUN=isFile)));
+  ## Sanity checks
+  is <- getIndexSet(this)
+  for (ii in seq_along(bams)) {
+    bam <- bams[[ii]]
+    stopifnot(isFile(bam))
+    isCompatibleWith(bam, is)
+  }
 
   verbose && exit(verbose);
 

@@ -336,11 +336,11 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
     invisible(list(pathnameFQ=pathnameFQs, pathnameSAM=pathnameSAM, pathnameBAM=pathnameBAM));
   }, isPaired=isPaired(this), indexPrefix=indexPrefix, rgSet=rgSet, paramsList=paramsList, path=getPath(this), skip=skip, verbose=verbose) # dsApply()
 
-  res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1));
+  bams <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1))
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  invisible(res);
+  invisible(bams)
 })
 
 

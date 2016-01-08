@@ -110,6 +110,7 @@ setMethodS3("getRootPath", "AbstractAlignment", function(this, ...) {
 }, protected=TRUE)
 
 
+
 ############################################################################
 # HISTORY:
 # 2014-04-13
