@@ -29,7 +29,9 @@
 # }
 #
 # \section{How to cite this package}{
-#  @eval "paste(capture.output(print(citation('aroma.seq'), style='latex')), collapse='\n')"
+#  Bengtsson H et al. (2016).
+# \emph{aroma.seq: @eval "getTitle(aroma.seq)"}
+# \url{@eval "getUrl(aroma.seq)"}.
 # }
 #
 # \section{License}{

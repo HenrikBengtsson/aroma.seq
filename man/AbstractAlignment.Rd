@@ -51,9 +51,7 @@ AbstractAlignment(dataSet=NULL, indexSet=NULL, rgSet=NULL, ...)
 
 \section{Fields and Methods}{
  \bold{Methods:}\cr
-\tabular{rll}{
- \tab \code{getOutputDataSet} \tab  -\cr
-}
+\emph{No methods defined}.
 
 
  \bold{Methods inherited from AromaSeqTransform}:\cr
