@@ -124,55 +124,6 @@ setMethodS3("hasDuplicatedSeqs", "SequenceContigsInterface", function(this, ...)
   anyDuplicated(getSeqNames(this, unique=FALSE, ...))
 }, protected=TRUE)
 
-setMethodS3("isCompatibleWithBySeqLengths", "SequenceContigsInterface", function(this, other, ...) {
-  if (!inherits(other, "SequenceContigsInterface")) {
-    res <- FALSE
-    attr(res, "reason") <- sprintf("The 'other' object is not an SequenceContigsInterface class: %s", class(other)[1L])
-    return(res)
-  }
-
-  lens <- getSeqLengths(this)
-  lensO <- getSeqLengths(other)
-  idxs <- match(lensO, lens)
-  res <- all(diff(idxs) > 0, na.rm=TRUE)
-  if (!res) {
-    attr(res, "reason") <- "The ordering of sequence lengths does not match."
-  }
-
-  res
-}, protected=TRUE)
-
-
-setMethodS3("isCompatibleWithBySeqNames", "SequenceContigsInterface", function(this, other, unique=TRUE, ...) {
-  if (!inherits(other, "SequenceContigsInterface")) {
-    res <- FALSE
-    attr(res, "reason") <- sprintf("The 'other' object is not an SequenceContigsInterface class: %s", class(other)[1L])
-    return(res)
-  }
-
-  names <- getSeqNames(this, unique=unique)
-  namesO <- getSeqNames(other, unique=unique)
-  idxs <- match(namesO, names)
-  res <- all(diff(idxs) > 0, na.rm=TRUE)
-  if (!res) {
-    attr(res, "reason") <- "The ordering of sequence names does not match."
-  }
-
-  res
-}, protected=TRUE)
-
-
-setMethodS3("isCompatibleWithBySeqs", "SequenceContigsInterface", function(this, other, ...) {
-  res <- isCompatibleWithBySeqNames(this, other, ...)
-  if (!res) return(res)
-
-  if (hasSeqLengths(this)) {
-    res <- isCompatibleWithBySeqLengths(this, other, ...)
-    if (!res) return(res)
-  }
-
-  res
-}, protected=TRUE)
 
 
 

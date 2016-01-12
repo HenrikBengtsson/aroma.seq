@@ -22,7 +22,7 @@
 \code{~~+--}\emph{\code{SequenceContigsInterface}}\cr
 
 \bold{Directly known subclasses:}\cr
-\link[aroma.seq]{BamDataFile}, \link[aroma.seq]{Bowtie2IndexSet}, \emph{\link[aroma.seq]{FastaReferenceFile}}, \emph{\link[aroma.seq]{FastaReferenceIndexFile}}, \emph{\link[aroma.seq]{GcBaseFile}}, \emph{\link[aroma.seq]{GtfDataFile}}\cr
+\link[aroma.seq]{BamDataFile}, \link[aroma.seq]{Bowtie2IndexSet}, \link[aroma.seq]{BwaIndexSet}, \emph{\link[aroma.seq]{FastaReferenceFile}}, \emph{\link[aroma.seq]{FastaReferenceIndexFile}}, \emph{\link[aroma.seq]{GcBaseFile}}, \emph{\link[aroma.seq]{GtfDataFile}}\cr
 
 public abstract class \bold{SequenceContigsInterface}\cr
 extends \link[R.oo]{Interface}\cr

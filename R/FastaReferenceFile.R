@@ -481,15 +481,23 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method=c("b
   prefix <- bwaIndexPrefix(pathnameFA, ...);
   verbose && cat(verbose, "Prefix for index files: ", prefix);
 
+  ## The filename pattern
+  fullname <- getFullName(this)
+  verbose && cat(verbose, "Fullname for index files: ", fullname)
+
   # Locate existing index files
   res <- tryCatch({
     BwaIndexSet$byPrefix(prefix);
   }, error=function(ex) BwaIndexSet());
+  verbose && print(verbose, res)
 
   # Nothing todo?
   if (skip && isComplete(res)) {
     verbose && cat(verbose, "Already done. Skipping.");
     verbose && exit(verbose);
+    # Assert compatibility
+    isCompatibleWith(this, res, mustWork=TRUE, verbose=less(verbose, 50))
+    isCompatibleWith(res, this, mustWork=TRUE, verbose=less(verbose, 50))
     return(res);
   }
 
@@ -498,15 +506,19 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method=c("b
   verbose && print(verbose, this);
 
   res <- bwaIndex(pathnameFA, indexPrefix=prefix, a=method, ..., verbose=less(verbose, 5));
-
   if (res != 0L) {
     throw("Failed to build BWA index. Return code: ", res);
   }
 
   res <- BwaIndexSet$byPrefix(prefix);
+  verbose && print(verbose, res)
 
   # Sanity check
   stopifnot(!is.null(res));
+
+  # Assert compatibility
+  isCompatibleWith(this, res, mustWork=TRUE, verbose=less(verbose, 50))
+  isCompatibleWith(res, this, mustWork=TRUE, verbose=less(verbose, 50))
 
   verbose && exit(verbose);
 
@@ -591,6 +603,7 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
     verbose && print(verbose, is)
     # Assert compatibility
     isCompatibleWith(this, is, mustWork=TRUE, verbose=less(verbose, 50))
+    isCompatibleWith(is, this, mustWork=TRUE, verbose=less(verbose, 50))
     verbose && exit(verbose);
     return(is);
   }
@@ -615,6 +628,7 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
 
   # Assert compatibility
   isCompatibleWith(this, is, mustWork=TRUE, verbose=less(verbose, 50))
+  isCompatibleWith(is, this, mustWork=TRUE, verbose=less(verbose, 50))
 
   verbose && exit(verbose);
 

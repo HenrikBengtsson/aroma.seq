@@ -1,6 +1,14 @@
 Package: aroma.seq
 ==================
 
+Version: 0.6.9 [2016-01-08]
+o ROBUSTNESS: Now AbstractAlignment methods assert that the output
+  data set is compatible with the index set.
+o ROBUSTNESS: When finding index sets from a FASTA reference files
+  it could happen that a non-compatible index set was returned.
+  Now we do a better job locating and validating compatibility.
+
+
 Version: 0.6.8 [2016-01-01]
 o BUG FIX: process() for BwaAlignment() would give error that
   "if (isPaired) { : argument is not interpretable as logical",

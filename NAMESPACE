@@ -142,6 +142,7 @@ S3method("getIndexPrefix", "AbstractIndexFile")
 # AbstractIndexSet
 S3method("as.character", "AbstractIndexSet")
 S3method("byPrefix", "AbstractIndexSet")
+S3method("getDefaultFilePatterns", "AbstractIndexSet")
 S3method("getFastaReferenceFile", "AbstractIndexSet")
 S3method("getIndexPrefix", "AbstractIndexSet")
 S3method("getOrganism", "AbstractIndexSet")
@@ -268,6 +269,7 @@ S3method("getIndexPrefix", "Bowtie2IndexFile")
 
 # Bowtie2IndexSet
 S3method("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet")
+S3method("getDefaultFilePatterns", "Bowtie2IndexSet")
 S3method("getSummary", "Bowtie2IndexSet")
 S3method("isComplete", "Bowtie2IndexSet")
 
@@ -277,7 +279,12 @@ S3method("getParameterSets", "BwaAlignment")
 S3method("process", "BwaAlignment")
 
 # BwaIndexSet
+S3method("as.character", "BwaIndexSet")
+S3method("getDefaultFilePatterns", "BwaIndexSet")
+S3method("isCompatibleWith", "BwaIndexSet")
 S3method("isComplete", "BwaIndexSet")
+S3method("getSeqLengths", "BwaIndexSet")
+S3method("readAnnData", "BwaIndexSet")
 
 # character
 S3method("directoryItems", "character")
