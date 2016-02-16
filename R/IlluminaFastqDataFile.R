@@ -142,7 +142,9 @@ setMethodS3("getFirstSequenceInfo", "IlluminaFastqDataFile", function(this, forc
     patternA <- "^([^:]+):([0-9]+):([^:]+):([0-9]+):([0-9]+):([0-9]+):([0-9]+)";
     patternB <- " ([^:]+):([^:]+):([0-9]+):([^:]+)$";
     pattern <- sprintf("%s%s", patternA, patternB);
-    stopifnot(regexpr(pattern, info) != -1);
+    if (regexpr(pattern, info) == -1) {
+      throw(sprintf("The (first) sequence of the FASTQ file has an 'info' string (%s) that does not match the expected regular expression (%s): %s", sQuote(info), sQuote(pattern), sQuote(pathnameFQ)))
+    }
 
     infoA <- gsub(patternB, "", info);
     infoB <- gsub(patternA, "", info);
