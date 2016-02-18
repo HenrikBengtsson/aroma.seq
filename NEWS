@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.6.9-9000 [2016-02-15]
+o Add isCompatibleWith() for AromaSeqDataFileSet, e.g. to check that
+  all BAM files to each other use isCompatibleWith(bams, bams[[1]]).
+
 Version: 0.6.9 [2016-01-08]
 o ROBUSTNESS: Now AbstractAlignment methods assert that the output
   data set is compatible with the index set.

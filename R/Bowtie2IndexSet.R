@@ -118,6 +118,13 @@ setMethodS3("getSeqLengths", "Bowtie2IndexSet", function(this, force=FALSE, ...)
 })
 
 
+setMethodS3("isTopHat2IndexSet", "Bowtie2IndexSet", function(this, ...) {
+  # AD HOC
+  path <- getPath(this);
+  grepl("tophat2", path, fixed=TRUE);
+}, protected=TRUE)
+
+
 ############################################################################
 # HISTORY:
 # 2015-05-07
