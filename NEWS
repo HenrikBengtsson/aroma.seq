@@ -6,6 +6,8 @@ o Now print() for IlluminaFastqDataFile also report on the platform
   and file format.  It also reports on the flowcell ID, lane, barcode
   sequence, sample name, read direction and instrument ID based on
   the first sequence in the FASTQ file (iff the file format is known).
+o ROBUSTNESS: Now the constructor of IlluminaFastqDataFile asserts that
+  all FASTQ files have a file format that is recognized/known.
 o ROBUSTNESS: Add isCompatibleWith() for AromaSeqDataFileSet, e.g. to check
   that all BAM files to each other use isCompatibleWith(bams, bams[[1]]).
 

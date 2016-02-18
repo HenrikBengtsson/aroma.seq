@@ -454,6 +454,7 @@ S3method("getSampleNames", "HTSeqCounting")
 S3method("process", "HTSeqCounting")
 
 # IlluminaFastqDataFile
+S3method("as.character", "IlluminaFastqDataFile")
 S3method("getBarcodeSequence", "IlluminaFastqDataFile")
 S3method("getDefaultSamReadGroup", "IlluminaFastqDataFile")
 S3method("getFileVersion", "IlluminaFastqDataFile")
@@ -465,6 +466,10 @@ S3method("getPlatform", "IlluminaFastqDataFile")
 S3method("getPlatformUnit", "IlluminaFastqDataFile")
 S3method("getReadDirection", "IlluminaFastqDataFile")
 S3method("getSampleName", "IlluminaFastqDataFile")
+
+# IlluminaFastqDataSet
+S3method("as.character", "IlluminaFastqDataSet")
+S3method("validate", "IlluminaFastqDataSet")
 
 # list
 S3method("directoryStructure", "list")
