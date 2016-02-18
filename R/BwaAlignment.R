@@ -227,10 +227,15 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
 
     # The FASTQ to be aligned
     if (isPaired) {
-      dfList <- list(R1=df, R2=getMateFile(df));
+      dfList <- list(R1=df, R2=getMateFile(df))
+      verbose && cat(verbose, "Paired-end read data:")
+      verbose && print(verbose, dfList)
     } else {
-      dfList <- list(df);
+      dfList <- list(df)
+      verbose && cat(verbose, "Single-end read data:")
+      verbose && print(verbose, df)
     }
+
     pathnameFQs <- sapply(dfList, FUN=getPathname);
     verbose && cat(verbose, "FASTQ pathname(s): ", hpaste(pathnameFQs));
 
