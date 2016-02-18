@@ -31,6 +31,23 @@ setConstructorS3("IlluminaFastqDataFile", function(...) {
 })
 
 
+setMethodS3("as.character", "IlluminaFastqDataFile", function(x, ...) {
+  s <- NextMethod("as.character")
+  fver <- getFileVersion(x)
+  s <- c(s, sprintf("Platform: %s", getPlatform(x)))
+  s <- c(s, sprintf("File format version: %s", fver))
+  if (!is.na(fver)) {
+    s <- c(s, sprintf("Information from the first sequence:"))
+    s <- c(s, sprintf("- Sample name: %s", getSampleName(x)))
+    s <- c(s, sprintf("- Flowcell ID: %s", getFlowcellId(x)))
+    s <- c(s, sprintf("- Lane: %s", getLane(x)))
+    s <- c(s, sprintf("- Barcode sequence: %s", getBarcodeSequence(x)))
+    s <- c(s, sprintf("- Read direction: %s", getReadDirection(x)))
+    s <- c(s, sprintf("- Instrument ID: %s", getInstrumentId(x)))
+  }
+  s
+}, protected=TRUE)
+
 
 setMethodS3("getFileVersion", "IlluminaFastqDataFile", function(this, ...) {
   name <- getFullName(this, ...);

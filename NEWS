@@ -1,6 +1,13 @@
 Package: aroma.seq
 ==================
 
+Version: 0.6.9-9000 [2016-02-17]
+o Now print() for IlluminaFastqDataFile also report on the platform
+  and file format.  It also reports on the flowcell ID, lane, barcode
+  sequence, sample name, read direction and instrument ID based on
+  the first sequence in the FASTQ file (iff the file format is known).
+
+
 Version: 0.6.9 [2016-01-08]
 o ROBUSTNESS: Now AbstractAlignment methods assert that the output
   data set is compatible with the index set.
