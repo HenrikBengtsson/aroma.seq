@@ -67,7 +67,7 @@ print(bfN);
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Bin reads chromosome by chromosome
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-for (kk in seq(along=chrLabels)) {
+for (kk in seq_along(chrLabels)) {
   chrLabel <- chrLabels[kk];
   verbose && enter(verbose, sprintf("Chromosome #%d ('%s') of %d", kk, chrLabel, length(chrLabels)));
 

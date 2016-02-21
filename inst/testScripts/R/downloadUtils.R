@@ -56,7 +56,7 @@ downloadBowtie2ExampleData <- function(...) {
   pathD <- Arguments$getWritablePath(pathD);
   pathnamesS <- grep("[.]fq$", pathnames, value=TRUE);
   pathnamesD <- file.path(pathD, basename(pathnamesS));
-  for (kk in seq(along=pathnamesS)) {
+  for (kk in seq_along(pathnamesS)) {
     if (!isFile(pathnamesD[kk])) copyFile(pathnamesS[kk], pathnamesD[kk]);
   }
 } # downloadBowtie2ExampleData()
@@ -339,7 +339,7 @@ downloadAffymetrixDataSet <- function(dataSet, tags=NULL, chipType=chipType, ...
     pathS <- paths[1];
     # Move all files in up one level
     pathnamesT <- gsub(pathS, path, pathnames, fixed=TRUE);
-    for (kk in seq(along=pathnames)) {
+    for (kk in seq_along(pathnames)) {
       file.rename(from=pathnames[kk], to=pathnamesT[kk]);
     }
   }
