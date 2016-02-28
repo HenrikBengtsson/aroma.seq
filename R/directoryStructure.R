@@ -43,7 +43,7 @@ setMethodS3("directoryStructure", "character", function(struct, ...) {
   parts <- strsplit(struct, split="/", fixed=TRUE);
   parts <- unlist(parts, use.names=FALSE);
   names <- gsub("^<(.*)>$", "\\1", parts);
-  pattern <- paste(rep("([^/]*)", length=length(parts)), collapse="/");
+  pattern <- paste(rep("([^/]*)", times=length(parts)), collapse="/");
   replacement <- sprintf("\\%d", seq_along(names));
   names(replacement) <- names;
   struct <- list(

@@ -27,7 +27,7 @@ agsub <- function(pattern, replacement, x, ..., default=NA_character_, as=c("mat
   }
 
   # Expand default
-  default <- rep(default, length=length(x));
+  default <- rep(default, length.out=length(x));
 
   # Allocate result
   res <- vector("list", length=length(replacement));
