@@ -137,105 +137,101 @@ setMethodS3("process", "BamMerger", function(this, ..., skip=TRUE, force=FALSE, 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Apply merger to each group of BAM files
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  dsApply(ds, IDXS=groups[todo], FUN=function(dfList, ..., force=FALSE, verbose=FALSE) {
-    R.utils::use("R.utils, aroma.seq, Rsamtools");
+  res <- listenv()
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Validate arguments
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Argument 'dfList':
-    stopifnot(is.list(dfList));
+  IDXS <- groups[todo]
+  for (gg in seq_along(IDXS)) {
+    idxs <- IDXS[[gg]]
+    dfList <- as.list(ds[idxs])
 
-    # Argument 'force':
-    force <- Arguments$getLogical(force);
+    group <- names(IDXS)[gg]
+    if (is.null(group)) group <- "<unknown>"
 
-    # Argument 'verbose':
-    verbose <- Arguments$getVerbose(verbose);
-    if (verbose) {
-      pushState(verbose);
-      on.exit(popState(verbose));
-    }
+    verbose && enter(verbose, sprintf("Merging BAM set #%d ('%s') of %d", gg, group, length(IDXS)))
+    verbose && cat(verbose, "Number of BAM files to be merged: ", length(dfList))
 
-    verbose && enter(verbose, "Merging BAM files");
-    verbose && cat(verbose, "Number of BAM files to be merged: ", length(dfList));
-
-    pathnames <- unlist(sapply(dfList, FUN=getPathname), use.names=FALSE);
-
-    name <- names(dfList)[1L];
-    filenameD <- sprintf("%s.bam", name);
-    filenameD <- Arguments$getFilename(filenameD);
-    pathnameBAM <- file.path(path, filenameD);
-    pathnameBAI <- sprintf("%s.bai", pathnameBAM);
-    verbose && cat(verbose, "Output BAM file: ", pathnameBAM);
-    verbose && cat(verbose, "Output BAM index file: ", pathnameBAI);
+    pathnames <- unlist(sapply(dfList, FUN=getPathname), use.names=FALSE)
+    name <- names(dfList)[1L]
+    filenameD <- sprintf("%s.bam", name)
+    filenameD <- Arguments$getFilename(filenameD)
+    pathnameBAM <- file.path(path, filenameD)
+    pathnameBAI <- sprintf("%s.bai", pathnameBAM)
+    verbose && cat(verbose, "Output BAM file: ", pathnameBAM)
+    verbose && cat(verbose, "Output BAM index file: ", pathnameBAI)
 
     # Already done?
     if (!force && isFile(pathnameBAM)) {
-      verbose && cat(verbose, "Already processed. Skipping.");
-      verbose && exit(verbose);
+      verbose && cat(verbose, "Already processed. Skipping.")
+      res[[gg]] <- pathnameBAM
+      verbose && exit(verbose)
+      next
     }
 
+    res[[gg]] %<=% {
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      # BEGIN: ATOMIC PROCESSING
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      verbose && enter(verbose, "Atomic processing")
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # BEGIN: ATOMIC PROCESSING
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    verbose && enter(verbose, "Atomic processing");
-    pathnameBAMT <- sprintf("%s.tmp", pathnameBAM);
-    verbose && cat(verbose, "Temporary output BAM file: ", pathnameBAMT);
-    pathnameBAIT <- sprintf("%s.bai", pathnameBAMT);
+      pathnameBAMT <- sprintf("%s.tmp", pathnameBAM)
+      verbose && cat(verbose, "Temporary output BAM file: ", pathnameBAMT)
+      pathnameBAIT <- sprintf("%s.bai", pathnameBAMT)
 
-    # Special case; nothing to merge, just copy
-    if (length(pathnames) == 1L) {
-      verbose && enter(verbose, "Copying single BAM file (nothing to merge)");
-      pathname <- pathnames[1L];
-      copyFile(pathname, pathnameBAMT, copy.mode=FALSE, overwrite=force);
+      # Special case; nothing to merge, just copy
+      if (length(pathnames) == 1L) {
+        verbose && enter(verbose, "Copying single BAM file (nothing to merge)")
+        pathname <- pathnames[1L]
+        copyFile(pathname, pathnameBAMT, copy.mode=FALSE, overwrite=force)
 
-      # Copy existing index file or create index from scratch?
-      bam <- BamDataFile(pathname);
-      bai <- getIndexFile(bam);
-      if (!is.null(bai)) {
-        verbose && enter(verbose, "Copying existing BAM index file");
-        copyFile(getPathname(bai), pathnameBAIT, copy.mode=FALSE, overwrite=force);
-        verbose && exit(verbose);
+        # Copy existing index file or create index from scratch?
+        bam <- BamDataFile(pathname)
+        bai <- getIndexFile(bam)
+        if (!is.null(bai)) {
+          verbose && enter(verbose, "Copying existing BAM index file")
+          copyFile(getPathname(bai), pathnameBAIT, copy.mode=FALSE, overwrite=force)
+          verbose && exit(verbose)
+        } else {
+          verbose && enter(verbose, "Indexing BAM file")
+          pathnameBAIT <- indexBam(pathnameBAMT)
+          verbose && cat(verbose, "Generated index file: ", pathnameBAIT)
+          file.rename(pathnameBAIT, pathnameBAI)
+          verbose && exit(verbose)
+        }
+
+        verbose && exit(verbose)
       } else {
-        verbose && enter(verbose, "Indexing BAM file");
-        pathnameBAIT <- indexBam(pathnameBAMT);
-        verbose && cat(verbose, "Generated index file: ", pathnameBAIT);
-        file.rename(pathnameBAIT, pathnameBAI);
-        verbose && exit(verbose);
+        pathnameBAMT2 <- mergeBam(pathnames, destination=pathnameBAMT, indexDestination=TRUE, overwrite=force)
+        verbose && cat(verbose, "Generated BAM file: ", pathnameBAMT)
+        stopifnot(pathnameBAMT2 == pathnameBAMT)
+        file.rename(pathnameBAIT, pathnameBAI)
       }
 
-      verbose && exit(verbose);
-    } else {
-      pathnameBAMT2 <- mergeBam(pathnames, destination=pathnameBAMT, indexDestination=TRUE, overwrite=force);
-      verbose && cat(verbose, "Generated BAM file: ", pathnameBAMT);
-      stopifnot(pathnameBAMT2 == pathnameBAMT);
-      file.rename(pathnameBAIT, pathnameBAI);
-    }
-
-    file.rename(pathnameBAMT, pathnameBAM);
-    verbose && exit(verbose);
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # END: ATOMIC PROCESSING
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      file.rename(pathnameBAMT, pathnameBAM)
+      verbose && exit(verbose)
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      # END: ATOMIC PROCESSING
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
-    verbose && cat(verbose, "Created BAM file: ", pathnameBAM);
-    verbose && cat(verbose, "Created BAM index file: ", pathnameBAI);
-    # Sanity checks
-    pathnameBAM <- Arguments$getReadablePathname(pathnameBAM);
-    pathnameBAI <- Arguments$getReadablePathname(pathnameBAI);
+      verbose && cat(verbose, "Created BAM file: ", pathnameBAM)
+      verbose && cat(verbose, "Created BAM index file: ", pathnameBAI)
+      # Sanity checks
+      pathnameBAM <- Arguments$getReadablePathname(pathnameBAM)
+      pathnameBAI <- Arguments$getReadablePathname(pathnameBAI)
 
-    verbose && exit(verbose);
+      pathnameBAM
+    } ## %<=%
 
-    invisible(list(pathnameBAM=pathnameBAM, pathnameBAI=pathnameBAI));
-  }, force=force, verbose=less(verbose, 1));
+    verbose && exit(verbose)
+  } ## for (gg ...)
 
-  res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 50));
+  res <- resolve(res)
 
-  verbose && exit(verbose);
+  res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 50))
 
-  invisible(res);
+  verbose && exit(verbose)
+
+  invisible(res)
 }) # process()
 
 
