@@ -1,4 +1,4 @@
-###########################################################################/**
+##########################################################################/**
 # @RdocClass BinnedGcNormalization
 #
 # @title "The abstract BinnedGcNormalization class"
@@ -211,6 +211,8 @@ setMethodS3("process", "BinnedGcNormalization", function(this, ..., force=FALSE,
   unc <- getGcContentFile(this);
   verbose && print(verbose, unc);
 
+  ## FIXME: Read GC content data only iff needed
+  ##        (move to inside the for-loop)  /HB 2016-03-12
   gc <- getGcContent(unc);
   verbose && str(verbose, gc);
   verbose && summary(verbose, gc);
@@ -227,138 +229,108 @@ setMethodS3("process", "BinnedGcNormalization", function(this, ..., force=FALSE,
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Apply aligner to each of the FASTQ files
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  dsApply(ds, FUN=function(df, unc, gc=NULL, params=NULL, ext, path, ...., skip=TRUE, verbose=FALSE) {
-    R.utils::use("R.utils, aroma.seq");
+  nbrOfUnits <- nbrOfUnits(unc)
+  path <- getPath(this)
+  skip <- !force
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Validate arguments
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Argument 'df':
-    df <- Arguments$getInstanceOf(df, "AromaUnitTotalCnBinaryFile");
+  res <- listenv()
+  for (ii in seq_along(ds)) {
+    df <- ds[[ii]]
+    fullname <- getFullName(df)
 
-    # Argument 'unc':
-    unc <- Arguments$getInstanceOf(unc, "AromaUnitNucleotideCountsFile");
-    nbrOfUnits <- nbrOfUnits(unc);
+    verbose && enter(verbose, sprintf("Sample #%d (%s) of %d", ii, sQuote(fullname), length(ds)))
 
-    # Argument 'gc':
-    if (!is.null(gc)) {
-      gc <- Arguments$getNumerics(gc, length=rep(nbrOfUnits, times=2L));
-    }
-
-    # Argument 'params':
-    if (!is.null(params)) {
-      params <- Arguments$getInstanceOf(params, "list");
-    }
-
-    # Argument 'ext':
-    ext <- Arguments$getCharacter(ext);
-
-    # Argument 'path':
-    path <- Arguments$getWritablePath(path);
-
-    # Argument 'skip':
-    skip <- Arguments$getLogical(skip);
-
-    # Argument 'verbose':
-    verbose <- Arguments$getVerbose(verbose);
-    if (verbose) {
-      pushState(verbose);
-      on.exit(popState(verbose));
-    }
-
-    fullname <- getFullName(df);
-    verbose && enter(verbose, "Sample ", sQuote(fullname));
-
-    filename <- sprintf("%s%s", fullname, ext);
+    filename <- sprintf("%s%s", fullname, ext)
     pathname <- Arguments$getReadablePathname(filename, path=path,
-                                                         mustExist=FALSE);
-    verbose && cat(verbose, "Output pathname: ", pathname);
+                                                         mustExist=FALSE)
+    verbose && cat(verbose, "Output pathname: ", pathname)
 
     # Already done?
     if (isFile(pathname)) {
-      dfOut <- newInstance(clazz, filename=pathname);
+      dfOut <- newInstance(clazz, filename=pathname)
       if (nbrOfUnits != nbrOfUnits(dfOut)) {
-        throw("The number of units in existing output file does not match the number of units in the output file: ", nbrOfUnits, " != ", nbrOfUnits(dfOut));
+        throw("The number of units in existing output file does not match the number of units in the output file: ", nbrOfUnits, " != ", nbrOfUnits(dfOut))
       }
-      verbose && cat(verbose, "Skipping already existing output file.");
-      verbose && exit(verbose);
-      return(invisible(list(dfNormalized=dfOut)));
+      verbose && cat(verbose, "Skipping already existing output file.")
+      verbose && exit(verbose)
+      res[[ii]] <- dfOut
+      next
     }
 
-    # Write to a temporary file
-    pathnameT <- pushTemporaryFile(pathname, verbose=verbose);
+    res[[ii]] %<=% {
+      # Write to a temporary file
+      pathnameT <- pushTemporaryFile(pathname, verbose=verbose)
 
-    verbose && print(verbose, df);
+      ## Data file to be processed
+      verbose && print(verbose, df)
 
-    y <- extractMatrix(df, drop=TRUE, verbose=less(verbose, 10));
-    verbose && cat(verbose, "Signals:");
-    verbose && str(verbose, y);
+      y <- extractMatrix(df, drop=TRUE, verbose=less(verbose, 10))
+      verbose && cat(verbose, "Signals:")
+      verbose && str(verbose, y)
 
-    if (!is.null(gc)) {
-      verbose && enter(verbose, "Retrieving GC content");
-      verbose && print(verbose, unc);
-      gc <- getGcContent(unc);
-      verbose && exit(verbose);
-    }
-    verbose && cat(verbose, "GC content:");
-    verbose && str(verbose, gc);
-    verbose && summary(verbose, gc);
+      verbose && cat(verbose, "GC content:")
+      verbose && str(verbose, gc)
+      verbose && summary(verbose, gc)
 
-    verbose && enter(verbose, "Normalizing signals (on the log scale) for GC content");
+      verbose && enter(verbose, "Normalizing signals (on the log scale) for GC content")
 
-    ly <- log2(y);
-    targetFcn <- function(...) 1;
-    lyN <- normalizeGcContent(ly, gcContent=gc, targetFcn=targetFcn, .isLogged=TRUE, .returnFit=TRUE);
-    yN <- 2^lyN;
-    fit <- attr(lyN, "modelFit");
-    verbose && cat(verbose, "Model fit:");
-    verbose && str(verbose, fit);
+      ly <- log2(y)
+      targetFcn <- function(...) 1
+      lyN <- normalizeGcContent(ly, gcContent=gc, targetFcn=targetFcn, .isLogged=TRUE, .returnFit=TRUE)
+      yN <- 2^lyN
+      fit <- attr(lyN, "modelFit")
+      verbose && cat(verbose, "Model fit:")
+      verbose && str(verbose, fit)
 
-    rm(y, ly, lyN);
-    verbose && exit(verbose);
+      rm(list=c("y", "ly", "lyN"))
+      verbose && exit(verbose)
 
-    verbose && enter(verbose, "Storing normalized signals");
-    verbose && cat(verbose, "Pathname: ", pathname);
+      verbose && enter(verbose, "Storing normalized signals")
+      verbose && cat(verbose, "Pathname: ", pathname)
 
-    footer <- list(
-      sourceDataFile=list(
-        fullname=getFullName(df),
-        platform=getPlatform(df),
-        chipType=getChipType(df),
-        checksum=getChecksum(df)
-      ), parameters=list(
-        annotation=list(
-          fullname=getFullName(unc),
-          platform=getPlatform(unc),
-          chipType=getChipType(unc),
-          checksum=getChecksum(unc)
-        ),
-        params=params
+      footer <- list(
+        sourceDataFile=list(
+          fullname=getFullName(df),
+          platform=getPlatform(df),
+          chipType=getChipType(df),
+          checksum=getChecksum(df)
+        ), parameters=list(
+          annotation=list(
+            fullname=getFullName(unc),
+            platform=getPlatform(unc),
+            chipType=getChipType(unc),
+            checksum=getChecksum(unc)
+          ),
+          params=params
+        )
       )
-    );
 
-    platform <- getPlatform(df);
-    chipType <- getChipType(df);
+      platform <- getPlatform(df)
+      chipType <- getChipType(df)
 
-    dfOut <- clazz$allocate(filename=pathnameT, nbrOfRows=nbrOfUnits,
-                            platform=platform, chipType=chipType,
-                            footer=footer, verbose=less(verbose, 50));
+      ## Create file
+      dfOut <- clazz$allocate(filename=pathnameT, nbrOfRows=nbrOfUnits,
+                              platform=platform, chipType=chipType,
+                              footer=footer, verbose=less(verbose, 50))
 
-    dfOut[,1] <- yN;
-    rm(yN);
+      ## Write signals to file
+      dfOut[,1] <- yN
+      rm(list="yN")
 
-    # Renaming temporary file
-    pathname <- popTemporaryFile(pathnameT, verbose=verbose);
+      # Renaming temporary file
+      pathname <- popTemporaryFile(pathnameT, verbose=verbose)
 
-    verbose && exit(verbose);
+      verbose && exit(verbose)
 
-    invisible(list(dfNormalized=dfOut));
-  }, unc=unc, gc=gc, params=params, ext=ext, path=getPath(this), skip=!force, verbose=verbose) # dsApply()
+      dfOut
+    } ## %<=%
+  } ## for (ii ...)
 
-  verbose && exit(verbose);
+  res <- resolve(res)
+  verbose && exit(verbose)
 
-  dsOut <- getOutputDataSet(this);
-  invisible(dsOut);
+  dsOut <- getOutputDataSet(this)
+  invisible(dsOut)
 })
 
 
