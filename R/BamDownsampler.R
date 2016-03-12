@@ -87,91 +87,68 @@ setMethodS3("process", "BamDownsampler", function(this, ..., force=FALSE, verbos
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Downsampling BAM data set");
-  ds <- getInputDataSet(this);
-  verbose && print(verbose, ds);
+  verbose && enter(verbose, "Downsampling BAM data set")
+  ds <- getInputDataSet(this)
+  verbose && print(verbose, ds)
 
-  params <- getParameters(this);
-  seed <- params$seed;
-  verbose && cat(verbose, "Random seed: ", seed);
+  params <- getParameters(this)
+  seed <- params$seed
+  verbose && cat(verbose, "Random seed: ", seed)
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Apply aligner to each of the BAM files
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  dsApply(ds, FUN=function(df, sampler, seed=NULL, path, ..., skip=TRUE, verbose=FALSE) {
-    R.utils::use("R.utils, aroma.seq");
+  skip <- !force
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Validate arguments
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Argument 'df':
-    df <- Arguments$getInstanceOf(df, "BamDataFile");
+  res <- listenv()
+  for (ii in seq_along(ds)) {
+    df <- ds[[ii]]
+    fullname <- getFullName(df)
 
-    # Argument 'sampler':
-    stopifnot(is.function(sampler));
+    verbose && enter(verbose, sprintf("Downsampling BAM #%d ('%s') of %d", ii, fullname, length(ds)))
 
-    # Argument 'seed':
-    if (!is.null(seed)) seed <- Arguments$getInteger(seed);
+    ext <- tools::file_ext(getFilename(df))
+    filename <- sprintf("%s.%s", fullname, ext)
+    pathname <- Arguments$getWritablePathname(filename, path=getPath(this), mustNotExist=FALSE)
 
-    # Argument 'path':
-    path <- Arguments$getWritablePath(path);
-
-    # Argument 'skip':
-    skip <- Arguments$getLogical(skip);
-
-    # Argument 'verbose':
-    verbose <- Arguments$getVerbose(verbose);
-    if (verbose) {
-      pushState(verbose);
-      on.exit(popState(verbose));
-    }
-
-
-    verbose && enter(verbose, "BAM downsampling of one sample");
-
-    fullname <- getFullName(df);
-    ext <- tools::file_ext(getFilename(df));
-    filename <- sprintf("%s.%s", fullname, ext);
-    pathname <- Arguments$getWritablePathname(filename, path=path, mustNotExist=FALSE);
+    ## Already processed?
     if (skip && isFile(pathname)) {
-      verbose && cat(verbose, "Already processed. Skipping.");
-      verbose && exit(verbose);
-      return(invisible(list(pathnameFQ=pathname, n=NA_integer_)));
+      verbose && cat(verbose, "Already processed. Skipping.")
+      verbose && exit(verbose)
+      res[[ii]] <- NA
+      next
     }
 
-    verbose && print(verbose, df);
-    n <- sampler(df);
-    verbose && printf(verbose, "Sample size: %d\n", n);
-    if (isFile(pathname)) {
-      file.remove(pathname);
-    }
+    res[[ii]] %<=% {
+      verbose && print(verbose, df)
+      n <- getSampleSize(this, df)
+      verbose && printf(verbose, "Sample size: %d\n", n)
+      if (isFile(pathname)) file.remove(pathname)
+      dfT <- writeSample(df, n=n, seed=seed, pathname=pathname, verbose=verbose)
+      verbose && print(verbose, dfT)
+      dfT
+    } ## %<=%
 
-    dfT <- writeSample(df, n=n, seed=seed, pathname=pathname, verbose=verbose);
-    verbose && print(verbose, dfT);
+    verbose && exit(verbose)
+  } ## for (ii ...)
 
-    # Not needed anymore
-    df <- dfT <- NULL;
+  ds <- NULL  ## Not needed anymore
 
-    verbose && exit(verbose);
+  ## Resolve all futures
+  res <- resolve(res)
 
-    invisible(list(pathnameFQ=pathname, n=n));
-  }, sampler=function(df) { getSampleSize(this, df) }, seed=seed, path=getPath(this), skip=!force, verbose=verbose) # dsApply()
+  res <- getOutputDataSet(this, verbose=less(verbose, 1))
 
-  # Not needed anymore
-  ds <- NULL;
+  verbose && exit(verbose)
 
-  res <- getOutputDataSet(this, verbose=less(verbose, 1));
-
-  verbose && exit(verbose);
-
-  invisible(res);
+  invisible(res)
 })
 
 
