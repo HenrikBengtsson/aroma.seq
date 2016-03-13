@@ -272,119 +272,98 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && cat(verbose, "Number of files: ", length(ds));
   verbose && cat(verbose, "Number of groups: ", length(groups));
-  dsApply(ds, IDXS=groups[todo], DROP=FALSE, FUN=function(dfListR1, isPaired=FALSE, indexSet, transcriptomeIndexSet=NULL, outPath, ..., skip=TRUE, verbose=FALSE) {
-    R.utils::use("R.utils, aroma.seq, Rsamtools");
+  outPath <- getPath(this)
+  IDXS <- groups[todo]
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Validate arguments
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Argument 'dfListR1':
-    dfListR1 <- Arguments$getInstanceOf(dfListR1, "list");
-    dfListR1 <- Arguments$getVector(dfListR1, length=c(1,Inf));
-    lapply(dfListR1, FUN=Arguments$getInstanceOf, "FastqDataFile");
+  res <- listenv()
 
-    # Argument 'isPaired':
-    isPaired <- Arguments$getLogical(isPaired);
+  for (gg in seq_along(IDXS)) {
+    idxs <- IDXS[[gg]]
+    dfListR1 <- as.list(ds[idxs])
+    sampleName <- names(IDXS)[gg]
 
-    # Argument 'indexSet':
-    indexSet <- Arguments$getInstanceOf(indexSet, "Bowtie2IndexSet");
+    verbose && enter(verbose, sprintf("TopHat2 alignment sample #%d ('%s') of %d", gg, sampleName, length(IDXS)))
 
-    # Argument 'transcriptomeIndexSet':
-    if (!is.null(transcriptomeIndexSet)) {
-      transcriptomeIndexSet <- Arguments$getInstanceOf(transcriptomeIndexSet, "Bowtie2IndexSet");
-    }
+    res[[gg]] %<=% {
+      reads1 <- sapply(dfListR1, FUN=getPathname)
+      verbose && printf(verbose, "R1 FASTQ files: [%d] %s\n", length(reads1), hpaste(sQuote(reads1)))
 
-    # Argument 'skip':
-    skip <- Arguments$getLogical(skip);
+      # Final sample-specific output directory
+      outPathS <- file.path(outPath, sampleName)
+      args <- list(
+        bowtieRefIndexPrefix=getIndexPrefix(indexSet),
+        reads1=reads1,
+        reads2=NULL,
+        transcriptomeIndexPrefix=NULL,
+        ...,
+        outPath=outPathS
+      )
 
-    # Argument 'outPath':
-    outPath <- Arguments$getWritablePath(outPath);
+      if (isPaired) {
+        dfListR2 <- lapply(dfListR1, FUN=getMateFile)
+        reads2 <- sapply(dfListR2, FUN=getPathname)
+        verbose && printf(verbose, "R2 FASTQ files: [%d] %s\n", length(reads2), hpaste(sQuote(reads2)))
+        args$reads2 <- reads2
+      }
 
-    # Argument 'verbose':
-    verbose <- Arguments$getVerbose(verbose);
-    if (verbose) {
-      pushState(verbose);
-      on.exit(popState(verbose));
-    }
-
-
-    # Get the group name
-    sampleName <- attr(dfListR1, "name", exact=TRUE);
-    verbose && enter(verbose, "Sample name ", sQuote(sampleName));
-    stopifnot(length(sampleName) == 1L);
-
-    reads1 <- sapply(dfListR1, FUN=getPathname);
-    verbose && printf(verbose, "R1 FASTQ files: [%d] %s\n", length(reads1), hpaste(sQuote(reads1)));
-
-    # Final sample-specific output directory
-    outPathS <- file.path(outPath, sampleName);
-    args <- list(
-      bowtieRefIndexPrefix=getIndexPrefix(indexSet),
-      reads1=reads1,
-      reads2=NULL,
-      transcriptomeIndexPrefix=NULL,
-      ...,
-      outPath=outPathS
-    );
-
-    if (isPaired) {
-      dfListR2 <- lapply(dfListR1, FUN=getMateFile);
-      reads2 <- sapply(dfListR2, FUN=getPathname);
-      verbose && printf(verbose, "R2 FASTQ files: [%d] %s\n", length(reads2), hpaste(sQuote(reads2)));
-      args$reads2 <- reads2;
-    }
-
-    if (!is.null(transcriptomeIndexSet)) {
-      args$transcriptomeIndexPrefix <- getIndexPrefix(transcriptomeIndexSet)
-    }
+      if (!is.null(transcriptomeIndexSet)) {
+        args$transcriptomeIndexPrefix <- getIndexPrefix(transcriptomeIndexSet)
+      }
 
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # BEGIN: ATOMIC OUTPUT
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Write to temporary output directory
-    args$outPath <- sprintf("%s.tmp", args$outPath);
-    verbose && cat(verbose, "Temporary output directory: ", args$outPath);
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      # BEGIN: ATOMIC OUTPUT
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      # Write to temporary output directory
+      args$outPath <- sprintf("%s.tmp", args$outPath)
+      verbose && cat(verbose, "Temporary output directory: ", args$outPath)
 
-    # (a) Align reads using TopHat2
-    verbose && cat(verbose, "Arguments passed to TopHat:");
-    verbose && str(verbose, args);
-    args$verbose <- less(verbose, 1);
-    res <- do.call(tophat2, args=args);
+      # (a) Align reads using TopHat2
+      verbose && cat(verbose, "Arguments passed to TopHat:")
+      verbose && str(verbose, args)
+      args$verbose <- less(verbose, 1)
+      res <- do.call(tophat2, args=args)
 
-    # (b) Generates BAM index file (assuming the BAM file is sorted)
-    pathnameBAM <- file.path(args$outPath, "accepted_hits.bam");
-    verbose && cat(verbose, "BAM file: ", pathnameBAM);
-    pathnameBAI <- indexBam(pathnameBAM);
-    verbose && cat(verbose, "BAM index file: ", pathnameBAI);
+      # (b) Generates BAM index file (assuming the BAM file is sorted)
+      pathnameBAM <- file.path(args$outPath, "accepted_hits.bam")
+      verbose && cat(verbose, "BAM file: ", pathnameBAM)
+      pathnameBAI <- indexBam(pathnameBAM)
+      verbose && cat(verbose, "BAM index file: ", pathnameBAI)
 
-    # Rename from temporary to final directory
-    file.rename(args$outPath, outPathS);
-    verbose && cat(verbose, "Final output directory: ", outPathS);
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # END: ATOMIC OUTPUT
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      # Rename from temporary to final directory
+      file.rename(args$outPath, outPathS)
+      verbose && cat(verbose, "Final output directory: ", outPathS)
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      # END: ATOMIC OUTPUT
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    verbose && exit(verbose);
+      ## Sanity check
+      pathnameBAM <- Arguments$getReadablePathname(pathnameBAM)
 
-    invisible(list(res=res));
-  }, isPaired=isPaired, indexSet=is, transcriptomeIndexSet=tis, outPath=getPath(this), args=args, skip=skip, verbose=verbose) # dsApply()
+      pathnameBAM
+    } ## %<=%
+
+    verbose && exit(verbose)
+  } ## for (gg ...)
+
+  ## Resolve futures
+  res <- resolve(res)
 
   # All calls are completed
-  done <- TRUE;
+  done <- TRUE
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Get results
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  bams <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1));
-  verbose && print(verbose, bams);
+  bams <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1))
+  verbose && print(verbose, bams)
 
   # Sanity check
-  stopifnot(all(sapply(bams, FUN=isFile)));
+  stopifnot(all(sapply(bams, FUN=isFile)))
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  bams;
+  bams
 })
 
 
