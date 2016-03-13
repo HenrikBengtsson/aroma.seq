@@ -94,39 +94,28 @@ setMethodS3("report", "FastqDataSet", function(this, dataSet=getFullName(this), 
   verbose && cat(verbose, "Report template (source): ", pathname);
   verbose && cat(verbose, "Output path: ", outPath);
 
-  resList <- dsApply(this, FUN=function(df, dataSet, flavor, outPath, ..., verbose=FALSE) {
-    R.utils::use("R.utils, aroma.seq");
+  ## FIXME: report(df, ...) does not work with multiprocess futures
+  ##        /HB 2016-03-12
+  oplan <- future::plan("eager")
+  on.exit(future::plan(oplan), add=TRUE)
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Validate arguments
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Argument 'df':
-    df <- Arguments$getInstanceOf(df, "FastqDataFile");
+  res <- listenv()
+  for (ii in seq_along(this)) {
+    df <- this[[ii]]
+    name <- getFullName(df)
+    verbose && enter(verbose, sprintf("FASTQ report #%d ('%s') of %d", ii, name, length(this)))
 
-    # Argument 'dataSet':
-    dataSet <- Arguments$getCharacter(dataSet);
-
-    # Argument 'outPath':
-    outPath <- Arguments$getWritablePath(outPath);
-
-    # Argument 'flavor':
-    flavor <- Arguments$getCharacter(flavor);
-
-    # Argument 'verbose':
-    verbose <- Arguments$getVerbose(verbose);
-    if (verbose) {
-      pushState(verbose);
-      on.exit(popState(verbose));
+    res[[ii]] %<=% {
+      report(df, dataSet=dataSet, flavor=flavor, outPath=outPath, ..., verbose=verbose)
     }
 
-    res <- report(df, dataSet=dataSet, flavor=flavor, outPath=outPath, ..., verbose=less(verbose));
+    verbose && exit(verbose)
+  } ## for (ii ...)
 
-    res;
-  }, dataSet=dataSet, flavor=flavor, outPath=outPath, verbose=verbose)
+  res <- resolve(res)
+  res <- as.list(res)
 
-  verbose && exit(verbose);
-
-  invisible(resList);
+  invisible(res)
 }) # report()
 
 
