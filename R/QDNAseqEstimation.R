@@ -153,52 +153,41 @@ setMethodS3("process", "QDNAseqEstimation", function(this, ..., force=FALSE, ver
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Apply aligner to each of the FASTQ files
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  dsApply(ds[todo], FUN=function(df, params, ..., force=FALSE, path, verbose=FALSE) {
-    R.utils::use("R.utils, aroma.seq, QDNAseq (>= 0.5.6)");
+  path <- getPath(this)
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Validate arguments
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Argument 'df':
-    df <- Arguments$getInstanceOf(df, "BamDataFile");
+  res <- listenv()
+  for (kk in seq_along(todo)) {
+    ii <- todo[kk]
+    df <- ds[[ii]]
+    name <- getFullName(df)
 
-    # Argument 'params'
-    params <- Arguments$getInstanceOf(params, "list");
+    verbose && enter(verbose, sprintf("QDNAseq on sample #%d ('%s') of %d", ii, name, length(todo)))
 
-    # Argument 'force':
-    force <- Arguments$getLogical(force);
+    res[[ii]] %<=% {
+      # Arguments to doQDNAseq()
+      args <- c(params, path=path, force=force)
+      verbose && cat(verbose, "Arguments to doQDNAseq():")
+      verbose && str(verbose, args)
 
-    # Argument 'path':
-    path <- Arguments$getWritablePath(path);
+      args <- c(list(df), args, verbose=verbose)
+      cn <- do.call(doQDNAseq, args=args)
+      verbose && print(verbose, cn)
 
-    # Argument 'verbose':
-    verbose <- Arguments$getVerbose(verbose);
-    if (verbose) {
-      pushState(verbose);
-      on.exit(popState(verbose));
+      cn
     }
 
-    verbose && enter(verbose, "QDNAseq on one sample");
+    verbose && exit(verbose)
+  } ## for (kk ...)
 
-    # Arguments to doQDNAseq()
-    args <- c(params, path=path, force=force);
-    verbose && cat(verbose, "Arguments to doQDNAseq():");
-    verbose && str(verbose, args);
-
-    args <- c(list(df), args, verbose=verbose);
-    cn <- do.call(doQDNAseq, args);
-    verbose && print(verbose, cn);
-    verbose && exit(verbose);
-
-    invisible(list(cn=cn));
-  }, params=params, path=getPath(this), force=force, verbose=verbose) # dsApply()
+  ## Resolve futures
+  res <- resolve(res)
 
   # At this point, all files should have been processed
-  res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1));
+  res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1))
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  res;
+  res
 })
 
 
