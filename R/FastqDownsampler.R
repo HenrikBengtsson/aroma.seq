@@ -111,73 +111,49 @@ setMethodS3("process", "FastqDownsampler", function(this, ..., force=FALSE, verb
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Apply aligner to each of the FASTQ files
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  dsApply(ds, FUN=function(df, sampler, seed=NULL, path, ..., skip=TRUE, verbose=FALSE) {
-    R.utils::use("R.utils, aroma.seq");
+  path <- getPath(this)
+  skip <- !force
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Validate arguments
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Argument 'df':
-    df <- Arguments$getInstanceOf(df, "FastqDataFile");
+  res <- listenv()
+  for (ii in seq_along(ds)) {
+    df <- ds[[ii]]
+    fullname <- getFullName(df)
 
-    # Argument 'sampler':
-    stopifnot(is.function(sampler));
+    verbose && enter(verbose, sprintf("FASTQ downsampling sample #%d ('%s') of %d", ii, fullname, length(ds)))
 
-    # Argument 'seed':
-    if (!is.null(seed)) seed <- Arguments$getInteger(seed);
-
-    # Argument 'path':
-    path <- Arguments$getWritablePath(path);
-
-    # Argument 'skip':
-    skip <- Arguments$getLogical(skip);
-
-    # Argument 'verbose':
-    verbose <- Arguments$getVerbose(verbose);
-    if (verbose) {
-      pushState(verbose);
-      on.exit(popState(verbose));
-    }
-
-
-    verbose && enter(verbose, "FASTQ downsampling of one sample");
-
-    fullname <- getFullName(df);
-    ext <- tools::file_ext(getFilename(df));
-    filename <- sprintf("%s.%s", fullname, ext);
-    pathname <- Arguments$getWritablePathname(filename, path=path, mustNotExist=FALSE);
+    ext <- tools::file_ext(getFilename(df))
+    filename <- sprintf("%s.%s", fullname, ext)
+    pathname <- Arguments$getWritablePathname(filename, path=path, mustNotExist=FALSE)
     if (skip && isFile(pathname)) {
-      verbose && cat(verbose, "Already processed. Skipping.");
-      verbose && exit(verbose);
-      return(invisible(list(pathnameFQ=pathname, n=NA_integer_)));
+      verbose && cat(verbose, "Already processed. Skipping.")
+      res[[ii]] <- pathname
+      verbose && exit(verbose)
     }
 
-    verbose && print(verbose, df);
-    n <- sampler(df);
-    verbose && printf(verbose, "Sample size: %d\n", n);
-    if (isFile(pathname)) {
-      file.remove(pathname);
+    res[[ii]] %<=% {
+      verbose && print(verbose, df)
+
+      n <- getSampleSize(this, df)
+      verbose && printf(verbose, "Sample size: %d\n", n)
+
+      if (isFile(pathname)) file.remove(pathname)
+      dfT <- writeSample(df, n=n, ordered=FALSE, seed=seed, pathname=pathname)
+      verbose && print(verbose, dfT)
+
+      getPathname(dfT)
     }
 
-    dfT <- writeSample(df, n=n, ordered=FALSE, seed=seed, pathname=pathname);
-    verbose && print(verbose, dfT);
+    verbose && exit(verbose)
+  } ## for (ii ...)
 
-    # Not needed anymore
-    df <- dfT <- NULL;
+  ## Resove futures
+  res <- resolve(res)
 
-    verbose && exit(verbose);
+  res <- getOutputDataSet(this, verbose=less(verbose, 1))
 
-    invisible(list(pathnameFQ=pathname, n=n));
-  }, sampler=function(df) { getSampleSize(this, df) }, seed=seed, path=getPath(this), skip=!force, verbose=verbose) # dsApply()
+  verbose && exit(verbose)
 
-  # Not needed anymore
-  ds <- NULL;
-
-  res <- getOutputDataSet(this, verbose=less(verbose, 1));
-
-  verbose && exit(verbose);
-
-  invisible(res);
+  invisible(res)
 })
 
 
@@ -188,7 +164,7 @@ setMethodS3("process", "FastqDownsampler", function(this, ..., force=FALSE, verb
 # 2013-11-16
 # o CLEANUP: Dropped several methods now taken care of by super class.
 # 2013-09-12
-# o Now process() for FastqDownsampler utilizes dsApply().
+# o Now process() for FastqDownsampler utilizes parallel processing.
 # o CLEANUP: Improved previous "mockup" code of FastqDownsampler.
 # 2013-09-03
 # o ROBUSTNESS: Now process() for FastqDownsampler gives an error
