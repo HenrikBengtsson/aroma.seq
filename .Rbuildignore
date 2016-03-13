@@ -40,5 +40,5 @@ README[.]md
 #----------------------------
 # Aroma, RSP etc.
 #----------------------------
-^[.]figures
-^[.]reports
+^figures
+^reports
