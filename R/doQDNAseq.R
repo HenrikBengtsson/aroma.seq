@@ -330,8 +330,6 @@ setMethodS3("doQDNAseq", "default", function(...) {
 # 2013-10-31
 # o Updated capitalization to reflect the updated 'QDNAseq' package name.
 # 2013-08-31
-# o Now doQDNAseq for BamDataSet utilizes dsApply().
-# 2013-08-31
 # o BUG FIX: doQDNAseq() for BamDataSet would give an error when it
 #   tried to collect and return the result file set.
 # o BUG FIX: doQDNAseq() for BamDataSet would give an error if data set
