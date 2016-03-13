@@ -262,11 +262,8 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   # Drop already used parameters
   args$transcripts <- NULL
   args$groupBy <- NULL
-
-  args$bowtieRefIndexPrefix <- getIndexPrefix(args$indexSet)
-  if (!is.null(args$transcriptomeIndexSet)) {
-    args$transcriptomeIndexPrefix <- getIndexPrefix(args$transcriptomeIndexSet)
-  }
+  if (!is.null(is)) args$bowtieRefIndexPrefix <- getIndexPrefix(is)
+  if (!is.null(tis)) args$transcriptomeIndexPrefix <- getIndexPrefix(tis)
 
   verbose && cat(verbose, "User arguments:")
   verbose && str(verbose, args)
@@ -321,6 +318,9 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
       verbose && str(verbose, argsGG)
       argsGG$verbose <- less(verbose, 1)
       res <- do.call(tophat2, args=argsGG)
+      
+      verbose && str(verbose, "Results:")
+      verbose && str(verbose, res)
 
       # (b) Generates BAM index file (assuming the BAM file is sorted)
       pathnameBAM <- file.path(argsGG$outPath, "accepted_hits.bam")
