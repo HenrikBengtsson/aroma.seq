@@ -40,5 +40,6 @@ README[.]md
 #----------------------------
 # Aroma, RSP etc.
 #----------------------------
+^[.]async
 ^figures
 ^reports
