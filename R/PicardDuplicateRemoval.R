@@ -90,47 +90,38 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Apply aligner to each of the FASTQ files
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  dsApply(ds[todo], FUN=function(df, params, path, ...., skip=TRUE, verbose=FALSE) {
-    R.utils::use("R.utils, aroma.seq");
+  path <- getPath(this)
+  skip <- !force
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Validate arguments
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Argument 'df':
-    df <- Arguments$getInstanceOf(df, "BamDataFile");
+  res <- listenv()
+  for (kk in seq_along(todo)) {
+    ii <- todo[kk]
+    df <- ds[[ii]]
+    fullname <- getFullName(df)
 
-    # Argument 'skip':
-    skip <- Arguments$getLogical(skip);
+    verbose && enter(verbose, sprintf("Picard MarkDuplicates on sample #%d ('%s') of %d", kk, fullname, length(todo)))
 
-    # Argument 'path':
-    path <- Arguments$getWritablePath(path);
-
-    # Argument 'verbose':
-    verbose <- Arguments$getVerbose(verbose);
-    if (verbose) {
-      pushState(verbose);
-      on.exit(popState(verbose));
-    }
-
-    verbose && enter(verbose, "Picard MarkDuplicates on one sample");
-
-    pathname <- getPathname(df);
-    verbose && cat(verbose, "Input BAM pathname: ", pathname);
+    pathname <- getPathname(df)
+    verbose && cat(verbose, "Input BAM pathname: ", pathname)
 
     # Output BAM file
-    fullname <- getFullName(df);
-    filename <- sprintf("%s.bam", fullname);
-    pathnameD <- Arguments$getWritablePathname(filename, path=path);
-    verbose && cat(verbose, "Output BAM pathname: ", pathnameD);
-    pathnameDI <- gsub("[.]bam$", ".bai", pathnameD);
-    verbose && cat(verbose, "Output BAM index pathname: ", pathnameDI);
+    filename <- sprintf("%s.bam", fullname)
+    pathnameD <- Arguments$getWritablePathname(filename, path=path)
+    verbose && cat(verbose, "Output BAM pathname: ", pathnameD)
+    pathnameDI <- gsub("[.]bam$", ".bai", pathnameD)
+    verbose && cat(verbose, "Output BAM index pathname: ", pathnameDI)
 
     # Nothing to do?
-    done <- (skip && isFile(pathnameD) && isFile(pathnameDI));
+    done <- (skip && isFile(pathnameD) && isFile(pathnameDI))
     if (done) {
-      verbose && cat(verbose, "Already processed. Skipping");
-    } else {
-      verbose && print(verbose, df);
+      verbose && cat(verbose, "Already processed. Skipping")
+      res[[kk]] <- pathnameD
+      verbose && exit(verbose)
+      next
+    }
+
+    res[[kk]] %<=% {
+      verbose && print(verbose, df)
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # (a) Filter via Picard
@@ -177,19 +168,23 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
         buildIndex(bf, skip=skip, overwrite=!skip, verbose=less(verbose, 10));
         verbose && exit(verbose);
       }
-    } # if (done)
 
-    verbose && exit(verbose);
+      pathnameD <- Arguments$getReadablePathname(pathnameD)
+      pathnameD
+    } ## %<=%
 
-    invisible(list(pathnameD=pathnameD, pathnameDI=pathnameDI));
-  }, params=params, path=getPath(this), skip=!force, verbose=verbose) # dsApply()
+    verbose && exit(verbose)
+  } ## for (kk ...)
+
+  ## Resolve all futures
+  res <- resolve(res)
 
   # At this point, all files should have been processed
-  res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1));
+  res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1))
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  res;
+  res
 })
 
 
@@ -203,7 +198,7 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
 # 2013-11-15
 # o Added argument 'onMissing' to getOutputDataSet().
 # 2013-09-03
-# o Now process() for PicardDuplicateRemoval utilizes dsApply().
+# o Now process() for PicardDuplicateRemoval utilizes parallel processing.
 # 2012-11-26
 # o BUG FIX: getOutputDataSet() would return a data set with "missing"
 #   files, if not complete.  Now it only returns the existing files.
