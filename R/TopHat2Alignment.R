@@ -260,11 +260,16 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   args <- params;
   # Drop already used parameters
-  args$transcripts <- NULL;
-  args$groupBy <- NULL;
-  verbose && cat(verbose, "User arguments:");
-  verbose && str(verbose, args);
+  args$transcripts <- NULL
+  args$groupBy <- NULL
 
+  args$bowtieRefIndexPrefix <- getIndexPrefix(args$indexSet)
+  if (!is.null(args$transcriptomeIndexSet)) {
+    args$transcriptomeIndexPrefix <- getIndexPrefix(args$transcriptomeIndexSet)
+  }
+
+  verbose && cat(verbose, "User arguments:")
+  verbose && str(verbose, args)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -290,24 +295,17 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
 
       # Final sample-specific output directory
       outPathS <- file.path(outPath, sampleName)
-      args <- list(
-        bowtieRefIndexPrefix=getIndexPrefix(indexSet),
-        reads1=reads1,
-        reads2=NULL,
-        transcriptomeIndexPrefix=NULL,
-        ...,
-        outPath=outPathS
-      )
+      argsGG <- args
+      argsGG$reads1 <- reads1
+      argsGG$reads2 <- NULL
+      argsGG$transcriptomeIndexPrefix <- NULL
+      argsGG$outPath <- outPathS
 
       if (isPaired) {
         dfListR2 <- lapply(dfListR1, FUN=getMateFile)
         reads2 <- sapply(dfListR2, FUN=getPathname)
         verbose && printf(verbose, "R2 FASTQ files: [%d] %s\n", length(reads2), hpaste(sQuote(reads2)))
-        args$reads2 <- reads2
-      }
-
-      if (!is.null(transcriptomeIndexSet)) {
-        args$transcriptomeIndexPrefix <- getIndexPrefix(transcriptomeIndexSet)
+        argsGG$reads2 <- reads2
       }
 
 
@@ -315,23 +313,23 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
       # BEGIN: ATOMIC OUTPUT
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # Write to temporary output directory
-      args$outPath <- sprintf("%s.tmp", args$outPath)
-      verbose && cat(verbose, "Temporary output directory: ", args$outPath)
+      argsGG$outPath <- sprintf("%s.tmp", argsGG$outPath)
+      verbose && cat(verbose, "Temporary output directory: ", argsGG$outPath)
 
       # (a) Align reads using TopHat2
       verbose && cat(verbose, "Arguments passed to TopHat:")
-      verbose && str(verbose, args)
-      args$verbose <- less(verbose, 1)
-      res <- do.call(tophat2, args=args)
+      verbose && str(verbose, argsGG)
+      argsGG$verbose <- less(verbose, 1)
+      res <- do.call(tophat2, args=argsGG)
 
       # (b) Generates BAM index file (assuming the BAM file is sorted)
-      pathnameBAM <- file.path(args$outPath, "accepted_hits.bam")
+      pathnameBAM <- file.path(argsGG$outPath, "accepted_hits.bam")
       verbose && cat(verbose, "BAM file: ", pathnameBAM)
       pathnameBAI <- indexBam(pathnameBAM)
       verbose && cat(verbose, "BAM index file: ", pathnameBAI)
 
       # Rename from temporary to final directory
-      file.rename(args$outPath, outPathS)
+      file.rename(argsGG$outPath, outPathS)
       verbose && cat(verbose, "Final output directory: ", outPathS)
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # END: ATOMIC OUTPUT
