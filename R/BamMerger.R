@@ -167,7 +167,7 @@ setMethodS3("process", "BamMerger", function(this, ..., skip=TRUE, force=FALSE, 
       next
     }
 
-    res[[gg]] %<=% {
+    res[[gg]] %<-% {
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # BEGIN: ATOMIC PROCESSING
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -220,7 +220,7 @@ setMethodS3("process", "BamMerger", function(this, ..., skip=TRUE, force=FALSE, 
       pathnameBAI <- Arguments$getReadablePathname(pathnameBAI)
 
       pathnameBAM
-    } ## %<=%
+    } ## %<-%
 
     verbose && exit(verbose)
   } ## for (gg ...)

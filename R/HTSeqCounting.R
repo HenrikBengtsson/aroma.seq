@@ -213,7 +213,7 @@ setMethodS3("process", "HTSeqCounting", function(this, ..., skip=TRUE, force=FAL
       next
     }
 
-    res[[kk]] %<=% {
+    res[[kk]] %<-% {
       pathnameGTF <- getPathname(transcripts)
       verbose && cat(verbose, "GTF pathname: ", pathnameGTF)
 
@@ -266,7 +266,7 @@ setMethodS3("process", "HTSeqCounting", function(this, ..., skip=TRUE, force=FAL
       verbose && exit(verbose)
 
       pathnameD
-    } ## %<=%
+    } ## %<-%
   } ## for (kk ...)
 
   ## Resolve futures

@@ -257,7 +257,7 @@ setMethodS3("process", "BinnedGcNormalization", function(this, ..., force=FALSE,
       next
     }
 
-    res[[ii]] %<=% {
+    res[[ii]] %<-% {
       # Write to a temporary file
       pathnameT <- pushTemporaryFile(pathname, verbose=verbose)
 
@@ -323,7 +323,7 @@ setMethodS3("process", "BinnedGcNormalization", function(this, ..., force=FALSE,
       verbose && exit(verbose)
 
       dfOut
-    } ## %<=%
+    } ## %<-%
   } ## for (ii ...)
 
   res <- resolve(res)

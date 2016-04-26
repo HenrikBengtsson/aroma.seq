@@ -261,7 +261,7 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
       next
     }
 
-    res[[gg]] %<=% {
+    res[[gg]] %<-% {
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # (a) Generate SAM file
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -329,7 +329,7 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
       file.remove(pathnameSAM)
 
       pathnameBAM
-    } ## %<=%
+    } ## %<-%
 
     verbose && exit(verbose)
   } ## for (gg ...)

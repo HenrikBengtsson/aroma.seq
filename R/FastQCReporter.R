@@ -182,7 +182,7 @@ setMethodS3("process", "FastQCReporter", function(this, ..., skip=TRUE, force=FA
     }
 
 
-    res[[gg]] %<=% {
+    res[[gg]] %<-% {
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # BEGIN: ATOMIC PROCESSING
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -286,7 +286,7 @@ setMethodS3("process", "FastQCReporter", function(this, ..., skip=TRUE, force=FA
       verbose && exit(verbose)
 
       pathnameD
-    } ## %<=%
+    } ## %<-%
   } ## for (gg ...)
 
   ## Resolve futures

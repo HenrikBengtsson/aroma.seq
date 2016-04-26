@@ -120,7 +120,7 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
       next
     }
 
-    res[[kk]] %<=% {
+    res[[kk]] %<-% {
       verbose && print(verbose, df)
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -171,7 +171,7 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
 
       pathnameD <- Arguments$getReadablePathname(pathnameD)
       pathnameD
-    } ## %<=%
+    } ## %<-%
 
     verbose && exit(verbose)
   } ## for (kk ...)

@@ -217,7 +217,7 @@ setMethodS3("process", "TotalCnBinnedCounting", function(this, ..., force=FALSE,
       next
     }
 
-    res[[kk]] %<=% {
+    res[[kk]] %<-% {
       verbose && print(verbose, df)
 
       # Preallocate vector
@@ -304,7 +304,7 @@ setMethodS3("process", "TotalCnBinnedCounting", function(this, ..., force=FALSE,
       verbose && print(verbose, dfOut)
 
       dfOut
-    } ## %<=%
+    } ## %<-%
 
     verbose && exit(verbose)
   } ## for (kk ...)

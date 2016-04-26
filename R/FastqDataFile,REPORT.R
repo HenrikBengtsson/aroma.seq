@@ -105,7 +105,7 @@ setMethodS3("report", "FastqDataSet", function(this, dataSet=getFullName(this), 
     name <- getFullName(df)
     verbose && enter(verbose, sprintf("FASTQ report #%d ('%s') of %d", ii, name, length(this)))
 
-    res[[ii]] %<=% {
+    res[[ii]] %<-% {
       report(df, dataSet=dataSet, flavor=flavor, outPath=outPath, ..., verbose=verbose)
     }
 

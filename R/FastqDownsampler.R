@@ -130,7 +130,7 @@ setMethodS3("process", "FastqDownsampler", function(this, ..., force=FALSE, verb
       verbose && exit(verbose)
     }
 
-    res[[ii]] %<=% {
+    res[[ii]] %<-% {
       verbose && print(verbose, df)
 
       n <- getSampleSize(this, df)

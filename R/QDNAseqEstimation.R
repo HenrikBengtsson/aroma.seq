@@ -163,7 +163,7 @@ setMethodS3("process", "QDNAseqEstimation", function(this, ..., force=FALSE, ver
 
     verbose && enter(verbose, sprintf("QDNAseq on sample #%d ('%s') of %d", ii, name, length(todo)))
 
-    res[[ii]] %<=% {
+    res[[ii]] %<-% {
       # Arguments to doQDNAseq()
       args <- c(params, path=path, force=force)
       verbose && cat(verbose, "Arguments to doQDNAseq():")

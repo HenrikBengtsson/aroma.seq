@@ -244,7 +244,7 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
       next
     }
 
-    res[[ii]] %<=% {
+    res[[ii]] %<-% {
       verbose && print(verbose, dfList)
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -320,7 +320,7 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
       pathnameBAM <- Arguments$getReadablePathname(pathnameBAM)
 
       pathnameBAM
-    } ## %<=%
+    } ## %<-%
 
     verbose && exit(verbose)
   } ## for (ii ...)

@@ -126,7 +126,7 @@ setMethodS3("process", "BamDownsampler", function(this, ..., force=FALSE, verbos
       next
     }
 
-    res[[ii]] %<=% {
+    res[[ii]] %<-% {
       verbose && print(verbose, df)
       n <- getSampleSize(this, df)
       verbose && printf(verbose, "Sample size: %d\n", n)
@@ -134,7 +134,7 @@ setMethodS3("process", "BamDownsampler", function(this, ..., force=FALSE, verbos
       dfT <- writeSample(df, n=n, seed=seed, pathname=pathname, verbose=verbose)
       verbose && print(verbose, dfT)
       dfT
-    } ## %<=%
+    } ## %<-%
 
     verbose && exit(verbose)
   } ## for (ii ...)

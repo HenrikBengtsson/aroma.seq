@@ -286,7 +286,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
 
     verbose && enter(verbose, sprintf("TopHat2 alignment sample #%d ('%s') of %d", gg, sampleName, length(IDXS)))
 
-    res[[gg]] %<=% {
+    res[[gg]] %<-% {
       reads1 <- sapply(dfListR1, FUN=getPathname)
       verbose && printf(verbose, "R1 FASTQ files: [%d] %s\n", length(reads1), hpaste(sQuote(reads1)))
 
@@ -318,7 +318,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
       verbose && str(verbose, argsGG)
       argsGG$verbose <- less(verbose, 1)
       res <- do.call(tophat2, args=argsGG)
-      
+
       verbose && str(verbose, "Results:")
       verbose && str(verbose, res)
 
@@ -339,7 +339,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
       pathnameBAM <- Arguments$getReadablePathname(pathnameBAM)
 
       pathnameBAM
-    } ## %<=%
+    } ## %<-%
 
     verbose && exit(verbose)
   } ## for (gg ...)
