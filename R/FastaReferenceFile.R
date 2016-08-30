@@ -93,7 +93,7 @@ setMethodS3("readSeqLengths", "FastaReferenceFile", function(this, force=FALSE, 
   seqLengths;
 }, private=TRUE)
 
-setMethodS3("getSeqLengths", "FastaReferenceFile", function(this, clean=FALSE, force=FALSE, ...) {
+setMethodS3("getSeqLengths", "FastaReferenceFile", function(this, clean=TRUE, force=FALSE, ...) {
   seqLengths <- this$.seqLengths;
   if (force || is.null(seqLengths)) {
     seqLengths <- readSeqLengths(this, ...);
