@@ -93,13 +93,65 @@ setMethodS3("readSeqLengths", "FastaReferenceFile", function(this, force=FALSE, 
   seqLengths;
 }, private=TRUE)
 
-setMethodS3("getSeqLengths", "FastaReferenceFile", function(this, force=FALSE, ...) {
+setMethodS3("getSeqLengths", "FastaReferenceFile", function(this, clean=TRUE, force=FALSE, ...) {
   seqLengths <- this$.seqLengths;
   if (force || is.null(seqLengths)) {
     seqLengths <- readSeqLengths(this, ...);
     this$.seqLengths <- seqLengths;
   }
+  
+  if (clean) {
+    names(seqLengths) <- cleanSeqNames(this, names(seqLengths))
+  }
+  
   seqLengths;
+})
+
+
+setMethodS3("getSeqChecksums", "FastaReferenceFile", function(this, idxs=NULL, force=FALSE, ...) {
+  names <- getSeqNames(this)
+  nbrOfSeqs <- length(names)
+  if (is.null(idxs)) idxs <- seq_len(nbrOfSeqs)
+  nidxs <- length(idxs)
+  
+  seqChecksums <- this$.seqChecksums;
+  if (is.null(seqChecksums)) {
+    seqChecksums <- rep(NA_character_, times=nbrOfSeqs)
+    names(seqChecksums) <- names
+  }
+
+  res <- seqChecksums[idxs]
+  
+  if (force) {
+    todo <- seq_along(idxs)
+  } else {
+    todo <- which(sapply(res[idxs], FUN=is.na))
+    idxs <- idxs[todo]
+  }
+##  str(list(idxs=idxs, res=res, todo=todo))
+
+  if (length(todo) == 0) return(res)
+
+  fa <- FaFile(getPathname(this))
+  stopifnot(countFa(fa) == nbrOfSeqs)
+  fai <- scanFaIndex(fa)
+  stopifnot(length(fai) == nbrOfSeqs)
+
+  for (kk in seq_along(todo)) {
+    ii <- todo[kk]
+    idx <- idxs[ii]
+    seq <- getSeq(fa, param=fai[idx])
+    seq <- as.character(seq)
+    seq <- unname(seq)
+    res[ii] <- getChecksum(seq)
+  }
+
+##str(list(res=res, idxs=idxs, seqChecksums=seqChecksums))
+
+  seqChecksums[idxs] <- res
+  this$.seqChecksums <- seqChecksums
+
+  res
 })
 
 

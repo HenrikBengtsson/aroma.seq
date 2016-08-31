@@ -49,3 +49,22 @@ if (fullTest && isCapableOf(aroma.seq, "bowtie2")) {
   is <- buildBowtie2IndexSet(fa, verbose=-10)
   print(is)
 }
+
+
+
+organism <- "Saccharomyces_cerevisiae"
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Setup FASTA reference file
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+fa <- FastaReferenceFile$byOrganism(organism)
+print(fa)
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Checksums per sequence
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+cs <- getSeqChecksums(fa, verbose=-10)
+print(cs)
+
+
+

@@ -12,6 +12,11 @@
 
 
 % Other missing docs
+\alias{isCompatibleWith.AromaSeqDataFileSet}
+\alias{htable}
+\alias{validate.IlluminaFastqDataSet}
+\alias{as.character.IlluminaFastqDataFile}
+\alias{as.character.IlluminaFastqDataSet}
 \alias{getDefaultFilePatterns}
 \alias{readAnnData}
 \alias{as.character.Bowtie2IndexSet}

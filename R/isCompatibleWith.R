@@ -66,6 +66,10 @@ setMethodS3("isCompatibleWithBySeqNames", "default", function(this, other, mustW
 }, protected=TRUE) # isCompatibleWithBySeqNames()
 
 
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# SequenceContigsInterface
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 setMethodS3("isCompatibleWithBySeqNames", "SequenceContigsInterface", function(this, other, unique=TRUE, mustWork=FALSE, ...) {
   res <- FALSE
   
@@ -160,6 +164,9 @@ setMethodS3("isCompatibleWithBySeqs", "SequenceContigsInterface", function(this,
 
 
 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# File subclasses
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 setMethodS3("isCompatibleWith", "FastaReferenceFile", function(this, other, ...) {
   isCompatibleWithBySeqNames(this, other, ...)
 })
@@ -168,11 +175,39 @@ setMethodS3("isCompatibleWith", "AromaSeqDataFile", function(this, other, ...) {
   isCompatibleWithBySeqNames(this, other, ...)
 })
 
-setMethodS3("isTopHat2IndexSet", "Bowtie2IndexSet", function(this, ...) {
-  # AD HOC
-  path <- getPath(this);
-  grepl("tophat2", path, fixed=TRUE);
-}, protected=TRUE)
+
+
+setMethodS3("isCompatibleWith", "GcBaseFile", function(this, other, mustWork=FALSE, ...) {
+  res <- NextMethod("isCompatibleWith")
+  if (!isTRUE(res)) return(res)
+  
+  ## Assert same names
+  names <- getSeqNames(other)
+  idxs <- match(names, getSeqNames(this))
+  nas <- is.na(idxs)
+  if (any(nas)) {
+    if (all(nas)) {
+      msg <- "None of the sequence names matches."
+    } else {
+      unknown <- names[nas]
+      msg <- sprintf("Some of the sequence names does not exist in target: [%d] %s", length(unknown), hpaste(sQuote(unknown)))
+    }
+    if (mustWork) throw(msg)
+    attr(res, "reason") <- msg
+    return(res)
+  }
+
+  ## Assert same order
+  res <- all(diff(idxs) > 0, na.rm=TRUE)
+  if (!res) {
+    msg <- "The ordering of sequence names does not match."
+    if (mustWork) throw(msg)
+    attr(res, "reason") <- msg
+    return(res)
+  }
+  
+  TRUE
+})
 
 setMethodS3("isCompatibleWith", "Bowtie2IndexSet", function(this, other, mustWork=FALSE, ...) {
   if (isTopHat2IndexSet(this)) {
@@ -196,37 +231,22 @@ setMethodS3("isCompatibleWith", "BwaIndexSet", function(this, other, ...) {
 })
 
 
-setMethodS3("isCompatibleWith", "GcBaseFile", function(this, other, mustWork=FALSE, ...) {
-  res <- NextMethod("isCompatibleWith")
-  if (!isTRUE(res)) return(res)
-  
-  ## Assert same names
-  names <- getSeqNames(other)
-  nas <- is.na(idxs)
-  if (any(nas)) {
-    if (all(nas)) {
-      msg <- "None of the sequence names matches."
-    } else {
-      unknown <- names[nas]
-      msg <- sprintf("Some of the sequence names does not exist in target: [%d] %s", length(unknown), hpaste(sQuote(unknown)))
-    }
-    if (mustWork) throw(msg)
-    attr(res, "reason") <- msg
-    return(res)
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# File set subclasses
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+setMethodS3("isCompatibleWith", "AromaSeqDataFileSet", function(this, other, ...) {
+  stopifnot(inherits(other, "SequenceContigsInterface"))
+
+  for (ii in seq_along(this)) {
+    df <- this[[ii]]
+    res <- isCompatibleWith(df, other, ...)
+    if (!res) return(res)
   }
 
-  ## Assert same order
-  idxs <- match(names, getSeqNames(this))
-  res <- all(diff(idxs) > 0, na.rm=TRUE)
-  if (!res) {
-    msg <- "The ordering of sequence names does not match."
-    if (mustWork) throw(msg)
-    attr(res, "reason") <- msg
-    return(res)
-  }
-  
   TRUE
 })
+
+
 
 
 ############################################################################

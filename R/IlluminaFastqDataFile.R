@@ -31,6 +31,23 @@ setConstructorS3("IlluminaFastqDataFile", function(...) {
 })
 
 
+setMethodS3("as.character", "IlluminaFastqDataFile", function(x, ...) {
+  s <- NextMethod("as.character")
+  fver <- getFileVersion(x)
+  s <- c(s, sprintf("Platform: %s", getPlatform(x)))
+  s <- c(s, sprintf("File format version: %s", fver))
+  if (!is.na(fver)) {
+    s <- c(s, sprintf("Information from the first sequence:"))
+    s <- c(s, sprintf("- Sample name: %s", getSampleName(x)))
+    s <- c(s, sprintf("- Flowcell ID: %s", getFlowcellId(x)))
+    s <- c(s, sprintf("- Lane: %s", getLane(x)))
+    s <- c(s, sprintf("- Barcode sequence: %s", getBarcodeSequence(x)))
+    s <- c(s, sprintf("- Read direction: %s", getReadDirection(x)))
+    s <- c(s, sprintf("- Instrument ID: %s", getInstrumentId(x)))
+  }
+  s
+}, protected=TRUE)
+
 
 setMethodS3("getFileVersion", "IlluminaFastqDataFile", function(this, ...) {
   name <- getFullName(this, ...);
@@ -142,7 +159,9 @@ setMethodS3("getFirstSequenceInfo", "IlluminaFastqDataFile", function(this, forc
     patternA <- "^([^:]+):([0-9]+):([^:]+):([0-9]+):([0-9]+):([0-9]+):([0-9]+)";
     patternB <- " ([^:]+):([^:]+):([0-9]+):([^:]+)$";
     pattern <- sprintf("%s%s", patternA, patternB);
-    stopifnot(regexpr(pattern, info) != -1);
+    if (regexpr(pattern, info) == -1) {
+      throw(sprintf("The (first) sequence of the FASTQ file has an 'info' string (%s) that does not match the expected regular expression (%s): %s", sQuote(info), sQuote(pattern), sQuote(pathnameFQ)))
+    }
 
     infoA <- gsub(patternB, "", info);
     infoB <- gsub(patternA, "", info);
