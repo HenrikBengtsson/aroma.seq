@@ -116,7 +116,7 @@ setMethodS3("getSeqChecksums", "FastaReferenceFile", function(this, idxs=NULL, f
   
   seqChecksums <- this$.seqChecksums;
   if (is.null(seqChecksums)) {
-    seqChecksums <- rep(NA_character_, times=nidxs)
+    seqChecksums <- rep(NA_character_, times=nbrOfSeqs)
     names(seqChecksums) <- names
   }
 
