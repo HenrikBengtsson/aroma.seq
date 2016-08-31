@@ -1,7 +1,7 @@
 Package: aroma.seq
 ==================
 
-Version: 0.6.9-9000 [2016-08-29]
+Version: 0.6.10 [2016-08-30]
 o Added getSeqChecksums() for FastaReferenceFile to calculate checksums
   for individual sequences of a FASTA reference file.
 o Now print() for IlluminaFastqDataFile also report on the platform
