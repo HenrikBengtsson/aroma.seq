@@ -31,9 +31,9 @@ Suggests:
   mgcv,
   BiocParallel (>= 1.4.0),
   BatchJobs (>= 1.6),
-  PSCBS (>= 0.60.0),
+  PSCBS (>= 0.61.0),
   R.devices (>= 2.14.0),
-  R.rsp (>= 0.21.0),
+  R.rsp (>= 0.30.0),
   markdown (>= 0.7.7)
 SuggestsNote:
   BioC (>= 3.2),
