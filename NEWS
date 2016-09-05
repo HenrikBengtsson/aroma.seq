@@ -1,6 +1,11 @@
 Package: aroma.seq
 ==================
 
+Version: 0.6.10-9000 [2016-03-12]
+o CLEANUP: All parallel processing is now done via futures implemented
+  by the future package.
+
+
 Version: 0.6.10 [2016-08-30]
 o Added getSeqChecksums() for FastaReferenceFile to calculate checksums
   for individual sequences of a FASTA reference file.

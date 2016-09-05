@@ -35,14 +35,14 @@ bowtie2 <- function(reads1, reads2=NULL, indexPrefix, pathnameSAM, ..., gzAllowe
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'reads1'
-  reads1 <- Arguments$getReadablePathnames(reads1, absolute=TRUE);
+  reads1 <- Arguments$getReadablePathnames(reads1, absolutePath=TRUE);
   assertNoDuplicated(reads1);
 
   # Argument 'reads2'
   isPaired <- (length(reads2) > 0L);
   if (isPaired) {
     stopifnot(length(reads2) == length(reads1));
-    reads2 <- Arguments$getReadablePathnames(reads2, absolute=TRUE);
+    reads2 <- Arguments$getReadablePathnames(reads2, absolutePath=TRUE);
     assertNoDuplicated(reads2);
   }
 
@@ -50,10 +50,10 @@ bowtie2 <- function(reads1, reads2=NULL, indexPrefix, pathnameSAM, ..., gzAllowe
   indexPrefix <- Arguments$getCharacter(indexPrefix, length=c(1L,1L));
   indexPath <- dirname(indexPrefix);
   indexName <- basename(indexPrefix);
-  indexPath <- Arguments$getReadablePath(indexPath, absolute=TRUE);
+  indexPath <- Arguments$getReadablePath(indexPath, absolutePath=TRUE);
 
   # Argument 'pathnameSAM':
-  pathnameSAM <- Arguments$getWritablePathname(pathnameSAM, absolute=TRUE);
+  pathnameSAM <- Arguments$getWritablePathname(pathnameSAM, absolutePath=TRUE);
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);

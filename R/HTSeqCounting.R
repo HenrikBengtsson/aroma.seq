@@ -131,10 +131,10 @@ setMethodS3("process", "HTSeqCounting", function(this, ..., skip=TRUE, force=FAL
     verbose && enter(verbose, "Temporary uncompressing file");
     pathnameZ <- getPathname(transcripts)
     pathname <- gunzip(pathnameZ, temporary=TRUE, remove=FALSE)
-    done <- FALSE;
+    done <- FALSE
     on.exit({
       if (done) file.remove(pathname)
-    }, add=TRUE);
+    }, add=TRUE)
     transcripts <- newInstance(transcripts, pathname);
     verbose && cat(verbose, "Using (temporary) transcripts:");
     verbose && print(verbose, transcripts);
@@ -188,109 +188,105 @@ setMethodS3("process", "HTSeqCounting", function(this, ..., skip=TRUE, force=FAL
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Apply aligner to each of the FASTQ files
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  dsApply(ds, IDXS=todo, DROP=TRUE, FUN=function(df, transcripts=NULL, outPath, ...., skip=TRUE, verbose=FALSE) {
-    R.utils::use("R.utils, aroma.seq, Rsamtools");
+  outPath <- getPath(this)
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Validate arguments
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Argument 'df':
-    df <- Arguments$getInstanceOf(df, "BamDataFile");
+  res <- listenv()
+  for (kk in seq_along(todo)) {
+    ii <- todo[kk]
+    df <- ds[[ii]]
+    name <- getFullName(df)
 
-    # Argument 'skip':
-    skip <- Arguments$getLogical(skip);
+    verbose && enter(verbose, sprintf("htseq-count #%d ('%s') of %d", kk, name, length(todo)))
 
-    # Argument 'outPath':
-    outPath <- Arguments$getWritablePath(outPath);
+    verbose && cat(verbose, "BAM file:")
+    verbose && print(verbose, df)
+    pathnameBAM <- getPathname(df)
 
-    # Argument 'verbose':
-    verbose <- Arguments$getVerbose(verbose);
-    if (verbose) {
-      pushState(verbose);
-      on.exit(popState(verbose));
-    }
+    filenameD <- sprintf("%s.count", getFullName(df))
+    pathnameD <- Arguments$getWritablePathname(filenameD, path=outPath, mustNotExist=FALSE)
 
-    verbose && enter(verbose, "htseq-count");
-
-    verbose && cat(verbose, "BAM file:");
-    verbose && print(verbose, df);
-    pathnameBAM <- getPathname(df);
-
-    pathnameGTF <- getPathname(transcripts);
-    verbose && cat(verbose, "GTF pathname: ", pathnameGTF);
-
-    filenameD <- sprintf("%s.count", getFullName(df));
-    pathnameD <- Arguments$getWritablePathname(filenameD, path=outPath, mustNotExist=FALSE);
     # Nothing to do?
     if (skip && isFile(pathnameD)) {
-      verbose && cat(verbose, "Already processed. Skipping.");
-      verbose && exit(verbose);
-      return(GenericDataFile(pathnameD));
+      verbose && cat(verbose, "Already processed. Skipping.")
+      res[[kk]] <- pathnameD
+      verbose && exit(verbose)
+      next
     }
 
-    # Final sample-specific output directory
-    args <- list(
-      pathnameS=pathnameBAM,
-      gff=pathnameGTF,
-      pathnameD=pathnameD
-    );
+    res[[kk]] %<-% {
+      pathnameGTF <- getPathname(transcripts)
+      verbose && cat(verbose, "GTF pathname: ", pathnameGTF)
 
-    # Is BAM file sorted?
-    isSorted <- isSorted(df);
-    if (isSorted) {
-      # ...then assume it is sorted by position (aroma.seq policy)
-      # FIXME: Check how BAM file is sorted
-      args$orderedBy <- "position";
-    }
+      # Final sample-specific output directory
+      args <- list(
+        pathnameS=pathnameBAM,
+        gff=pathnameGTF,
+        pathnameD=pathnameD
+      )
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # BEGIN: ATOMIC OUTPUT
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-##    # Write to temporary output directory
-##    args$outPath <- sprintf("%s.tmp", args$outPath);
-##    verbose && cat(verbose, "Temporary output directory: ", args$outPath);
+      # Is BAM file sorted?
+      isSorted <- isSorted(df)
+      if (isSorted) {
+        # ...then assume it is sorted by position (aroma.seq policy)
+        # FIXME: Check how BAM file is sorted
+        args$orderedBy <- "position"
+      }
 
-    verbose && cat(verbose, "Arguments passed to htseqCount():");
-    verbose && str(verbose, args);
-    args$verbose <- less(verbose, 1);
-    res <- do.call(htseqCount, args=args);
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      # BEGIN: ATOMIC OUTPUT
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  ##    # Write to temporary output directory
+  ##    args$outPath <- sprintf("%s.tmp", args$outPath)
+  ##    verbose && cat(verbose, "Temporary output directory: ", args$outPath)
 
-    verbose && cat(verbose, "Results:");
-    verbose && print(verbose, res);
+      verbose && cat(verbose, "Arguments passed to htseqCount():")
+      verbose && str(verbose, args)
+      args$verbose <- less(verbose, 1)
+      res <- do.call(htseqCount, args=args)
 
-    # Was there a non-zero exit status?
-    status <- attr(res, "status");
-    if (!is.null(status)) {
-      verbose && cat(verbose, "Status: ", status);
-    }
+      verbose && cat(verbose, "Results:")
+      verbose && print(verbose, res)
 
-##   # Rename from temporary to final directory
-##    file.rename(args$outPath, outPathS);
-##    verbose && cat(verbose, "Final output directory: ", outPathS);
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # END: ATOMIC OUTPUT
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      # Was there a non-zero exit status?
+      status <- attr(res, "status")
+      if (!is.null(status)) {
+        verbose && cat(verbose, "Status: ", status)
+      }
 
-    verbose && exit(verbose);
+  ##   # Rename from temporary to final directory
+  ##    file.rename(args$outPath, outPathS)
+  ##    verbose && cat(verbose, "Final output directory: ", outPathS)
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      # END: ATOMIC OUTPUT
+      # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    invisible(list(res=res));
-  }, transcripts=transcripts, outPath=getPath(this), skip=skip, verbose=verbose) # dsApply()
+      ## Sanity check
+      pathnameD <- Arguments$getReadablePathname(pathnameD)
 
-  # All calls are completed
-  done <- TRUE;
+      verbose && exit(verbose)
+
+      pathnameD
+    } ## %<-%
+  } ## for (kk ...)
+
+  ## Resolve futures
+  res <- resolve(res)
+
+  ## All files are processed; can clean up temporary files now
+  done <- FALSE
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Get results
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  counts <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1));
-  verbose && print(verbose, counts);
+  counts <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1))
+  verbose && print(verbose, counts)
 
   # Sanity check
-  stopifnot(all(sapply(counts, FUN=isFile)));
+  stopifnot(all(sapply(counts, FUN=isFile)))
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  counts;
+  counts
 })
 
 

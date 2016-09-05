@@ -62,11 +62,11 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
   bowtieRefIndexPrefix <- Arguments$getCharacter(bowtieRefIndexPrefix, length=c(1L,1L));
   bowtieRefIndexPath <- dirname(bowtieRefIndexPrefix);
   bowtieRefIndexName <- basename(bowtieRefIndexPrefix);
-  bowtieRefIndexPath <- Arguments$getReadablePath(bowtieRefIndexPath, absolute=TRUE);
+  bowtieRefIndexPath <- Arguments$getReadablePath(bowtieRefIndexPath, absolutePath=TRUE);
 
   # Argument 'reads1'
   if (length(reads1) > 0L) {
-    reads1 <- Arguments$getReadablePathnames(reads1, absolute=TRUE);
+    reads1 <- Arguments$getReadablePathnames(reads1, absolutePath=TRUE);
     assertNoDuplicated(reads1);
   }
 
@@ -74,13 +74,13 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
   isPaired <- (length(reads2) > 0L);
   if (isPaired) {
     stopifnot(length(reads2) == length(reads1));
-    reads2 <- Arguments$getReadablePathnames(reads2, absolute=TRUE);
+    reads2 <- Arguments$getReadablePathnames(reads2, absolutePath=TRUE);
     assertNoDuplicated(reads2);
   }
 
   # Argument 'gtf'
   if (!is.null(gtf)) {
-    gtf <- Arguments$getReadablePathname(gtf, absolute=TRUE);
+    gtf <- Arguments$getReadablePathname(gtf, absolutePath=TRUE);
     if (isGzipped(gtf)) {
       throw("TopHat does not support gzipped GTF files: ", gtf);
     }
@@ -92,7 +92,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
     transcriptomeIndexPrefix <- Arguments$getCharacter(transcriptomeIndexPrefix, length=c(1L,1L));
     transcriptomeIndexPath <- dirname(transcriptomeIndexPrefix);
     transcriptomeIndexName <- basename(transcriptomeIndexPrefix);
-    transcriptomeIndexPath <- Arguments$getReadablePath(transcriptomeIndexPath, absolute=TRUE);
+    transcriptomeIndexPath <- Arguments$getReadablePath(transcriptomeIndexPath, absolutePath=TRUE);
   }
 
 
