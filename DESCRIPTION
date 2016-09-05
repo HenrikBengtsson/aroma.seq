@@ -1,5 +1,5 @@
 Package: aroma.seq
-Version: 0.6.10-9000
+Version: 0.7.0
 Depends:
   R (>= 3.2.2),
   R.utils (>= 2.3.0),
