@@ -1,6 +1,10 @@
 Package: aroma.seq
 ==================
 
+Version: 0.7.0-9000 [2016-09-05]
+o ...
+
+
 Version: 0.7.0 [2016-09-05]
 o CLEANUP: All parallel processing is now done via futures implemented
   by the future package.
