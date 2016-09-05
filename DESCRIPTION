@@ -1,5 +1,5 @@
 Package: aroma.seq
-Version: 0.6.10
+Version: 0.7.0
 Depends:
   R (>= 3.2.2),
   R.utils (>= 2.3.0),
@@ -20,7 +20,7 @@ Imports:
   ShortRead (>= 1.28.0),
   Rsamtools (>= 1.22.0),
   listenv,
-  future
+  future (>= 0.13.0)
 Suggests:
   Biobase (>= 2.26.0),
   aroma.light (>= 3.0.0),

@@ -182,158 +182,141 @@ setMethodS3("process", "TotalCnBinnedCounting", function(this, ..., force=FALSE,
   ext <- getOutputFileExtension(this);
 
   # Output directory
-  path <- getPath(this);
-  verbose && cat(verbose, "Number of items to be processed: ", length(todo));
+  path <- getPath(this)
+  verbose && cat(verbose, "Number of items to be processed: ", length(todo))
 
+  ## Number of units
+  nbrOfUnits <- parameters$targetUgp$nbrOfUnits
 
-  # Input arguments:
-  # df: [BamDataFile]
-  # targetList: [list]
-  # parameters: [list]
-  # clazz: [Class]
-  # ext: [characterer]
-  # force: [logical]
-  # verbose: [Verbose]
-  dsApply(ds[todo], FUN=function(df, targetList, parameters, clazz, ext, force=FALSE, verbose=FALSE, ...) {
-    R.utils::use("R.oo, R.utils, aroma.seq")
+  ## FIXME: For some reason the below does not work with
+  ##        parallel futures. /HB 2016-03-12
+  oplan <- future::plan("eager")
+  on.exit(future::plan(open), add=TRUE)
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Validate arguments
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Argument 'df':
-    df <- Arguments$getInstanceOf(df, "BamDataFile");
+  res <- listenv()
+  for (kk in seq_along(todo)) {
+    ii <- todo[kk]
+    df <- ds[[ii]]
+    fullname <- getFullName(df)
 
-    # Argument 'targetList':
-    targetList <- Arguments$getInstanceOf(targetList, "list");
+    verbose && enter(verbose, sprintf("Item #%d ('%s') of %d", kk, fullname, length(todo)))
 
-    # Argument 'parameters':
-    parameters <- Arguments$getInstanceOf(parameters, "list");
-
-    # Argument 'clazz':
-    clazz <- Arguments$getInstanceOf(clazz, "Class");
-
-    # Argument 'ext':
-    ext <- Arguments$getCharacter(ext);
-
-    # Argument 'force':
-    force <- Arguments$getLogical(force);
-
-    # Argument 'verbose':
-    verbose <- Arguments$getVerbose(verbose);
-    if (verbose) {
-      pushState(verbose);
-      on.exit(popState(verbose));
-    }
-
-    args <- list(...);
-    str(args);
-
-    verbose && enter(verbose, sprintf("Item '%s'", getName(df)));
-
-    fullname <- getFullName(df);
-    filename <- sprintf("%s%s", fullname, ext);
+    filename <- sprintf("%s%s", fullname, ext)
     pathname <- Arguments$getReadablePathname(filename, path=path,
-                                                         mustExist=FALSE);
-    verbose && cat(verbose, "Output pathname: ", pathname);
+                                                         mustExist=FALSE)
+    verbose && cat(verbose, "Output pathname: ", pathname)
 
-    nbrOfUnits <- parameters$targetUgp$nbrOfUnits;
     if (!force && isFile(pathname)) {
-      dfOut <- newInstance(clazz, filename=pathname);
+      dfOut <- newInstance(clazz, filename=pathname)
       if (nbrOfUnits != nbrOfUnits(dfOut)) {
-        throw("The number of units in existing output file does not match the number of units in the output file: ", nbrOfUnits, " != ", nbrOfUnits(dfOut));
+        throw("The number of units in existing output file does not match the number of units in the output file: ", nbrOfUnits, " != ", nbrOfUnits(dfOut))
       }
-      verbose && cat(verbose, "Skipping already existing output file.");
-      verbose && exit(verbose);
-      return(invisible(dfOut))
+      verbose && cat(verbose, "Skipping already existing output file.")
+      res[[kk]] <- dfOut
+      verbose && exit(verbose)
+      next
     }
 
-    verbose && print(verbose, df);
+    res[[kk]] %<-% {
+      verbose && print(verbose, df)
 
-    # Preallocate vector
-    M <- rep(NA_real_, times=nbrOfUnits);
+      # Preallocate vector
+      M <- rep(NA_real_, times=nbrOfUnits)
 
-    verbose && enter(verbose, "Reading and smoothing input data");
-    for (cc in seq_along(targetList)) {
-      target <- targetList[[cc]];
-      chromosome <- target$chromosome;
-      chrTag <- sprintf("Chr%02d", chromosome);
+      verbose && enter(verbose, "Reading and smoothing input data")
+      for (cc in seq_along(targetList)) {
+        target <- targetList[[cc]]
+        chromosome <- target$chromosome
+        chrTag <- sprintf("Chr%02d", chromosome)
+        verbose && enter(verbose, sprintf("Chromosome %d ('%s') of %d",
+                                                 cc, chrTag, length(targetList)))
 
-      verbose && enter(verbose, sprintf("Chromosome %d ('%s') of %d",
-                                               cc, chrTag, nbrOfChromosomes));
-      verbose && cat(verbose, "Extracting raw CNs:");
-      rawCNs <- extractRawCopyNumbers(df, chromosome=chromosome,
-                                                  verbose=less(verbose, 10));
-      verbose && print(verbose, rawCNs);
-      verbose && summary(verbose, rawCNs);
+        verbose && cat(verbose, "Extracting raw CNs:")
+        rawCNs <- extractRawCopyNumbers(df, chromosome=chromosome,
+                                                    verbose=less(verbose, 10))
+        verbose && print(verbose, rawCNs)
+        verbose && summary(verbose, rawCNs)
 
-      verbose && cat(verbose, "Smoothing CNs:");
-      verbose && cat(verbose, "Target positions:");
-      verbose && str(verbose, target$xOut);
+        verbose && cat(verbose, "Smoothing CNs:")
+        verbose && cat(verbose, "Target positions:")
+        verbose && str(verbose, target$xOut)
 
-      smoothCNs <- smoothRawCopyNumbers(this, rawCNs=rawCNs,
-                                        target=target, verbose=verbose);
-      rawCNs <- NULL; # Not needed anymore
-      verbose && print(verbose, smoothCNs);
-      verbose && summary(verbose, smoothCNs);
+        smoothCNs <- smoothRawCopyNumbers(this, rawCNs=rawCNs,
+                                          target=target, verbose=verbose)
+        rawCNs <- NULL; # Not needed anymore
+        verbose && print(verbose, smoothCNs)
+        verbose && summary(verbose, smoothCNs)
 
-      M[target$units] <- getSignals(smoothCNs);
+        M[target$units] <- getSignals(smoothCNs)
 
-      target <- smoothCNs <- NULL; # Not needed anymore
-      verbose && exit(verbose);
-    } # for (cc ...)
+        target <- smoothCNs <- NULL # Not needed anymore
 
-    verbose && cat(verbose, "Smoothed CNs across all chromosomes:");
-    verbose && str(verbose, M);
-    verbose && summary(verbose, M);
-    verbose && printf(verbose, "Missing values: %d (%.1f%%) out of %d\n",
-                   sum(is.na(M)), 100*sum(is.na(M))/nbrOfUnits, nbrOfUnits);
-    verbose && exit(verbose);
+        verbose && exit(verbose)
+      } # for (cc ...)
+      verbose && exit(verbose)
 
-    verbose && enter(verbose, "Storing smoothed data");
-    verbose && cat(verbose, "Pathname: ", pathname);
+      verbose && enter(verbose, "Smoothed CNs across all chromosomes:")
+      verbose && str(verbose, M)
+      verbose && summary(verbose, M)
+      verbose && printf(verbose, "Missing values: %d (%.1f%%) out of %d\n",
+                     sum(is.na(M)), 100*sum(is.na(M))/nbrOfUnits, nbrOfUnits)
+      verbose && exit(verbose)
 
-    footer <- list(
-      sourceDataFile=list(
-        fullname=getFullName(df),
-        platform=getPlatform(df),
-        chipType=getChipType(df),
-        checksum=getChecksum(df)
-      ),
-      parameters=parameters
-    );
+      verbose && enter(verbose, "Storing smoothed data")
+      verbose && cat(verbose, "Pathname: ", pathname)
 
-    # Write to a temporary file
-    pathnameT <- pushTemporaryFile(pathname, verbose=verbose);
+      footer <- list(
+        sourceDataFile=list(
+          fullname=getFullName(df),
+          platform=getPlatform(df),
+          chipType=getChipType(df),
+          checksum=getChecksum(df)
+        ),
+        parameters=parameters
+      )
 
-    dfOut <- clazz$allocate(filename=pathnameT, nbrOfRows=nbrOfUnits,
-                            platform=parameters$targetUgp$platform,
-                            chipType=parameters$targetUgp$chipType,
-                            footer=footer, verbose=less(verbose, 50));
+      # Write to a temporary file
+      pathnameT <- pushTemporaryFile(pathname, verbose=verbose)
 
-    dfOut[,1L] <- M;
-    # Not needed anymore
-    M <- footer <- NULL;
+      ## Alocate empty file
+      dfOut <- clazz$allocate(filename=pathnameT, nbrOfRows=nbrOfUnits,
+                              platform=parameters$targetUgp$platform,
+                              chipType=parameters$targetUgp$chipType,
+                              footer=footer, verbose=less(verbose, 50))
 
-    # Renaming temporary file
-    pathname <- popTemporaryFile(pathnameT, verbose=verbose);
+      ## Save signals
+      dfOut[,1L] <- M
 
-    verbose && exit(verbose); # Storing
+      # Not needed anymore
+      M <- footer <- NULL
 
-    # Sanity check
-    dfOut <- newInstance(clazz, filename=pathname);
-    if (nbrOfUnits != nbrOfUnits(dfOut)) {
-      throw("The number of units in existing output file does not match the number of units in the output file: ", nbrOfUnits, " != ", nbrOfUnits(dfOut));
-    }
+      # Renaming temporary file
+      pathname <- popTemporaryFile(pathnameT, verbose=verbose)
 
-    verbose && exit(verbose);
+      verbose && exit(verbose) # Storing
 
-    invisible(dfOut);
-  }, targetList=targetList, parameters=parameters, clazz=clazz, ext=ext, force=force, verbose=verbose);
+      # Sanity check
+      dfOut <- newInstance(clazz, filename=pathname)
+      if (nbrOfUnits != nbrOfUnits(dfOut)) {
+        throw("The number of units in existing output file does not match the number of units in the output file: ", nbrOfUnits, " != ", nbrOfUnits(dfOut))
+      }
 
-  verbose && exit(verbose);
+      verbose && print(verbose, dfOut)
 
-  dsOut <- getOutputDataSet(this, onMissing="error");
-  invisible(dsOut);
+      dfOut
+    } ## %<-%
+
+    verbose && exit(verbose)
+  } ## for (kk ...)
+
+  ## Resolve futures
+  res <- resolve(res)
+
+  verbose && exit(verbose)
+
+  dsOut <- getOutputDataSet(this, onMissing="error")
+
+  invisible(dsOut)
 }) # process()
 
 

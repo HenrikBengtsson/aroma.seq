@@ -36,3 +36,10 @@ README[.]md
 ^[.]check
 ^.*[.]tar[.]gz$
 ^[a-z0-9]+Data
+
+#----------------------------
+# Aroma, RSP etc.
+#----------------------------
+^[.]future
+^figures
+^reports

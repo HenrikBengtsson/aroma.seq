@@ -54,23 +54,23 @@ setMethodS3("gatk", "default", function(analysisType, ..., pathnameI=NULL, pathn
 
   # Argument 'pathnameI':
   if (length(pathnameI) > 0L) {
-    pathnameI <- Arguments$getReadablePathnames(pathnameI, absolute=TRUE);
+    pathnameI <- Arguments$getReadablePathnames(pathnameI, absolutePath=TRUE);
     assertNoDuplicated(pathnameI);
   }
 
   # Argument 'pathnameR':
   if (length(pathnameR) > 0L) {
-    pathnameR <- Arguments$getReadablePathname(pathnameR, absolute=TRUE);
+    pathnameR <- Arguments$getReadablePathname(pathnameR, absolutePath=TRUE);
   }
 
   # Argument 'pathnameL':
   if (length(pathnameL) > 0L) {
-    pathnameL <- Arguments$getReadablePathname(pathnameL, absolute=TRUE);
+    pathnameL <- Arguments$getReadablePathname(pathnameL, absolutePath=TRUE);
   }
 
   # Argument 'pathnameLog':
   if (length(pathnameLog) > 0L) {
-    pathnameLog <- Arguments$getWritablePathname(pathnameLog, absolute=TRUE);
+    pathnameLog <- Arguments$getWritablePathname(pathnameLog, absolutePath=TRUE);
   }
 
   # Argument 'outPath':

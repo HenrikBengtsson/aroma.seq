@@ -116,7 +116,7 @@ importFrom("utils", "file_test", "getS3method", "head",
            "packageVersion", "read.table", "str", "unzip")
 
 importFrom("listenv", "listenv")
-importFrom("future", "%<=%")
+importFrom("future", "%<-%", "resolve")
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # EXPORTS
