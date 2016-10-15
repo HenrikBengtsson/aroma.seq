@@ -2,6 +2,8 @@ Package: aroma.seq
 ==================
 
 Version: 0.7.0-9000 [2016-10-15]
+o Now enabling parallelization via futures by default.  User still
+  need to configure what futures to use in order to parallelize.
 o CLEANUP: Package no longer depends on BatchJobs and BiocParallel.
 
 

@@ -12,15 +12,13 @@
     'source("http://callr.org/install#HenrikBengtsson/aroma.seq")'
   )
 
-  # Enable automate parallel processing via futures?
-  if (queryRCmdCheck() == "notRunning") {
-    setOption("R.filesets/parallel", "future")
-    msg <- c(msg,
-      '',
-      'Parallel processing enabled using futures',
-      'To disable: setOption("R.filesets/parallel", "none")'
-    )
-  }
+  # Enable automate parallel processing via futures
+  setOption("R.filesets/parallel", "future")
+  msg <- c(msg,
+    '',
+    'Parallel processing enabled using futures',
+    'To disable: setOption("R.filesets/parallel", "none")'
+  )
 
   startupMessage(pkg, '\n\n',
     '------------------------- aroma.seq -------------------------\n',

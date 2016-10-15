@@ -1,5 +1,4 @@
 library("aroma.seq")
-setOption("R.filesets/parallel", "none")
 
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 fullTest <- fullTest && all(isCapableOf(aroma.seq, c("bwa", "picard")))

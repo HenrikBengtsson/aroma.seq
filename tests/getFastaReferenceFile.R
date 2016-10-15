@@ -1,6 +1,5 @@
 library("aroma.seq")
 equals <- R.oo::equals # In case testthat::equals() is attached
-setOption("R.filesets/parallel", "none")
 
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 fullTest <- fullTest && isCapableOf(aroma.seq, "bowtie2")

@@ -13,7 +13,6 @@ if (future::supportsMulticore()) strategies <- c(strategies, "multicore")
 if (require(pkg <- "future.BatchJobs", character.only=TRUE)) {
   strategies <- c(strategies, "batchjobs_local")
 }
-setOption("R.filesets/parallel", "future")
 
 dataSet <- "TopHat-example"
 organism <- "Lambda_phage"
