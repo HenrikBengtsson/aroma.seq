@@ -4,15 +4,15 @@ fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 fullTest <- fullTest && isCapableOf(aroma.seq, "bowtie2")
 if (fullTest) {
 
-# Setup (writable) local data directory structure
-setupExampleData()
-
 library("future")
 strategies <- c("lazy", "eager")
 if (future::supportsMulticore()) strategies <- c(strategies, "multicore")
 if (require(pkg <- "future.BatchJobs", character.only=TRUE)) {
   strategies <- c(strategies, "batchjobs_local")
 }
+
+# Setup (writable) local data directory structure
+setupExampleData()
 
 dataSet <- "TopHat-example"
 organism <- "Lambda_phage"

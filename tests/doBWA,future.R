@@ -11,7 +11,6 @@ if (require(pkg <- "future.BatchJobs", character.only=TRUE)) {
   strategies <- c(strategies, "batchjobs_local")
 }
 
-
 # Setup (writable) local data directory structure
 setupExampleData()
 
@@ -44,10 +43,3 @@ for (strategy in strategies) {
 }
 
 } # if (fullTest)
-
-
-############################################################################
-# HISTORY:
-# 2013-08-31
-# o Created from doBowtie2,parallel.R.
-############################################################################

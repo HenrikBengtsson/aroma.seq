@@ -5,6 +5,13 @@ fullTest <- fullTest && (Sys.getenv("_R_CHECK_BUGGY_") != "")
 fullTest <- fullTest && isPackageInstalled("ShortRead")
 if (fullTest) {
 
+library("future")
+strategies <- c("lazy", "eager")
+if (future::supportsMulticore()) strategies <- c(strategies, "multicore")
+if (require(pkg <- "future.BatchJobs", character.only=TRUE)) {
+  strategies <- c(strategies, "batchjobs_local")
+}
+
 # Setup (writable) local data directory structure
 setupExampleData()
 
@@ -21,15 +28,20 @@ print(fqs)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Downsample
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ds <- FastqDownsampler(fqs, subset=25, tags=c("*", "parallel"))
-print(ds)
+for (strategy in strategies) {
+  plan(strategy)
+  print(plan())
 
-fqsS <- process(ds, verbose=-10)
-print(fqsS)
+  ds <- FastqDownsampler(fqs, subset=25, tags=c("*", strategy))
+  print(ds)
+  
+  fqsS <- process(ds, verbose=-10)
+  print(fqsS)
 
-# Sanity checks
-stopifnot(identical(getFullNames(fqsS), getFullNames(fqs)))
-fqS <- fqsS[[1]]
-stopifnot(nbrOfSeqs(fqS) == getSampleSize(ds))
+  # Sanity checks
+  stopifnot(identical(getFullNames(fqsS), getFullNames(fqs)))
+  fqS <- fqsS[[1]]
+  stopifnot(nbrOfSeqs(fqS) == getSampleSize(ds))
+}
 
 } # if (fullTest)

@@ -36,6 +36,13 @@ fullTest <- fullTest && isDirectory("annotationData,aroma.seq,private")
 fullTest <- fullTest && isDirectory("fastqData,aroma.seq,private")
 if (fullTest) {
 
+library("future")
+strategies <- c("lazy", "eager")
+if (future::supportsMulticore()) strategies <- c(strategies, "multicore")
+if (require(pkg <- "future.BatchJobs", character.only=TRUE)) {
+  strategies <- c(strategies, "batchjobs_local")
+}
+
 dataSet <- "AlbertsonD_2012-SCC,AB042";
 organism <- "Homo_sapiens";
 
@@ -96,11 +103,16 @@ verbose && print(verbose, ds)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Normalize GC content (and rescale to median=2 assuming diploid)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bgn <- BinnedGcNormalization(ds)
-verbose && print(verbose, bgn)
+for (strategy in strategies) {
+  plan(strategy)
+  print(plan())
 
-dsG <- process(bgn, verbose=verbose)
-verbose && print(verbose, dsG)
+  bgn <- BinnedGcNormalization(ds, tags=c("*", strategy))
+  verbose && print(verbose, bgn)
+  
+  dsG <- process(bgn, verbose=verbose)
+  verbose && print(verbose, dsG)
+}
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

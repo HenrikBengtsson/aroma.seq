@@ -6,6 +6,13 @@ fullTest <- fullTest && isCapableOf(aroma.seq, "samtools")
 fullTest <- fullTest && isCapableOf(aroma.seq, "tophat2")
 if (fullTest) {
 
+library("future")
+strategies <- c("lazy", "eager")
+if (future::supportsMulticore()) strategies <- c(strategies, "multicore")
+if (require(pkg <- "future.BatchJobs", character.only=TRUE)) {
+  strategies <- c(strategies, "batchjobs_local")
+}
+
 dataSet <- "YeastTest"
 organism <- "Saccharomyces_cerevisiae"
 
@@ -31,14 +38,19 @@ print(fqs)
 is <- buildBowtie2IndexSet(fa, verbose=TRUE)  # is = 'index set'
 print(is)
 
-# Align input reads using TopHat
-ta <- TopHat2Alignment(dataSet=fqs, indexSet=is, tags=c("*", "parallel"))
-process(ta, verbose=-100)
+for (strategy in strategies) {
+  plan(strategy)
+  print(plan())
 
-bams <- getOutputDataSet(ta)
-print(bams)
-
-# Sanity checks
-stopifnot(length(bams) == length(fqs))
+  # Align input reads using TopHat
+  ta <- TopHat2Alignment(dataSet=fqs, indexSet=is, tags=c("*", strategy))
+  process(ta, verbose=-100)
+  
+  bams <- getOutputDataSet(ta)
+  print(bams)
+  
+  # Sanity checks
+  stopifnot(length(bams) == length(fqs))
+}
 
 } # if (fullTest)
