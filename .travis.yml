@@ -28,6 +28,8 @@ matrix:
     - os: osx
       r: release
 
+bioc_packages:
+  - BiocInstaller
 
 notifications:
   email:
