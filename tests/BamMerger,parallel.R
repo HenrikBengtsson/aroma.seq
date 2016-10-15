@@ -1,9 +1,8 @@
 library("aroma.seq")
-setOption("R.filesets/parallel", "BiocParallel")
+setOption("R.filesets/parallel", "future")
 
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 fullTest <- fullTest && isCapableOf(aroma.seq, "bowtie2")
-fullTest <- fullTest && isPackageInstalled("BiocParallel")
 fullTest <- fullTest && isPackageInstalled("BatchJobs")
 if (fullTest) {
 

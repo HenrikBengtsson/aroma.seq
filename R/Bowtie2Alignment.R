@@ -406,7 +406,7 @@ setMethodS3("validateGroups", "Bowtie2Alignment", function(this, groups, ...) {
 # o BUG FIX: The internal workaround of process() for Bowtie2Alignment
 #   that handled commas in FASTQ filenames deleted the temporary files
 #   too soon resulting in garbage alignments.
-# o Now process() for Bowtie2Alignment() can utilize BatchJobs.
+# o Now process() for Bowtie2Alignment() can utilize parallel processing.
 # 2013-08-24
 # o Now Bowtie2Alignment() will do paired-end alignment if the
 #   FastqDataSet specifies paired-end reads.

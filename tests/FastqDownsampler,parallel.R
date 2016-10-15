@@ -1,5 +1,5 @@
 library("aroma.seq")
-setOption("R.filesets/parallel", "BiocParallel")
+setOption("R.filesets/parallel", "future")
 
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 fullTest <- fullTest && (Sys.getenv("_R_CHECK_BUGGY_") != "")
