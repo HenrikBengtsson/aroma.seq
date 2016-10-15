@@ -1,8 +1,8 @@
 Package: aroma.seq
 Version: 0.7.0-9000
 Depends:
-  R (>= 3.2.2),
-  R.utils (>= 2.3.0),
+  R (>= 3.2.5),
+  R.utils (>= 2.4.0),
   R.filesets (>= 2.10.0),
   aroma.core (>= 3.0.0)
 Imports:
@@ -10,7 +10,7 @@ Imports:
   R.methodsS3 (>= 1.7.1),
   R.oo (>= 1.20.0),
   R.cache (>= 0.12.0),
-  matrixStats (>= 0.50.2),
+  matrixStats (>= 0.51.0),
   gtools (>= 3.5.0),
   Biostrings,
   GenomeInfoDb,
@@ -20,7 +20,7 @@ Imports:
   ShortRead (>= 1.28.0),
   Rsamtools (>= 1.22.0),
   listenv,
-  future (>= 0.13.0)
+  future (>= 1.1.1)
 Suggests:
   Biobase (>= 2.26.0),
   aroma.light (>= 3.0.0),
