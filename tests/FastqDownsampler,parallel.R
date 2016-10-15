@@ -4,7 +4,6 @@ setOption("R.filesets/parallel", "future")
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 fullTest <- fullTest && (Sys.getenv("_R_CHECK_BUGGY_") != "")
 fullTest <- fullTest && isPackageInstalled("ShortRead")
-fullTest <- fullTest && isPackageInstalled("BatchJobs")
 if (fullTest) {
 
 # Setup (writable) local data directory structure

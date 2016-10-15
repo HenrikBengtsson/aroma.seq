@@ -35,7 +35,6 @@ fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 fullTest <- fullTest && isCapableOf(aroma.seq, "bwa")
 fullTest <- fullTest && isDirectory("annotationData,aroma.seq,private")
 fullTest <- fullTest && isDirectory("fastqData,aroma.seq,private")
-fullTest <- fullTest && isPackageInstalled("BatchJobs")
 if (fullTest) {
 
 dataSet <- "AlbertsonD_2012-SCC,AB042";

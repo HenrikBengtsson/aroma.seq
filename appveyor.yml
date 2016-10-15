@@ -40,7 +40,7 @@ install:
 build_script:
   - echo Current directory=%CD%
   - travis-tool.sh install_bioc aroma.light Biobase Biostrings edgeR GenomicRanges qrqc Rsamtools ShortRead DNAcopy
-  - travis-tool.sh install_r aroma.cn BatchJobs
+  - travis-tool.sh install_r aroma.cn
   - travis-tool.sh install_bioc GenomeInfoDb
   - travis-tool.sh install_r gtools
   - travis-tool.sh install_bioc aroma.light QDNAseq

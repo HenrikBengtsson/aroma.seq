@@ -3,7 +3,6 @@ setOption("R.filesets/parallel", "future")
 
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 fullTest <- fullTest && isCapableOf(aroma.seq, "bwa")
-fullTest <- fullTest && isPackageInstalled("BatchJobs")
 if (fullTest) {
 
 # Setup (writable) local data directory structure

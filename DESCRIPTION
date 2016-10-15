@@ -29,7 +29,6 @@ Suggests:
   QDNAseq (>= 1.8.1),
   qrqc (>= 1.26.0),
   mgcv,
-  BatchJobs (>= 1.6),
   PSCBS (>= 0.61.0),
   R.devices (>= 2.14.0),
   R.rsp (>= 0.30.0),
@@ -39,7 +38,6 @@ SuggestsNote:
   Recommended:
   aroma.light,
   aroma.cn,
-  BatchJobs,
   Biobase,
   Biostrings,
   edgeR,

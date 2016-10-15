@@ -6,7 +6,6 @@ fullTest <- fullTest && all(isCapableOf(aroma.seq, c("bwa", "picard")))
 fullTest <- fullTest && isPackageInstalled("QDNAseq")
 fullTest <- fullTest && isDirectory("annotationData,aroma.seq,private");
 fullTest <- fullTest && isDirectory("fastqData,aroma.seq,private");
-fullTest <- fullTest && isPackageInstalled("BatchJobs")
 if (fullTest) {
 
 dataSet <- "AlbertsonD_2012-SCC,AB042"
