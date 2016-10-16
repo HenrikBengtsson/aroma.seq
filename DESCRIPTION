@@ -1,61 +1,65 @@
 Package: aroma.seq
 Version: 0.7.0-9000
 Depends:
-  R (>= 3.3.1),
-  R.utils (>= 2.4.0),
-  R.filesets (>= 2.10.0),
-  aroma.core (>= 3.0.0)
+    R (>= 3.3.1),
+    R.utils (>= 2.4.0),
+    R.filesets (>= 2.10.0),
+    aroma.core (>= 3.0.0)
 Imports:
-  methods,
-  R.methodsS3 (>= 1.7.1),
-  R.oo (>= 1.20.0),
-  R.cache (>= 0.12.0),
-  matrixStats (>= 0.51.0),
-  gtools (>= 3.5.0),
-  Biostrings,
-  GenomeInfoDb,
-  S4Vectors,
-  GenomicRanges,
-  IRanges,
-  ShortRead (>= 1.30.0),
-  Rsamtools (>= 1.24.0),
-  listenv,
-  future (>= 1.1.1)
+    methods,
+    R.methodsS3 (>= 1.7.1),
+    R.oo (>= 1.20.0),
+    R.cache (>= 0.12.0),
+    matrixStats (>= 0.51.0),
+    gtools (>= 3.5.0),
+    Biostrings,
+    GenomeInfoDb,
+    S4Vectors,
+    GenomicRanges,
+    IRanges,
+    ShortRead (>= 1.30.0),
+    Rsamtools (>= 1.24.0),
+    listenv,
+    future (>= 1.1.1)
 Suggests:
-  Biobase (>= 2.32.0),
-  aroma.light (>= 3.2.0),
-  aroma.cn (>= 1.6.1),
-  edgeR (>= 3.14.0),
-  QDNAseq (>= 1.8.1),
-  qrqc (>= 1.26.0),
-  mgcv,
-  PSCBS (>= 0.61.0),
-  R.devices (>= 2.14.0),
-  R.rsp (>= 0.30.0),
-  markdown (>= 0.7.7)
-SuggestsNote:
-  BioC (>= 3.2),
-  Recommended:
-  aroma.light,
-  aroma.cn,
-  Biobase,
-  Biostrings,
-  edgeR,
-  GenomicRanges,
-  PSCBS,
-  Rsamtools,
-  ShortRead,
-  qrqc
+    Biobase (>= 2.32.0),
+    aroma.light (>= 3.2.0),
+    aroma.cn (>= 1.6.1),
+    edgeR (>= 3.14.0),
+    QDNAseq (>= 1.8.1),
+    qrqc (>= 1.26.0),
+    mgcv,
+    PSCBS (>= 0.61.0),
+    R.devices (>= 2.14.0),
+    R.rsp (>= 0.30.0),
+    markdown (>= 0.7.7)
+SuggestsNote: BioC (>= 3.2),
+    Recommended:
+    aroma.light,
+    aroma.cn,
+    Biobase,
+    Biostrings,
+    edgeR,
+    GenomicRanges,
+    PSCBS,
+    Rsamtools,
+    ShortRead,
+    qrqc
 Title: High-Throughput Sequence Analysis using the Aroma Framework
 Authors@R: c(
   person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
          email="henrikb@braju.com"),
   person("Adam B.", "Olshen", role=c("aut")),
   person("Taku", "Tokuyasu", role=c("aut")))
-Description: Simple, flexible and distributed processing of very large-scale HT-Seq data - available at the R prompt [RATHER EARLY VERSION].
+Description: Simple, flexible and distributed processing of very large-scale HT-
+    Seq data - available at the R prompt [RATHER EARLY VERSION].
 License: LGPL (>= 2.1)
 LazyLoad: TRUE
-biocViews: Infrastructure, ProprietaryPlatforms, HighThroughputSequencing, DataImport, DataRepresentation, Preprocessing, QualityControl, Visualization, ReportWriting, aCGH, CopyNumberVariants, DifferentialExpression, GeneExpression, SNP, Transcription
+biocViews: Infrastructure, ProprietaryPlatforms, HighThroughputSequencing,
+    DataImport, DataRepresentation, Preprocessing, QualityControl, Visualization,
+    ReportWriting, aCGH, CopyNumberVariants, DifferentialExpression, GeneExpression,
+    SNP, Transcription
 ByteCompile: TRUE
 URL: https://github.com/HenrikBengtsson/aroma.seq
 BugReports: https://github.com/HenrikBengtsson/aroma.seq/issues
+RoxygenNote: 5.0.1.9000
