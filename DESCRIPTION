@@ -33,15 +33,17 @@ Suggests:
     R.devices (>= 2.14.0),
     R.rsp (>= 0.30.0),
     markdown (>= 0.7.7)
-SuggestsNote: BioC (>= 3.2),
+SuggestsNote:
+    aroma.cn,
+    PSCBS,
+    sequenza,
+    BioC (>= 3.2),
     Recommended:
     aroma.light,
-    aroma.cn,
     Biobase,
     Biostrings,
     edgeR,
     GenomicRanges,
-    PSCBS,
     Rsamtools,
     ShortRead,
     qrqc
