@@ -675,3 +675,9 @@ S3method("byName", "CnvKitCopyNumberRatioFileSet")
 
 S3method("findByName", "MPileupFileSet")
 S3method("getDefaultFullName", "MPileupFile")
+
+S3method("binForPSCBS", "data.frame")
+S3method("readDataFrameForPSCBS", "SeqzFile")
+S3method("readStats", "SeqzFile")
+S3method("readStats", "SeqzFileSet")
+S3method("segmentByPairedPSCBS", "SeqzFileSet")
