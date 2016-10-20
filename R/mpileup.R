@@ -13,9 +13,6 @@
 #'
 #' @export
 setMethodS3("mpileup", "BamDataSet", function(bams, fa, Q=20, chromosomes=getSeqNames(fa), dataset=getFullName(bams), tags="mpileup", organism=getOrganism(bams), pathD=file.path("seqzData", fullname(dataset, tags), organism), ..., force=FALSE, verbose=FALSE) {
-  use("future")  ## %<-%
-  use("listenv")
-
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -118,13 +115,14 @@ setMethodS3("mpileup", "BamDataSet", function(bams, fa, Q=20, chromosomes=getSeq
     ## Assert BAM use the same chromosome names
     stopifnot(all(chromosomesT %in% getSeqNames(bam)))
 
+    label <- sprintf("sample_%d", ii)
     work[[ii]] %<-% {
       print(future::sessionDetails())
       resT <- mpileup(bam, fa=fa, chromosomes=chromosomesT, Q=Q, pathD=pathD, ..., force=force, verbose=less(verbose, 1))
       verbose && print(verbose, resT)
       stopifnot(length(resT) == length(todo))
       resT
-    } %label% sprintf("sample_%d", ii) ## %<-%
+    } %label% label
     
     verbose && exit(verbose)
   } # for (ii ...)
@@ -163,9 +161,6 @@ setMethodS3("mpileup", "BamDataSet", function(bams, fa, Q=20, chromosomes=getSeq
 #'
 #' @export
 setMethodS3("mpileup", "BamDataFile", function(bam, fa, Q=20, chromosomes=getSeqNames(fa), pathD, ..., force=FALSE, verbose=FALSE) {
-  use("future")  ## %<-%
-  use("listenv")
-
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -223,6 +218,9 @@ setMethodS3("mpileup", "BamDataFile", function(bam, fa, Q=20, chromosomes=getSeq
     pathnameDz <- sprintf("%s.gz", pathnameD)
     verbose && cat(verbose, "Output pathname: ", pathnameDz)
 
+    ## Future label
+    label <- sprintf("chr_%s", chr)
+
     if (!force && !isFile(pathnameD) && !isFile(pathnameDz)) {
       verbose && enter(verbose, "Running samtools mpileup")
       res[[kk]] %<-% {
@@ -233,7 +231,7 @@ setMethodS3("mpileup", "BamDataFile", function(bam, fa, Q=20, chromosomes=getSeq
         mp <- MPileupFile(pathnameD)
 	gzip(mp)
 	mp
-     } %label% sprintf("chr_%s", chr) #%<-%
+     } %label% label
       verbose && exit(verbose)
     } else {
       if (isFile(pathnameDz)) {
@@ -244,7 +242,7 @@ setMethodS3("mpileup", "BamDataFile", function(bam, fa, Q=20, chromosomes=getSeq
         res[[kk]] %<-% {
           gzip(pathnameD)
 	  MPileupFile(pathnameDz)
-	} %label% sprintf("chr_%s", chr) #%<-%
+	} %label% label
       }
     }
 

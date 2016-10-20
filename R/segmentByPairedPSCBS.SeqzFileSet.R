@@ -13,7 +13,7 @@ setMethodS3("readTotalCNsAndBAFs", "SeqzFile", function(this, ploidy=2, ..., ver
     Bf              = readr::col_double(),
     zygosity.normal = readr::col_character()
   )
-  data <- readr::read_tsv(pathname, col_types=acol_types, progress=isVisible(verbose))
+  data <- readr::read_tsv(pathname, col_types=col_types, progress=isVisible(verbose))
 
   depth <- data$depth.tumor + data$depth.normal
   tcn <- ploidy * data$depth.tumor/data$depth.normal
@@ -45,9 +45,9 @@ setMethodS3("readStats", "SeqzFile", function(this, ..., force=FALSE, verbose=FA
   
   pathname <- getPathname(this)
 
-  col_types <- cols_only(
-    depth.normal=col_integer(),
-    depth.tumor=col_integer()
+  col_types <- readr::cols_only(
+    depth.normal = readr::col_integer(),
+    depth.tumor  = readr::col_integer()
   )
   data <- readr::read_tsv(pathname, col_types=col_types, progress=isVisible(verbose))
 
@@ -221,6 +221,10 @@ setMethodS3("segmentByPairedPSCBS", "SeqzFileSet", function(seqz, ..., binSize, 
     verbose && printf(verbose, "Sample '%s'; Chromosome %d\n", sample, chr)
 
     chrTag <- sprintf("chr=%d", chr)
+
+    ## Future label
+    label <- sprintf("%s-%s", chrTag, sample)
+    
     filenameD <- sprintf("%s,%s,PairedPSCBS.xdr", sample, chrTag)
     pathnameD <- file.path(outPath, filenameD)
     if (!isFile(pathnameD)) {
@@ -260,7 +264,7 @@ setMethodS3("segmentByPairedPSCBS", "SeqzFileSet", function(seqz, ..., binSize, 
 
         verbose && print(verbose, fit)
         fit
-      } ## %<-%
+      } %label% label
     } else {
       verbose && cat(verbose, "Already processed. Skipping. Loading.")
       fit <- loadObject(pathnameD)
