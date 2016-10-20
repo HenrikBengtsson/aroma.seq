@@ -19,6 +19,7 @@ importFrom("R.oo", "BasicObject")
 importFrom("R.oo", "Class")
 importFrom("R.oo", "Object")
 importFrom("R.oo", "Interface")
+
 importFrom("R.filesets", "GenericDataFile")
 importFrom("R.filesets", "GenericDataFileSet")
 importFrom("R.filesets", "RdsFile")
@@ -26,6 +27,7 @@ importFrom("R.filesets", "RdsFileSet")
 importFrom("R.filesets", "TabularTextFile")
 importFrom("R.filesets", "TabularTextFileSet")
 importFrom("R.filesets", "getDefaultColumnClassPatterns")
+importFrom("R.filesets", "getSubdirs")
 
 ## Importing generics
 importFrom("R.oo", "equals")
@@ -51,6 +53,7 @@ importFrom("R.filesets", "setTags")
 
 ## Importing functions
 importFrom("matrixStats", "binCounts")
+importFrom("matrixStats", "binMeans")
 importFrom("matrixStats", "rowAnys")
 importFrom("matrixStats", "rowCollapse")
 importFrom("matrixStats", "rowOrderStats")
@@ -116,7 +119,7 @@ importFrom("utils", "file_test", "getS3method", "head",
            "packageVersion", "read.table", "str", "unzip")
 
 importFrom("listenv", "listenv")
-importFrom("future", "%<-%", "resolve")
+importFrom("future", "%<-%", "resolve", "%label%")
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # EXPORTS

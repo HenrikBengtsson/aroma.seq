@@ -26,15 +26,6 @@ setMethodS3("readAnnotationData", "SeqzFile", function(this, colClasses=c(chromo
 })
 
 
-setMethodS3("readTotalCNsAndBAFs", "SeqzFile", function(this, ploidy=2, ...) {
-  data <- readDataFrame(this, colClasses=c(chromosome="character", position="integer", "(depth.normal|depth.tumor)"="integer", "(Af|Bf)"="numeric", zygosity.normal="character"), ...)
-  depth <- data$depth.tumor + data$depth.normal
-  tcn <- ploidy * data$depth.tumor / data$depth.normal
-  data <- data.frame(chromosome=data$chromosome, x=data$position, depth=depth, tcn=tcn, baf=data$Bf, isHet=(data$zygosity.normal == "het"), stringsAsFactors=FALSE)
-  data
-})
-
-
 setConstructorS3("SeqzFileSet", function(...) {
   extend(TabularTextFileSet(...), "SeqzFileSet")
 })

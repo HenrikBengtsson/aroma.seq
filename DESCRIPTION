@@ -22,20 +22,22 @@ Imports:
     listenv,
     future (>= 1.1.1)
 Suggests:
-    Biobase (>= 2.32.0),
-    aroma.light (>= 3.2.0),
     aroma.cn (>= 1.6.1),
-    edgeR (>= 3.14.0),
-    QDNAseq (>= 1.8.1),
-    qrqc (>= 1.26.0),
+    markdown (>= 0.7.7),
     mgcv,
     PSCBS (>= 0.61.0),
     R.devices (>= 2.14.0),
     R.rsp (>= 0.30.0),
-    markdown (>= 0.7.7)
+    readr (>= 1.0.0),
+    Biobase (>= 2.32.0),
+    aroma.light (>= 3.2.0),
+    edgeR (>= 3.14.0),
+    QDNAseq (>= 1.8.1),
+    qrqc (>= 1.26.0)
 SuggestsNote:
     aroma.cn,
     PSCBS,
+    readr,
     sequenza,
     BioC (>= 3.2),
     Recommended:
