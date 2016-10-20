@@ -98,18 +98,16 @@ pileup2seqz <- function(pus, gc, sampleName, dataset, tags="seqz", organism, pat
 	  throw(sprintf("Result file of %s is empty (0 bytes): %s", args[1], pathnameT))
         }
         popTemporaryFile(pathnameT)
-        sz <- GenericDataFile(pathnameD)
-        gzip(sz)
-        sz
+        SeqzFile(gzip(pathnameD))
       } %label% label
       verbose && exit(verbose)
    } else {
       if (isFile(pathnameDz)) {
         verbose && cat(verbose, "Already processed. Skipping.")
-        plist[[chr]] <- GenericDataFile(pathnameDz)
+        plist[[chr]] <- SeqzFile(pathnameDz)
       } else {
         verbose && cat(verbose, "Already processed, but will compress.")
-        plist[[chr]] %<-% GenericDataFile(gzip(pathnameD)) %label% label
+        plist[[chr]] %<-% SeqzFile(gzip(pathnameD)) %label% label
       }
     }
 
@@ -121,8 +119,9 @@ pileup2seqz <- function(pus, gc, sampleName, dataset, tags="seqz", organism, pat
   ## Resolve and collect values as they are ready
   plist <- resolve(plist, value = TRUE)
 
-  ## Return as a list of gzip'ed GenericDataFile:s
+  ## Return as a gzip'ed SeqzFileSet
   plist <- as.list(plist)
+  plist <- SeqzFileSet(plist)
   
   plist
 } # pileup2seqz()
