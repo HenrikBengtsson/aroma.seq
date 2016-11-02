@@ -4,11 +4,12 @@ Depends:
     R (>= 3.3.1),
     R.utils (>= 2.4.0),
     R.filesets (>= 2.10.0),
-    aroma.core (>= 3.0.0)
+    aroma.core (>= 3.0.0),
+    future (>= 1.1.1)
 Imports:
     methods,
     R.methodsS3 (>= 1.7.1),
-    R.oo (>= 1.20.0),
+    R.oo (>= 1.21.0),
     R.cache (>= 0.12.0),
     matrixStats (>= 0.51.0),
     gtools (>= 3.5.0),
@@ -19,8 +20,7 @@ Imports:
     IRanges,
     ShortRead (>= 1.30.0),
     Rsamtools (>= 1.24.0),
-    listenv,
-    future (>= 1.1.1)
+    listenv
 Suggests:
     aroma.cn (>= 1.6.1),
     markdown (>= 0.7.7),
