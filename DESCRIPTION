@@ -50,7 +50,8 @@ SuggestsNote:
     ShortRead,
     qrqc
 Remotes:
-    HenrikBengtsson/future@develop
+    HenrikBengtsson/future@develop,
+    HenrikBengtsson/PSCBS@develop
 Title: High-Throughput Sequence Analysis using the Aroma Framework
 Authors@R: c(
   person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
