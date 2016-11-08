@@ -63,6 +63,8 @@ BamDataSet(files=NULL, ...)
  \tab \code{findByName} \tab  -\cr
  \tab \code{getChipType} \tab  -\cr
  \tab \code{getPlatform} \tab  -\cr
+ \tab \code{isPaired} \tab  -\cr
+ \tab \code{mpileup} \tab  -\cr
  \tab \code{sortByName} \tab  -\cr
  \tab \code{sortByPosition} \tab  -\cr
  \tab \code{splitByTargetType} \tab  -\cr
@@ -70,7 +72,7 @@ BamDataSet(files=NULL, ...)
 
 
  \bold{Methods inherited from AromaSeqDataFileSet}:\cr
-getDefaultFullName, isCompatibleWith
+doBWA, getDefaultFullName, isCompatibleWith
 
  \bold{Methods inherited from AromaPathnameInterface}:\cr
 directoryStructure, getOrganism

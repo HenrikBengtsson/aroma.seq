@@ -9,7 +9,7 @@
 \name{doBWA}
 \alias{doBWA.default}
 \alias{doBWA}
-\alias{doBWA.FastqDataSet}
+\alias{doBWA.AromaSeqDataFileSet}
 
 \title{Read alignment using the Burrows-Wheeler Transform aligner (BWA)}
 
@@ -19,11 +19,11 @@
 
 \usage{
   doBWA(...)
-  \method{doBWA}{FastqDataSet}(dataSet, reference, ..., verbose=FALSE)
+  \method{doBWA}{AromaSeqDataFileSet}(dataSet, reference, ..., verbose=FALSE)
 }
 
 \arguments{
- \item{dataSet, df}{A \code{\link{FastqDataSet}}.}
+ \item{dataSet, df}{A \code{\link{FastqDataSet}} or a \code{\link{BamDataSet}}.}
  \item{reference}{A \code{\link{FastaReferenceFile}} or a \code{\link{BwaIndexSet}} specifying the genome reference to align the FASTQ reads to.}
  \item{...}{Additional arguments passed to \code{\link{BwaAlignment}}.}
  \item{verbose}{See \code{\link{Verbose}}.}

@@ -10,8 +10,7 @@
 #
 # \usage{
 #   @usage doBWA
-#   @usage doBWA,FastqDataSet
-#   @usage doBWA,BamDataSet
+#   @usage doBWA,AromaSeqDataFileSet
 # }
 #
 # \arguments{

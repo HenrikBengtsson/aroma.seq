@@ -64,7 +64,7 @@ HTSeqCountDataSet(files=NULL, ...)
 
 
  \bold{Methods inherited from AromaSeqDataFileSet}:\cr
-getDefaultFullName, isCompatibleWith
+doBWA, getDefaultFullName, isCompatibleWith
 
  \bold{Methods inherited from AromaPathnameInterface}:\cr
 directoryStructure, getOrganism

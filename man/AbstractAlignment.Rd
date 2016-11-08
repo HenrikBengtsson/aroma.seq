@@ -41,7 +41,7 @@ AbstractAlignment(dataSet=NULL, indexSet=NULL, rgSet=NULL, ...)
 }
 
 \arguments{
- \item{dataSet}{An \code{\link{FastqDataSet}}.}
+ \item{dataSet}{An \code{\link{AromaSeqDataFileSet}}.}
  \item{indexSet}{An \code{\link{AbstractIndexSet}}.}
  \item{tags}{Additional tags for the output data sets.}
  \item{rgSet}{(optional) An \code{\link{SamReadGroup}} for added
