@@ -1,7 +1,7 @@
 Package: aroma.seq
 ==================
 
-Version: 0.7.0-9000 [2016-11-01]
+Version: 0.8.0 [2016-11-08]
 o Now the future package is attached with this package.
 o Started to add some support for the sequenza package.
 o Now enabling parallelization via futures by default.  User still
