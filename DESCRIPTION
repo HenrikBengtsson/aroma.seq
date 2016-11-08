@@ -1,65 +1,70 @@
 Package: aroma.seq
-Version: 0.7.0
+Version: 0.8.0
 Depends:
-  R (>= 3.2.2),
-  R.utils (>= 2.3.0),
-  R.filesets (>= 2.10.0),
-  aroma.core (>= 3.0.0)
+    R (>= 3.3.1),
+    R.utils (>= 2.5.0),
+    R.filesets (>= 2.10.0),
+    aroma.core (>= 3.0.0),
+    future (>= 1.1.1)
 Imports:
-  methods,
-  R.methodsS3 (>= 1.7.1),
-  R.oo (>= 1.20.0),
-  R.cache (>= 0.12.0),
-  matrixStats (>= 0.50.2),
-  gtools (>= 3.5.0),
-  Biostrings,
-  GenomeInfoDb,
-  S4Vectors,
-  GenomicRanges,
-  IRanges,
-  ShortRead (>= 1.28.0),
-  Rsamtools (>= 1.22.0),
-  listenv,
-  future (>= 0.13.0)
+    methods,
+    R.methodsS3 (>= 1.7.1),
+    R.oo (>= 1.21.0),
+    R.cache (>= 0.12.0),
+    matrixStats (>= 0.51.0),
+    gtools (>= 3.5.0),
+    Biostrings,
+    GenomeInfoDb,
+    S4Vectors,
+    GenomicRanges,
+    IRanges,
+    ShortRead (>= 1.30.0),
+    Rsamtools (>= 1.24.0),
+    listenv
 Suggests:
-  Biobase (>= 2.26.0),
-  aroma.light (>= 3.0.0),
-  aroma.cn (>= 1.6.1),
-  edgeR (>= 3.12.0),
-  QDNAseq (>= 1.6.0),
-  qrqc (>= 1.24.0),
-  mgcv,
-  BiocParallel (>= 1.4.0),
-  BatchJobs (>= 1.6),
-  PSCBS (>= 0.61.0),
-  R.devices (>= 2.14.0),
-  R.rsp (>= 0.30.0),
-  markdown (>= 0.7.7)
-SuggestsNote:
-  BioC (>= 3.2),
-  Recommended:
-  aroma.light,
-  aroma.cn,
-  BatchJobs,
-  Biobase,
-  BiocParallel,
-  Biostrings,
-  edgeR,
-  GenomicRanges,
-  PSCBS,
-  Rsamtools,
-  ShortRead,
-  qrqc
+    aroma.cn (>= 1.6.1),
+    markdown (>= 0.7.7),
+    mgcv,
+    PSCBS (>= 0.61.0),
+    R.devices (>= 2.15.0),
+    R.rsp (>= 0.30.0),
+    readr (>= 1.0.0),
+    Biobase (>= 2.32.0),
+    aroma.light (>= 3.2.0),
+    edgeR (>= 3.14.0),
+    QDNAseq (>= 1.8.1),
+    qrqc (>= 1.26.0)
+SuggestsNote: aroma.cn,
+    PSCBS,
+    readr,
+    sequenza,
+    BioC (>= 3.2),
+    Recommended:
+    aroma.light,
+    Biobase,
+    Biostrings,
+    edgeR,
+    GenomicRanges,
+    Rsamtools,
+    ShortRead,
+    qrqc
+Remotes: HenrikBengtsson/future@develop,
+    HenrikBengtsson/PSCBS@develop
 Title: High-Throughput Sequence Analysis using the Aroma Framework
 Authors@R: c(
   person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
          email="henrikb@braju.com"),
   person("Adam B.", "Olshen", role=c("aut")),
   person("Taku", "Tokuyasu", role=c("aut")))
-Description: Simple, flexible and distributed processing of very large-scale HT-Seq data - available at the R prompt [RATHER EARLY VERSION].
+Description: Simple, flexible and distributed processing of very large-scale HT-
+    Seq data - available at the R prompt [RATHER EARLY VERSION].
 License: LGPL (>= 2.1)
 LazyLoad: TRUE
-biocViews: Infrastructure, ProprietaryPlatforms, HighThroughputSequencing, DataImport, DataRepresentation, Preprocessing, QualityControl, Visualization, ReportWriting, aCGH, CopyNumberVariants, DifferentialExpression, GeneExpression, SNP, Transcription
+biocViews: Infrastructure, ProprietaryPlatforms, HighThroughputSequencing,
+    DataImport, DataRepresentation, Preprocessing, QualityControl, Visualization,
+    ReportWriting, aCGH, CopyNumberVariants, DifferentialExpression, GeneExpression,
+    SNP, Transcription
 ByteCompile: TRUE
 URL: https://github.com/HenrikBengtsson/aroma.seq
 BugReports: https://github.com/HenrikBengtsson/aroma.seq/issues
+RoxygenNote: 5.0.1

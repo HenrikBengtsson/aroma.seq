@@ -19,6 +19,7 @@ importFrom("R.oo", "BasicObject")
 importFrom("R.oo", "Class")
 importFrom("R.oo", "Object")
 importFrom("R.oo", "Interface")
+
 importFrom("R.filesets", "GenericDataFile")
 importFrom("R.filesets", "GenericDataFileSet")
 importFrom("R.filesets", "RdsFile")
@@ -26,6 +27,7 @@ importFrom("R.filesets", "RdsFileSet")
 importFrom("R.filesets", "TabularTextFile")
 importFrom("R.filesets", "TabularTextFileSet")
 importFrom("R.filesets", "getDefaultColumnClassPatterns")
+importFrom("R.filesets", "getSubdirs")
 
 ## Importing generics
 importFrom("R.oo", "equals")
@@ -51,6 +53,7 @@ importFrom("R.filesets", "setTags")
 
 ## Importing functions
 importFrom("matrixStats", "binCounts")
+importFrom("matrixStats", "binMeans")
 importFrom("matrixStats", "rowAnys")
 importFrom("matrixStats", "rowCollapse")
 importFrom("matrixStats", "rowOrderStats")
@@ -116,7 +119,7 @@ importFrom("utils", "file_test", "getS3method", "head",
            "packageVersion", "read.table", "str", "unzip")
 
 importFrom("listenv", "listenv")
-importFrom("future", "%<-%", "resolve")
+importFrom("future", "%<-%", "resolve", "%label%")
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # EXPORTS
@@ -218,6 +221,7 @@ S3method("getTargets", "BamDataFile")
 S3method("getTotalTargetLength", "BamDataFile")
 S3method("hasIndex", "BamDataFile")
 S3method("isSorted", "BamDataFile")
+S3method("mpileup", "BamDataFile")
 S3method("nbrOfMappedReads", "BamDataFile")
 S3method("nbrOfReads", "BamDataFile")
 S3method("nbrOfTargets", "BamDataFile")
@@ -240,6 +244,7 @@ S3method("getChipType", "BamDataSet")
 S3method("getDepth", "BamDataSet")
 S3method("getOrganism", "BamDataSet")
 S3method("getPlatform", "BamDataSet")
+S3method("mpileup", "BamDataSet")
 S3method("sortByName", "BamDataSet")
 S3method("sortByPosition", "BamDataSet")
 
@@ -670,3 +675,9 @@ S3method("byName", "CnvKitCopyNumberRatioFileSet")
 
 S3method("findByName", "MPileupFileSet")
 S3method("getDefaultFullName", "MPileupFile")
+
+S3method("binForPSCBS", "data.frame")
+S3method("readDataFrameForPSCBS", "SeqzFile")
+S3method("readStats", "SeqzFile")
+S3method("readStats", "SeqzFileSet")
+S3method("segmentByPairedPSCBS", "SeqzFileSet")

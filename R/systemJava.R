@@ -90,7 +90,7 @@ setMethodS3("systemJava", "default", function(..., jvmArgs=Sys.getenv("JVM_ARGS"
   }
 
   at <- match("*", .fmtArg)[1L];
-  .fmtArg <- R.utils::insert(.fmtArg, at=at+1L, defFmtArg)[-at];
+  .fmtArg <- R.utils::insert(.fmtArg, ats=at+1L, defFmtArg)[-at];
   .fmtArg <- rev(.fmtArg);
   dups <- duplicated(names(.fmtArg));
   .fmtArg <- .fmtArg[!dups];

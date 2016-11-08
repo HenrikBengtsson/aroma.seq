@@ -1,5 +1,4 @@
 library("aroma.seq")
-setOption("R.filesets/parallel", "none")
 
 fullTest <- isPackageInstalled("qrqc")
 if (fullTest) {

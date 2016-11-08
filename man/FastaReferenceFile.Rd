@@ -56,6 +56,7 @@ FastaReferenceFile(...)
  \tab \code{byOrganism} \tab  -\cr
  \tab \code{getIndexFile} \tab  -\cr
  \tab \code{getOrganism} \tab  -\cr
+ \tab \code{getSeqChecksums} \tab  -\cr
  \tab \code{getSeqLengths} \tab  -\cr
  \tab \code{hasIndex} \tab  -\cr
  \tab \code{isCompatibleWith} \tab  -\cr

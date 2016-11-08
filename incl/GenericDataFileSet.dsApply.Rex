@@ -22,9 +22,7 @@ res2 <- dsApply(ds, FUN=getFileSize, .parallel="none")
 print(res2)
 stopifnot(identical(res2, res1))
 
-# Alt 4. (via BatchJobs)
-if (isPackageInstalled("BatchJobs")) {
-  res3 <- dsApply(ds, FUN=getFileSize, .parallel="BiocParallel::BatchJobs")
-  print(res3)
-  stopifnot(identical(res3, res1))
-}
+# Alt 4. (via futures)
+res3 <- dsApply(ds, FUN=getFileSize, .parallel="future")
+print(res3)
+stopifnot(identical(res3, res1))

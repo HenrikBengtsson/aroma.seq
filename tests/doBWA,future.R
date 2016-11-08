@@ -7,12 +7,9 @@ if (fullTest) {
 library("future")
 strategies <- c("lazy", "eager")
 if (future::supportsMulticore()) strategies <- c(strategies, "multicore")
-if (require(pkg <- "async", character.only=TRUE)) {
-  backend("local")
-  strategies <- c(strategies, "batchjobs")
+if (require(pkg <- "future.BatchJobs", character.only=TRUE)) {
+  strategies <- c(strategies, "batchjobs_local")
 }
-setOption("R.filesets/parallel", "future")
-
 
 # Setup (writable) local data directory structure
 setupExampleData()
@@ -46,10 +43,3 @@ for (strategy in strategies) {
 }
 
 } # if (fullTest)
-
-
-############################################################################
-# HISTORY:
-# 2013-08-31
-# o Created from doBowtie2,parallel.R.
-############################################################################

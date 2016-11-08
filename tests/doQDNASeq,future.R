@@ -1,13 +1,18 @@
 library("aroma.seq")
-setOption("R.filesets/parallel", "BiocParallel")
 
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 fullTest <- fullTest && all(isCapableOf(aroma.seq, c("bwa", "picard")))
 fullTest <- fullTest && isPackageInstalled("QDNAseq")
 fullTest <- fullTest && isDirectory("annotationData,aroma.seq,private");
 fullTest <- fullTest && isDirectory("fastqData,aroma.seq,private");
-fullTest <- fullTest && isPackageInstalled("BatchJobs")
 if (fullTest) {
+
+library("future")
+strategies <- c("lazy", "eager")
+if (future::supportsMulticore()) strategies <- c(strategies, "multicore")
+if (require(pkg <- "future.BatchJobs", character.only=TRUE)) {
+  strategies <- c(strategies, "batchjobs_local")
+}
 
 dataSet <- "AlbertsonD_2012-SCC,AB042"
 organism <- "Homo_sapiens"
@@ -33,8 +38,13 @@ print(fqs)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # QDNAseq on FASTQ files
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-cns <- doQDNAseq(fqs, reference=fa, binWidth=100, tags=c("*", "parallel"), verbose=-20)
-print(cns)
+for (strategy in strategies) {
+  plan(strategy)
+  print(plan())
+
+  cns <- doQDNAseq(fqs, reference=fa, binWidth=100, tags=c("*", strategy), verbose=-20)
+  print(cns)
+}
 
 # Display individual output files
 for (ii in seq_along(cns)) print(cns[[ii]])
@@ -52,9 +62,14 @@ print(bam)
 cn <- doQDNAseq(bam, binWidth=100, verbose=-20)
 print(cn)
 
-# QDNAseq on a BAM file set
-cns <- doQDNAseq(bams, binWidth=100, tags=c("*", "parallel"), verbose=-20)
-print(cns)
+for (strategy in strategies) {
+  plan(strategy)
+  print(plan())
+
+  # QDNAseq on a BAM file set
+  cns <- doQDNAseq(bams, binWidth=100, tags=c("*", strategy), verbose=-20)
+  print(cns)
+}
 
 } # if (fullTest)
 

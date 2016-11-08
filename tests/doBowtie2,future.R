@@ -1,22 +1,18 @@
 library("aroma.seq")
-setOption("R.filesets/parallel", "BiocParallel")
 
 fullTest <- (Sys.getenv("_R_CHECK_FULL_") != "")
 fullTest <- fullTest && isCapableOf(aroma.seq, "bowtie2")
-fullTest <- fullTest && isPackageInstalled("BatchJobs")
 if (fullTest) {
-
-# Setup (writable) local data directory structure
-setupExampleData()
 
 library("future")
 strategies <- c("lazy", "eager")
 if (future::supportsMulticore()) strategies <- c(strategies, "multicore")
-if (require(pkg <- "async", character.only=TRUE)) {
-  backend("local")
-  strategies <- c(strategies, "batchjobs")
+if (require(pkg <- "future.BatchJobs", character.only=TRUE)) {
+  strategies <- c(strategies, "batchjobs_local")
 }
-setOption("R.filesets/parallel", "future")
+
+# Setup (writable) local data directory structure
+setupExampleData()
 
 dataSet <- "TopHat-example"
 organism <- "Lambda_phage"

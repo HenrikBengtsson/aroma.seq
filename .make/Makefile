@@ -289,7 +289,7 @@ binary: $(R_OUTDIR)/$(PKG_ZIP)
 # Build Rd help files from Rdoc comments
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 rox:
-	$(R_SCRIPT) -e "roxygen2::roxygenize()"
+	$(R_SCRIPT) -e "roxygen2::roxygenize(roclets='rd')"
 
 Rd: check_Rex
 	$(R_SCRIPT) -e "setwd('..'); Sys.setlocale(locale='C'); R.oo::compileRdoc('$(PKG_NAME)', path='$(PKG_DIR)')"
