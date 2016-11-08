@@ -2,7 +2,7 @@ Package: aroma.seq
 Version: 0.7.0-9000
 Depends:
     R (>= 3.3.1),
-    R.utils (>= 2.4.0),
+    R.utils (>= 2.5.0),
     R.filesets (>= 2.10.0),
     aroma.core (>= 3.0.0),
     future (>= 1.1.1)
@@ -26,7 +26,7 @@ Suggests:
     markdown (>= 0.7.7),
     mgcv,
     PSCBS (>= 0.61.0),
-    R.devices (>= 2.14.0),
+    R.devices (>= 2.15.0),
     R.rsp (>= 0.30.0),
     readr (>= 1.0.0),
     Biobase (>= 2.32.0),
@@ -34,8 +34,7 @@ Suggests:
     edgeR (>= 3.14.0),
     QDNAseq (>= 1.8.1),
     qrqc (>= 1.26.0)
-SuggestsNote:
-    aroma.cn,
+SuggestsNote: aroma.cn,
     PSCBS,
     readr,
     sequenza,
@@ -49,8 +48,7 @@ SuggestsNote:
     Rsamtools,
     ShortRead,
     qrqc
-Remotes:
-    HenrikBengtsson/future@develop,
+Remotes: HenrikBengtsson/future@develop,
     HenrikBengtsson/PSCBS@develop
 Title: High-Throughput Sequence Analysis using the Aroma Framework
 Authors@R: c(
@@ -69,4 +67,4 @@ biocViews: Infrastructure, ProprietaryPlatforms, HighThroughputSequencing,
 ByteCompile: TRUE
 URL: https://github.com/HenrikBengtsson/aroma.seq
 BugReports: https://github.com/HenrikBengtsson/aroma.seq/issues
-RoxygenNote: 5.0.1.9000
+RoxygenNote: 5.0.1
