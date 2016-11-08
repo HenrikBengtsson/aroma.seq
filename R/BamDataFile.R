@@ -876,6 +876,17 @@ setMethodS3("getFlagStat", "BamDataFile", function(this, ..., force=FALSE) {
 })
 
 
+setMethodS3("isPaired", "BamDataFile", function(this, ..., force=FALSE) {
+  isPaired <- this$.isPaired
+  if (is.null(isPaired) || force) {
+    bai <- buildIndex(this)
+    isPaired <- testPairedEndBam(getPathname(this), index = getPathname(bai))
+    this$.isPaired <- isPaired
+  }
+  isPaired
+})
+
+
 ############################################################################
 # HISTORY:
 # 2015-05-06

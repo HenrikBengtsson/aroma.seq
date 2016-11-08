@@ -178,6 +178,18 @@ setMethodS3("splitByTargetType", "BamDataSet", function(this, as=c("BamDataSet",
 }) # splitByTargetType()
 
 
+setMethodS3("isPaired", "BamDataSet", function(this, ..., force = FALSE) {
+  paired <- this$.paired
+  if (is.null(paired) || force) {
+    paired <- lapply(this, FUN = isPaired, force = force)
+    paired <- unlist(paired, use.names = FALSE)
+    paired <- all(paired)
+    this$.paired <- paired
+  }
+  paired
+})
+
+
 ############################################################################
 # HISTORY:
 # 2015-05-06

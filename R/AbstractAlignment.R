@@ -12,7 +12,7 @@
 # @synopsis
 #
 # \arguments{
-#  \item{dataSet}{An @see "FastqDataSet".}
+#  \item{dataSet}{An @see "AromaSeqDataFileSet".}
 #  \item{indexSet}{An @see "AbstractIndexSet".}
 #  \item{tags}{Additional tags for the output data sets.}
 #  \item{rgSet}{(optional) An @see "SamReadGroup" for added
@@ -32,14 +32,16 @@ setConstructorS3("AbstractAlignment", function(dataSet=NULL, indexSet=NULL, rgSe
   # Validate arguments
   if (!is.null(dataSet)) {
     # Argument 'dataSet':
-    dataSet <- Arguments$getInstanceOf(dataSet, "FastqDataSet");
+    dataSet <- Arguments$getInstanceOf(dataSet, "AromaSeqDataFileSet");
 
     # Argument 'indexSet':
     indexSet <- Arguments$getInstanceOf(indexSet, "AbstractIndexSet");
 
     # Argument 'rgSet':
     if (is.null(rgSet)) {
-      rgSet <- getSamReadGroup(dataSet);
+      if (inherits(dataSet, "FastqDataSet")) {
+        rgSet <- getSamReadGroup(dataSet)
+      }
     } else {
       rgSet <- Arguments$getInstanceOf(rgSet, "SamReadGroup");
     }
