@@ -4,6 +4,8 @@ Package: aroma.seq
 Version: 0.8.0-9000 [2016-11-08]
 o doBWA() and BwaAlignment supports single-end alignment using also
   BAM files as input (in addition to FASTQ files).
+o getIndexFile() gained arguments 'creat = TRUE' and 'clean = TRUE'
+  for BamDataFile and FastaReferenceFile.
 o Add isPaired() for BamDataFile and BamDataSet.
 
 
