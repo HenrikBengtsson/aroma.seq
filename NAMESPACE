@@ -167,6 +167,9 @@ S3method("isCapableOf", "AromaSeq")
 S3method("setupTests", "AromaSeq")
 S3method("skeleton", "AromaSeq")
 
+S3method("getSamReadGroup", "AromaSeqDataFile")
+S3method("setSamReadGroup", "AromaSeqDataFile")
+S3method("getDefaultSamReadGroup", "AromaSeqDataFile")
 S3method("doBWA", "AromaSeqDataFileSet")
 
 # AromaSeqTransform
@@ -365,16 +368,13 @@ S3method("findMateFile", "FastqDataFile")
 S3method("findRspReportTemplate", "FastqDataFile")
 S3method("getCommonSeqWidth", "FastqDataFile")
 S3method("getDefaultFullName", "FastqDataFile")
-S3method("getDefaultSamReadGroup", "FastqDataFile")
 S3method("getGeometry", "FastqDataFile")
 S3method("getMateFile", "FastqDataFile")
-S3method("getSamReadGroup", "FastqDataFile")
 S3method("nbrOfSeqs", "FastqDataFile")
 S3method("readFASTQSummary", "FastqDataFile")
 S3method("readGeometry", "FastqDataFile")
 S3method("readSeqFile", "FastqDataFile")
 S3method("report", "FastqDataFile")
-S3method("setSamReadGroup", "FastqDataFile")
 S3method("writeSample", "FastqDataFile")
 
 # FastqDataSet

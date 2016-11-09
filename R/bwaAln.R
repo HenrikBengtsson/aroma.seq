@@ -58,7 +58,7 @@ setMethodS3("bwaAln", "default", function(pathnameFQ, indexPrefix, pathnameD, ..
   stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFQ));
 ##  stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFA));
 
-  res <- systemBWA("aln", "f"=shQuote(pathnameD), shQuote(indexPrefix), shQuote(pathnameFQ), ..., verbose=less(verbose, 10));
+  res <- systemBWA("aln", "f"=shQuote(pathnameD), shQuote(indexPrefix), ..., shQuote(pathnameFQ), verbose=less(verbose, 10));
 
   verbose && exit(verbose);
 

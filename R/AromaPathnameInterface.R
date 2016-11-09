@@ -31,6 +31,23 @@ setMethodS3("getDefaultFullName", "AromaSeqDataFile", function(this, ...) {
   value;
 })
 
+setMethodS3("getDefaultSamReadGroup", "AromaSeqDataFile", function(this, ...) {
+  SamReadGroup()
+})
+
+
+setMethodS3("setSamReadGroup", "AromaSeqDataFile", function(this, rg, ...) {
+  # Argument 'rg':
+  if (!is.null(rg)) rg <- Arguments$getInstanceOf(rg, "SamReadGroup")
+  this$.rg <- rg
+  invisible(this)
+})
+
+setMethodS3("getSamReadGroup", "AromaSeqDataFile", function(this, ...) {
+  rg <- this$.rg
+  if (is.null(rg)) rg <- getDefaultSamReadGroup(this, ...)
+  rg
+})
 
 setConstructorS3("AromaSeqDataFileSet", function(...) {
   extend(AromaPathnameInterface(...), "AromaSeqDataFileSet");
