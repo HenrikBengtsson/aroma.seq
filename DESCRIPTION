@@ -27,7 +27,7 @@ Suggests:
     mgcv,
     PSCBS (>= 0.61.0),
     R.devices (>= 2.15.0),
-    R.rsp (>= 0.30.0),
+    R.rsp (>= 0.40.0),
     readr (>= 1.0.0),
     Biobase (>= 2.32.0),
     aroma.light (>= 3.2.0),
