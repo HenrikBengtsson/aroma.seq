@@ -54,19 +54,16 @@ FastqDataFile(..., paired=FALSE)
  \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{getCommonSeqWidth} \tab  -\cr
- \tab \code{getDefaultSamReadGroup} \tab  -\cr
  \tab \code{getGeometry} \tab  -\cr
- \tab \code{getSamReadGroup} \tab  -\cr
  \tab \code{nbrOfSeqs} \tab  -\cr
  \tab \code{readSeqFile} \tab  -\cr
  \tab \code{report} \tab  -\cr
- \tab \code{setSamReadGroup} \tab  -\cr
  \tab \code{splitUp} \tab  -\cr
 }
 
 
  \bold{Methods inherited from AromaSeqDataFile}:\cr
-getDefaultFullName, isCompatibleWith
+getDefaultFullName, getDefaultSamReadGroup, getSamReadGroup, isCompatibleWith, setSamReadGroup
 
  \bold{Methods inherited from AromaPathnameInterface}:\cr
 directoryStructure, getOrganism
