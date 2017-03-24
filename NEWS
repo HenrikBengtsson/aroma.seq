@@ -3,6 +3,11 @@ Package: aroma.seq
 
 Version: 0.9.0-9000 [2017-03-24]
 
+ o ...
+
+
+Version: 0.9.0 [2017-03-24]
+
 NEW FEATURES:
 
  o doBWA() and BwaAlignment supports single-end alignment using also
