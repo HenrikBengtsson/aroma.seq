@@ -110,28 +110,6 @@ setMethodS3("readGeometry", "FastqDataFile", function(this, ...) {
 }, private=TRUE)
 
 
-setMethodS3("getDefaultSamReadGroup", "FastqDataFile", function(this, ...) {
-  SamReadGroup();
-})
-
-setMethodS3("setSamReadGroup", "FastqDataFile", function(this, rg, ...) {
-  # Argument 'rg':
-  if (!is.null(rg)) {
-    rg <- Arguments$getInstanceOf(rg, "SamReadGroup");
-  }
-  this$.rg <- rg;
-  invisible(this);
-})
-
-setMethodS3("getSamReadGroup", "FastqDataFile", function(this, ...) {
-  rg <- this$.rg;
-  if (is.null(rg)) {
-    rg <- getDefaultSamReadGroup(this, ...);
-  }
-  rg;
-})
-
-
 setMethodS3("writeSample", "FastqDataFile", function(this, pathname, n, ordered=FALSE, seed=NULL, ..., full=FALSE, verbose=FALSE) {
   use("ShortRead")
 

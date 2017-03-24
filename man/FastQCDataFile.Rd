@@ -54,7 +54,7 @@ FastQCDataFile(...)
 
 
  \bold{Methods inherited from AromaSeqDataFile}:\cr
-getDefaultFullName, isCompatibleWith
+getDefaultFullName, getDefaultSamReadGroup, getSamReadGroup, isCompatibleWith, setSamReadGroup
 
  \bold{Methods inherited from AromaPathnameInterface}:\cr
 directoryStructure, getOrganism

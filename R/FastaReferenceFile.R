@@ -331,17 +331,33 @@ setMethodS3("buildIndex", "FastaReferenceFile", function(this, ..., skip=TRUE, v
 
 
 
-setMethodS3("getIndexFile", "FastaReferenceFile", function(this, ...) {
+setMethodS3("getIndexFile", "FastaReferenceFile", function(this, create = TRUE, clean = TRUE, ...) {
   pathname <- getPathname(this)
   pathnameIDX <- sprintf("%s.fai", pathname)
-  pathnameIDX <- Arguments$getReadablePathname(pathnameIDX, mustExist=FALSE)
-  if (!isFile(pathnameIDX)) return(NULL)
+  pathnameIDX <- Arguments$getReadablePathname(pathnameIDX, mustExist = FALSE)
+
+  
+  if (isFile(pathnameIDX)) {
+    ## If index file is outdated, deleted
+    if (clean && file_test("-ot", pathnameIDX, pathname)) {
+      warning("Detected outdated index file and recreated it: ", pathnameIDX)
+      file.remove(pathnameIDX)
+      ## Will try to recreate it
+      create <- TRUE
+    }
+  }
+
+  if (!isFile(pathnameIDX)) {
+    if (!create) return(NULL)
+    pathnameT <- Rsamtools::indexFa(file = pathname)
+  }
+
   FastaReferenceIndexFile(pathnameIDX)
 })
 
 
 setMethodS3("hasIndex", "FastaReferenceFile", function(this, ...) {
-  !is.null(getIndexFile(this));
+  !is.null(getIndexFile(this, create = FALSE));
 })
 
 

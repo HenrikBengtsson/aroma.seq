@@ -56,7 +56,6 @@ FastqDataSet(files=NULL, ..., paired=FALSE, struct=NULL)
  \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{byName} \tab  -\cr
- \tab \code{doBWA} \tab  -\cr
  \tab \code{doBowtie2} \tab  -\cr
  \tab \code{doDownsample} \tab  -\cr
  \tab \code{doQDNAseq} \tab  -\cr
@@ -70,7 +69,7 @@ FastqDataSet(files=NULL, ..., paired=FALSE, struct=NULL)
 
 
  \bold{Methods inherited from AromaSeqDataFileSet}:\cr
-getDefaultFullName, isCompatibleWith
+doBWA, getDefaultFullName, isCompatibleWith
 
  \bold{Methods inherited from AromaPathnameInterface}:\cr
 directoryStructure, getOrganism

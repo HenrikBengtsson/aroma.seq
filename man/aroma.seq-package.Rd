@@ -15,7 +15,7 @@
 
 
 \description{
-  Simple, flexible and distributed processing of very large-scale HT-Seq data - available at the R prompt [RATHER EARLY VERSION].
+  Simple, flexible and distributed processing of very large-scale HT-     Seq data - available at the R prompt [RATHER EARLY VERSION].
 }
 
 \section{Requirements}{

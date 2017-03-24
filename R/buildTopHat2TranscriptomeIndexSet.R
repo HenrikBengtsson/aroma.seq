@@ -53,7 +53,7 @@ setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(thi
   }
 
   # Argument 'outPath':
-  if (is.null(outPath)) outPath <- file.path(getParent(getPath(is)), "tophat2")
+  if (is.null(outPath)) outPath <- file.path(getParent(getPath(this)), "tophat2")
   outPath <- Arguments$getReadablePath(outPath, mustExist=FALSE)
   if (!isDirectory(outPath)) {
     outPath <- Arguments$getWritablePath(outPath)

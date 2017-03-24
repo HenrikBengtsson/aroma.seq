@@ -66,7 +66,7 @@ setMethodS3("buildIndex", "BamDataFile", function(this, ..., skip=!overwrite, ov
 
   if (hasIndex(this)) {
     if (skip) {
-      return(invisible(getIndexFile(this)))
+      return(invisible(getIndexFile(this, create = FALSE)))
     }
     if (!overwrite) {
       throw("Cannot build index file (*.bai). File already exists: ", pathnameBAI)
@@ -76,23 +76,36 @@ setMethodS3("buildIndex", "BamDataFile", function(this, ..., skip=!overwrite, ov
   pathname <- Arguments$getReadablePathname(pathname)
   pathnameT <- Rsamtools::indexBam(pathname)
 
-  getIndexFile(this)
+  getIndexFile(this, create = FALSE)
 })
 
 
-setMethodS3("getIndexFile", "BamDataFile", function(this, ...) {
-  pathname <- getPathname(this);
-  pathnameBAI <- sprintf("%s.bai", pathname);
-  pathnameBAI <- Arguments$getReadablePathname(pathnameBAI, mustExist=FALSE);
-  if (!isFile(pathnameBAI)) {
-    return(NULL);
+setMethodS3("getIndexFile", "BamDataFile", function(this, create = TRUE, clean = TRUE, ...) {
+  pathname <- getPathname(this)
+  pathnameIDX <- sprintf("%s.bai", pathname)
+  pathnameIDX <- Arguments$getReadablePathname(pathnameIDX, mustExist = FALSE)
+  
+  if (isFile(pathnameIDX)) {
+    ## If index file is outdated, deleted
+    if (clean && file_test("-ot", pathnameIDX, pathname)) {
+      warning("Detected outdated index file and recreated it: ", pathnameIDX)
+      file.remove(pathnameIDX)
+      ## Will try to recreate it
+      create <- TRUE
+    }
   }
-  BamIndexDataFile(pathnameBAI);
+
+  if (!isFile(pathnameIDX)) {
+    if (!create) return(NULL)
+    pathnameT <- Rsamtools::indexBam(pathname)
+  }
+
+  BamIndexDataFile(pathnameIDX)
 })
 
 
 setMethodS3("hasIndex", "BamDataFile", function(this, ...) {
-  !is.null(getIndexFile(this));
+  !is.null(getIndexFile(this, create = FALSE));
 })
 
 
@@ -873,6 +886,17 @@ setMethodS3("getFlagStat", "BamDataFile", function(this, ..., force=FALSE) {
   }
 
   stats;
+})
+
+
+setMethodS3("isPaired", "BamDataFile", function(this, ..., force=FALSE) {
+  isPaired <- this$.isPaired
+  if (is.null(isPaired) || force) {
+    bai <- buildIndex(this)
+    isPaired <- testPairedEndBam(getPathname(this), index = getPathname(bai))
+    this$.isPaired <- isPaired
+  }
+  isPaired
 })
 
 

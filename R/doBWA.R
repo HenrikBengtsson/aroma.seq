@@ -1,6 +1,6 @@
 ###########################################################################/**
 # @RdocDefault doBWA
-# @alias doBWA.FastqDataSet
+# @alias doBWA.AromaSeqDataFileSet
 #
 # @title "Read alignment using the Burrows-Wheeler Transform aligner (BWA)"
 #
@@ -10,11 +10,11 @@
 #
 # \usage{
 #   @usage doBWA
-#   @usage doBWA,FastqDataSet
+#   @usage doBWA,AromaSeqDataFileSet
 # }
 #
 # \arguments{
-#  \item{dataSet, df}{A @see "FastqDataSet".}
+#  \item{dataSet, df}{A @see "FastqDataSet" or a @see "BamDataSet".}
 #  \item{reference}{A @see "FastaReferenceFile" or a @see "BwaIndexSet" specifying the genome reference to align the FASTQ reads to.}
 #  \item{...}{Additional arguments passed to @see "BwaAlignment".}
 #  \item{verbose}{See @see "Verbose".}
@@ -39,7 +39,7 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("doBWA", "FastqDataSet", function(dataSet, reference, ..., verbose=FALSE) {
+setMethodS3("doBWA", "AromaSeqDataFileSet", function(dataSet, reference, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -109,9 +109,8 @@ setMethodS3("doBWA", "FastqDataSet", function(dataSet, reference, ..., verbose=F
 
 
 setMethodS3("doBWA", "default", function(...) {
-  throw("The \"default\" method is still not implemented. Please see help('doBWA').");
+  throw("The \"default\" method is still not implemented. Please see help('doBWA').")
 })
-
 
 ############################################################################
 # HISTORY:

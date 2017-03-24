@@ -73,7 +73,9 @@ BamDataFile(...)
  \tab \code{getTargets} \tab  -\cr
  \tab \code{getTotalTargetLength} \tab  -\cr
  \tab \code{hasIndex} \tab  -\cr
+ \tab \code{isPaired} \tab  -\cr
  \tab \code{isSorted} \tab  -\cr
+ \tab \code{mpileup} \tab  -\cr
  \tab \code{nbrOfMappedReads} \tab  -\cr
  \tab \code{nbrOfReads} \tab  -\cr
  \tab \code{nbrOfTargets} \tab  -\cr
@@ -89,7 +91,7 @@ BamDataFile(...)
 
 
  \bold{Methods inherited from AromaSeqDataFile}:\cr
-getDefaultFullName, isCompatibleWith
+getDefaultFullName, getDefaultSamReadGroup, getSamReadGroup, isCompatibleWith, setSamReadGroup
 
  \bold{Methods inherited from AromaPathnameInterface}:\cr
 directoryStructure, getOrganism

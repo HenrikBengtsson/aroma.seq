@@ -251,15 +251,20 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
       # (a) Generate SAI file via BWA aln
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       verbose && enter(verbose, "Generating SAI")
+      
       for (kk in seq_along(pathnameSAIs)) {
         pathnameSAI <- pathnameSAIs[kk]
         if (!isFile(pathnameSAI)) {
+	  fq <- dfList[[kk]]
           pathnameFQ <- pathnameFQs[kk]
-          args <- list(pathnameFQ, indexPrefix=indexPrefix,
-                       pathnameD=pathnameSAI)
+	  stopifnot(pathnameFQ == getPathname(fq))
+
+          args <- list("aln", f=shQuote(pathnameSAI), shQuote(indexPrefix))
+	  if (inherits(fq, "BamDataFile")) args <- c(args, "-b")
+	  args <- c(args, shQuote(pathnameFQ))
+	  args$verbose <- less(verbose, 10)
           args <- c(args, paramsList$aln)
-          args$verbose <- less(verbose, 5)
-          res <- do.call(bwaAln, args=args)
+          res <- do.call(systemBWA, args = args)
           verbose && cat(verbose, "System result code: ", res)
         }
       } # for (kk ...)
@@ -273,6 +278,8 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
       # (b) Generate SAM via BWA samse/sampe
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       if (!isFile(pathnameSAM)) {
+        verbose && enter(verbose, "Generating SAM")
+	
         # Extract sample-specific read group
         rgII <- getSamReadGroup(df)
         if (length(rgSet) > 0L) {
@@ -304,17 +311,24 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
             file.remove(pathnameSAM)
           }
         }
+	
+        verbose && print(verbose, pathnameSAM)
+        verbose && exit(verbose)
       }
+      
       # Sanity check
       Arguments$getReadablePathname(pathnameSAM)
+
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # (c) Generates a (sorted and indexed) BAM file from SAM file
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       if (!isFile(pathnameBAM)) {
+        verbose && enter(verbose, "Generating BAM")
         sf <- SamDataFile(pathnameSAM)
         bf <- convertToBam(sf, verbose=less(verbose, 5))
         verbose && print(verbose, pathnameBAM)
+        verbose && exit(verbose)
       }
       # Sanity check
       pathnameBAM <- Arguments$getReadablePathname(pathnameBAM)
@@ -326,7 +340,7 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
   } ## for (ii ...)
 
   ## Resolve futures
-  res <- resolve(res)
+  res <- as.list(res)
 
   bams <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1))
 
