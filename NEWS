@@ -2,1045 +2,1830 @@ Package: aroma.seq
 ==================
 
 Version: 0.8.0-9000 [2016-11-08]
-o doBWA() and BwaAlignment supports single-end alignment using also
-  BAM files as input (in addition to FASTQ files).
-o getIndexFile() gained arguments 'creat = TRUE' and 'clean = TRUE'
-  for BamDataFile and FastaReferenceFile.
-o Add isPaired() for BamDataFile and BamDataSet.
 
+NEW FEATURES:
 
+ o doBWA() and BwaAlignment supports single-end alignment using also
+   BAM files as input (in addition to FASTQ files).
+
+ o getIndexFile() gained arguments 'creat = TRUE' and 'clean = TRUE'
+   for BamDataFile and FastaReferenceFile.
+
+ o Add isPaired() for BamDataFile and BamDataSet.
+ 
+ 
 Version: 0.8.0 [2016-11-08]
-o Now the future package is attached with this package.
-o Started to add some support for the sequenza package.
-o Now enabling parallelization via futures by default.  User still
-  need to configure what futures to use in order to parallelize.
-o CLEANUP: Package no longer depends on BatchJobs and BiocParallel.
 
+NEW FEATURES:
 
+ o Now the future package is attached with this package.
+
+PERFORMANCE:
+
+ o Now enabling parallelization via futures by default.  User still
+   need to configure what futures to use in order to parallelize.
+
+REFACTORIZATION:
+
+ o CLEANUP: Package no longer depends on BatchJobs and BiocParallel.
+ 
+ o Started to add some support for the sequenza package.
+
+ 
 Version: 0.7.0 [2016-09-05]
-o CLEANUP: All parallel processing is now done via futures implemented
-  by the future package.
 
+REFACTORIZATION:
 
+ o CLEANUP: All parallel processing is now done via futures implemented
+   by the future package.
+ 
+ 
 Version: 0.6.10 [2016-08-30]
-o Added getSeqChecksums() for FastaReferenceFile to calculate checksums
-  for individual sequences of a FASTA reference file.
-o Now print() for IlluminaFastqDataFile also report on the platform
-  and file format.  It also reports on the flowcell ID, lane, barcode
-  sequence, sample name, read direction and instrument ID based on
-  the first sequence in the FASTQ file (iff the file format is known).
-o ROBUSTNESS: Now the constructor of IlluminaFastqDataFile asserts that
-  all FASTQ files have a file format that is recognized/known.
-o ROBUSTNESS: Add isCompatibleWith() for AromaSeqDataFileSet, e.g. to check
-  that all BAM files to each other use isCompatibleWith(bams, bams[[1]]).
 
+NEW FEATURES:
 
+ o Added getSeqChecksums() for FastaReferenceFile to calculate checksums
+   for individual sequences of a FASTA reference file.
+
+ o Now print() for IlluminaFastqDataFile also report on the platform
+   and file format.  It also reports on the flowcell ID, lane, barcode
+   sequence, sample name, read direction and instrument ID based on
+   the first sequence in the FASTQ file (iff the file format is known).
+
+SOFTWARE QUALITY:
+
+ o ROBUSTNESS: Now the constructor of IlluminaFastqDataFile asserts that
+   all FASTQ files have a file format that is recognized/known.
+
+ o ROBUSTNESS: Add isCompatibleWith() for AromaSeqDataFileSet, e.g. to check
+   that all BAM files to each other use isCompatibleWith(bams, bams[[1]]).
+ 
+ 
 Version: 0.6.9 [2016-01-08]
-o ROBUSTNESS: Now AbstractAlignment methods assert that the output
-  data set is compatible with the index set.
-o ROBUSTNESS: When finding index sets from a FASTA reference files
-  it could happen that a non-compatible index set was returned.
-  Now we do a better job locating and validating compatibility.
 
+SOFTWARE QUALITY:
 
+ o ROBUSTNESS: Now AbstractAlignment methods assert that the output
+   data set is compatible with the index set.
+
+ o ROBUSTNESS: When finding index sets from a FASTA reference files
+   it could happen that a non-compatible index set was returned.
+   Now we do a better job locating and validating compatibility.
+ 
+ 
 Version: 0.6.8 [2016-01-01]
-o BUG FIX: process() for BwaAlignment() would give error that
-  "if (isPaired) { : argument is not interpretable as logical",
-  which was do to a typo and caught when processed using futures.
 
+BUG FIXES:
 
+ o process() for BwaAlignment() would give error that "if (isPaired) { :
+   argument is not interpretable as logical", which was do to a typo and
+   caught when processed using futures.
+ 
+ 
 Version: 0.6.7 [2016-01-01]
-o Add stubs for MPileupFile and MPileupFileSet.
-o Now SeqzFile also supports gzip'ed files.
 
+NEW FEATURES:
 
+ o Add stubs for MPileupFile and MPileupFileSet.
+
+ o Now SeqzFile also supports gzip'ed files.
+ 
+ 
 Version: 0.6.6 [2015-11-22]
-o ROBUSTNESS: Now buildIndex() and readHeader() for BamDataFile
-  assert that the BAM file exists before trying to parse it.
-  Likewise, print() for BamDataFile no longer give an error
-  if BAM file does not exist.
-o ROBUSTNESS: Explicitly importing core R functions.
-o BUG FIX: Adjusted for Bowtie2 2.2.0 (Feb 2014) which no longer
-  has bowtie2-align but bowtie2-align-s and bowtie2-align-l.
-o Package now requires R (>= 3.2.2) released August 2015.
-  This allows us to use BioC (>= 3.2) (October 2015).
 
+SIGNIFICANT CHANGES:
 
+ o Package now requires R (>= 3.2.2) released August 2015.
+   This allows us to use BioC (>= 3.2) (October 2015).
+
+SOFTWARE QUALITY:
+
+ o ROBUSTNESS: Now buildIndex() and readHeader() for BamDataFile
+   assert that the BAM file exists before trying to parse it.
+   Likewise, print() for BamDataFile no longer give an error
+   if BAM file does not exist.
+
+REFACTORIZATION:
+
+ o ROBUSTNESS: Explicitly importing core R functions.
+
+BUG FIXES:
+
+ o Adjusted for Bowtie2 2.2.0 (Feb 2014) which no longer has bowtie2-align but
+   bowtie2-align-s and bowtie2-align-l.
+ 
+ 
 Version: 0.6.5 [2015-06-01]
-o Now the scoring/reporting on known orderings of sequences
-  also recognizes mixed ordering with roman numeral (e.g. mouse
-  chromosomes).
-o BUG FIX: readDataFrame() for FastaReferenceIndexFile did
-  not handle large genomes such as the human one, because
-  it tried to represent the file offset using 'integer',
-  which was not enough to represent it.
 
+NEW FEATURES:
 
+ o Now the scoring/reporting on known orderings of sequences also recognizes
+   mixed ordering with roman numeral (e.g. mouse chromosomes).
+
+BUG FIXES:
+
+ o readDataFrame() for FastaReferenceIndexFile did not handle large genomes
+   such as the human one, because it tried to represent the file offset using
+   'integer', which was not enough to represent it.
+ 
+ 
 Version: 0.6.4 [2015-05-13]
-o Added findCNVkit() and isCapableOf(aroma.seq, "CNVkit").
-o Added CnvKitCopyNumberRatio(File|Set).
-o BUG FIX: buildTopHat2TranscriptomeIndexSet(..., skip=TRUE)
-  would still require write permission and give an error if
-  such do not exist.
 
+NEW FEATURES:
 
+ o Added findCNVkit() and isCapableOf(aroma.seq, "CNVkit").
+
+ o Added CnvKitCopyNumberRatio(File|Set).
+
+BUG FIXES:
+
+ o buildTopHat2TranscriptomeIndexSet(..., skip=TRUE) would still require write
+   permission and give an error if such do not exist.
+ 
+ 
 Version: 0.6.3 [2015-05-08]
-o Using Emsembl-flavored organism names, e.g. Homo_sapiens
-  and Mus_musculus (was HomoSapiens and MusMusculus).
 
+SIGNIFICANT CHANGES:
 
+ o Using Emsembl-flavored organism names, e.g. Homo_sapiens and Mus_musculus
+   (was HomoSapiens and MusMusculus).
+ 
+ 
 Version: 0.6.2 [2015-05-07]
-o Added splitByTargetType() for BamDataSet.
-o Added getFlagStat() for BamDataFile.
-o Added getIndexFile() and hasIndex() to FastaReferenceIndexFile.
-  The print() method reports on the existence of the index file.
-o ROBUSTNESS: All SequenceContigsInterface classes report on
-  possible ways the sequences/chromosomes are ordered.
-o ROBUSTNESS: Now print() for BamDataSet warns if there are
-  BAM files that have been aligned to different target sequences,
-  which would indicate that different FASTA reference files have
-  been used.
-o CLEANUP: Added SequenceContigsInterface providing methods for
-  querying sequence names and lengths etc.  Several classes inherits/
-  implements this class, e.g. BamDataFile, FastaReferenceFile etc.
-  This simplifies validation of contig compatibility.
-o CLEANUP: Package no longer warns on "'fasta.info' is deprecated".
 
+NEW FEATURES:
 
+ o Added splitByTargetType() for BamDataSet.
+
+ o Added getFlagStat() for BamDataFile.
+
+ o Added getIndexFile() and hasIndex() to FastaReferenceIndexFile.
+   The print() method reports on the existence of the index file.
+
+ o ROBUSTNESS: All SequenceContigsInterface classes report on
+   possible ways the sequences/chromosomes are ordered.
+
+SOFTWARE QUALITY:
+
+ o ROBUSTNESS: Now print() for BamDataSet warns if there are BAM files that
+   have been aligned to different target sequences, which would indicate that
+   different FASTA reference files have been used.
+
+REFACTORIZATION:
+
+ o CLEANUP: Added SequenceContigsInterface providing methods for
+   querying sequence names and lengths etc.  Several classes inherits/
+   implements this class, e.g. BamDataFile, FastaReferenceFile etc.
+   This simplifies validation of contig compatibility.
+
+ o CLEANUP: Package no longer warns on "'fasta.info' is deprecated".
+ 
+ 
 Version: 0.6.1 [2015-05-06]
-o Added FastaReferenceIndexFile.
-o Added SeqzFile and SeqzFileSet skeletons.
-o Added splitUp() for FastqDataFile.  Added package tests.
-o Now readGeometry() for FastqDataFile also works for compressed FASTQ files.
-o Now countNucleotides() handles multiple chromosomes.
-o Added default isCompatibleWith() for AromaSeqDataFile object, which
-  uses internal isCompatibleWithBySeqNames().
-o CLEANUP: Now using getSeqNames() everywhere.
-o BUG FIX: Now getMateFile() for FastqDataFile returns a "paired" file.
-o Package now requires R (>= 3.1.3) released Match 2015. This allows
-  us to use BioC (>= 3.0) (October 2014).
 
+SIGNIFICANT CHANGES:
+
+ o Package now requires R (>= 3.1.3) released Match 2015. This allows
+   us to use BioC (>= 3.0) (October 2014).
+
+NEW FEATURES:
+
+ o Added FastaReferenceIndexFile.
+
+ o Added SeqzFile and SeqzFileSet skeletons.
+
+ o Added splitUp() for FastqDataFile.  Added package tests.
+
+ o Now readGeometry() for FastqDataFile also works for compressed FASTQ files.
+
+ o Now countNucleotides() handles multiple chromosomes.
+
+ o Added default isCompatibleWith() for AromaSeqDataFile object, which
+   uses internal isCompatibleWithBySeqNames().
+
+REFACTORIZATION:
+
+ o CLEANUP: Now using getSeqNames() everywhere.
+
+BUG FIXES:
+
+ o Now getMateFile() for FastqDataFile returns a "paired" file.
+
+ 
 Version: 0.6.0 [2015-02-28]
-o Importing several core Bioc packages (instead of suggesting them).
 
+SIGNIFICANT CHANGES:
 
+ o Importing several core Bioc packages (instead of suggesting them).
+ 
+ 
 Version: 0.5.22 [2014-09-29]
-o Start adding support for the SRA Toolkit and SRA files.
-  Added SRADataFile, SRADataSet, and systemSraToolkit().
-o Added tview() for BamDataFile.
 
+NEW FEATURES:
 
+ o Added tview() for BamDataFile.
+ 
+ o Start adding support for the SRA Toolkit and SRA files.
+   Added SRADataFile, SRADataSet, and systemSraToolkit().
+
+ 
 Version: 0.5.21 [2014-09-28]
-o Added countNucleotides() for BamDataSet.
-o Added support for memoization to countNucleotides() for BamDataFile.
 
+NEW FEATURES:
 
+ o Added countNucleotides() for BamDataSet.
+
+PERFORMANCE:
+
+ o Added support for memoization to countNucleotides() for BamDataFile.
+ 
+ 
 Version: 0.5.20 [2014-09-09]
-o BUG FIX: getGroups() for FileGroupsInterface would drop suffixes
-  _1 and _R2, which should be there, from fullnames.
 
+BUG FIXES:
 
+ o getGroups() for FileGroupsInterface would drop suffixes _1 and _R2, which
+   should be there, from fullnames.
+ 
+ 
 Version: 0.5.19 [2014-09-05]
-o ROBUSTNESS: When copying files the file permissions of the
-  destination files are now reset.
-o Added a few missing NAMESPACE imports.
 
+SOFTWARE QUALITY:
 
+ o ROBUSTNESS: When copying files the file permissions of the destination files
+   are now reset.
+
+REFACTORIZATION:
+
+ o Added a few missing NAMESPACE imports.
+ 
+ 
 Version: 0.5.18 [2014-08-27]
-o Added extractCounts() for HTSeqCountDataFile and HTSeqCountDataSet.
-o BUG FIX/ROBUSTNESS: Now extractMatrix() and readDGE() for
-  HTSeqCountDataSet drops "genes" with prefix '__' in case they exists,
-  e.g. "__no_feature", "__ambiguous", etc.
 
+NEW FEATURES:
 
+ o Added extractCounts() for HTSeqCountDataFile and HTSeqCountDataSet.
+
+BUG FIXES:
+
+ o ROBUSTNESS: Now extractMatrix() and readDGE() for HTSeqCountDataSet drops
+   "genes" with prefix '__' in case they exists, e.g. "__no_feature",
+   "__ambiguous", etc.
+ 
+ 
 Version: 0.5.17 [2014-08-23]
-o ROBUSTNESS: Now getFastaReferenceFile() now asserts compatibility.
-o ROBUSTNESS: Now buildTopHat2TranscriptomeIndexSet() and
-  buildBowtie2IndexSet() assert that the returned index set is
-  compatible with the input data.
-o BUG FIX: buildTopHat2TranscriptomeIndexSet() would give an error
-  if the final destination directory already existed.
 
+SOFTWARE QUALITY:
 
+ o ROBUSTNESS: Now getFastaReferenceFile() now asserts compatibility.
+
+ o ROBUSTNESS: Now buildTopHat2TranscriptomeIndexSet() and
+   buildBowtie2IndexSet() assert that the returned index set is
+   compatible with the input data.
+
+BUG FIXES:
+
+ o buildTopHat2TranscriptomeIndexSet() would give an error if the final
+   destination directory already existed.
+ 
+ 
 Version: 0.5.16 [2014-08-12]
-o ROBUSTNESS: Now Bowtie2Alignment asserts that SAM read groups to
-  be written do not contain spaces.
-o BUG FIX: getSeqNames() for Bowtie2IndexSet and FastaReferenceFile
-  would return the sequence description in addition to the ID as part
-  of the name.
 
+SOFTWARE QUALITY:
 
+ o ROBUSTNESS: Now Bowtie2Alignment asserts that SAM read groups to
+   be written do not contain spaces.
+
+BUG FIXES:
+
+ o getSeqNames() for Bowtie2IndexSet and FastaReferenceFile would return the
+   sequence description in addition to the ID as part of the name.
+ 
+ 
 Version: 0.5.15 [2014-08-09]
-o Now all static byOrganism() methods infer the organism from the passed
-  argument via getOrganism() if not already a character string, e.g.
-  gtf <- GtfDataFile$byOrganism(fa) where fa is a FastaReferenceFile.
 
+NEW FEATURES:
 
+ o Now all static byOrganism() methods infer the organism from the passed
+   argument via getOrganism() if not already a character string, e.g.
+   gtf <- GtfDataFile$byOrganism(fa) where fa is a FastaReferenceFile.
+ 
+ 
 Version: 0.5.14 [2014-08-08]
-o Added argument 'groupBy' to Bowtie2Alignment, which can be used to
-  specify which FASTQ files should be processed together.
-o ROBUSTNESS: Now bowtie2() supports multiple FASTQ files/file pairs
-  and commas and spaces in directory names (but not filenames).
-o Now it is possible to specify the "home" directory of each external
-  software used via system environment variables, e.g. 'BOWTIE2_HOME'.
-o CLEANUP: Bowtie2Alignment no longer keeps intermediate SAM file.
-o BUG FIX: Now Bowtie2Alignment escapes spaces in SAM Read Group
-  values before passing to Bowtie2.
 
+NEW FEATURES:
 
+ o Added argument 'groupBy' to Bowtie2Alignment, which can be used to
+   specify which FASTQ files should be processed together.
+
+ o ROBUSTNESS: Now bowtie2() supports multiple FASTQ files/file pairs
+   and commas and spaces in directory names (but not filenames).
+
+ o Now it is possible to specify the "home" directory of each external
+   software used via system environment variables, e.g. 'BOWTIE2_HOME'.
+
+ o CLEANUP: Bowtie2Alignment no longer keeps intermediate SAM file.
+
+BUG FIXES:
+
+ o Now Bowtie2Alignment escapes spaces in SAM Read Group values before passing
+   to Bowtie2.
+ 
+ 
 Version: 0.5.13 [2014-08-07]
-o BUG FIX: Now FastQCReporter also works with FastQC (>= 0.11.1).
 
+BUG FIXES:
 
+ o Now FastQCReporter also works with FastQC (>= 0.11.1).
+ 
+ 
 Version: 0.5.12 [2014-07-24]
-o GENERALIZATION: Now argument 'organism' can also be a file or a data
-  set in addition to a character string for most methods, e.g.
-  FastqDataSet(name, organism=fa) where 'fa' is a FastaReferenceFile.
-o ROBUSTNESS: Now getOutputDataSet() for AbstractAlignment asserts
-  that the output data set contains at most the same number of items
-  as the input data set.
-o SPEEDUP: Now getSeqNames() for GtfDataFile memoizes results.
-o SPEEDUP: Now Tophat2Alignment() prebuilds the transcriptome index
-  set and reuses it for all samples.  Requires Tophat (>= 2.0.10).
-o Added argument 'transcriptomeIndexSet' to tophat().
-o BUG FIX: tophat(reads1=NULL, gtf) would generate an error.
-o ROBUSTNESS: Now buildTopHat2TranscriptomeIndexSet() asserts that the
-  Bowtie2 index set and GTF have compatible sequence names.
 
+NEW FEATURES:
 
+ o GENERALIZATION: Now argument 'organism' can also be a file or a data
+   set in addition to a character string for most methods, e.g.
+   FastqDataSet(name, organism=fa) where 'fa' is a FastaReferenceFile.
+
+ o Added argument 'transcriptomeIndexSet' to tophat().
+
+SOFTWARE QUALITY:
+
+ o ROBUSTNESS: Now getOutputDataSet() for AbstractAlignment asserts
+   that the output data set contains at most the same number of items
+   as the input data set.
+
+ o ROBUSTNESS: Now buildTopHat2TranscriptomeIndexSet() asserts that the
+   Bowtie2 index set and GTF have compatible sequence names.
+
+PERFORMANCE:
+
+ o SPEEDUP: Now getSeqNames() for GtfDataFile memoizes results.
+
+ o SPEEDUP: Now Tophat2Alignment() prebuilds the transcriptome index
+   set and reuses it for all samples.  Requires Tophat (>= 2.0.10).
+ 
+BUG FIXES:
+
+ o tophat(reads1=NULL, gtf) would generate an error.
+
+ 
 Version: 0.5.12 [2014-07-22]
-o BUG FIX: tophat(reads1=NULL, gtf) would generate an error.
-o ROBUSTNESS: Now buildTopHat2TranscriptomeIndexSet() asserts that the
-  Bowtie2 index set and GTF have compatible sequence names.
 
+SOFTWARE QUALITY:
 
+ o ROBUSTNESS: Now buildTopHat2TranscriptomeIndexSet() asserts that the
+   Bowtie2 index set and GTF have compatible sequence names.
+
+BUG FIXES:
+
+ o tophat(reads1=NULL, gtf) would generate an error.
+
+ 
 Version: 0.5.11 [2014-07-18]
-o GENERALIZATION: Now getReadCounts() for BamDataFile falls back to
-  use Rsamtools::quickBamFlagSummary() if 'samtools indexstats' is
-  not available.
 
+NEW FEATURES:
 
+ o GENERALIZATION: Now getReadCounts() for BamDataFile falls back to use
+   Rsamtools::quickBamFlagSummary() if 'samtools indexstats' is not available.
+ 
+ 
 Version: 0.5.10 [2014-06-25]
-o Added missing nucleotide type ('N') to AromaUnitNucleotideCountsFile
-  and added argument 'na.rm' to getGcContent() for that class.
 
+NEW FEATURES:
 
+ o Added missing nucleotide type ('N') to AromaUnitNucleotideCountsFile
+   and added argument 'na.rm' to getGcContent() for that class.
+ 
+ 
 Version: 0.5.9 [2014-06-16]
-o Updated startup message on how to install devel version of package.
-o BUG FIX: findGATK(mustExist=FALSE) would return FALSE instead of NULL
-  if GATK was not found.
 
+NEW FEATURES:
 
+ o Updated startup message on how to install devel version of package.
+
+BUG FIXES:
+
+ o findGATK(mustExist=FALSE) would return FALSE instead of NULL if GATK was
+   not found.
+ 
+ 
 Version: 0.5.8 [2014-06-14]
-o Added countNucleotides() for BamDataFile with a package system test.
-o Bumped package dependencies.
 
+NEW FEATURES:
 
+ o Added countNucleotides() for BamDataFile with a package system test.
+
+ 
 Version: 0.5.7 [2014-05-24]
-o ROBUSTNESS: capabilitiesOf() always returns even if one of the
-  "find" functions gives an error.
-o ROBUSTNESS: Now findFastQC(mustExist=FALSE) returns NULL if
-  'fastqc --version' fails although 'fastqc' is found.
 
+NEW FEATURES:
 
+ o ROBUSTNESS: Now findFastQC(mustExist=FALSE) returns NULL if
+   'fastqc --version' fails although 'fastqc' is found.
+
+ o ROBUSTNESS: capabilitiesOf() always returns even if one of the
+   "find" functions gives an error.
+ 
+ 
 Version: 0.5.6 [2014-05-11]
-o Added argument 'jvmArgs' to systemJava() to make it simple to call
-  Java as 'java -Xmx1024m ..." etc.
 
+NEW FEATURES:
 
+ o Added argument 'jvmArgs' to systemJava() to make it simple to call
+   Java as 'java -Xmx1024m ..." etc.
+ 
+ 
 Version: 0.5.5 [2014-05-02]
-o CLEANUP: Now using ds[[idx]] instead of getFile(ds, idx) everywhere.
 
+REFACTORIZATION:
 
+ o CLEANUP: Now using ds[[idx]] instead of getFile(ds, idx) everywhere.
+ 
+ 
 Version: 0.5.4 [2014-04-23]
-o Non-installed suggested packages are now automatically installed when
-  needed.  This is achieved by using R.utils::use() instead of require().
-o BUG FIX: doDownsample() for FastqDataSet ignored argument 'subset'.
 
+NEW FEATURES:
 
+ o Non-installed suggested packages are now automatically installed when
+   needed.  This is achieved by using R.utils::use() instead of require().
+
+BUG FIXES:
+
+ o doDownsample() for FastqDataSet ignored argument 'subset'.
+ 
+ 
 Version: 0.5.3 [2014-04-19]
-o BUG FIX: After moving dsApply() et al. to R.filesets, this package
-  never ran jobs in parallel.  Forgot to update the name of the
-  setting.
 
+BUG FIXES:
 
+ o After moving dsApply() et al. to R.filesets, this package never ran jobs in
+   parallel.  Forgot to update the name of the setting.
+ 
+ 
 Version: 0.5.2 [2014-04-18]
-o Added doDownsample() for BamDataSet and FastqDataSet.
-o Added BamDownsampler analogously to FastqDownsampler.
-o Added writeSample() for BamDataFile utilizing Rsamtools::filterBam().
-o Now getProgramString() for BamDataFile returns information on all
-  programs used, not just the first one.  By default, it no longer
-  reports on the full calls. It also does a better job on presenting
-  and cleaning up the software names.
-o BUG FIX: FastqDownsampler did not respect fullname translators.
-o BUG FIX: process() for HTSeqCounting and TopHat2Alignment would
-  remove the temporary uncompressed GTF file on exit, even if
-  asynchroneous calls are still running.
 
+NEW FEATURES:
 
+ o Added doDownsample() for BamDataSet and FastqDataSet.
+
+ o Added BamDownsampler analogously to FastqDownsampler.
+
+ o Added writeSample() for BamDataFile utilizing Rsamtools::filterBam().
+
+ o Now getProgramString() for BamDataFile returns information on all
+   programs used, not just the first one.  By default, it no longer
+   reports on the full calls. It also does a better job on presenting
+   and cleaning up the software names.
+
+BUG FIXES:
+
+ o FastqDownsampler did not respect fullname translators.
+
+ o process() for HTSeqCounting and TopHat2Alignment would remove the temporary
+   uncompressed GTF file on exit, even if asynchroneous calls are still running.
+ 
+ 
 Version: 0.5.1 [2014-04-16]
-o Now getDefaultFullName() for FastqDataFile drops PE suffixes.
-o Added field 'paired' to FastqDataFile.
-o SPEEDUP: Now readSeqLengths() for FastaReferenceFile memoizes results.
-o BUG FIX: convertToBam()/convertToSam() for data sets would write
-  all SAM/BAM files to the directory of the first file.
 
+NEW FEATURES:
 
+ o Now getDefaultFullName() for FastqDataFile drops PE suffixes.
+
+ o Added field 'paired' to FastqDataFile.
+
+PERFORMANCE:
+
+ o SPEEDUP: Now readSeqLengths() for FastaReferenceFile memoizes results.
+
+BUG FIXES:
+
+ o convertToBam()/convertToSam() for data sets would write all SAM/BAM files
+   to the directory of the first file.
+ 
+ 
 Version: 0.5.0 [2014-04-15]
-o Package now requires R (>= 3.1.0) and BioC (>= 2.14.0).
-o Bumped up package dependencies. Added 'QDNAseq'.
-o CLEANUP: Dropped BioC (< 2.14.0) backward compatibility code.
 
+SIGNIFICANT CHANGES:
 
+ o Package now requires R (>= 3.1.0) and BioC (>= 2.14.0).
+
+ o Added 'QDNAseq' dependency.
+
+REFACTORIZATION:
+
+ o CLEANUP: Dropped BioC (< 2.14.0) backward compatibility code.
+ 
+ 
 Version: 0.4.39 [2014-04-13]
-o Added buildDictionary() for FastaReferenceFile.  Required by GATK.
-o ROBUSTNESS: Now gatk() throws GATK errors as R errors.
-o ROBUSTNESS: Added package system test for gatk().
 
+NEW FEATURES:
 
+ o Added buildDictionary() for FastaReferenceFile.  Required by GATK.
+
+SOFTWARE QUALITY:
+
+ o ROBUSTNESS: Now gatk() throws GATK errors as R errors.
+
+ o ROBUSTNESS: Added package system test for gatk().
+ 
+ 
 Version: 0.4.38 [2014-04-13]
-o Added support for paired-end BWA alignment in addition already
-  supported single-end BWA alignment.
-o Now paired-end alignments are tagged as "pe".  Previously they were
-  tagged as "paired", which was ambigous in case for instance
-  tumor-normal pair data was analyzed.
-o CLEANUP: Now FastQCReporter outputs sample directories without the
-  default and auxillary '_fastqc' suffix.
 
+NEW FEATURES:
 
+ o Added support for paired-end BWA alignment in addition already
+   supported single-end BWA alignment.
+
+ o Now paired-end alignments are tagged as "pe".  Previously they were
+   tagged as "paired", which was ambigous in case for instance
+   tumor-normal pair data was analyzed.
+
+ o CLEANUP: Now FastQCReporter outputs sample directories without the
+   default and auxillary '_fastqc' suffix.
+ 
+ 
 Version: 0.4.37 [2014-04-10]
-o Now doTopHat2() requires that 'transcripts' is explicitly specified.
-  This is to protect against the mistake when the user forgets to
-  specify the transcripts.
-o BUG FIX: getSequenceNames() for Bowtie2IndexSet returned nothing.
 
+SOFTWARE QUALITY:
 
+ o Now doTopHat2() requires that 'transcripts' is explicitly specified.
+   This is to protect against the mistake when the user forgets to
+   specify the transcripts.
+
+BUG FIXES:
+
+ o getSequenceNames() for Bowtie2IndexSet returned nothing.
+ 
+ 
 Version: 0.4.36 [2014-04-08]
-o Making more efforts of utilizing directory structure patterns.
-o BUG FIX: getSequenceNames() for Bowtie2IndexSet returned nothing.
 
+NEW FEATURES:
 
+ o Making more efforts of utilizing directory structure patterns.
+
+BUG FIXES:
+
+ o getSequenceNames() for Bowtie2IndexSet returned nothing.
+ 
+ 
 Version: 0.4.35 [2014-04-06]
-o CLEANUP: Now all parallel/distributed processing is handled by
-  dsApply(), which has been moved to R.filesets 1.5.0.
 
+REFACTORIZATION:
 
+ o CLEANUP: Now all parallel/distributed processing is handled by
+   dsApply(), which has been moved to R.filesets 1.5.0.
+ 
+ 
 Version: 0.4.34 [2014-04-02]
-o CLEANUP: Dropped declaration of internal S3 method dsApply().
-  This ease the migration of that method to the R.filesets package.
 
+REFACTORIZATION:
 
+ o CLEANUP: Dropped declaration of internal S3 method dsApply().
+   This ease the migration of that method to the R.filesets package.
+ 
+ 
 Version: 0.4.33 [2014-03-14]
-o Now findGATK() also returns the version of GATK.
 
+NEW FEATURES:
 
+ o Now findGATK() also returns the version of GATK.
+ 
+ 
 Version: 0.4.32 [2014-03-11]
-o ROBUSTNESS: Added argument 'sortByName' to htseqCount(), which for
-  now defaults to "always", because although htseq-count (>= 0.6.0)
-  is supposed to handle when BAM files are sorted by position, it will
-  run out of memory for modestly large BAM files.
-o ROBUSTNESS: If the external software returns a non-zero exit code,
-  then htseqCount() removes any empty count file and scans the log file
-  for errors and warnings and translates them into ditto in R.
-o Now htseqCount() also outputs a log file.
 
+NEW FEATURES:
 
+ o Now htseqCount() also outputs a log file.
+
+ o ROBUSTNESS: Added argument 'sortByName' to htseqCount(), which for
+   now defaults to "always", because although htseq-count (>= 0.6.0)
+   is supposed to handle when BAM files are sorted by position, it will
+   run out of memory for modestly large BAM files.
+
+SOFTWARE QUALITY:
+
+ o ROBUSTNESS: If the external software returns a non-zero exit code,
+   then htseqCount() removes any empty count file and scans the log file
+   for errors and warnings and translates them into ditto in R.
+ 
+ 
 Version: 0.4.31 [2014-03-10]
-o ROBUSTNESS: Now bowtie2(), bowtie2Build(), bwaAln(), bwaIndex() and so
-  on use shQuote() for all pathnames.
-o ROBUSTNESS: Now process() for HTSeqCounting validates that the GTF
-  file has chromsome names in a format that matched the BAM files.
-  If not, an error is thrown.
-o SPEEDUP: Now htseqCount() only workaround non-supported BAM files
-  for older version of htseq-count.
-o Added getSeqNames() for GtfDataFile.
 
+NEW FEATURES:
 
+ o Added getSeqNames() for GtfDataFile.
+
+SOFTWARE QUALITY:
+
+ o ROBUSTNESS: Now process() for HTSeqCounting validates that the GTF
+   file has chromsome names in a format that matched the BAM files.
+   If not, an error is thrown.
+
+ o ROBUSTNESS: Now bowtie2(), bowtie2Build(), bwaAln(), bwaIndex() and so
+   on use shQuote() for all pathnames.
+
+PERFORMANCE:
+
+ o SPEEDUP: Now htseqCount() only workaround non-supported BAM files
+   for older version of htseq-count.
+ 
+ 
 Version: 0.4.30 [2014-03-09]
-o ROBUSTNESS: Now htseqCount() writes results atomically.
-o Now findHTSeq() returns versions in format '0.5.4-3' not '0.5.4p3',
-  This makes it easier to test against different versions of HTSeq.
-o Added verbose output to htseqCount().
-o DOCUMENTATION: Added Details section to help("htseqCount").
-o BUG FIX: getIndexStats() for BamDataFile would not work if pathname
-  had a space or other symbols causing it to be split up.
 
+NEW FEATURES:
 
+ o Now findHTSeq() returns versions in format '0.5.4-3' not '0.5.4p3',
+   This makes it easier to test against different versions of HTSeq.
+
+ o Added verbose output to htseqCount().
+
+SOFTWARE QUALITY:
+
+ o ROBUSTNESS: Now htseqCount() writes results atomically.
+
+DOCUMENTATION:
+
+ o Added Details section to help("htseqCount").
+
+BUG FIXES:
+
+ o getIndexStats() for BamDataFile would not work if pathname had a space or
+   other symbols causing it to be split up.
+ 
+ 
 Version: 0.4.29 [2014-03-08]
-o Bumped up package dependencies.
-o RELAXATION: readHeader() for BamDataFile no longer require that
-  the BAM file is indexed.
-o Now as.character()/print() for BamDataFile reports on by which software
-  (and how) the BAM file was created, if the @PG SAM header is available.
 
+NEW FEATURES:
 
+ o Now as.character()/print() for BamDataFile reports on by which software
+   (and how) the BAM file was created, if the @PG SAM header is available.
+
+ o RELAXATION: readHeader() for BamDataFile no longer require that
+   the BAM file is indexed.
+
+ 
 Version: 0.4.28 [2014-03-06]
-o Added convertToSam() analogously to convertToBam().
-o Added arguments 'mateInnerDist' and 'mateStdDev' to tophat().
-  Added a doTopHat2() package test for using these.
-o ROBUSTNESS: Now tophat() asserts that no duplicated options are
-  passed to the TopHat executable.
 
+NEW FEATURES:
 
+ o Added convertToSam() analogously to convertToBam().
+
+ o Added arguments 'mateInnerDist' and 'mateStdDev' to tophat().
+   Added a doTopHat2() package test for using these.
+
+SOFTWARE QUALITY:
+
+ o ROBUSTNESS: Now tophat() asserts that no duplicated options are
+   passed to the TopHat executable.
+ 
+ 
 Version: 0.4.27 [2014-03-02]
-o Added FastQCReporter.
-o Added FastQCDataFile and FastQCDataFileSet.
-o Added low-level support for calling FastQC.
 
+NEW FEATURES:
 
+ o Added FastQCReporter.
+
+ o Added FastQCDataFile and FastQCDataFileSet.
+
+ o Added low-level support for calling FastQC.
+ 
+ 
 Version: 0.4.26 [2014-02-27]
-o GENERALIZATION: Now findRspReportTemplate() scans for templates
-  also for super classes of the object.  This means that the template
-  for FastqDataFile also works for IlluminaFastqDataFile:s.
 
+NEW FEATURES:
 
+ o GENERALIZATION: Now findRspReportTemplate() scans for templates
+   also for super classes of the object.  This means that the template
+   for FastqDataFile also works for IlluminaFastqDataFile:s.
+ 
+ 
 Version: 0.4.25 [2014-02-25]
-o Now getSampleName() passes '...' to getFullName().
 
+NEW FEATURES:
 
+ o Now getSampleName() passes '...' to getFullName().
+ 
+ 
 Version: 0.4.24 [2014-02-25]
-o ROBUSTNESS: Now explicitly forcing package tests to run either
-  in sequential or in parallel mode.
-o BUG FIX: FastaReferenceFile$byOrganism(organism, prefix) would throw
-  "Error: Unknown arguments: prefix".  Added explicit package system
-  test for this.
 
+SOFTWARE QUALITY:
 
+ o ROBUSTNESS: Now explicitly forcing package tests to run either
+   in sequential or in parallel mode.
+
+BUG FIXES:
+
+ o FastaReferenceFile$byOrganism(organism, prefix) would throw "Error: Unknown
+   arguments: prefix".  Added explicit package system test for this.
+ 
+ 
 Version: 0.4.23 [2014-02-20]
-o Added writeFastaReferenceFile() for FastaReferenceSet for merging
-  multiple FASTA files into a new one.
-o Added getOrganism() to FastaReferenceSet.
-o GENERALIZATION: Better handling of gzipped FastaReferenceFile:s,
-  e.g. now byOrganism() also locates gzipped files.
 
+NEW FEATURES:
 
+ o Added writeFastaReferenceFile() for FastaReferenceSet for merging
+   multiple FASTA files into a new one.
+
+ o Added getOrganism() to FastaReferenceSet.
+
+PERFORMANCE:
+
+ o GENERALIZATION: Better handling of gzipped FastaReferenceFile:s,
+   e.g. now byOrganism() also locates gzipped files.
+ 
+ 
 Version: 0.4.22 [2014-02-03]
-o BUG FIX: byPath() for PairedEndFastqDataSet explicitly passed
-  arguments '...' to NextMethod(), which would cause them to be
-  duplicated in certain cases.
 
+BUG FIXES:
 
+ o byPath() for PairedEndFastqDataSet explicitly passed arguments '...' to
+   NextMethod(), which would cause them to be duplicated in certain cases.
+ 
+ 
 Version: 0.4.21 [2014-01-25]
-o Now GtfDataFile by default assumes that the GTF file has no
-  column headers.
-o Now byOrganism() for FastaReferenceFile and GtfDataFile pass '...'
-  to the constructor as well.
-o DOCUMENTATION: Added help for byOrganism() for FastaReferenceFile
-  and GtfDataFile.
 
+NEW FEATURES:
 
+ o Now GtfDataFile by default assumes that the GTF file has no column headers.
+
+ o Now byOrganism() for FastaReferenceFile and GtfDataFile pass '...' to the
+   constructor as well.
+
+DOCUMENTATION:
+
+ o Added help for byOrganism() for FastaReferenceFile and GtfDataFile.
+ 
+ 
 Version: 0.4.20 [2014-01-24]
-o Added doHTSeqCount() with a package system test.
-o Added extractDGEList() for HTSeqCountDataSet  with a package system test.
-o Added HTSeqCounting with a package system test.
-o Added HTSeqCountDataFile|Set classes.
-o BUG FIX: Now the BamDataFileSet returned by the TopHat2Alignment
-  properly identifies its name and organism.
-o BUG FIX: findHTSeq() failed to identify the version.
-o Package passes 'R CMD check' with all OK.
 
+NEW FEATURES:
 
+ o Added doHTSeqCount() with a package system test.
+
+ o Added extractDGEList() for HTSeqCountDataSet with a package system test.
+
+ o Added HTSeqCounting with a package system test.
+
+ o Added HTSeqCountDataFile|Set classes.
+
+SOFTWARE QUALITY:
+
+ o Package passes 'R CMD check' with all OK.
+
+BUG FIXES:
+
+ o Now the BamDataFileSet returned by the TopHat2Alignment properly identifies
+   its name and organism.
+
+ o findHTSeq() failed to identify the version.
+ 
+ 
 Version: 0.4.19 [2014-01-18]
-o Now TopHat2Alignment supports also gzipped GTF files by temporarily
-  uncompressing them before processing the samples.
-o Added GtfDataFile.
 
+NEW FEATURES:
 
+ o Now TopHat2Alignment supports also gzipped GTF files by temporarily
+   uncompressing them before processing the samples.
+
+ o Added GtfDataFile.
+
+ 
 Version: 0.4.18 [2014-01-18]
-o SPEEDUP: Now TopHat2Alignment adds a link to the FASTA file in the
-  directory if the Bowtie2 index set, which then will be used by TopHat
-  when processing all samples.  Previously it would create such a FASTA
-  file by reverse engineering.
-o Added getFastaReferenceFile() for AbstractIndexSet.
-o Added tag 'gtf' to the set of asterisk tags of TopHat2Alignment
-  if argument 'transcripts' is specified.
-o ROBUSTNESS: Added package system test of TopHat2Alignment with
-  a GTF transcripts file specified.
-o ROBUSTNESS: Now tophat() and TopHat2Alignment give an informative error
-  message if a *gzipped* GTF file is passed, which is not supported.
 
+NEW FEATURES:
 
+ o Added getFastaReferenceFile() for AbstractIndexSet.
+
+ o Added tag 'gtf' to the set of asterisk tags of TopHat2Alignment if argument
+   'transcripts' is specified.
+
+PERFORMANCE:
+
+ o SPEEDUP: Now TopHat2Alignment adds a link to the FASTA file in the
+   directory if the Bowtie2 index set, which then will be used by TopHat
+   when processing all samples.  Previously it would create such a FASTA
+   file by reverse engineering.
+
+SOFTWARE QUALITY:
+
+ o ROBUSTNESS: Now tophat() and TopHat2Alignment give an informative error
+   message if a *gzipped* GTF file is passed, which is not supported.
+
+ o ROBUSTNESS: Added package system test of TopHat2Alignment with
+   a GTF transcripts file specified.
+ 
+ 
 Version: 0.4.17 [2014-01-16]
-o CLEANUP: Now BamMerger and TopHat2Alignment implements the new
-  FileGroupsInterface.
-o ROBUSTNESS: Now getGroups() of BamMerger and TopHat2Alignment assert
-  that the file indices identified for each group/sample is unique.
-o ROBUSTNESS: Update test data set such that it possible to test
-  alignment of multiple FASTQ files per sample.
-o BUG FIX: getGroups() of TopHat2Alignment would not generate the
-  correct sets of indices.
 
+SOFTWARE QUALITY:
 
+ o ROBUSTNESS: Now getGroups() of BamMerger and TopHat2Alignment assert
+   that the file indices identified for each group/sample is unique.
+
+ o ROBUSTNESS: Update test data set such that it possible to test alignment
+   of multiple FASTQ files per sample.
+
+REFACTORIZATION:
+
+ o CLEANUP: Now BamMerger and TopHat2Alignment implements the new
+   FileGroupsInterface.
+
+BUG FIXES:
+
+ o getGroups() of TopHat2Alignment would not generate the correct sets of 
+   indices.
+ 
+ 
 Version: 0.4.16 [2014-01-15]
-o BUG FIX: Automatic enabling of parallel processing was disabled
-  by mistake in v0.4.13.
 
+BUG FIXES:
 
+ o Automatic enabling of parallel processing was disabled by mistake in v0.4.13.
+ 
+ 
 Version: 0.4.15 [2014-01-14]
-o ROBUSTNESS: Now low-level methods that take a vector of pathnames
-  as input tests assert that there are no duplicated pathnames, e.g.
-  bowtie2(), cuffdiff(), and tophat().
 
+SOFTWARE QUALITY:
 
+ o ROBUSTNESS: Now low-level methods that take a vector of pathnames as input
+   tests assert that there are no duplicated pathnames, e.g. bowtie2(), 
+   cuffdiff(), and tophat().
+ 
+ 
 Version: 0.4.14 [2014-01-13]
-o Bumped up package dependencies to reflect the real code requirements.
 
+SIGNIFICANT CHANGES:
 
+ o Bumped up package dependencies to reflect the real code requirements.
+ 
+ 
 Version: 0.4.13 [2014-01-09]
-o Added argument 'groupBy' to TopHat2Alignment, which can be used to
-  specify which FASTQ files should be processed together.
 
+NEW FEATURES:
 
+ o Added argument 'groupBy' to TopHat2Alignment, which can be used to
+   specify which FASTQ files should be processed together.
+ 
+ 
 Version: 0.4.12 [2014-01-07]
-o BUG FIX: Now readGeometry() for FastqDataFile returns missing values
-  for non-existing files.  Used to give an error.
-o Now getFilePairs() for FastqDataSet returns NA files (was R1) in
-  case mate file R2 could not be found.
 
+NEW FEATURES:
 
+ o Now getFilePairs() for FastqDataSet returns NA files (was R1) in case mate
+   file R2 could not be found.
+
+BUG FIXES:
+
+ o Now readGeometry() for FastqDataFile returns missing values for non-existing
+   files.  Used to give an error.
+ 
+ 
 Version: 0.4.11 [2014-01-04]
-o CONSISTENCY: Now dsApply() for GenericDataFileSet returns a named
-  vector with names corresponding to the names of the processed file
-  items.  Added an example to the help for dsApply() and a package
-  system test.
 
+NEW FEATURES:
 
+ o CONSISTENCY: Now dsApply() for GenericDataFileSet returns a named
+   vector with names corresponding to the names of the processed file
+   items.  Added an example to the help for dsApply() and a package
+   system test.
+ 
+ 
 Version: 0.4.10 [2013-12-21]
-o SPEEDUP: Now getFirstSequenceInfo() for IlluminaFastqDataFile only
-  parses one read (it used to read all of the FASTQ file).
 
+PERFORMANCE:
 
+ o SPEEDUP: Now getFirstSequenceInfo() for IlluminaFastqDataFile only
+   parses one read (it used to read all of the FASTQ file).
+ 
+ 
 Version: 0.4.9 [2013-11-29]
-o Reworked htseqCount() w/ modified signature, internal sam/bam sorting
-  by name.
 
+NEW FEATURES:
 
+ o Reworked htseqCount() w/ modified signature, internal sam/bam sorting
+   by name.
+ 
+ 
 Version: 0.4.8 [2013-11-24]
-o SPEEDUP: Parallelized TotalCnBinnedCounting.
-o BUG FIX: smoothRawCopyNumbers() for TotalCnBinnedCounting
-  assumed that the 'matrixStats' package was loaded.
 
+PERFORMANCE:
 
+ o SPEEDUP: Parallelized TotalCnBinnedCounting.
+
+BUG FIXES:
+
+ o smoothRawCopyNumbers() for TotalCnBinnedCounting assumed that the
+   'matrixStats' package was loaded.
+ 
+ 
 Version: 0.4.7 [2013-11-22]
-o Added BamMerger and a system test.
-o Now all AromaSeqTransform classes displays the output path
-  by default when printed.
-o Added argument 'IDXS' to dsApply() allowing to process not only
-  individuals files but also lists of individuals files.
 
+NEW FEATURES:
 
+ o Added BamMerger and a system test.
+
+ o Now all AromaSeqTransform classes displays the output path
+   by default when printed.
+
+ o Added argument 'IDXS' to dsApply() allowing to process not only
+   individuals files but also lists of individuals files.
+ 
+ 
 Version: 0.4.6 [2013-11-21]
-o Now process() for TopHat2Alignment generates an index file for
-  accepted_hits.bam.  This will also assert the assumption that
-  TopHat2 outputs sorted BAM files, because if not indexing will
-  fail and an error will be generated.
-o CLEANUP: bwaIndexPrefix() no longer adds a "methods" tags (i.e.
-  'bwtsw' or 'is'), because the generated index files are identical
-  regardless of method used.
 
+NEW FEATURES:
 
+ o Now process() for TopHat2Alignment generates an index file for
+   accepted_hits.bam.  This will also assert the assumption that
+   TopHat2 outputs sorted BAM files, because if not indexing will
+   fail and an error will be generated.
+
+ o CLEANUP: bwaIndexPrefix() no longer adds a "methods" tags (i.e.
+   'bwtsw' or 'is'), because the generated index files are identical
+   regardless of method used.
+ 
+ 
 Version: 0.4.5 [2013-11-20]
-o Now doQDNAseq() for BamDataFile and QDNAseqEstimation output RDS files.
 
+NEW FEATURES:
 
+ o Now doQDNAseq() for BamDataFile and QDNAseqEstimation output RDS files.
+ 
+ 
 Version: 0.4.4 [2013-11-19]
-o Now getSampleName() for IlluminaFastqDataFile gives a more informative
-  error message if the fullname does not match the expected pattern.
-o ROBUSTNESS: Now FastaReferenceFile$byOrganism() asserts that the
-  returned FASTA file specifies the requested organism.
 
+NEW FEATURES:
 
+ o Now getSampleName() for IlluminaFastqDataFile gives a more informative
+   error message if the fullname does not match the expected pattern.
+
+SOFTWARE QUALITY:
+
+ o ROBUSTNESS: Now FastaReferenceFile$byOrganism() asserts that the
+   returned FASTA file specifies the requested organism.
+ 
+ 
 Version: 0.4.3 [2013-11-18]
-o CLEANUP/REDUNDANCY: Now doQDNAseq() for BamDataFile passes only the
-  subset of arguments part of '...' that apply to each of the internal
-  QDNAseq steps.  This means that doQDNAseq() no longer have to
-  replicate the arguments of the QDNAseq package.
-o BUG FIX/REPRODUCIBILITY: doQDNAseq() for BamDataFile forgot to
-  apply the pre-filtering step that is part of QDNAseq.
 
+NEW FEATURES:
 
+ o CLEANUP/REDUNDANCY: Now doQDNAseq() for BamDataFile passes only the
+   subset of arguments part of '...' that apply to each of the internal
+   QDNAseq steps.  This means that doQDNAseq() no longer have to
+   replicate the arguments of the QDNAseq package.
+
+BUG FIXES:
+
+ o REPRODUCIBILITY: doQDNAseq() for BamDataFile forgot to apply the
+   pre-filtering step that is part of QDNAseq.
+ 
+ 
 Version: 0.4.2 [2013-11-17]
-o Added support for FastaReferenceFile$byOrganism(..., prefix),
-  making it possible to distinguish between multiple FASTA files
-  for the same organism.
-o CLEANUP: BwaAlignment no longer includes the BWA index 'method' as
-  a tag in the output directory, because all methods outputs the exact
-  same BWA index, e.g. now tag 'bwa' is added when it was 'bwa,bwtsw'.
-o ROBUSTNESS: If read group ID is missing, process() for BwaAlignment
-  sets it to be the same as the fullname of the filename.  Same for
-  the SM read group.  This as the advantage of aligned BAM files are
-  more likely to be mergable afterward.
-o ROBUSTNESS: The default method for building BWA indices is now 'bwtsw',
-  because contrary to the previous default ('is'), the new one supports
-  larger genomes as well (such as the human genome) and will always work.
-  It is useful to understand that regardless of choice, the generated
-  index sets are always identical across building methods.  There is
-  a package system test asserting this fact.
-o ROBUSTNESS: Now buildBwaIndexSet(..., method="is") checks for maximum
-  size of reference genome (2GB) and gives an informative error if the
-  FASTA file is greater.
-o BUG FIX: BwaIndexSet$byPrefix(prefix) would find any BWA index set
-  in directory dirname(prefix) without matching filenames of the set
-  to basename(prefix).
 
+NEW FEATURES:
 
+ o Added support for FastaReferenceFile$byOrganism(..., prefix),
+   making it possible to distinguish between multiple FASTA files
+   for the same organism.
+
+ o CLEANUP: BwaAlignment no longer includes the BWA index 'method' as
+   a tag in the output directory, because all methods outputs the exact
+   same BWA index, e.g. now tag 'bwa' is added when it was 'bwa,bwtsw'.
+
+SOFTWARE QUALITY:
+
+ o ROBUSTNESS: Now buildBwaIndexSet(..., method="is") checks for maximum
+   size of reference genome (2GB) and gives an informative error if the
+   FASTA file is greater.
+
+ o ROBUSTNESS: If read group ID is missing, process() for BwaAlignment
+   sets it to be the same as the fullname of the filename.  Same for
+   the SM read group.  This as the advantage of aligned BAM files are
+   more likely to be mergable afterward.
+
+ o ROBUSTNESS: The default method for building BWA indices is now 'bwtsw',
+   because contrary to the previous default ('is'), the new one supports
+   larger genomes as well (such as the human genome) and will always work.
+   It is useful to understand that regardless of choice, the generated
+   index sets are always identical across building methods.  There is
+   a package system test asserting this fact.
+
+BUG FIXES:
+
+ o BwaIndexSet$byPrefix(prefix) would find any BWA index set in directory
+   dirname(prefix) without matching filenames of the set to basename(prefix).
+ 
+ 
 Version: 0.4.1 [2013-11-16]
-o Added QDNAseqEstimation, which is utilized by doQDNAseq() methods.
-o Added validate() for both Sam- and BamDataFile:s, and corresponding
-  system tests based on BWA and Bowtie2 aligned SAM/BAM files.
-o Added low-level picardValidateSamFile().
 
+NEW FEATURES:
 
+ o Added QDNAseqEstimation, which is utilized by doQDNAseq() methods.
+
+ o Added low-level picardValidateSamFile().
+ 
+SOFTWARE QUALITY:
+
+ o Added validate() for both Sam- and BamDataFile:s, and corresponding
+   system tests based on BWA and Bowtie2 aligned SAM/BAM files.
+
+ 
 Version: 0.4.0 [2013-11-16]
-o CLEANUP: Added AromaSeqTransform class that now several method
-  classes extends.
-o Package passes 'R CMD check' (all OKs) and extended system tests.
 
+SOFTWARE QUALITY:
 
+ o Package passes 'R CMD check' (all OKs) and extended system tests.
+
+REFACTORIZATION:
+
+ o CLEANUP: Added AromaSeqTransform class that now several method
+   classes extends.
+ 
+ 
 Version: 0.3.7 [2013-11-15]
-o SPEEDUP: Now PicardDuplicateRemoval skips already processed
-  items much faster and if all are done, even quicker.
-o Now parallel processing via BiocParallel and BatchJobs is
-  automatically enabled if a .BatchJobs.R file exists in the
-  current working directory when 'aroma.seq' is attached.
 
+PERFORMANCE:
 
+ o SPEEDUP: Now PicardDuplicateRemoval skips already processed items much
+   faster and if all are done, even quicker.
+
+ o Now parallel processing via BiocParallel and BatchJobs is automatically
+   enabled if a .BatchJobs.R file exists in the current working directory
+   when 'aroma.seq' is attached.
+ 
+ 
 Version: 0.3.6 [2013-11-14]
-o Added sortByPosition() for BamDataFile/BamDataSet.
 
+NEW FEATURES:
 
+ o Added sortByPosition() for BamDataFile/BamDataSet.
+ 
+ 
 Version: 0.3.5 [2013-11-12]
-o SPEEDUP: Now report() for FastqDataSet defaults to HTML reports,
-  and supports parallel processing (with a package system test).
-o Added readSeqFile() for FastqDataFile with system tests.
-o For now FASTA files should be non-compressed in order to
-  work will all third-party tools.
 
+NEW FEATURES:
 
+ o Added readSeqFile() for FastqDataFile with system tests.
+
+ o For now FASTA files should be non-compressed in order to
+   work will all third-party tools.
+
+PERFORMANCE:
+
+ o SPEEDUP: Now report() for FastqDataSet defaults to HTML reports, and
+   supports parallel processing (with a package system test).
+ 
+ 
 Version: 0.3.4 [2013-11-11]
-o SPEEDUP: Now Bowtie2Alignment and BwaAlignment skip already processed
-  items much faster and if all are done, even quicker.
-o BUG FIX: BamDataSet$byPath() would include also SAM files.
 
+PERFORMANCE:
 
+ o SPEEDUP: Now Bowtie2Alignment and BwaAlignment skip already processed
+   items much faster and if all are done, even quicker.
+
+BUG FIXES:
+
+ o BamDataSet$byPath() would include also SAM files.
+ 
+ 
 Version: 0.3.3 [2013-11-10]
-o Started to add support for custom directory structures.
 
+NEW FEATURES:
 
+ o Started to add support for custom directory structures.
+ 
+ 
 Version: 0.3.2 [2013-11-09]
-o Added static byName() for FastqDataSet, BamDataSet and SamDataSet.
-o Added FastaReferenceFile$byOrganism().
-o Now all package system tests use byName() instead of byPath().
-o Now all input and output paths contains the organims name, e.g.
-  fastqData/<dataSet>/<organism>/.  Placeholder "Generic" is no
-  longer used for <organism>.
-o Added getOrganism() for BamDataSet, SamDataSet, and FastqDataSet.
 
+NEW FEATURES:
 
+ o Added static byName() for FastqDataSet, BamDataSet and SamDataSet.
+
+ o Added FastaReferenceFile$byOrganism().
+
+ o Now all input and output paths contains the organims name, e.g.
+   fastqData/<dataSet>/<organism>/.  Placeholder "Generic" is no
+   longer used for <organism>.
+
+ o Added getOrganism() for BamDataSet, SamDataSet, and FastqDataSet.
+
+REFACTORIZATION:
+
+ o Now all package system tests use byName() instead of byPath().
+ 
+ 
 Version: 0.3.1 [2013-11-08]
-o Added samtoolsSort() and samtoolsMpileup().
-o DOCUMENTATION: Added more help pages.
 
+NEW FEATURES:
 
+ o Added samtoolsSort() and samtoolsMpileup().
+
+DOCUMENTATION:
+
+ o Added more help pages.
+ 
+ 
 Version: 0.3.0 [2013-11-02]
-o Added doTopHat2() and corresponding system test.
-o Migrating to use the 'BiocParallel' package for interfacing
-  with BatchJobs and other parallel backends.
-o Now FastqDataFile|Set handles more paired filename formats.
-o SPEEDUP: Parallelized BinnedGcNormalization.
-o ROBUSTNESS: Added package system test for BinnedGcNormalization.
-o BUG FIX: normalizeGcContent() assumed that 'aroma.light' was attached.
 
+NEW FEATURES:
 
+ o Added doTopHat2() and corresponding system test.
+
+ o Now FastqDataFile|Set handles more paired filename formats.
+
+PERFORMANCE:
+
+ o SPEEDUP: Parallelized BinnedGcNormalization.
+
+SOFTWARE QUALITY:
+
+ o ROBUSTNESS: Added package system test for BinnedGcNormalization.
+
+REFACTORIZATION:
+
+ o Migrating to use the 'BiocParallel' package for interfacing with BatchJobs
+   and other parallel backends.
+
+BUG FIXES:
+
+ o normalizeGcContent() assumed that 'aroma.light' was attached.
+ 
+ 
 Version: 0.2.37 [2013-11-01]
-o SPEEDUP: Parallized TopHat2Alignment.  Added system test.
-o SPEEDUP: Now process() for TopHat2Alignment skips already
-  processed samples.
-o Now FastaReferenceSet$byPath() also finds gzip'ed FASTA files.
-o Now buildBowtie2IndexSet() for FastaReferenceFile supports
-  gzip'ed FASTA files.
 
+NEW FEATURES:
 
+ o Now FastaReferenceSet$byPath() also finds gzip'ed FASTA files.
+
+ o Now buildBowtie2IndexSet() for FastaReferenceFile supports gzip'ed
+   FASTA files.
+
+PERFORMANCE:
+
+ o SPEEDUP: Parallelized TopHat2Alignment.  Added system test.
+
+ o SPEEDUP: Now process() for TopHat2Alignment skips already processed samples.
+ 
+ 
 Version: 0.2.36 [2013-10-31]
-o Added input BAM file support to HTSeq.
-o Added check for 'python' to capabilitiesOf(aroma.seq).
-o Updated capitalization everywhere to reflect the updated
-  name of the 'QDNAseq' package (was 'qdnaseq').
 
+NEW FEATURES:
 
+ o Added input BAM file support to HTSeq.
+
+SOFTWARE QUALITY:
+
+ o Added check for 'python' to capabilitiesOf(aroma.seq).
+
+REFACTORIZATION:
+
+ o Updated capitalization everywhere to reflect the updated name of the
+   'QDNAseq' package (was 'qdnaseq').
+ 
+ 
 Version: 0.2.35 [2013-10-30]
-o ROBUSTNESS: Added package system test for TopHat2Alignment.
-o ROBUSTNESS: Now process() for TopHat2Alignment checks for known
-  incompatible versions of bowtie2 and tophat2.
 
+SOFTWARE QUALITY:
 
+ o ROBUSTNESS: Now process() for TopHat2Alignment checks for known incompatible
+   versions of bowtie2 and tophat2.
+ 
+ o ROBUSTNESS: Added package system test for TopHat2Alignment.
+
+ 
 Version: 0.2.34 [2013-10-19]
-o Added tophat1() and tophat2() which are wrappers for tophat().
 
+NEW FEATURES:
 
+ o Added tophat1() and tophat2() which are wrappers for tophat().
+ 
+ 
 Version: 0.2.33 [2013-10-18]
-o ...
 
-
+ o ...
+ 
+ 
 Version: 0.2.32 [2013-10-17]
-o Package now requires R (>= 3.0.2) [and Bioc (>= 2.13.0)].
-o Updated package dependences.
 
+SIGNIFICANT CHANGES:
 
+ o Package now requires R (>= 3.0.2) [and Bioc (>= 2.13.0)].
+
+ o Updated package dependences.
+ 
+ 
 Version: 0.2.31 [2013-09-28]
-o ROBUSTNESS: Now dsApply() generates more unique BatchJobs
-  registry names in order to avoid potential name clashes.
-o Now the 'aroma.seq' Package object is also available when the
-  package is only loaded (but not attached).
-o BUG FIX: Forgot argument 'verbose' of process() of FastqDownsampler.
-o Updated package dependences.
 
+NEW FEATURES:
 
+ o Now the 'aroma.seq' Package object is also available when the package is
+   only loaded (but not attached).
+
+ o ROBUSTNESS: Now dsApply() generates more unique BatchJobs registry names
+   in order to avoid potential name clashes.
+
+ o Updated package dependences.
+
+BUG FIXES:
+
+ o Forgot argument 'verbose' of process() of FastqDownsampler.
+ 
+ 
 Version: 0.2.30 [2013-09-13]
-o Added basic support for parallel processing of FastqDownsampler().
-o DOCUMENTATION: Added Rd help for FastqDownsampler.
-o DOCUMENTATION: Removed low-level functions from the help index.
-o Added system test for FastqDownsampler.
 
+PERFORMANCE:
 
+ o Added basic support for parallel processing of FastqDownsampler().
+
+SOFTWARE QUALITY:
+
+ o Added system test for FastqDownsampler.
+
+DOCUMENTATION:
+
+ o Added Rd help for FastqDownsampler.
+
+ o Removed low-level functions from the help index.
+
+ 
+ 
 Version: 0.2.29 [2013-09-03]
-o Added basic support for parallel processing of doQDNASeq() and
-  PicardDuplicateRemoval.
 
+PERFORMANCE:
 
+ o Added basic support for parallel processing of doQDNASeq() and
+   PicardDuplicateRemoval.
+ 
+ 
 Version: 0.2.28 [2013-08-31]
-o Basic support for parallel processing via BwaAlignment works.
-o Added system test for doQDNASeq().
-o CLEANUP: Restructuring code for parallel/distributed processing.
-o BUG FIX: doQDNASeq() for BamDataSet would give an error when it
-  tried to collect and return the result file set.
-o BUG FIX: doQDNASeq() for BamDataSet would give an error if data set
-  was already processed and verbose output was enabled.
 
+PERFORMANCE:
 
+ o Basic support for parallel processing via BwaAlignment works.
+
+SOFTWARE QUALITY:
+
+ o Added system test for doQDNASeq().
+
+REFACTORIZATION:
+
+ o CLEANUP: Restructuring code for parallel/distributed processing.
+
+BUG FIXES:
+
+ o doQDNASeq() for BamDataSet would give an error when it tried to collect and
+   return the result file set.
+
+ o doQDNASeq() for BamDataSet would give an error if data set was already
+   processed and verbose output was enabled.
+ 
+ 
 Version: 0.2.26 [2013-08-26]
-o Basic support for parallel processing via Bowtie2Alignment works.
-o Starting to put in the core framework for distributed processing.
-o BUG FIX: The internal workaround of process() for Bowtie2Alignment
-  that handled commas in FASTQ filenames deleted the temporary files
-  too soon resulting in garbage alignments.
 
+PERFORMANCE:
 
+ o Basic support for parallel processing via Bowtie2Alignment works.
+
+ o Starting to put in the core framework for distributed processing.
+
+BUG FIXES:
+
+ o The internal workaround of process() for Bowtie2Alignment that handled
+   commas in FASTQ filenames deleted the temporary files too soon resulting in
+   garbage alignments.
+ 
+ 
 Version: 0.2.25 [2013-08-26]
-o Now TopHatAlignment supports the new style of "paired" FastqDataSet:s.
 
+NEW FEATURES:
 
+ o Now TopHatAlignment supports the new style of "paired" FastqDataSet:s.
+ 
+ 
 Version: 0.2.24 [2013-08-24]
-o Now Bowtie2Alignment() will do paired-end alignment if the
-  FastqDataSet specifies paired-end reads.
-o Made AbstractAlignment aware of paired-end FastqDataSet:s.
-o Added byPath() for FastqDataSet that acknowledge 'paired' argument.
-o Added argument 'paired' to constructor of FastqDataSet and methods
-  isPaired() and getFilePairs().
-o Added getMateFile() for FastqDataFile.
 
+NEW FEATURES:
 
+ o Now Bowtie2Alignment() will do paired-end alignment if the FastqDataSet
+   specifies paired-end reads.
+
+ o Made AbstractAlignment aware of paired-end FastqDataSet:s.
+
+ o Added byPath() for FastqDataSet that acknowledge 'paired' argument.
+
+ o Added argument 'paired' to constructor of FastqDataSet and methods
+   isPaired() and getFilePairs().
+
+ o Added getMateFile() for FastqDataFile.
+ 
+ 
 Version: 0.2.23 [2013-08-22]
-o BUG FIX: Read Group options ('--rg' and '--rg-id') passed to 'bowtie2'
-  by the Bowtie2Aligment class did not have the preceeding '--'.
 
+BUG FIXES:
 
+ o Read Group options ('--rg' and '--rg-id') passed to 'bowtie2' by the
+   Bowtie2Aligment class did not have the preceeding '--'.
+ 
+ 
 Version: 0.2.22 [2013-08-22]
-o CLEANUP: Now doQDNASeq() utilizes doBWA().
-o Added doBWA() and doBowtie2().
 
+NEW FEATURES:
 
+ o Added doBWA() and doBowtie2().
+
+REFACTORIZATION:
+
+ o CLEANUP: Now doQDNASeq() utilizes doBWA().
+ 
+ 
 Version: 0.2.21 [2013-08-21]
-o BUG FIX: Package gave errors with 'R CMD check' on R devel.
 
+BUG FIXES:
 
+ o Package gave errors with 'R CMD check' on R devel.
+ 
+ 
 Version: 0.2.20 [2013-08-15]
-o Added TopHatAlignment, FastaReferenceSet, and prototype RNA-seq
-  workflow script.
 
+NEW FEATURES:
 
+ o Added TopHatAlignment, FastaReferenceSet, and prototype RNA-seq
+   workflow script.
+ 
+ 
 Version: 0.2.19 [2013-08-06]
-o Bumped up package dependencies to match what is on available on CRAN.
 
+SIGNIFICANT CHANGES:
 
+ o Bumped up package dependencies to match what is on available on CRAN.
+ 
+ 
 Version: 0.2.18 [2013-07-29]
-o Now doQDNASeq() for BamDataSet saves processed data to qdnaseqData/.
 
+NEW FEATURES:
 
+ o Now doQDNASeq() for BamDataSet saves processed data to qdnaseqData/.
+ 
+ 
 Version: 0.2.17 [2013-07-19]
-o SPEEDUP: Now the results of capabilitiesOf() are cached.
 
+PERFORMANCE:
 
+ o SPEEDUP: Now the results of capabilitiesOf() are cached.
+ 
+ 
 Version: 0.2.16 [2013-07-18]
-o Now all NnnAlignment methods outputs to root directory 'bamData/'.
-o BUG FIX: Now Bowtie2Alignment handles if there are commas in the
-  pathname of the FASTQ file by using a tempory file link without
-  commas.  This is needed because the bowtie2 executable does not
-  support commas.
-o ROBUSTNESS: Added several system tests.
-o Added annotationData/ and fastqData/ under package's exData/.
-o BUG FIX: queryBowtie2("support:fastq.gz") did not always
-  return a logical.
 
+NEW FEATURES:
 
+ o Now all NnnAlignment methods outputs to root directory 'bamData/'.
+
+ o Added annotationData/ and fastqData/ under package's exData/.
+
+SOFTWARE QUALITY:
+
+ o ROBUSTNESS: Added several system tests.
+
+BUG FIXES:
+
+ o Now Bowtie2Alignment handles if there are commas in the pathname of the
+   FASTQ file by using a tempory file link without commas.  This is needed
+   because the bowtie2 executable does not support commas.
+
+ o queryBowtie2("support:fastq.gz") did not always return a logical.
+ 
+ 
 Version: 0.2.15 [2013-07-11]
-o Added doQDNASeq() for FastqDataSet and BamDataSet.
-o Package now requires R v3.0.0 or newer.
-o Bumped up package dependencies.
 
+SIGNIFICANT CHANGES:
 
+ o Package now requires R v3.0.0 or newer.
+
+NEW FEATURES:
+
+ o Added doQDNASeq() for FastqDataSet and BamDataSet.
+
+ 
 Version: 0.2.14 [2013-07-11]
-o BUG FIX: Error in UseMethod("getPathname") : no applicable method
-  for 'getPathname' applied to an object of class.
 
+BUG FIXES:
 
+ o Error in UseMethod("getPathname") : no applicable method for 'getPathname'
+   applied to an object of class.
+ 
+ 
 Version: 0.2.13 [2013-07-03]
-o Added a first draft for FastqDownsampler.
-o Added writeSample() for FastqDataFile.
-o More help documentation.
-o Bumped up package dependencies.
 
+NEW FEATURES:
 
+ o Added a first draft for FastqDownsampler.
+
+ o Added writeSample() for FastqDataFile.
+
+DOCUMENTATION:
+
+ o More help documentation.
+
+ 
 Version: 0.2.12 [2013-06-27]
-o GENERALIZATION: Now FastqDataFile can also hold a gzipped file.
-  If so, then certain properties of the file is not parsed, e.g.
-  number of sequences.  However, the file can still be passed on
-  to for instance aligners that support gzipped files out of the
-  box, e.g. BwaAlignment.
-o Now process() for Bowtie2Aligment temporarily decompresses
-  gzipped FASTQ files in case the installed bowtie2 does not
-  support gzip files.
-o BUG FIX: buildBowtie2IndexSet() for FastaReferenceFile became broken
-  after updates in systemBowtie2Build().
 
+NEW FEATURES:
 
+ o GENERALIZATION: Now FastqDataFile can also hold a gzipped file.  If so, 
+   then certain properties of the file is not parsed, e.g. number of sequences.
+   However, the file can still be passed on to for instance aligners that
+   support gzipped files out of the box, e.g. BwaAlignment.
+
+ o Now process() for Bowtie2Aligment temporarily decompresses gzipped FASTQ
+   files in case the installed bowtie2 does not support gzip files.
+
+BUG FIXES:
+
+ o buildBowtie2IndexSet() for FastaReferenceFile became broken after updates
+   in systemBowtie2Build().
+ 
+ 
 Version: 0.2.11 [2013-06-20]
-o Added findHTSeq() and systemHTSeq().
-o Now readGeometry() and getGeometry() for FastqDataFile returns
-  c(NA,NA) for gzipped files. This is better than an error.
-o Bumped up package dependencies.
 
+NEW FEATURES:
 
+ o Added findHTSeq() and systemHTSeq().
+
+ o Now readGeometry() and getGeometry() for FastqDataFile returns
+   c(NA,NA) for gzipped files. This is better than an error.
+
+ 
 Version: 0.2.10 [2013-04-04]
-o SPEEDUP: Now the internal "find" function that locates external
-  executables caches their results.
-o Bumped up package dependencies.
 
+PERFORMANCE:
 
+ o SPEEDUP: Now the internal "find" function that locates external
+   executables caches their results.
+
+ 
 Version: 0.2.9 [2013-03-15]
-o ...
 
-
+ o ...
+ 
+ 
 Version: 0.2.8 [2013-03-14]
-o Standardize args in bowtie/tophat/cuff*: Move 'command' to end, use 'optionsVec'
 
+NEW FEATURES:
 
+ o Standardize args in bowtie/tophat/cuff*: Move 'command' to end, 
+   use 'optionsVec'.
+ 
+ 
 Version: 0.2.7 [2013-03-08]
-o Rewrote several bowtie methods to align with tophat.R as a template
 
+NEW FEATURES:
 
+ o Rewrote several bowtie methods to align with tophat.R as a template
+ 
+ 
 Version: 0.2.6 [2013-02-22]
-o Added findTopHat() et al.
 
+NEW FEATURES:
 
+ o Added findTopHat() et al.
+ 
+ 
 Version: 0.2.5 [2013-02-15]
-o Added systemTophat(), and tophat().
 
+NEW FEATURES:
 
+ o Added systemTophat(), and tophat().
+ 
+ 
 Version: 0.2.4 [2013-02-08]
-o Added systemTophat() and systemTophatBuild() and tophat().
 
+NEW FEATURES:
 
+ o Added systemTophat() and systemTophatBuild() and tophat().
+ 
+ 
 Version: 0.2.3 [2012-12-06]
-o Added report() for FastqDataFile and FastqDataSet.
-o Added findRspReportTemplate().
 
+NEW FEATURES:
 
+ o Added report() for FastqDataFile and FastqDataSet.
+
+ o Added findRspReportTemplate().
+ 
+ 
 Version: 0.2.2 [2012-12-03]
-o Bumped up package dependencies.
 
-
+ o ...
+ 
+ 
 Version: 0.2.1 [2012-11-26]
-o SPEEDUP: process(..., dropEmpty=TRUE) for GatkAlleleCounting
-  is now much faster.
-o ROBUSTNESS: Now convertToBamDataSet() for SamDataSet asserts
-  that the output set is complete.
-o BUG FIX: process() for BwaAlignment and Bowtie2Alignment was
-  only align the first sample regardless on input data set.
-  This bug was introduced in aroma.seq v0.1.27.
-o BUG FIX: getOutputDataSet() for AbstractAlignment and
-  PicardDuplicateRemoval could return data sets with "missing"
-  files, if the method was not completed.  Now they only
-  returns the existing output files.
 
+PERFORMANCE:
 
+ o process(..., dropEmpty=TRUE) for GatkAlleleCounting is now much faster.
+
+SOFTWARE QUALITY:
+
+ o ROBUSTNESS: Now convertToBamDataSet() for SamDataSet asserts that the
+   output set is complete.
+
+BUG FIXES:
+
+ o process() for BwaAlignment and Bowtie2Alignment was only align the first
+   sample regardless on input data set.  This bug was introduced in
+   aroma.seq v0.1.27.
+
+ o getOutputDataSet() for AbstractAlignment and PicardDuplicateRemoval could
+   return data sets with "missing" files, if the method was not completed.
+   Now they only returns the existing output files.
+ 
+ 
 Version: 0.2.0 [2012-11-21]
-o Updated verbose output of parameters.
 
+NEW FEATURES:
 
+ o Updated verbose output of parameters.
+ 
+ 
 Version: 0.1.29 [2012-11-21]
-o Now applicable classes utilize the new ParametersInterface.
-o DOCUMENTATION: Hiding more internal methods from the help indices.
 
+REFACTORIZATION:
 
+ o Now applicable classes utilize the new ParametersInterface.
+
+DOCUMENTATION:
+
+ o Hiding more internal methods from the help indices.
+ 
+ 
 Version: 0.1.27 [2012-11-12]
-o CLEANUP: Now seq_along(x) instead of seq(along=x) everywhere.
-  Similarly, seq(ds) where 'ds' is GenericDataFileSet is now
-  replaced by seq_along(ds).  Likewise, seq_len(x) replaces
-  seq(length=x), and length(ds) replaces nbrOfFiles(ds).
 
+REFACTORIZATION:
 
+ o CLEANUP: Now seq_along(x) instead of seq(along=x) everywhere. Similarly, 
+   seq(ds) where 'ds' is GenericDataFileSet is now replaced by seq_along(ds).
+   Likewise, seq_len(x) replaces seq(length=x), and length(ds) replaces 
+   nbrOfFiles(ds).
+ 
+ 
 Version: 0.1.26 [2012-11-09]
-o Added argument 'dropEmpty' to GatkAlleleCounting, which will drop
-  all SNPs with zero coverage from the output files making the
-  smaller and faster to read, particularly for low coverage samples.
 
+NEW FEATURES:
 
+ o Added argument 'dropEmpty' to GatkAlleleCounting, which will drop all SNPs
+   with zero coverage from the output files making the smaller and faster to 
+   read, particularly for low coverage samples.
+ 
+ 
 Version: 0.1.25 [2012-11-08]
-o Implemented getOutputDataSet() for GatkAlleleCounting, which
-  returns a TabularTextFileSet.
 
+NEW FEATURES:
 
+ o Implemented getOutputDataSet() for GatkAlleleCounting, which
+   returns a TabularTextFileSet.
+ 
+ 
 Version: 0.1.24 [2012-11-08]
-o Renamed getColumnNames() to getDefaultColumnNames() for all
-  classes inheriting from GenericTabularFile, because of the
-  new ColumnNamesInterface interface.
 
+SIGNIFICANT CHANGES:
 
+ o Renamed getColumnNames() to getDefaultColumnNames() for all classes
+   inheriting from GenericTabularFile, because of new ColumnNamesInterface.
+ 
+ 
 Version: 0.1.23 [2012-11-02]
-o Now process() for GatkAlleleCounting outputs cleaner files.
 
+NEW FEATURES:
 
+ o Now process() for GatkAlleleCounting outputs cleaner files.
+ 
+ 
 Version: 0.1.22 [2012-10-31]
-o Added GatkAlleleCounting.
-o Added anyDuplicated() and writeBedDataFile() for AromaUgpFile.
-o Added buildIndex() for FastaReferenceFile for building FAI index files.
-o Added buildScripts/.  First script is creating an Aroma UGP file
-  containing the positions of Chr1-25 SNPs of a SNP135 BED file.
 
+NEW FEATURES:
 
+ o Added GatkAlleleCounting.
+
+ o Added anyDuplicated() and writeBedDataFile() for AromaUgpFile.
+
+ o Added buildIndex() for FastaReferenceFile for building FAI index files.
+
+ o Added buildScripts/.  First script is creating an Aroma UGP file
+   containing the positions of Chr1-25 SNPs of a SNP135 BED file.
+ 
+ 
 Version: 0.1.21 [2012-10-30]
-o Added validate() for BamDataFile.
 
+SOFTWARE QUALITY:
 
+ o Added validate() for BamDataFile.
+ 
+ 
 Version: 0.1.20 [2012-10-29]
-o CLEANUP: Now using Arguments$get(Read|Writ)ablePath() instead of
-  filePath(..., expandLinks="any").
 
+REFACTORIZATION:
 
+ o CLEANUP: Now using Arguments$get(Read|Writ)ablePath() instead of
+   filePath(..., expandLinks="any").
+ 
+ 
 Version: 0.1.19 [2012-10-21]
-o ROBUSTNESS: Now using Arguments$getWritablePath() everywhere instead
-  of mkdirs(), because the former will do a better job in creating
-  and asserting directories on slow shared file systems, and when it
-  fails it gives a more informative error message.
-o FIX: Now BwaAligment will use a default SAM read group ID of 1
-  (cf. Picard AddOrReplaceReadGroups) if missing.  Previously it
-  gave an error instead.
 
+SOFTWARE QUALITY:
 
+ o ROBUSTNESS: Now using Arguments$getWritablePath() everywhere instead
+   of mkdirs(), because the former will do a better job in creating
+   and asserting directories on slow shared file systems, and when it
+   fails it gives a more informative error message.
+
+BUG FIXES:
+
+ o FIX: Now BwaAligment will use a default SAM read group ID of 1 (cf. Picard
+   AddOrReplaceReadGroups) if missing.  Previously it gave an error instead.
+ 
+ 
 Version: 0.1.18 [2012-10-18]
-o Added trial version of BinnedGcNormalization.
 
+NEW FEATURES:
 
+ o Added trial version of BinnedGcNormalization.
+ 
+ 
 Version: 0.1.17 [2012-10-17]
-o ROBUSTNESS: Now binTabulate(seq, ...) also handles the case where
-  sequence 'seq' is offsetted, i.e. starts at a different position
-  than the first one.
 
+SOFTWARE QUALITY:
 
+ o ROBUSTNESS: Now binTabulate(seq, ...) also handles the case where sequence
+   'seq' is offsetted, i.e. starts at a different position than the first one.
+ 
+ 
 Version: 0.1.16 [2012-10-16]
-o Added AromaUnitNucleotideCountsFile and methods for importing
-  binned nucleotide counts from a BSgenome object.
-o Added binTabulate() for MaskedDNAString.
-o ROBUSTNESS/BUG FIX: No longer passing '...' to NextMethod(), cf.
-  R-devel thread 'Do *not* pass '...' to NextMethod() - it'll do it
-  for you; missing documentation, a bug or just me?' on Oct 16, 2012.
 
+NEW FEATURES:
 
+ o Added AromaUnitNucleotideCountsFile and methods for importing binned
+   nucleotide counts from a BSgenome object.
+
+ o Added binTabulate() for MaskedDNAString.
+
+BUG FIXES:
+
+ o ROBUSTNESS: No longer passing '...' to NextMethod(), cf. R-devel thread
+   'Do *not* pass '...' to NextMethod() - it'll do it for you; missing
+   documentation, a bug or just me?' on Oct 16, 2012.
+ 
+ 
 Version: 0.1.15 [2012-10-11]
-o Added TotalCnBinnedCounting().
 
+NEW FEATURES:
 
+ o Added TotalCnBinnedCounting().
+ 
+ 
 Version: 0.1.14 [2012-10-10]
-o Added argument 'which' to readDataFrame() for BamDataFile.
 
+NEW FEATURES:
 
+ o Added argument 'which' to readDataFrame() for BamDataFile.
+ 
+ 
 Version: 0.1.13 [2012-10-02]
-o Added getIndexStats(), nbrOfReads(), ... for BamDataFile:s.
-o Added readDataFrame() for BamDataFile.
-o Added PicardDuplicateRemoval.
-o BUG FIX: systemSamtools(), systemJava() and systemBWA() did
-  not handle cases with only non-named arguments.
 
+NEW FEATURES:
 
+ o Added getIndexStats(), nbrOfReads(), ... for BamDataFile:s.
+
+ o Added readDataFrame() for BamDataFile.
+
+ o Added PicardDuplicateRemoval.
+
+BUG FIXES:
+
+ o systemSamtools(), systemJava() and systemBWA() did not handle cases with
+   only non-named arguments.
+ 
+ 
 Version: 0.1.12 [2012-10-01]
-o Added IlluminaFastqData(File|Set), which is aware of Illumina
-  specific filenames and sequence information.
-o Now BwaAlignment and Bowtie2Alignment inherits AbstactAlignment
-  and both write SAM read groups, if available/provided.
-o Package now utilizes the ShortRead package.
 
+NEW FEATURES:
 
+ o Added IlluminaFastqData(File|Set), which is aware of Illumina specific
+   filenames and sequence information.
+
+ o Now BwaAlignment and Bowtie2Alignment inherits AbstactAlignment and both
+   write SAM read groups, if available/provided.
+
+REFACTORIZATION:
+
+ o Package now utilizes the ShortRead package.
+ 
+ 
 Version: 0.1.11 [2012-09-28]
-o Added getReadGroups() and replaceAllReadGroups() for BamDataFile.
-o Added SamReadGroup() class.
-o Added buildIndex() for BamDataFile.
-o Added low-level support for GATK.
 
+NEW FEATURES:
 
+ o Added getReadGroups() and replaceAllReadGroups() for BamDataFile.
+
+ o Added SamReadGroup() class.
+
+ o Added buildIndex() for BamDataFile.
+
+ o Added low-level support for GATK.
+ 
+ 
 Version: 0.1.10 [2012-09-27]
-o Added low-level support for Picard.
 
+NEW FEATURES:
 
+ o Added low-level support for Picard.
+ 
+ 
 Version: 0.1.9 [2012-09-27]
-o Added Bowtie2Alignment.
 
+NEW FEATURES:
 
+ o Added Bowtie2Alignment.
+ 
+ 
 Version: 0.1.8 [2012-09-27]
-o Added setupTests(aroma.seq) for easy setup of a redundancyTests/ directory.
 
+NEW FEATURES:
 
+ o Added setupTests(aroma.seq) for easy setup of a redundancyTests/ directory.
+ 
+ 
 Version: 0.1.7 [2012-09-25]
-o Added capabilitiesOf(aroma.seq).
-o Now a SamDataSet can be converted to a BamDataSet.
-o Added BwaAlignment.
-o Added BamDataFile and BamDataSet classes.
-o Added BamData(File|Set) classes, cf. SamData(File|Set).
-o Added BwaIndex(File|Set) classes for holding BWA index sets.
 
+NEW FEATURES:
 
+ o Added capabilitiesOf(aroma.seq).
+
+ o Now a SamDataSet can be converted to a BamDataSet.
+
+ o Added BwaAlignment.
+
+ o Added BamDataFile and BamDataSet classes.
+
+ o Added BamData(File|Set) classes, cf. SamData(File|Set).
+
+ o Added BwaIndex(File|Set) classes for holding BWA index sets.
+ 
+ 
 Version: 0.1.6 [2012-09-24]
-o Added buildBwaIndexSet() for FastaReferenceFile.
-o Added low-level support for BWA index, aln and samse.
 
+NEW FEATURES:
 
+ o Added buildBwaIndexSet() for FastaReferenceFile.
+
+ o Added low-level support for BWA index, aln and samse.
+ 
+ 
 Version: 0.1.5 [2012-08-31]
-o TESTING: Added some test scripts for running bowtie2 at
-  the shell and at the system level.
 
+SOFTWARE QUALITY:
 
+ o TESTING: Added some test scripts for running bowtie2 at the shell and at
+   the system level.
+ 
+ 
 Version: 0.1.4 [2012-08-22]
-o ...
 
-
+ o ...
+ 
+ 
 Version: 0.1.3 [2012-08-21]
-o Add systemBowtie2Build and testSystemBowtie2Build.
 
+NEW FEATURES:
 
+ o Add systemBowtie2Build and testSystemBowtie2Build.
+ 
+ 
 Version: 0.1.2 [2012-08-20]
-o TYPO: Renamed Bowtie2Aligment to Bowtie2Alignment.
 
-
+ o TYPO: Renamed Bowtie2Aligment to Bowtie2Alignment.
+ 
+ 
 Version: 0.1.1 [2012-07-11]
-o Added a bowtie2() function stub.
 
+NEW FEATURES:
 
+ o Added a bowtie2() function stub.
+ 
+ 
 Version: 0.1.0 [2012-06-28]
-o Added BowtieAlignment.
-o Added BamDataFile and BamDataSet.
-o Added FastqDataFile and FastqDataSet.
-o Added FastaReferenceFile.
 
+NEW FEATURES:
 
+ o Added BowtieAlignment.
+
+ o Added BamDataFile and BamDataSet.
+
+ o Added FastqDataFile and FastqDataSet.
+
+ o Added FastaReferenceFile.
+ 
+ 
 Version: 0.0.1 [2012-06-28]
-o Created. Just a stub.
+
+ o Created. Just a stub.
