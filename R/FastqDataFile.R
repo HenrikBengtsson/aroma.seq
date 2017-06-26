@@ -318,7 +318,7 @@ setMethodS3("splitUp", "FastqDataFile", function(this, size, path=getPath(this),
     bfr <- readLines(con, n=nlinesPerFile, warn=FALSE, ok=TRUE)
     nbfr <- length(bfr)
     if (nbfr %% 4 != 0) {
-      throw("Read %d lines (after having read %d lines previously), which is not a multiple of four: %s", nbfr, nlines, pathnameFQ)
+      throw(sprintf("Read %d lines (after having read %d lines previously), which is not a multiple of four: %s", nbfr, nlines, pathnameFQ))
     }
 
     ## Write chunk
