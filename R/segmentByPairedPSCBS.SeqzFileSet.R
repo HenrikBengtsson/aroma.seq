@@ -9,7 +9,7 @@ setMethodS3("readTotalCNsAndBAFs", "SeqzFile", function(this, ploidy=2, ..., ver
     position        = readr::col_integer(),
     depth.normal    = readr::col_integer(),
     depth.tumor     = readr::col_integer(),
-    Af              = readr::col_double(),
+    Af              = readr::col_double(),  ## FIXME: Why not just void this one? /HB 2017-06-26
     Bf              = readr::col_double(),
     zygosity.normal = readr::col_character()
   )
