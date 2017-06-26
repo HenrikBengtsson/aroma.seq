@@ -126,7 +126,7 @@ setMethodS3("mpileup", "BamDataSet", function(bams, fa, Q=20, chromosomes=getSeq
     
     verbose && exit(verbose)
   } # for (ii ...)
-
+  todo <- NULL
   verbose && print(verbose, work)
   verbose && exit(verbose)
 
@@ -135,13 +135,19 @@ setMethodS3("mpileup", "BamDataSet", function(bams, fa, Q=20, chromosomes=getSeq
   verbose && enter(verbose, "Collect and resolve all futures")
   work <- resolve(work, value=TRUE, progress=TRUE)
   verbose && print(verbose, work)
+  stopifnot(length(work) == length(bams))
   verbose && exit(verbose)
 
   ## Step 4: Gather and rearrange
   verbose && enter(verbose, "Gather and rearrange")
-  work <- unlist(work, use.names=FALSE)
-  stopifnot(length(work) == length(todo))
-  res[todo] <- work
+  for (ii in seq_along(work)) {
+    resII <- res[,ii]
+    todo <- which(unlist(lapply(resII, FUN=is.null)))
+    if (length(todo) == 0) next
+    workII <- work[[ii]]
+    stopifnot(length(workII) == length(todo))
+    res[todo, ii] <- workII
+  }
   work <- todo <- NULL ## Not needed anymore
 
   ## Transpose

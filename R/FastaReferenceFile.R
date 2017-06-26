@@ -479,7 +479,7 @@ setMethodS3("buildDictionary", "FastaReferenceFile", function(this, ..., skip=TR
 #      \url{http://seqanswers.com/forums/showthread.php?t=5921}\cr
 #  [2] Edwards Bioinformatics Lab,
 #      \emph{How to create a database for BWA and BWA-SW}, 2013.
-#      \url{http://edwards.sdsu.edu/research/index.php/robert/282-how-to-create-a-database-for-bwa-and-bwa-sw} \cr
+#      \url{https://edwards.sdsu.edu/research/how-to-create-a-database-for-bwa-and-bwa-sw/} \cr
 #  [3] Henrik Bengtsson, \emph{bwa index -a is: Details on database 2GB limit?},
 #      bwa-help thread on 2013-11-18.
 #      \url{https://sourceforge.net/mailarchive/message.php?msg_id=31649355}\cr

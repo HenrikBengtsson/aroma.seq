@@ -1,17 +1,17 @@
 Package: aroma.seq
-Version: 0.9.0
+Version: 0.9.1
 Depends:
     R (>= 3.3.1),
     R.utils (>= 2.5.0),
     R.filesets (>= 2.11.0),
     aroma.core (>= 3.1.0),
-    future (>= 1.4.0)
+    future (>= 1.5.0)
 Imports:
     methods,
     R.methodsS3 (>= 1.7.1),
     R.oo (>= 1.21.0),
     R.cache (>= 0.12.0),
-    matrixStats (>= 0.51.0),
+    matrixStats (>= 0.52.2),
     gtools (>= 3.5.0),
     Biostrings,
     GenomeInfoDb,
@@ -26,9 +26,9 @@ Suggests:
     markdown (>= 0.7.7),
     mgcv,
     PSCBS (>= 0.62.0),
-    R.devices (>= 2.15.0),
-    R.rsp (>= 0.40.0),
-    readr (>= 1.0.0),
+    R.devices (>= 2.15.1),
+    R.rsp (>= 0.41.0),
+    readr (>= 1.1.1),
     Biobase (>= 2.32.0),
     aroma.light (>= 3.2.0),
     edgeR (>= 3.14.0),
