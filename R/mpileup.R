@@ -92,6 +92,7 @@ setMethodS3("mpileup", "BamDataSet", function(bams, fa, Q=20, chromosomes=getSeq
   verbose && enter(verbose, "Processing incomplete BAMs (i.e. missing one or more chromosomes)")
 
   work <- listenv()
+  length(work) <- length(bams)
   for (ii in seq_along(bams)) {
     bam <- bams[[ii]]
     name <- getFullName(bam)
@@ -140,6 +141,7 @@ setMethodS3("mpileup", "BamDataSet", function(bams, fa, Q=20, chromosomes=getSeq
 
   ## Step 4: Gather and rearrange
   verbose && enter(verbose, "Gather and rearrange")
+  stopifnot(length(work) == ncol(res))
   for (ii in seq_along(work)) {
     resII <- res[,ii]
     todo <- which(unlist(lapply(resII, FUN=is.null)))
