@@ -3,7 +3,11 @@ Package: aroma.seq
 
 Version: 0.9.1-9000 [2017-06-26]
 
- o ...
+BUG FIXES:
+
+ o mpileup() for BamDataSet would give an error on "length(work) == 
+   length(todo) is not TRUE" if and only if there were already processed
+   results.  This bug was introduced while fixing the one in 0.9.1.
  
 
 Version: 0.9.1 [2017-06-26]
