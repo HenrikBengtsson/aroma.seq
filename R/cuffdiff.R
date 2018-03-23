@@ -90,12 +90,3 @@ setMethodS3("cuffdiff", "default", function(transcriptsGtf, ## e.g. from TopHat?
 
   res
 }) # cuffdiff()
-
-############################################################################
-# HISTORY:
-# 2014-01-14 [HB]
-# o ROBUSTNESS: Now cuffdiff() tests for duplicated entries in 'bams'
-#   and gives an informative errors message if detected.
-# 2013-??-?? [TT]
-# o Created.
-############################################################################

@@ -110,13 +110,3 @@ setMethodS3("systemSamtools", "default", function(command, ..., .fake=FALSE, ver
 
   res;
 }) # systemSamtools()
-
-
-############################################################################
-# HISTORY:
-# 2012-10-02
-# o BUG FIX: systemSamtools(), systemJava() and systemBWA() did not
-#   handle cases with only non-named arguments.
-# 2012-09-25
-# o Created from systemBWA.R.
-############################################################################

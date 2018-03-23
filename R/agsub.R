@@ -60,11 +60,3 @@ agsub <- function(pattern, replacement, x, ..., default=NA_character_, as=c("mat
 
   res;
 } # agsub()
-
-
-############################################################################
-# HISTORY:
-# 2013-11-10
-# o Added agsub(). Will probably end up in 'R.utils' at some point.
-# o Created.
-############################################################################

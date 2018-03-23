@@ -197,21 +197,3 @@ setMethodS3("getDefaultSamReadGroup", "IlluminaFastqDataFile", function(this, ..
   PU <- getPlatformUnit(this);
   SamReadGroup(SM=SM, PL=PL, PU=PU);
 })
-
-
-
-############################################################################
-# HISTORY:
-# 2013-12-21
-# o SPEEDUP: Now getFirstSequenceInfo() for IlluminaFastqDataFile only
-#   parses one read (it used to read all of the FASTQ file).
-# 2013-11-19
-# o Now getSampleName() for IlluminaFastqDataFile gives a more informative
-#   error message if the fullname does not match the expected pattern.
-# 2012-10-16
-# o BUG FIX: getSampleName() did not handle trailing indices, e.g. _002.
-# 2012-10-02
-# o Added getFileVersion().
-# 2012-06-29
-# o Created.
-############################################################################

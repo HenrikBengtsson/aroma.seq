@@ -376,24 +376,3 @@ setMethodS3("getCombineBy", "GatkAlleleCounting", function(this, ...) {
 
   combineBy;
 }, protected=TRUE, static=TRUE)
-
-
-
-############################################################################
-# HISTORY:
-# 2012-11-26
-# o SPEEDUP: process(..., dropEmpty=TRUE) for GatkAlleleCounting is
-#   now much faster.
-# o BUG FIX: process() for GatkAlleleCounting would give an error.
-# 2012-11-09
-# o Added argument 'dropEmpty' to GatkAlleleCounting, which will drop
-#   all SNPs with zero coverage from the output files.
-# 2012-11-08
-# o Implemented getOutputDataSet().
-# 2012-11-02
-# o Now process() also cleans up the GATK output file by dropping
-#   redundant columns and parsing the allele counts into integers.
-# 2012-10-31
-# o Added GatkAlleleCounting.
-# o Created.
-############################################################################

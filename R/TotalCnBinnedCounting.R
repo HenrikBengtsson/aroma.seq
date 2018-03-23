@@ -381,13 +381,3 @@ setMethodS3("getChipType", "BamDataFile", function(this, ...) {
 setMethodS3("getFilenameExtension", "BamDataFile", function(this, ...) {
   "bam";
 }, protected=TRUE)
-
-
-############################################################################
-# HISTORY:
-# 2013-11-24
-# o BUG FIX: smoothRawCopyNumbers() for TotalCnBinnedCounting assumed
-#   that the 'matrixStats' package was loaded.
-# 2012-10-11
-# o Created from TotalCnBinnedSmoothing.R.
-############################################################################

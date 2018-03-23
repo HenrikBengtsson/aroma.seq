@@ -73,11 +73,3 @@ setMethodS3("picardValidateSamFile", "default", function(pathname, ..., onWarnin
 
   invisible(bfr);
 }, protected=TRUE)
-
-
-############################################################################
-# HISTORY:
-# 2013-11-16 [HB]
-# o Added picardValidateSamFile().
-# o Created.
-############################################################################

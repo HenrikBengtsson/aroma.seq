@@ -43,12 +43,3 @@ setMethodS3("cufflinks", "default", function(bams=NULL,  ## vector of pathnames
 
   res
 }) # cufflinks()
-
-############################################################################
-# HISTORY:
-# 2014-01-14 [HB]
-# o ROBUSTNESS: Now cuffdiff() tests for duplicated entries in 'bams'
-#   and gives an informative errors message if detected.
-# 2013-??-?? [TT]
-# o Created.
-############################################################################

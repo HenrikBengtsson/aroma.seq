@@ -351,30 +351,3 @@ setMethodS3("splitUp", "FastqDataFile", function(this, size, path=getPath(this),
 
   res
 })
-
-
-############################################################################
-# HISTORY:
-# 2014-04-16
-# o Now getDefaultFullName() for FastqDataFile drops PE suffixes.
-# o Added field 'paired' to FastqDataFile.
-# 2014-01-07
-# o Now readGeometry() for FastqDataFile returns missing values for
-#   non-existing files.
-# 2013-11-02
-# o Now FastqDataFile(Set) handles more paired filename formats.
-# 2013-08-24
-# o Added getMateFile() for FastqDataFile.
-# 2013-07-10
-# o BUG FIX: writeSample() would give Error in UseMethod("getPathname").
-# 2013-07-01
-# o Added writeSample() for FastqDataFile.
-# 2013-06-25
-# o Added getDefaultFullName() for FastqDataFile so <fullname>.fastq.gz
-#   is properly handled.  Should ideally handled by R.filesets.
-# 2013-06-20
-# o Now readGeometry() and getGeometry() returns c(NA,NA) for
-#   gzipped files. This is better than an error.
-# 2012-06-28
-# o Created.
-############################################################################

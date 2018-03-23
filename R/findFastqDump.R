@@ -17,9 +17,3 @@ findFastqDump <- function(...,
   res <- findExternal(command=commandName, path=path, versionPattern=versionPattern, ...);
   res
 } # findFastqDump()
-
-############################################################################
-# HISTORY:
-# 2014-03-06
-# o Copied from findFastQC(), findPerl()
-############################################################################

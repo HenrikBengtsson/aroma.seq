@@ -245,14 +245,3 @@ setMethodS3("isCompatibleWith", "AromaSeqDataFileSet", function(this, other, ...
 
   TRUE
 })
-
-
-
-
-############################################################################
-# HISTORY:
-# 2014-08-23
-# o Added isCompatibleWith().
-# o Added isCompatibleWithBySeqNames().
-############################################################################
-

@@ -87,11 +87,3 @@ setMethodS3("systemBowtie2", "default", function(commandName="bowtie2",
   ## Now assume the argument string is passed fully formed to systemBowtie2.
 
 })
-
-############################################################################
-# HISTORY:
-# 2013-04-01 [HB]
-# o Now using findBowtie2() to located executable.
-# 2012-08-22
-# o TT:  Created systemBowtie2 stub
-############################################################################

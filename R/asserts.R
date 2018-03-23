@@ -51,14 +51,3 @@ setMethodS3("getTuxedoOption", "Arguments", function(static, value, ..., .name=N
   }
   value
 }, static=TRUE)
-
-
-############################################################################
-# HISTORY:
-# 2014-08-08
-# o Added static getTuxedoOption() for Arguments.
-# o Added tests for spaces.
-# 2014-01-14
-# o Added assertNoDuplicated().
-# o Created.
-############################################################################

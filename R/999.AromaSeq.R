@@ -212,35 +212,3 @@ setMethodS3("skeleton", "AromaSeq", function(static, dataSet="MyDatSet", organis
 
   invisible(TRUE)
 }) # skeleton()
-
-
-############################################################################
-# HISTORY:
-# 2014-09-30
-# o Added 'sratoolkit' to capabilities.
-# 2014-05-24
-# o ROBUSTNESS: capabilitiesOf() always returns even if one of the
-#   "find" functions gives an error.
-# 2014-03-20
-# o Added 'fastq-dump' to capabilities.
-# 2014-02-28
-# o Added 'fastqc' to capabilities.
-# 2013-11-08
-# o Added skeleton() for AromaSeq, e.g.
-#   skeleon(aroma.seq, "MyDataSet", "Homo_sapiens").
-# 2013-10-30
-# o Added 'python' to capabilities.
-# 2013-07-19
-# o SPEEDUP: Now the results of capabilitiesOf() are cached.
-# 2013-07-03
-# o Added 'HTSeq' to capabilitiesOf().
-# 2013-04-01
-# o Added 'tophat1' and 'tophat2' to capabilitiesOf().
-# 2012-09-27
-# o Added setupTests() for AromaSeq.
-# 2012-09-25
-# o Added capabilitiesOf().
-# o Added 'samtools' to AromaSeq$isCapableOf().
-# 2012-09-24
-# o Created.
-############################################################################

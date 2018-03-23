@@ -88,14 +88,3 @@ setupExampleData <- function(dirs=c("annotationData", "bamData", "fastqData*"), 
 
   invisible(dirs);
 } # setupExampleData()
-
-
-############################################################################
-# HISTORY:
-# 2014-04-11
-# o Now setupExampleData() includes GATKResourceBundle data, iff GATK
-#   and its resource bundle is available.
-# 2013-11-01
-# o Added setupExampleData().
-# o Created.
-############################################################################

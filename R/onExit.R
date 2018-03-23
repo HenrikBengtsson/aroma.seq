@@ -73,14 +73,3 @@ onExit <- function(expr=NULL, where=c("first", "last", "replace"), ..., exits, e
 
   invisible(exits);
 } # onExit()
-
-
-############################################################################
-# HISTORY:
-# 2013-11-08
-# o Added help for onExit().
-# 2013-11-02
-# o Added onExit(), which requires on.exit(eval(onExit())) at the beginning.
-#   See today's email to R-devel for why.
-# o Created.
-############################################################################

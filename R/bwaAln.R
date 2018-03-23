@@ -64,12 +64,3 @@ setMethodS3("bwaAln", "default", function(pathnameFQ, indexPrefix, pathnameD, ..
 
   res;
 }) # bwaAln()
-
-
-############################################################################
-# HISTORY:
-# 2014-03-10 [HB]
-# o ROBUSTNESS: Now bwaAln() uses shQuote() for all pathnames.
-# 2012-09-24
-# o Created.
-############################################################################

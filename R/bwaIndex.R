@@ -55,18 +55,3 @@ setMethodS3("bwaIndex", "default", function(pathnameFA, indexPrefix="*", ..., ve
 
   res;
 }) # bwaIndex()
-
-
-
-############################################################################
-# HISTORY:
-# 2014-03-10 [HB]
-# o ROBUSTNESS: Now bwaIndex() uses shQuote() for all pathnames.
-# 2013-11-21
-# o CLEANUP: bwaIndex() no longer has a 'method' argument as it is no
-#   longer needed by bwaIndexPrefix().
-# 2012-09-27
-# o Added argument 'method' with will be passed to bwaIndexPrefix().
-# 2012-09-24
-# o Created.
-############################################################################

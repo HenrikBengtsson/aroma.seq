@@ -219,12 +219,3 @@ setMethodS3("normalizeGcContent", "default", function(y, gcContent, targetFcn=NU
 
   y;
 }, private=TRUE)
-
-
-############################################################################
-# HISTORY:
-# 2013-11-02
-# o BUG FIX: normalizeGcContent() assumed that 'aroma.light' was attached.
-# 2012-10-16
-# o Created from normalizeFragmentLength.R of aroma.light.
-############################################################################

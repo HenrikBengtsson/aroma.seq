@@ -80,13 +80,3 @@ setMethodS3("doDownsample", "FastqDataSet", function(dataSet, subset=1e6, ..., v
 setMethodS3("doDownsample", "default", function(...) {
   throw("The \"default\" method is still not implemented. Please see help('doDownsample').");
 })
-
-
-############################################################################
-# HISTORY:
-# 2014-04-23
-# o BUG FIX: doDownsample() for FastqDataSet ignored argument 'subset'.
-# 2014-04-18
-# o Added doDownsample() for BamDataSet and FastqDataSet.
-# o Created.
-############################################################################

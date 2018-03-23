@@ -128,12 +128,3 @@ setMethodS3("writeFastaReferenceFile", "FastaReferenceSet", function(this, filen
 
   res;
 }) # writeFastaReferenceFile()
-
-
-############################################################################
-# HISTORY:
-# 2014-06-19
-# o Now writeFastaReferenceFile() creates checksum file by default.
-# 2014-02-20
-# o Created.
-############################################################################

@@ -186,22 +186,3 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
 
   res
 })
-
-
-
-############################################################################
-# HISTORY:
-# 2013-11-22
-# o Now PicardDuplicateRemoval extends SamTransform.
-# 2013-11-16
-# o CLEANUP: Dropped several methods now taken care of by super class.
-# 2013-11-15
-# o Added argument 'onMissing' to getOutputDataSet().
-# 2013-09-03
-# o Now process() for PicardDuplicateRemoval utilizes parallel processing.
-# 2012-11-26
-# o BUG FIX: getOutputDataSet() would return a data set with "missing"
-#   files, if not complete.  Now it only returns the existing files.
-# 2012-10-02
-# o Created.
-############################################################################

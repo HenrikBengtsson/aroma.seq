@@ -41,11 +41,3 @@ setMethodS3("getRootPath", "SamTransform", function(this, ...) {
   stopifnot(regexpr("Data$", path) != -1L);
   path;
 }, protected=TRUE)
-
-
-
-############################################################################
-# HISTORY:
-# 2013-11-22
-# o Created.
-############################################################################

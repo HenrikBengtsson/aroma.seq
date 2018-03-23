@@ -109,21 +109,3 @@ setMethodS3("findRspReportTemplate", "FastqDataSet", function(this, ...) {
   aFile <- getOneFile(this);
   findRspReportTemplate(aFile, ...);
 }, protected=TRUE)
-
-
-
-############################################################################
-# HISTORY:
-# 2014-02-27
-# o GENERALIZATION: Now findRspReportTemplate() scans for templates
-#   also for super classes of the object.  This means that the template
-#   for FastqDataFile also works for IlluminaFastqDataFile:s.
-# o Added findRspReportTemplate() for FastqDataSet.
-# 2013-11-12
-# o Now findRspReportTemplate() expands 'paths' with format "pkg::path/to"
-#   to system.file("path/to", package="pkg").
-# o Added findRspReportTemplate() for FastqDataFile.
-# 2012-12-06
-# o Added findRspReportTemplate() for Object.
-# o Created.
-############################################################################

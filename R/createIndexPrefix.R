@@ -78,10 +78,3 @@ setMethodS3("createIndexPrefix", "default", function(pathnameFA, subdir=NULL, ta
 
   prefix;
 }) # createIndexPrefix()
-
-
-############################################################################
-# HISTORY:
-# 2012-09-27
-# o Created from bwaIndexPrefix.R.
-############################################################################

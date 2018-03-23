@@ -88,10 +88,3 @@ setMethodS3("systemGenericCmd", "default", function(commandName=NULL,
   verbose && exit(verbose);
   res;
 }) # systemGenericCmd
-
-
-############################################################################
-# HISTORY:
-# 2013-03-08
-# o TT:  Created.
-############################################################################

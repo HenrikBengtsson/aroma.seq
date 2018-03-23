@@ -90,10 +90,3 @@ setMethodS3("systemTopHatBuild", "default", function( ## ( No 'command' arg in t
   verbose && exit(verbose);
   res;
 }) # systemTopHatBuild()
-
-
-############################################################################
-# HISTORY:
-# 2013-01-24
-# o Created. TAT
-############################################################################

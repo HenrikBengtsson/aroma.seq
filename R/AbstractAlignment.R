@@ -110,24 +110,3 @@ setMethodS3("getOrganism", "AbstractAlignment", function(this, ...) {
 setMethodS3("getRootPath", "AbstractAlignment", function(this, ...) {
   "bamData";
 }, protected=TRUE)
-
-
-
-############################################################################
-# HISTORY:
-# 2014-04-13
-# o Now paired-end alignments are tagged as "pe".  Previously they were
-#   tagged as "paired", which was ambigous in case for instance
-#   tumor-normal pair data was analyzed.
-# 2013-11-16
-# o Now AbstractAlignment extends AromaSeqTransform.
-# 2013-11-09
-# o Now getPath() for AbstractAlignment contains the organism.
-# 2013-08-24
-# o Added isPaired() for AbstractAlignment.  Made as.character() and
-#   getAsteriskTags() aware of it.
-# 2013-07-18
-# o Now getRootPath() for AbstractAlignment returns "bamData".
-# 2012-10-01
-# o Created; extracted from BwaAlignment.R.
-############################################################################

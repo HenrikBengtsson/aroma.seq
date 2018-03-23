@@ -59,18 +59,3 @@ findGATK <- function(mustExist=TRUE, ..., verbose=FALSE) {
 
   pathname;
 } # findGATK()
-
-
-############################################################################
-# HISTORY:
-# 2014-06-16
-# o BUG FIX: findGATK(mustExist=FALSE) would return FALSE instead of NULL
-#   if GATK was not found.
-# 2014-03-14
-# o Now findGATK() also returns the version of GATK.
-# 2012-10-01
-# o BUG FIX: findGATK(mustExists=FALSE) would throw an error if GATK
-#   was not found.
-# 2012-09-28
-# o Created.
-############################################################################

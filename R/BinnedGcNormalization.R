@@ -338,14 +338,3 @@ setMethodS3("process", "BinnedGcNormalization", function(this, ..., force=FALSE,
 setMethodS3("getOutputFiles", "BinnedGcNormalization", function(this, ...) {
   NextMethod("getOutputFiles", pattern=".*[.]asb$");
 }, protected=TRUE)
-
-
-
-############################################################################
-# HISTORY:
-# 2013-11-02
-# o BUG FIX: getOutputFileExtension() for BinnedGcNormalization would
-#   give Error in UseMethod("getOneFile").
-# 2012-10-18
-# o Created.
-############################################################################

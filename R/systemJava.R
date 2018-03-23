@@ -202,13 +202,3 @@ setMethodS3("systemJavaJar", "default", function(pathname, ...) {
   # Quote jar pathname just in case
   systemJava("-jar "=sprintf("\"%s\"", pathname), ...);
 })
-
-
-############################################################################
-# HISTORY:
-# 2014-05-11
-# o Added argument 'jvmArgs' to systemJava() to make it simple to call
-#   Java as 'java -Xmx1024m ..." etc.
-# 2012-09-28
-# o Created.
-############################################################################

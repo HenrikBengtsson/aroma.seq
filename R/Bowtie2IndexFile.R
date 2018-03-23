@@ -44,10 +44,3 @@ setMethodS3("getIndexPrefix", "Bowtie2IndexFile", function(this, ...) {
   prefix <- file.path(path, fullname);
   prefix;
 })
-
-
-############################################################################
-# HISTORY:
-# 2012-09-25
-# o Created.
-############################################################################

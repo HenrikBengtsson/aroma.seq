@@ -49,12 +49,3 @@ setMethodS3("samtoolsView", "default", function(pathname, pathnameD, ..., verbos
 
   res;
 }) # samtoolsView()
-
-
-############################################################################
-# HISTORY:
-# 2014-03-10 [HB]
-# o ROBUSTNESS: Now samtoolsView() uses shQuote() for all pathnames.
-# 2012-09-25
-# o Created.
-############################################################################

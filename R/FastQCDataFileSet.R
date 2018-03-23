@@ -30,10 +30,3 @@ setMethodS3("byPath", "FastQCDataFileSet", function(static, ..., recursive=TRUE,
   res <- NextMethod("byPath", recursive=recursive, pattern=pattern);
   res;
 }, static=TRUE)
-
-
-############################################################################
-# HISTORY:
-# 2014-03-02
-# o Created.
-############################################################################

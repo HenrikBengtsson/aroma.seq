@@ -79,18 +79,3 @@ setMethodS3("systemBowtie2Build", "default", function(commandName="bowtie2-build
   verbose && exit(verbose);
   res;
 }) # systemBowtie2Build()
-
-
-############################################################################
-# HISTORY:
-# 2013-04-01 [HB]
-# o Now using findBowtie2() to located executable.
-# 2013-03-07
-# o TT:  Rewritten to conform to systemTopHat.R template.
-# 2012-08-22
-# o TT:  First implementation of low-level system wrapper, including all bowtie2-build options; not tested
-# 2012-08-21
-# o TT:  Implemented working version (turns out this was closer in intent to bowtie2Build.R
-# 2012-08-20
-# o HB:  Created systemBowtie2Build stub
-############################################################################

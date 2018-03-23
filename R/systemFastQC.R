@@ -75,10 +75,3 @@ setMethodS3("systemFastQC", "default", function(..., verbose=FALSE) {
 
   bfr;
 }) # systemFastQC()
-
-
-############################################################################
-# HISTORY:
-# 2014-02-28 [HB]
-# o Created from systemPicard().
-############################################################################

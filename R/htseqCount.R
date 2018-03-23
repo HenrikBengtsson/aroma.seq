@@ -327,33 +327,3 @@ setMethodS3("htseqCount", "default", function(pathnameS, gff, orderedBy=c("none"
 
   res;
 }) # htseqCount()
-
-
-############################################################################
-# HISTORY:
-# 2014-03-11 [HB]
-# o ROBUSTNESS: Added argument 'sortByName' to htseqCount(), which for
-#   now defaults to "always", because although htseq-count (>= 0.6.0)
-#   is supposed to handle when BAM files are sorted by position, it will
-#   run out of memory for modestly large BAM files.
-# o ROBUSTNESS: If the external software returns a non-zero exit code,
-#   then htseqCount() removes any empty count file and scans the log file
-#   for errors and warnings and translates them into ditto in R.
-# o Now htseqCount() writes counts to one file and log messages to another.
-# 2014-03-10 [HB]
-# o ROBUSTNESS: Now htseqCount() uses shQuote() for all pathnames.
-# 2014-03-09 [HB]
-# o ROBUSTNESS: Now htseqCount() writes results atomically.
-# o CLEANUP: Now htseqCount() cleans out temporary files ASAP.
-# o SPEEDUP: Now supporting htseq-count (>= 0.6.0) options.
-# o CLEANUP: Clean out obsolete code handling 'optionsVec'.
-# o Added verbose output to htseqCount().
-# o Temporary filenames are now using aroma-style tags.
-# o DOCUMENTATION: Added Details section to help.
-# 2013-12-16 [TT]
-# o local asSam() added (needed for Rsamtools < 1.15.14).
-# 2013-11-29 [TT]
-# o Internal sort-by-name added.
-# 2013-05-31 [TT]
-# o Created.
-############################################################################

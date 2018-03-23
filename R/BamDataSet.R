@@ -188,19 +188,3 @@ setMethodS3("isPaired", "BamDataSet", function(this, ..., force = FALSE) {
   }
   paired
 })
-
-
-############################################################################
-# HISTORY:
-# 2015-05-06
-# o Added splitByTargetType() to BamDataSet.
-# 2013-11-11
-# o BUG FIX: BamDataSet$byPath() would include also SAM files.
-# 2013-11-09
-# o Added static findByName() and byName() for BamDataSet.
-# o Added getOrganism() to BamDataSet.
-# 2012-09-25
-# o Added getDepth().
-# 2012-06-28
-# o Created.
-############################################################################

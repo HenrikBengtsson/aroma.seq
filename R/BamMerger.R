@@ -259,14 +259,3 @@ setMethodS3("validateGroups", "BamMerger", function(this, groups, ...) {
 
   invisible(groups);
 }, protected=TRUE)
-
-
-############################################################################
-# HISTORY:
-# 2014-01-16 [HB]
-# o CLEANUP: Now BamMerger implements new FileGroupsInterface.
-# o ROBUSTNESS: Now getGroups() of BamMerger assert that the
-#   file indices identified for each group/sample is unique.
-# 2013-11-22
-# o Created.
-############################################################################

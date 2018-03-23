@@ -14,10 +14,3 @@ findSraToolkit <- function(command="fastq-dump", ...) {
   res <- findExternal(command=command, path=path, versionPattern=versionPattern, ...);
   res
 }
-
-
-############################################################################
-# HISTORY:
-# 2014-09-29
-# o Created.
-############################################################################

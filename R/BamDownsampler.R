@@ -150,10 +150,3 @@ setMethodS3("process", "BamDownsampler", function(this, ..., force=FALSE, verbos
 
   invisible(res)
 })
-
-
-############################################################################
-# HISTORY:
-# 2014-04-18
-# o Created from FastqDownsampler.R.
-############################################################################

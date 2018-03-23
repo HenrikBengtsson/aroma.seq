@@ -152,11 +152,3 @@ setMethodS3("sortByPosition", "BamDataSet", function(ds, path=getPath(ds), suffi
 
   bs;
 }) # sortByPosition() for BamDataSet
-
-
-
-############################################################################
-# HISTORY:
-# 2013-11-13
-# o Created from convertToBam.R (which is a SamDataFile / SamDataSet method)
-############################################################################

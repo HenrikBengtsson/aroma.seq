@@ -128,10 +128,3 @@ setMethodS3("readFASTQSummary", "FastqDataFile", function(this, ...) {
 
 
 ## setOldClass("FastqDataFile")
-
-############################################################################
-# HISTORY:
-# 2013-11-12
-# o Added readSeqFile() with Rdoc help.
-# o Created.
-############################################################################

@@ -41,18 +41,3 @@ setMethodS3("findFilesTodo", "TotalCnBinnedCounting", function(this, ...) {
   }
   todo;
 })
-
-
-
-############################################################################
-# HISTORY:
-# 2013-11-16
-# o CLEANUP: Replaced several implementations of findFilesTodo() with
-#   one for AromaSeqTransform.
-# 2013-11-15
-# o Extracted all findFilesTodo() methods and document them under the
-#   same generic function.
-# o Added findFilesTodo() for PicardDuplicateRemoval.
-# 2013-11-11
-# o Added findFilesTodo() for AbstractAlignment.
-############################################################################

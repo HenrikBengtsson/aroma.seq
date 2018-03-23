@@ -73,10 +73,3 @@ setMethodS3("systemFastqDump", "default", function(...,
   verbose && exit(verbose);
   res;
 }) # systemFastqDump()
-
-
-############################################################################
-# HISTORY:
-# 2014-03-06
-# o Created. TAT
-############################################################################

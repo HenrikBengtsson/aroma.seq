@@ -56,11 +56,3 @@ setConstructorS3("AromaSeqDataFileSet", function(...) {
 setMethodS3("getDefaultFullName", "AromaSeqDataFileSet", function(this, ...) {
   directoryItem(this, name="dataset");
 })
-
-
-############################################################################
-# HISTORY:
-# 2014-04-07
-# o Added AromaPathnameInterface.
-# o Added (temporary) AromaSeqData(File|FileSet).
-############################################################################

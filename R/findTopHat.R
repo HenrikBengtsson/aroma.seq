@@ -26,14 +26,3 @@ findTopHat2 <- function(..., command="tophat2", version=c(2,3)) {
   }
   res;
 } # findTopHat2()
-
-
-############################################################################
-# HISTORY:
-# 2013-04-01
-# o CLEANUP: Now findTopHat1() and  findTopHat2() utilizes findTopHat().
-# o Now findTopHat() cached the results.
-# o Renamed from findTopHatv() to findTopHat().
-# 2013-01-24
-# o Created.
-############################################################################

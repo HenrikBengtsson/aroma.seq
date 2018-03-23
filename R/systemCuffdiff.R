@@ -87,9 +87,3 @@ setMethodS3("systemCuffdiff", "default", function(cuffdiffStr="",
   verbose && exit(verbose);
   res;
 }) # systemCuffdiff()
-
-############################################################################
-# HISTORY:
-# 2013-02-15
-# o Created. TAT
-############################################################################

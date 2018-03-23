@@ -92,10 +92,3 @@ setMethodS3("doHTSeqCount", "BamDataSet", function(dataSet, transcripts, ..., ve
 setMethodS3("doHTSeqCount", "default", function(...) {
   throw("In order to use doHTSeqCount(), the data need to be aligned into a BamDataFileSet first.");
 })
-
-
-############################################################################
-# HISTORY:
-# 2014-01-24
-# o Created from doTopHat2().
-############################################################################

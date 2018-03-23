@@ -117,15 +117,3 @@ setMethodS3("report", "FastqDataSet", function(this, dataSet=getFullName(this), 
 
   invisible(res)
 }) # report()
-
-
-############################################################################
-# HISTORY:
-# 2013-11-12
-# o SPEEDUP: Now report() for FastqDataSet supports parallel processing.
-# 2013-07-18
-# o BUG FIX: Incorrectly named argument ('dataSetSet').
-# 2012-12-06
-# o Added report() for FastqDataFile.
-# o Created.
-############################################################################

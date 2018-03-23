@@ -49,10 +49,3 @@ setMethodS3("getIndexPrefix", "AbstractIndexFile", function(this, ...) {
   prefix <- file.path(path, fullname);
   prefix;
 })
-
-
-############################################################################
-# HISTORY:
-# 2012-09-27
-# o Created from BwaIndexFile.R.
-############################################################################

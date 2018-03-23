@@ -86,10 +86,3 @@ setMethodS3("systemCufflinks", "default", function(commandName="cufflinks",
   verbose && exit(verbose);
   res;
 }) # systemCufflinks()
-
-
-############################################################################
-# HISTORY:
-# 2013-02-15
-# o Created. TAT
-############################################################################

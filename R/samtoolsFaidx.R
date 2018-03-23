@@ -47,12 +47,3 @@ setMethodS3("samtoolsFaidx", "default", function(pathname, ..., verbose=FALSE) {
 # From http://samtools.sourceforge.net/samtools.shtml:
 # faidx 	samtools faidx <ref.fasta> [region1 [...]]
 # Index reference sequence in the FASTA format or extract subsequence from indexed reference sequence. If no region is specified, faidx will index the file and create <ref.fasta>.fai on the disk. If regions are speficified, the subsequences will be retrieved and printed to stdout in the FASTA format. The input file can be compressed in the RAZF format.
-
-
-############################################################################
-# HISTORY:
-# 2014-03-10 [HB]
-# o ROBUSTNESS: Now samtoolsFaidx() uses shQuote() for all pathnames.
-# 2013-11-15
-# o Created from samtoolsView.R
-############################################################################

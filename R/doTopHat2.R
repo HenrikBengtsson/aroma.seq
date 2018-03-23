@@ -122,14 +122,3 @@ setMethodS3("doTopHat2", "FastqDataSet", function(dataSet, reference, transcript
 setMethodS3("doTopHat2", "default", function(...) {
   throw("The \"default\" method is still not implemented. Please see help('doTopHat2').");
 })
-
-
-############################################################################
-# HISTORY:
-# 2014-04-10
-# o Now doTopHat2() requires that 'transcripts' is explicitly specified.
-#   This is to protect against the mistake when the user forgets to
-#   specify the transcripts.
-# 2013-11-02
-# o Created from doBowtie2().
-############################################################################

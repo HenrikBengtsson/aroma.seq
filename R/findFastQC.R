@@ -103,13 +103,3 @@ findFastQC <- function(mustExist=TRUE, ..., verbose=FALSE) {
 
   pathname;
 } # findFastQC()
-
-
-############################################################################
-# HISTORY:
-# 2014-05-24
-# o ROBUSTNESS: Now findFastQC(mustExist=FALSE) returns NULL if
-#   'fastqc --version' fails although 'fastqc' is found.
-# 2014-02-28
-# o Created from findPicard().
-############################################################################

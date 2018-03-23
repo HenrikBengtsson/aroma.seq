@@ -138,21 +138,3 @@ setMethodS3("convertToBam", "SamDataSet", function(ds, path=NULL, ..., verbose=F
 
   bs;
 }) # convertToBam() for SamDataSet
-
-
-############################################################################
-# HISTORY:
-# 2014-04-16 [HB]
-# o BUG FIX: convertToBam() for SamDataSet would write all BAM files
-#   to the directory of the first SAM file.
-# 2013-11-08
-# o Merged source code of convertToBam() for SamDataFile and SamDataSet
-#   into the same source code file and documents as a generic function.
-# o DOCUMENTATION: Added help on convertToBam() for SamDataFile.
-# o Renamed to use convertToBam() for both SamDataFile and SamDataSet.
-# 2012-11-26
-# o ROBUSTNESS: Now convertToBamDataSet() for SamDataSet asserts that
-#   the output set is complete.
-# 2012-09-25
-# o Created from BamDataFile.R.
-############################################################################

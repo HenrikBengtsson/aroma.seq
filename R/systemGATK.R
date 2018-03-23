@@ -58,10 +58,3 @@ setMethodS3("systemGATK", "default", function(..., verbose=FALSE) {
 
   res;
 }) # systemGATK()
-
-
-############################################################################
-# HISTORY:
-# 2012-09-28
-# o Created from systemPicard.R.
-############################################################################

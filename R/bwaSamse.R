@@ -70,12 +70,3 @@ setMethodS3("bwaSamse", "default", function(pathnameSAI, pathnameFQ, indexPrefix
 
   res;
 }) # bwaSamse()
-
-
-############################################################################
-# HISTORY:
-# 2014-03-10 [HB]
-# o ROBUSTNESS: Now bwaSamse() uses shQuote() for all pathnames.
-# 2012-09-24
-# o Created.
-############################################################################

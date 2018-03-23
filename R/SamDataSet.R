@@ -141,13 +141,3 @@ setMethodS3("byName", "SamDataSet", function(static, name, tags=NULL, organism=N
 
   res;
 }, static=TRUE)
-
-
-############################################################################
-# HISTORY:
-# 2013-11-09
-# o Added static findByName() and byName() for SamDataSet.
-# o Added getOrganism().
-# 2012-09-25
-# o Created from BamDataSet.R.
-############################################################################

@@ -123,26 +123,3 @@ setMethodS3("isTopHat2IndexSet", "Bowtie2IndexSet", function(this, ...) {
   path <- getPath(this);
   grepl("tophat2", path, fixed=TRUE);
 }, protected=TRUE)
-
-
-############################################################################
-# HISTORY:
-# 2015-05-07
-# o Added readSeqLengths() which caches to file.
-# 2014-08-23
-# o ROBUSTNESS: Now buildBowtie2IndexSet() asserts that the returned
-#   index set is compatible with the FASTA file.
-# 2014-08-11
-# o BUG FIX: getSeqNames() for Bowtie2IndexSet would return the
-#   sequence description in addition to the ID as part of the name.
-# 2014-07-24
-# o CONSISTENCY: Renamed getSequenceNames() to getSeqNames() for
-#   Bowtie2IndexSet.  Deprecated the old version.
-# 2014-04-10
-# o BUG FIX: getSequenceNames() for Bowtie2IndexSet returned nothing.
-# 2012-09-27
-# o Added getSummary() and getSequenceNames() for Bowtie2IndexSet, which
-#   utilizes 'bowtie2-inspect' executable.
-# 2012-09-27
-# o Created from BwaIndexSet.R.
-############################################################################

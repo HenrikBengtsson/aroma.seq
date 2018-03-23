@@ -123,12 +123,3 @@ setMethodS3("nbrOfSeqs", "SequenceContigsInterface", function(this, ...) {
 setMethodS3("hasDuplicatedSeqs", "SequenceContigsInterface", function(this, ...) {
   anyDuplicated(getSeqNames(this, unique=FALSE, ...))
 }, protected=TRUE)
-
-
-
-
-############################################################################
-# HISTORY:
-# 2015-05-06
-# o Extracted from FastaReferenceFile.R.
-############################################################################

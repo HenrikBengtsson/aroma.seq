@@ -78,12 +78,3 @@ setMethodS3("systemHTSeqCount", "default", function(..., args=NULL, stdout=TRUE,
   verbose && exit(verbose);
   res;
 }) # systemHTSeqCount()
-
-
-############################################################################
-# HISTORY:
-# 2013-06-20 [HB]
-# o Renamed from systemHtseqCount() to systemHTSeqCount().
-# 2013-05-31 [TAT]
-# o Created systemHtseqCount stub
-############################################################################

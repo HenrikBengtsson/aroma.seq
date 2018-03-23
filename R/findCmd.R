@@ -76,10 +76,3 @@ setMethodS3("findCmd", "default", function(command, mustExist=TRUE, ..., verbose
 
   pathname;
 }) # findCmd()
-
-
-############################################################################
-# HISTORY:
-# 2013-01-29
-# o Created TAT
-############################################################################

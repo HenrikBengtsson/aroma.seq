@@ -30,10 +30,3 @@
 setConstructorS3("HTSeqCountDataFile", function(...) {
   extend(TabularTextFile(..., columnNames=c("transcript", "count"), .verify=FALSE), c("HTSeqCountDataFile", uses("AromaSeqDataFile")))
 })
-
-
-##############################################################################
-# HISTORY:
-# 2014-01-24
-# o Created.
-##############################################################################

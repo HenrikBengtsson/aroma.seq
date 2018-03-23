@@ -255,16 +255,3 @@ setMethodS3("extractCounts", "HTSeqCountDataSet", function(this, rows=NULL, ...)
 
   data;
 })
-
-
-
-############################################################################
-# HISTORY:
-# 2014-08-27
-# o Added extractCounts() for HTSeqCountDataFile and HTSeqCountDataSet.
-# o BUG FIX/ROBUSTNESS: Now extractMatrix() and readDGE() for
-#   HTSeqCountDataSet drops "genes" with prefix '__' in case they exists,
-#   e.g. "__no_feature", "__ambiguous", etc.
-# 2014-01-24
-# o Created.
-############################################################################

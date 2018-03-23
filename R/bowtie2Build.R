@@ -108,22 +108,3 @@ setMethodS3("bowtie2Build", "default", function(pathnameFAs,
 
   res;
 }) # bowtie2Build()
-
-############################################################################
-# HISTORY:
-# 2014-03-10 [HB]
-# o ROBUSTNESS: Now bowtie2Build() uses shQuote() for all pathnames.
-# 2014-03-10 [HB]
-# o ROBUSTNESS: Now bowtie2Build() uses shQuote() for all pathnames.
-# 2014-01-14 [HB]
-# o ROBUSTNESS: Now bowtie2Build() tests for duplicated entries in
-#   'pathnameFAs' and gives an informative errors message if detected.
-# 2013-11-01 [HB]
-# o Now bowtie2Build() supports gzip'ed FASTQ.
-# 2013-03-08 [TT]
-# o Completely rewritten to follow tophat.R template.
-# 2012-09-14 [TT]
-# o First real draft of "level 2" code.
-# 2012-07-18 [HB]
-# o Created bowtie2-build() stub.
-############################################################################

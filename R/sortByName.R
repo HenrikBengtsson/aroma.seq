@@ -155,11 +155,3 @@ setMethodS3("sortByName", "BamDataSet", function(ds, path=getPath(ds), tag='byNa
 
   bs;
 }) # sortByName() for BamDataSet
-
-
-
-############################################################################
-# HISTORY:
-# 2013-11-13
-# o Created from convertToBam.R (which is a SamDataFile / SamDataSet method)
-############################################################################

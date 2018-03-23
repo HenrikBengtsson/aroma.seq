@@ -33,12 +33,3 @@ setMethodS3("as.character", "BamIndexDataFile", function(x, ...) {
   s <- NextMethod("as.character");
   s;
 }, protected=TRUE)
-
-
-
-
-############################################################################
-# HISTORY:
-# 2012-10-02
-# o Created.
-############################################################################

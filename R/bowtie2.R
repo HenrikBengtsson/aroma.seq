@@ -281,31 +281,3 @@ bowtie2 <- function(reads1, reads2=NULL, indexPrefix, pathnameSAM, ..., gzAllowe
 
   res;
 } # bowtie2()
-
-
-############################################################################
-# HISTORY:
-# 2014-08-07 [HB]
-# o Now using arguments 'reads1' and 'reads2', cf. tophat().
-# o Added verbose output.
-# 2014-03-10 [HB]
-# o ROBUSTNESS: Now bowtie2() uses shQuote() for all pathnames.
-# 2014-01-14 [HB]
-# o ROBUSTNESS: Now bowtie2() tests for duplicated entries in 'reads1'
-#   and 'reads2' and gives an informative errors message if detected.
-# 2013-08-24
-# o Now bowtie2() will do paired-end alignment if length(pathnameFQ) == 2.
-# 2013-08-23
-# o BUG FIX: Read Group options ('--rg' and '--rg-id') passed to 'bowtie2'
-#   by the Bowtie2Aligment class missed the preceeding '--'.  Also, if
-#   the Read Group ID was missing NULL was used - now it is set to 1.
-# 2013-07-18
-# o Now bowtie2() handles if there are commas in the pathname of
-#   the FASTQ file by using a tempory file link without commas.  This
-#   is needed because the bowtie2 executable does not support commas.
-# 2013-06-27
-# o Now bowtie2() temporarily decompresses gzipped FASTQ files in case
-#   the installed bowtie2 does not support gzip files.
-# 2012-09-27
-# o Created.
-############################################################################

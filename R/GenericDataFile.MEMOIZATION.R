@@ -107,10 +107,3 @@ setMethodS3("memoizedCall2", "GenericDataFile", function(this, what, ..., envir=
   # 4. Return results
   value;
 }, protected=TRUE)
-
-
-############################################################################
-# HISTORY:
-# 2012-12-21
-# o Created.
-############################################################################

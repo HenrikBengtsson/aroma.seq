@@ -78,12 +78,3 @@ setMethodS3("systemPicard", "default", function(command, ..., verbose=FALSE) {
 
   res;
 }) # systemPicard()
-
-
-############################################################################
-# HISTORY:
-# 2012-09-28
-# o Now utilizing systemJavaJar().
-# 2012-09-27
-# o Created.
-############################################################################

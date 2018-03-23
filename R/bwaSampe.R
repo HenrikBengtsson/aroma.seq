@@ -72,10 +72,3 @@ setMethodS3("bwaSampe", "default", function(pathnameSAI, pathnameFQ, indexPrefix
 
   res;
 }) # bwaSampe()
-
-
-############################################################################
-# HISTORY:
-# 2014-04-13 [HB]
-# o Created from bwaSamse().
-############################################################################

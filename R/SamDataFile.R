@@ -44,15 +44,3 @@ setMethodS3("as.character", "SamDataFile", function(x, ...) {
 
 
 setMethodS3("validate", "SamDataFile", validate.BamDataFile)
-
-
-############################################################################
-# HISTORY:
-# 2013-11-16
-# o Added validate() for SamDataFile.
-# 2013-11-08
-# o DOCUMENTATION: Added help on convertToBam() for SamDataFile.
-# o Renamed to use convertToBam() for both SamDataFile and SamDataSet.
-# 2012-09-25
-# o Created from BamDataFile.R.
-############################################################################

@@ -276,13 +276,3 @@ setMethodS3("getPath", "AromaSeqTransform", function(this, create=TRUE, ...) {
 # ABSTRACT METHODS
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 setMethodS3("process", "AromaSeqTransform", abstract=TRUE)
-
-
-
-############################################################################
-# HISTORY:
-# 2013-11-22
-# o Added argument '.className' to the AromaSeqTransform constructor.
-# 2013-11-16
-# o Created.
-############################################################################

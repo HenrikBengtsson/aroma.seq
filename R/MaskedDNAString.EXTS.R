@@ -63,15 +63,3 @@ setMethodS3("binTabulate", "MaskedDNAString", function(seq, bx, letters=c("A", "
 
   counts;
 }) # binTabulate()
-
-
-############################################################################
-# HISTORY:
-# 2012-10-17
-# o ROBUSTNESS: Now binTabulate(seq, ...) also handles the case where
-#   sequence 'seq' is offsetted, i.e. starts at a different position
-#   than the first one.
-# 2012-10-16
-# o Added binTabulate() for MaskedDNAString.
-# o Created.
-############################################################################

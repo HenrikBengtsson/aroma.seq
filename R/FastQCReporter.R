@@ -324,18 +324,3 @@ setMethodS3("validateGroups", "FastQCReporter", function(this, groups, ...) {
 
   invisible(groups);
 }, protected=TRUE)
-
-
-############################################################################
-# HISTORY:
-# 2014-08-07
-# o BUG FIX: Now FastQCReporter also works with FastQC (>= 0.11.1).
-# 2014-07-18
-# o The error message when FastQC fail to generate a '*_fastqc'
-#   subdirectory is now more informative.
-# 2014-04-13 [HB]
-# o CLEANUP: Now FastQCReporter outputs sample directories without the
-#   default and auxillary '_fastqc' suffix.
-# 2014-03-02 [HB]
-# o Created.
-############################################################################

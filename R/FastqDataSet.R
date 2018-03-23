@@ -306,23 +306,3 @@ setMethodS3("byName", "FastqDataSet", function(static, name, tags=NULL, organism
 
   res;
 }, static=TRUE)
-
-
-
-
-
-############################################################################
-# HISTORY:
-# 2014-01-07
-# o Now getFilePairs() for FastqDataSet returns NA files (was R1) in
-#   case mate file R2 could not be found.
-# 2013-11-09
-# o Added static findByName() and byName() for FastqDataSet.
-# o Added getOrganism() to FastqDataSet.
-# 2013-08-24
-# o Added as.character() for FastqDataSet outputting also paired status.
-# o Added byPath() for FastqDataSet that acknowledge 'paired' argument.
-# o Added isPaired() and getFilePairs() for FastqDataSet.
-# 2012-06-28
-# o Created.
-############################################################################

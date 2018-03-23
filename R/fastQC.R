@@ -72,12 +72,3 @@ setMethodS3("fastQC", "default", function(..., pathnames=character(0L), outPath=
 
   res;
 }) # fastQC()
-
-
-############################################################################
-# HISTORY:
-# 2014-03-10 [HB]
-# o ROBUSTNESS: Now fastQC() uses shQuote() for all pathnames.
-# 2014-02-28 [HB]
-# o Created from bwaSamse().
-############################################################################

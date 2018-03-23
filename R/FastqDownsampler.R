@@ -155,20 +155,3 @@ setMethodS3("process", "FastqDownsampler", function(this, ..., force=FALSE, verb
 
   invisible(res)
 })
-
-
-############################################################################
-# HISTORY:
-# 2014-04-18
-# o BUG FIX: FastqDownsampler did not respect fullname translators.
-# 2013-11-16
-# o CLEANUP: Dropped several methods now taken care of by super class.
-# 2013-09-12
-# o Now process() for FastqDownsampler utilizes parallel processing.
-# o CLEANUP: Improved previous "mockup" code of FastqDownsampler.
-# 2013-09-03
-# o ROBUSTNESS: Now process() for FastqDownsampler gives an error
-#   if the data set is paired-end; will implement later.
-# 2013-07-01
-# o Created.
-############################################################################

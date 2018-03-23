@@ -187,18 +187,3 @@ setMethodS3("gatk", "default", function(analysisType, ..., pathnameI=NULL, pathn
 
   res
 }) # gatk()
-
-
-############################################################################
-# HISTORY:
-# 2014-04-14 [HB]
-# o Added argument 'pathnameLog' to gatk().
-# o ROBUSTNESS: Now gatk() outputs to a "unique" directory.
-# 2014-04-13 [HB]
-# o ROBUSTNESS: Now gatk() throws GATK errors as R errors.
-# o Added optional arguments 'pathnameI', 'pathnameR' and 'pathnameL'
-#   to gatk().
-# o Made argument 'analysisType' mantadory for gatk().
-# 2014-03-14 [HB]
-# o Created from tophat.R.
-############################################################################

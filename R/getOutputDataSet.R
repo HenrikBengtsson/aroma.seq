@@ -207,29 +207,3 @@ setMethodS3("getOutputDataSet", "TotalCnBinnedCounting", function(this, onMissin
 
   res;
 }) # getOutputDataSet() for TotalCnBinnedCounting
-
-
-############################################################################
-# HISTORY:
-# 2014-07-24
-# o ROBUSTNESS: Now getOutputDataSet() for AbstractAlignment asserts
-#   that the output data set contains at most the same number of items
-#   as the input data set.
-# 2013-11-15
-# o CLEANUP: The different getOutputDataSet() methods no longer have to
-#   workaround the special case where the output data set is empty. They
-#   also don't have to handle argument 'onMissing'.  All this is now taken
-#   care of by extract() for GenericDataFileSet in R.filesets (>= 2.3.3).
-# o Extracted all findFilesTodo() methods and document them under the
-#   same generic function.
-# o Added argument 'onMissing' to getOutputDataSet() for
-#   PicardDuplicateRemoval.
-# 2013-11-11
-# o Added argument 'onMissing' to getOutputDataSet() for AbstractAlignment
-#   and TopHat2Alignment.
-# 2012-11-26
-# o Added argument 'onMissing' to getOutputDataSet() for AbstractAlignment.
-# o BUG FIX: getOutputDataSet() for AbstractAlignment would return a data
-#   set with "missing" files, if not complete.  Now it only returns the
-#   existing files (by default).
-############################################################################

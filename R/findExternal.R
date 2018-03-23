@@ -297,21 +297,3 @@ getExternalHome <- function(name, mustExist=TRUE, ...) {
   }
   path;
 } # getExternalHome()
-
-
-############################################################################
-# HISTORY:
-# 2014-08-07
-# o Added argument 'path' to findExternal().
-# o Added getExternalHome().
-# 2014-07-24
-# o ROBUSTNESS: Added 'versionPattern' to the set of cache keys.
-# 2014-03-09
-# o Now findExternal() drops trailing periods and trims too.
-# 2013-04-02
-# o ROBUSTNESS: Now findExternal(..., version=NULL) only gives a warning
-#   if it fails to infer the version from the software's version output.
-# 2013-04-01
-# o Renamed argument 'mustExists' to 'mustExist'.
-# o Created from findTopHat.R.
-############################################################################

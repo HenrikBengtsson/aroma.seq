@@ -97,20 +97,3 @@ setMethodS3("getFastaReferenceFile", "AbstractIndexSet", function(this, ...) {
 
 
 setMethodS3("isComplete", "AbstractIndexSet", abstract=TRUE);
-
-
-############################################################################
-# HISTORY:
-# 2014-08-23
-# o ROBUSTNESS: Now getFastaReferenceFile() now asserts compatibility.
-# 2014-01-18
-# o Added getFastaReferenceFile() for AbstractIndexSet.
-# 2013-11-17
-# o BUG FIX: BwaIndexSet$byPrefix(prefix) would find any BWA index set
-#   in directory dirname(prefix) without matching filenames of the set
-#   to basename(prefix).
-# 2013-11-10
-# o Added getOrganism().
-# 2012-09-27
-# o Created from BwaIndexSet.R
-############################################################################

@@ -109,10 +109,3 @@ setMethodS3("doBowtie2", "FastqDataSet", function(dataSet, reference, ..., verbo
 setMethodS3("doBowtie2", "default", function(...) {
   throw("The \"default\" method is still not implemented. Please see help('doBowtie2').");
 })
-
-
-############################################################################
-# HISTORY:
-# 2013-08-22
-# o Created.
-############################################################################

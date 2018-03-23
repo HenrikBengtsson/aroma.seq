@@ -87,23 +87,3 @@ setMethodS3("getGroupNames", "FileGroupsInterface", function(this, ...) {
 setMethodS3("validateGroups", "FileGroupsInterface", function(this, ...) {
   this;
 })
-
-
-############################################################################
-# HISTORY:
-# 2014-09-09
-# o BUG FIX: getGroups() for FileGroupsInterface would drop suffixes
-#   _1 and _R2, which should be there, from fullnames.
-# 2014-01-16 [HB]
-# o Using this Interface for BamMerger and TopHat2Alignment.
-# o Added FileGroupsInterface.
-# o Created.
-# Previous related history below:
-# 2014-01-16 [HB]
-# o BUG FIX: getGroups() of TopHat2Alignment would not generate the
-#   correct sets of indices.
-# o ROBUSTNESS: Now getGroups() of TopHat2Alignment assert that the
-#   file indices identified for each group/sample is unique.
-# 2013-11-22
-# o Implemented getGroups() for BamMerger.
-############################################################################

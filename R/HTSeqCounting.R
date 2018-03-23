@@ -288,15 +288,3 @@ setMethodS3("process", "HTSeqCounting", function(this, ..., skip=TRUE, force=FAL
 
   counts
 })
-
-
-############################################################################
-# HISTORY:
-# 2014-03-10 [HB]
-# o Now process() passes orderedBy="position" to htseqCount().
-# o ROBUSTNESS: Now process() for HTSeqCounting validates that the GTF
-#   file has chromsome names in a format that matched the BAM files.
-#   If not, an error is thrown.
-# 2014-01-23 [HB]
-# o Created.
-############################################################################

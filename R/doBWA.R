@@ -111,11 +111,3 @@ setMethodS3("doBWA", "AromaSeqDataFileSet", function(dataSet, reference, ..., ve
 setMethodS3("doBWA", "default", function(...) {
   throw("The \"default\" method is still not implemented. Please see help('doBWA').")
 })
-
-############################################################################
-# HISTORY:
-# 2013-11-17
-# o Now doBWA() builds BWA indices using method 'bwtsw' (was 'is').
-# 2013-08-22
-# o Created.
-############################################################################

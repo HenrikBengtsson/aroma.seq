@@ -197,16 +197,3 @@ setMethodS3("countNucleotides", "BamDataSet", function(bams, loci, ..., verbose=
 
   counts;
 }) # countNucleotides()
-
-
-############################################################################
-# HISTORY:
-# 2015-04-15
-# o Now countNucleotides() handles multiple chromosomes.
-# 2014-09-28
-# o Added countNucleotides() for BamDataSet.
-# o Added support for memoization to countNucleotides() for BamDataFile.
-# 2014-06-14
-# o Added to aroma.seq.
-# o Created from BAF,chr{{chr}}.md.rsp.
-############################################################################

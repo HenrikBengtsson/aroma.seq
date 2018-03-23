@@ -214,18 +214,3 @@ setConstructorS3("AromaUncFile", function(...) {
 
   this;
 })
-
-
-############################################################################
-# HISTORY:
-# 2014-06-24
-# o Added argument 'na.rm' to getGcContent().
-# o Now this file type also allocates and 'N' column.
-# 2012-10-18
-# o Added getGcContent().
-# 2012-10-16
-# o Added getAromaUncFile() for AromaUgpFile.
-# o Added allocateFromUgp().
-# o Added importFromBSgenome().
-# o Created from AromaUnitGcContentFile.R.
-############################################################################

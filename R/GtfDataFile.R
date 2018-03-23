@@ -205,23 +205,3 @@ setMethodS3("getSeqLengths", "GtfDataFile", function(this, unique=FALSE, onlyIfC
 
   lens
 })
-
-
-
-############################################################################
-# HISTORY:
-# 2014-07-24
-# o SPEEDUP: Now getSeqNames() for GtfDataFile memoized results.
-# 2014-03-10
-# o Added getSeqNames() for GtfDataFile, which now as.character() reports
-#   on, iff already parsed.
-# 2014-02-25
-# o Now static byOrganism() no longer passes '...'.
-# 2014-01-25
-# o DOCUMENTATION: Added help for GtfDataFile$byOrganism().
-# o Now static byOrganism() passes '...' also to the constructor.
-# o Now GtfDataFile by default assumes that the GTF file has no
-#   column headers.
-# 2014-01-18
-# o Created.
-############################################################################

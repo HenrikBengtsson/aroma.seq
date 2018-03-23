@@ -188,23 +188,3 @@ setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(thi
 
   tis
 }) # buildTopHat2TranscriptomeIndexSet()
-
-
-
-############################################################################
-# HISTORY:
-# 2014-08-23 [HB]
-# o BUG FIX: buildTopHat2TranscriptomeIndexSet() would give an error
-#   if the final destination directory already existed.
-# o CLEANUP: Now any logs/ directory is renamed to <fullname>.logs/.
-# o CLEANUP: Now any empty tmp/ directories are removed at the end.
-# o ROBUSTNESS: Now buildTopHat2TranscriptomeIndexSet() asserts that the
-#   returned index set is compatible with the input index set file.
-# 2014-07-22 [HB]
-# o ROBUSTNESS: Now buildTopHat2TranscriptomeIndexSet() asserts that the
-#   Bowtie2 index set and GTF have compatible sequence names and that
-#   the GTF filename has no commas.
-# o CLEANUP: Tidied up code and harmonized with the rest of the package.
-# 2014-02-04 [TT]
-# o Created.
-############################################################################

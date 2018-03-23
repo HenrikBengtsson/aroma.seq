@@ -56,12 +56,3 @@ setMethodS3("samtoolsMpileup", "default", function(refFile, bamFile, pathnameD="
 
   res
 }) # samtoolsMpileup()
-
-
-############################################################################
-# HISTORY:
-# 2014-03-10 [HB]
-# o ROBUSTNESS: Now samtoolsMpileup() uses shQuote() for all pathnames.
-# 2013-10-31
-# o Created as copy of samtoolsView.R [TT]
-############################################################################

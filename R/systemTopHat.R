@@ -84,10 +84,3 @@ setMethodS3("systemTopHat", "default", function(commandName="tophat",
   verbose && exit(verbose);
   res;
 }) # systemTopHat()
-
-
-############################################################################
-# HISTORY:
-# 2013-01-24
-# o Created. TAT
-############################################################################

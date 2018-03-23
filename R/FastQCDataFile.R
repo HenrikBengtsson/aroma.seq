@@ -51,10 +51,3 @@ setMethodS3("getSampleName", "FastQCDataFile", function(this, ...) {
 setMethodS3("getDefaultFullName", "FastQCDataFile", function(this, ...) {
   getSampleName(this, ...);
 }, protected=TRUE)
-
-
-############################################################################
-# HISTORY:
-# 2014-03-02
-# o Created.
-############################################################################

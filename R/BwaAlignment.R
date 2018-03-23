@@ -348,34 +348,3 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
 
   invisible(bams)
 })
-
-
-
-############################################################################
-# HISTORY:
-# 2014-04-13
-# o Now BwaAlignment supports paired-end alignment too.
-# 2013-11-17
-# o CLEANUP: Now getAsteriskTags() for BwaAlignment no longer includes
-#   the 'method' tag, e.g. now 'bwa' when it used to be 'bwa,is'.  This
-#   is because the 'method' tags only indicates *how* the BWA index was
-#   build, not what it outputs (same regardless of method).
-# o If read group ID is missing, process() for BwaAlignment sets it to
-#   be the same as the fullname of the filename.  Same for SM.
-# 2013-11-11
-# o SPEEDUP: Now Bowtie2Alignment and BwaAlignment skips already processed
-#   items much faster and if all are done, even quicker.
-# 2013-08-31
-# o Now process() for BwaAlignment utilizes parallel processing.
-# 2012-10-21
-# o Added argument 'drop' to getParameters().
-# o Now a default 'ID' tag is added to the SAM read group if missing.
-# 2012-10-01
-# o Now process() BwaAlignment write SAM read groups, iff given.
-# o Now BwaAlignment inherits from AbstractAlignment.
-# 2012-09-28
-# o Added support for argument 'rgSet' to BwaAlignment().
-# 2012-09-25
-# o Now process() passes additional arguments to bwaAln().
-# o Created from Bowtie2Alignment.R.
-############################################################################

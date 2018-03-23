@@ -63,15 +63,3 @@ findPicard <- function(mustExist=TRUE, ..., verbose=FALSE) {
 
   path;
 } # findPicard()
-
-
-############################################################################
-# HISTORY:
-# 2013-04-01
-# o Now findPicard() sets attribute 'version', iff possible.
-# 2012-10-01
-# o BUG FIX: findPicard(mustExists=FALSE) would throw an error if Picard
-#   was not found.
-# 2012-09-27
-# o Created.
-############################################################################

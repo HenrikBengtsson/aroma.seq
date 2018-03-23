@@ -87,12 +87,3 @@ setMethodS3("writeBedDataFile", "AromaUgpFile", function(this, ..., path=getPath
 
   invisible(res);
 }) # writeBedDataFile()
-
-
-############################################################################
-# HISTORY:
-# 2012-10-31.
-# o Added anyDuplicated() for AromaUgpFile.
-# o Added writeBedDataFile() for AromaUgpFile.
-# o Created.
-############################################################################

@@ -39,12 +39,3 @@ setMethodS3("getOrganism", "FastaReferenceSet", function(this, ...) {
   aFile <- this[[1L]];
   getOrganism(aFile, ...);
 })
-
-
-############################################################################
-# HISTORY:
-# 2013-11-01
-# o Now FastaReferenceSet$byPath() also finds gzip'ed FASTA files.
-# 2013-08-01
-# o Created from SamDataSet.R
-############################################################################

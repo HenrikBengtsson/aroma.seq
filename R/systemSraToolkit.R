@@ -62,10 +62,3 @@ setMethodS3("systemSraToolkit", "default", function(command, ..., verbose=FALSE)
 
   res;
 }) # systemSraToolkit()
-
-
-############################################################################
-# HISTORY:
-# 2014-09-29
-# o Created.
-############################################################################

@@ -44,21 +44,3 @@ queryBowtie2 <- function(what=c("support:fastq.gz"), ...) {
 
   res;
 } # queryBowtie2()
-
-
-############################################################################
-# HISTORY:
-# 2013-07-18
-# o BUG FIX: queryBowtie2("support:fastq.gz") did not always
-#   return a logical.
-# 2013-06-25
-# o Added queryBowtie2().
-# 2013-04-01
-# o BUG FIX: findBowtie2() was incorrectly hardwired to 'bowtie2-align'.
-# o Now findBowtie2() sets attribute 'version', iff possible.
-# 2012-09-27
-# o Now looking for bowtie2-align instead of bowtie2, because the latter
-#   is a perl script calling the former.
-# 2012-09-24
-# o Created.
-############################################################################
