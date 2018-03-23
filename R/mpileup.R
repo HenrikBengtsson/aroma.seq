@@ -141,7 +141,7 @@ setMethodS3("mpileup", "BamDataSet", function(bams, fa, Q=20, chromosomes=getSeq
 
   ## Step 4: Gather and rearrange
   verbose && enter(verbose, "Gather and rearrange")
-  stopifnot(length(work) == nrow(res))
+  stopifnot(length(work) == ncol(res))
   for (ii in seq_along(work)) {
     resII <- res[,ii]
     todo <- which(unlist(lapply(resII, FUN=is.null)))
