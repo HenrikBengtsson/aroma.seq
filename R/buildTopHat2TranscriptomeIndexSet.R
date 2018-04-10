@@ -35,7 +35,7 @@ setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(thi
   } # hasCommas()
 
   assertNoCommas <- function(pathnames, ...) {
-    stopifnot(!any(hasCommas(pathnames)));
+    stop_if_not(!any(hasCommas(pathnames)));
   } # assertNoCommas()
 
 
@@ -109,7 +109,7 @@ setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(thi
   # Call TopHat executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Assert TopHat and that it is of a sufficient version
-  stopifnot(isCapableOf(aroma.seq, "tophat2"))
+  stop_if_not(isCapableOf(aroma.seq, "tophat2"))
   verT <- attr(findTopHat2(), "version")
   if (verT < '2.0.10') throw("TopHat version >= 2.0.10 required")
 
@@ -165,7 +165,7 @@ setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(thi
   }
 
   # Assert that all files have been moved
-  stopifnot(length(listDirectory(outPathT, pattern=pattern)) == 0L);
+  stop_if_not(length(listDirectory(outPathT, pattern=pattern)) == 0L);
 
   # Remove temporary directory, if empty
   if (length(listDirectory(outPathT, private=TRUE)) == 0L) {

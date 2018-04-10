@@ -77,7 +77,7 @@ setMethodS3("getOutputDataSet", "AbstractAlignment", function(this, onMissing=c(
   for (ii in seq_along(bams)) {
     bam <- bams[[ii]]
     bamExists <- isFile(bam)
-    if (onMissing != "NA") stopifnot(bamExists)
+    if (onMissing != "NA") stop_if_not(bamExists)
     if (bamExists) isCompatibleWith(bam, is)
   }
 

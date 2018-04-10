@@ -47,7 +47,7 @@ setMethodS3("samtoolsMpileup", "default", function(refFile, bamFile, pathnameD="
   verbose && enter(verbose, "Running samtools 'mpileup'")
 
   # Assert that input files are not overwritten
-  stopifnot((getAbsolutePath(pathnameD) != getAbsolutePath(refFile)) &&
+  stop_if_not((getAbsolutePath(pathnameD) != getAbsolutePath(refFile)) &&
               (getAbsolutePath(pathnameD) != getAbsolutePath(bamFile)))
 
   res <- systemSamtools("mpileup", f=shQuote(refFile), ..., shQuote(bamFile), stdout=pathnameD, verbose=less(verbose, 10))

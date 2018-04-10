@@ -73,7 +73,7 @@ setMethodS3("convertToSam", "BamDataFile", function(this, path=getPath(this), sk
   }
 
   # Asserts
-  stopifnot(getAbsolutePath(pathnameSAM) != getAbsolutePath(pathname));
+  stop_if_not(getAbsolutePath(pathnameSAM) != getAbsolutePath(pathname));
   pathnameSAM <- Arguments$getWritablePathname(pathnameSAM, mustNotExist=!overwrite);
 
   # Converting BAM to SAM

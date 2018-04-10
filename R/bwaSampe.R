@@ -40,11 +40,11 @@ setMethodS3("bwaSampe", "default", function(pathnameSAI, pathnameFQ, indexPrefix
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'pathnameSAI':
   pathnameSAI <- Arguments$getReadablePathnames(pathnameSAI, length=c(2,2));
-  stopifnot(pathnameSAI[2L] != pathnameSAI[1L]);
+  stop_if_not(pathnameSAI[2L] != pathnameSAI[1L]);
 
   # Argument 'pathnameFQ':
   pathnameFQ <- Arguments$getReadablePathnames(pathnameFQ, length=c(2,2));
-  stopifnot(pathnameFQ[2L] != pathnameFQ[1L]);
+  stop_if_not(pathnameFQ[2L] != pathnameFQ[1L]);
 
   # Argument 'indexPrefix':
   dummy <- Arguments$getReadablePath(getParent(indexPrefix));
@@ -62,9 +62,9 @@ setMethodS3("bwaSampe", "default", function(pathnameSAI, pathnameFQ, indexPrefix
   verbose && enter(verbose, "Running BWA 'sampe'");
 
   # Assert that input files are not overwritten
-  stopifnot(!getAbsolutePath(pathnameD) %in% getAbsolutePath(pathnameSAI));
-  stopifnot(!getAbsolutePath(pathnameD) %in% getAbsolutePath(pathnameFQ));
-##  stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFA));
+  stop_if_not(!getAbsolutePath(pathnameD) %in% getAbsolutePath(pathnameSAI));
+  stop_if_not(!getAbsolutePath(pathnameD) %in% getAbsolutePath(pathnameFQ));
+##  stop_if_not(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFA));
 
   res <- systemBWA("sampe", "f"=shQuote(pathnameD), shQuote(indexPrefix), shQuote(pathnameSAI), shQuote(pathnameFQ), ..., verbose=less(verbose, 10));
 

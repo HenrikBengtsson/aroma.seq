@@ -84,7 +84,7 @@ setMethodS3("readAnnData", "BwaIndexSet", function(this, ...) {
     strsplit(x, split="\t", fixed=TRUE)[[1]]
   })
   ns <- sapply(dataT, FUN=length)
-  stopifnot(all(ns == 3))
+  stop_if_not(all(ns == 3))
   hdr <- dataT[[1]]
   hdr <- list(
     totalSeqLength=as.double(hdr[1]),
@@ -92,7 +92,7 @@ setMethodS3("readAnnData", "BwaIndexSet", function(this, ...) {
     unknown=hdr[3]
   )
   dataT <- dataT[-1]
-  stopifnot(length(dataT) == 2*hdr$nbrOfSequences)
+  stop_if_not(length(dataT) == 2*hdr$nbrOfSequences)
   seqInfo <- list()
   for (kk in seq_len(hdr$nbrOfSequences)) {
     dataKK <- dataT[1:2 + 2*(kk-1)]
@@ -101,7 +101,7 @@ setMethodS3("readAnnData", "BwaIndexSet", function(this, ...) {
     seqInfo[[kk]] <- seqInfoKK
   }
   seqInfo <- Reduce(rbind, seqInfo)
-  stopifnot(sum(seqInfo$length) == hdr$totalSeqLength)
+  stop_if_not(sum(seqInfo$length) == hdr$totalSeqLength)
   attr(seqInfo, "header") <- hdr
   seqInfo
 })

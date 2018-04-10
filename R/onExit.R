@@ -52,7 +52,7 @@ onExit <- function(expr=NULL, where=c("first", "last", "replace"), ..., exits, e
     }
   }
   if (!is.null(exits)) {
-    stopifnot(is.call(exits));
+    stop_if_not(is.call(exits));
   }
 
   # Argument 'where':

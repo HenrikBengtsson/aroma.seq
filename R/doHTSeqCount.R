@@ -62,7 +62,7 @@ setMethodS3("doHTSeqCount", "BamDataSet", function(dataSet, transcripts, ..., ve
   # Checking requirements
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "HTSeqCounting/Check requirements");
-  stopifnot(isCapableOf(aroma.seq, "htseq"));
+  stop_if_not(isCapableOf(aroma.seq, "htseq"));
   verbose && exit(verbose);
 
 

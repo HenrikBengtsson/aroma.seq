@@ -156,7 +156,7 @@ setMethodS3("isPaired", "FastqDataSet", function(this, ...) {
 
 
 setMethodS3("getFilePairs", "FastqDataSet", function(this, ...) {
-  stopifnot(isPaired(this));
+  stop_if_not(isPaired(this));
 
   pairs <- vector("list", length=2*length(this));
   dim(pairs) <- c(length(this), 2L);

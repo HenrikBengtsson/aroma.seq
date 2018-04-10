@@ -73,7 +73,7 @@ setMethodS3("tophat", "default", function(bowtieRefIndexPrefix, reads1=NULL, rea
   # Argument 'reads2'
   isPaired <- (length(reads2) > 0L);
   if (isPaired) {
-    stopifnot(length(reads2) == length(reads1));
+    stop_if_not(length(reads2) == length(reads1));
     reads2 <- Arguments$getReadablePathnames(reads2, absolutePath=TRUE);
     assertNoDuplicated(reads2);
   }

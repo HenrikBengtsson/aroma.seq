@@ -104,9 +104,9 @@ setMethodS3("importFromBSgenome", "AromaUnitNucleotideCountsFile", function(this
     verbose && enter(verbose, "Inferring UGP file from file footer");
     ftr <- readFooter(this);
     binSource <- ftr$sources$binning;
-    stopifnot(is.list(binSource));
+    stop_if_not(is.list(binSource));
     fullname <- binSource$fullname;
-    stopifnot(!is.null(fullname));
+    stop_if_not(!is.null(fullname));
     ugp <- AromaUgpFile$byChipType(fullname, nbrOfUnits=nbrOfUnits(this));
     verbose && exit(verbose);
   }
@@ -124,7 +124,7 @@ setMethodS3("importFromBSgenome", "AromaUnitNucleotideCountsFile", function(this
 
   verbose && enter(verbose, "Asserting that all chromosomes exists and sequences in the BSgenome source");
   # Sanity check
-  stopifnot(all(is.element(names(chromosomes), seqnames(db))));
+  stop_if_not(all(is.element(names(chromosomes), seqnames(db))));
   verbose && exit(verbose);
 
   verbose && exit(verbose);

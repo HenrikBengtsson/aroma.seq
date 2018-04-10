@@ -78,7 +78,7 @@ setMethodS3("process", "HTSeqCounting", function(this, ..., skip=TRUE, force=FAL
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Assert external software versions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  stopifnot(isCapableOf(aroma.seq, "htseq"));
+  stop_if_not(isCapableOf(aroma.seq, "htseq"));
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -141,7 +141,7 @@ setMethodS3("process", "HTSeqCounting", function(this, ..., skip=TRUE, force=FAL
     verbose && exit(verbose);
   }
   # Sanity check
-  stopifnot(!isGzipped(transcripts));
+  stop_if_not(!isGzipped(transcripts));
 
   verbose && cat(verbose, "Number of samples: ", length(ds));
 
@@ -282,7 +282,7 @@ setMethodS3("process", "HTSeqCounting", function(this, ..., skip=TRUE, force=FAL
   verbose && print(verbose, counts)
 
   # Sanity check
-  stopifnot(all(sapply(counts, FUN=isFile)))
+  stop_if_not(all(sapply(counts, FUN=isFile)))
 
   verbose && exit(verbose)
 

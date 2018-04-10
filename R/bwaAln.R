@@ -55,8 +55,8 @@ setMethodS3("bwaAln", "default", function(pathnameFQ, indexPrefix, pathnameD, ..
   verbose && enter(verbose, "Running BWA 'aln'");
 
   # Assert that input files are not overwritten
-  stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFQ));
-##  stopifnot(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFA));
+  stop_if_not(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFQ));
+##  stop_if_not(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFA));
 
   res <- systemBWA("aln", "f"=shQuote(pathnameD), shQuote(indexPrefix), ..., shQuote(pathnameFQ), verbose=less(verbose, 10));
 

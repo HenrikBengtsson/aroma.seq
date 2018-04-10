@@ -38,6 +38,6 @@ setMethodS3("getRootPath", "SamTransform", function(this, ...) {
   path <- getPath(ds);
   path <- getParent(path, depth=2L);
   # Sanity check
-  stopifnot(regexpr("Data$", path) != -1L);
+  stop_if_not(regexpr("Data$", path) != -1L);
   path;
 }, protected=TRUE)

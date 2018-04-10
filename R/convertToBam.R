@@ -71,7 +71,7 @@ setMethodS3("convertToBam", "SamDataFile", function(this, path=getPath(this), sk
   }
 
   # Asserts
-  stopifnot(getAbsolutePath(pathnameBAM) != getAbsolutePath(pathname));
+  stop_if_not(getAbsolutePath(pathnameBAM) != getAbsolutePath(pathname));
   pathnameBAM <- Arguments$getWritablePathname(pathnameBAM, mustNotExist=!overwrite);
 
   # Converting SAM to BAM, sort and create an index (*.bai)

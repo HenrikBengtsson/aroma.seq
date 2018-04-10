@@ -34,7 +34,7 @@ setMethodS3("getGroups", "FileGroupsInterface", function(this, ...) {
     }
   }
   # Sanity check
-  stopifnot(is.list(groups));
+  stop_if_not(is.list(groups));
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

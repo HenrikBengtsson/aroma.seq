@@ -235,7 +235,7 @@ setMethodS3("isCompatibleWith", "BwaIndexSet", function(this, other, ...) {
 # File set subclasses
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 setMethodS3("isCompatibleWith", "AromaSeqDataFileSet", function(this, other, ...) {
-  stopifnot(inherits(other, "SequenceContigsInterface"))
+  stop_if_not(inherits(other, "SequenceContigsInterface"))
 
   for (ii in seq_along(this)) {
     df <- this[[ii]]

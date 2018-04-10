@@ -62,7 +62,7 @@ setMethodS3("doBowtie2", "FastqDataSet", function(dataSet, reference, ..., verbo
   # Checking requirements
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Bowtie2/Check requirements");
-  stopifnot(isCapableOf(aroma.seq, "bwa"));
+  stop_if_not(isCapableOf(aroma.seq, "bwa"));
   verbose && exit(verbose);
 
 

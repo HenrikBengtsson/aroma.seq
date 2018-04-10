@@ -68,8 +68,8 @@ setMethodS3("isComplete", "Bowtie2IndexSet", function(this, ...) {
 
 
 setMethodS3("getSummary", "Bowtie2IndexSet", function(this, ...) {
-  stopifnot(isComplete(this));
-  stopifnot(isCapableOf(aroma.seq, "bowtie2"));
+  stop_if_not(isComplete(this));
+  stop_if_not(isCapableOf(aroma.seq, "bowtie2"));
   prefix <- getIndexPrefix(this);
   tempfile
   bfr <- system2("bowtie2-inspect", args=c("--summary", prefix), stdout=TRUE);
@@ -82,8 +82,8 @@ setMethodS3("getSummary", "Bowtie2IndexSet", function(this, ...) {
 
 
 setMethodS3("readSeqLengths", "Bowtie2IndexSet", function(this, force=FALSE, ...) {
-  stopifnot(isComplete(this))
-  stopifnot(isCapableOf(aroma.seq, "bowtie2"))
+  stop_if_not(isComplete(this))
+  stop_if_not(isCapableOf(aroma.seq, "bowtie2"))
 
   prefix <- getIndexPrefix(this)
 

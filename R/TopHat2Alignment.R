@@ -117,8 +117,8 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Test for non-compatible bowtie2 and tophat2 versions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  stopifnot(isCapableOf(aroma.seq, "tophat2"));
-  stopifnot(isCapableOf(aroma.seq, "bowtie2"));
+  stop_if_not(isCapableOf(aroma.seq, "tophat2"));
+  stop_if_not(isCapableOf(aroma.seq, "bowtie2"));
   verT <- attr(findTopHat2(), "version");
   verB <- attr(findBowtie2(), "version");
   if (!is.null(verT) && !is.null(verB)) {
@@ -212,7 +212,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   faT <- newInstance(fa, pathnameT);
   verbose && cat(verbose, "FASTA file that TopHat will see/use:");
   verbose && print(verbose, faT);
-  stopifnot(getPath(faT) == getPath(is));
+  stop_if_not(getPath(faT) == getPath(is));
   pathT <- fa <- pathnameT <- faT <- NULL;
   verbose && exit(verbose);
 
@@ -243,7 +243,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
       verbose && exit(verbose);
     }
     # Sanity check
-    stopifnot(!isGzipped(transcripts));
+    stop_if_not(!isGzipped(transcripts));
 
     # (b) Build transcriptome index set
     verbose && enter(verbose, "Building transcriptome index set");
@@ -357,7 +357,7 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   verbose && print(verbose, bams)
 
   # Sanity check
-  stopifnot(all(sapply(bams, FUN=isFile)))
+  stop_if_not(all(sapply(bams, FUN=isFile)))
 
   verbose && exit(verbose)
 

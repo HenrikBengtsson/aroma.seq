@@ -50,7 +50,7 @@ setupExampleData <- function(dirs=c("annotationData", "bamData", "fastqData*"), 
     }
 
     # Sanity check
-    stopifnot(isDirectory(dir));
+    stop_if_not(isDirectory(dir));
   } # for (ii ...)
 
 
