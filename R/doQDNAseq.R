@@ -237,11 +237,11 @@ setMethodS3("doQDNAseq", "FastqDataSet", function(dataSet, binWidth, reference, 
   verbose && enter(verbose, "QDNAseq/Check requirements");
 
   verbose && enter(verbose, "QDNAseq/Check requirements/BWA");
-  stop_if_not(isCapableOf(aroma.seq, "bwa"));
+  .stop_if_not(isCapableOf(aroma.seq, "bwa"));
   verbose && exit(verbose);
 
   verbose && enter(verbose, "QDNAseq/Check requirements/Picard");
-  stop_if_not(isCapableOf(aroma.seq, "picard"));
+  .stop_if_not(isCapableOf(aroma.seq, "picard"));
   verbose && exit(verbose);
 
   verbose && exit(verbose);

@@ -41,7 +41,7 @@ setMethodS3("samtoolsSort", "default", function(pathname, pathnameD, ..., verbos
   verbose && enter(verbose, "Running samtools 'sort'");
 
   # Assert that input files are not overwritten
-  stop_if_not(getAbsolutePath(pathnameD) != getAbsolutePath(pathname));
+  .stop_if_not(getAbsolutePath(pathnameD) != getAbsolutePath(pathname));
 
   res <- systemSamtools("sort", ..., shQuote(pathname), shQuote(pathnameD), verbose=less(verbose, 10));
 

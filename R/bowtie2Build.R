@@ -48,7 +48,7 @@ setMethodS3("bowtie2Build", "default", function(pathnameFAs,
   } # hasCommas()
 
   assertNoCommas <- function(pathnames, ...) {
-    stop_if_not(!any(hasCommas(pathnames)));
+    .stop_if_not(!any(hasCommas(pathnames)));
   } # assertNoCommas()
 
 

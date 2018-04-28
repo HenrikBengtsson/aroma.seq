@@ -41,7 +41,7 @@ bowtie2 <- function(reads1, reads2=NULL, indexPrefix, pathnameSAM, ..., gzAllowe
   # Argument 'reads2'
   isPaired <- (length(reads2) > 0L);
   if (isPaired) {
-    stop_if_not(length(reads2) == length(reads1));
+    .stop_if_not(length(reads2) == length(reads1));
     reads2 <- Arguments$getReadablePathnames(reads2, absolutePath=TRUE);
     assertNoDuplicated(reads2);
   }
@@ -112,7 +112,7 @@ bowtie2 <- function(reads1, reads2=NULL, indexPrefix, pathnameSAM, ..., gzAllowe
 
       # Sanity check
       isGzipped <- any(sapply(pathnameFQ, FUN=isGzipped));
-      stop_if_not(!isGzipped);
+      .stop_if_not(!isGzipped);
 
       # Reassign 'reads1' and 'reads2'.
       idxs <- seq_along(reads1);

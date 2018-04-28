@@ -155,7 +155,7 @@ setMethodS3("getReadCounts", "BamDataFile", function(this, ...) {
       quickBamFlagSummary(pathname, index=pathname, main.groups.only=FALSE)
     })
     stats <- grep("record is", stats, value=TRUE)
-    stop_if_not(length(stats) == 2L)
+    .stop_if_not(length(stats) == 2L)
     stats <- strsplit(stats, split="|", fixed=TRUE)
     stats <- sapply(stats, FUN=function(x) x[2L])
     counts <- as.integer(stats)
@@ -163,7 +163,7 @@ setMethodS3("getReadCounts", "BamDataFile", function(this, ...) {
   }
 
   # Sanity check
-  stop_if_not(length(counts) == 2L)
+  .stop_if_not(length(counts) == 2L)
 
   counts
 })
@@ -442,7 +442,7 @@ setMethodS3("replaceAllReadGroups", "BamDataFile", function(this, rg="*", ..., v
     rgDefault <- getReadGroups(this);
     rgDefault <- Reduce(merge, rgDefault);
     # Sanity check
-    stop_if_not(inherits(rgDefault, "SamReadGroup"));
+    .stop_if_not(inherits(rgDefault, "SamReadGroup"));
 
     for (key in keys) {
       rg[[key]] <- rgDefault[[key]];
@@ -541,15 +541,15 @@ setMethodS3("readDataFrame", "BamDataFile", function(this, fields=NULL, flag=sca
   data <- scanBam(pathname, param=param, ...);
 
   # Sanity check
-  stop_if_not(is.list(data) && length(data) == 1L);
+  .stop_if_not(is.list(data) && length(data) == 1L);
   data <- data[[1L]];
-  stop_if_not(is.list(data));
+  .stop_if_not(is.list(data));
   verbose && str(verbose, data);
 
   verbose && enter(verbose, "Coercing list to data frame");
   # Sanity check
   ns <- sapply(data, FUN=length);
-  stop_if_not(all(ns == ns[1L]));
+  .stop_if_not(all(ns == ns[1L]));
 
   data <- as.data.frame(data, stringsAsFactors=TRUE);
   verbose && str(verbose, data);
@@ -636,7 +636,7 @@ setMethodS3("validate", "BamDataFile", function(this, method=c("picard"), ..., v
   verbose && cat(verbose, "Validation method: ", method);
 
   if (method == "picard") {
-    stop_if_not(isCapableOf(aroma.seq, "picard"));
+    .stop_if_not(isCapableOf(aroma.seq, "picard"));
     res <- picardValidateSamFile(getPathname(this), ..., verbose=verbose);
   }
 
@@ -740,7 +740,7 @@ setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, seed=NULL,
       res <- keep[offset + seq_len(n)];
 ##      message(sprintf("n2=%d",length(res)))
       # Sanity check
-      stop_if_not(length(res) == n);
+      .stop_if_not(length(res) == n);
 
       # Update offset
       offset <<- offset + n;
@@ -783,7 +783,7 @@ setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, seed=NULL,
   verbose && cat(verbose, "Created: ", pathname2);
 
   bam2 <- newInstance(this, pathname2);
-  stop_if_not(nbrOfReads(bam2) == n);
+  .stop_if_not(nbrOfReads(bam2) == n);
 
   # Undo temporary files
   file.rename(pathnameIT, pathnameI);

@@ -17,17 +17,17 @@ setMethodS3("mpileup", "BamDataSet", function(bams, fa, Q=20, chromosomes=getSeq
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'bams':
-  stop_if_not(inherits(bams, "BamDataSet"))
-  stop_if_not(isCompatibleWith(bams, bams[[1]]))  ## Self consistency
+  .stop_if_not(inherits(bams, "BamDataSet"))
+  .stop_if_not(isCompatibleWith(bams, bams[[1]]))  ## Self consistency
 
   # Argument 'fa':
-  stop_if_not(inherits(fa, "FastaReferenceFile"))
+  .stop_if_not(inherits(fa, "FastaReferenceFile"))
   ## Assert compatible chromosome names and equal chromosome lengths
   seqLengths <- getSeqLengths(fa)
   for (ii in seq_along(bams)) {
     bam <- bams[[ii]]
-    stop_if_not(all(getSeqNames(bam) %in% names(seqLengths)))
-    stop_if_not(all(seqLengths[getSeqNames(bam)] == getSeqLengths(bam)))
+    .stop_if_not(all(getSeqNames(bam) %in% names(seqLengths)))
+    .stop_if_not(all(seqLengths[getSeqNames(bam)] == getSeqLengths(bam)))
   }
   
   # Argument 'pathD':
@@ -56,7 +56,7 @@ setMethodS3("mpileup", "BamDataSet", function(bams, fa, Q=20, chromosomes=getSeq
   verbose && printf(verbose, "Chromosomes: [%d] %s\n", nchrs, hpaste(chromosomes))
 
   ## Assert BAM use the same chromosome names
-  stop_if_not(all(chromosomes %in% getSeqNames(fa)))
+  .stop_if_not(all(chromosomes %in% getSeqNames(fa)))
 
   ## Chromosome-by-sample matrix of MPileupFile:s
   ## (will be transposed before being returned)
@@ -114,14 +114,14 @@ setMethodS3("mpileup", "BamDataSet", function(bams, fa, Q=20, chromosomes=getSeq
     verbose && printf(verbose, "Chromosomes to process: [%d] %s\n", nchrsT, hpaste(chromosomesT))
 
     ## Assert BAM use the same chromosome names
-    stop_if_not(all(chromosomesT %in% getSeqNames(bam)))
+    .stop_if_not(all(chromosomesT %in% getSeqNames(bam)))
 
     label <- sprintf("sample_%d", ii)
     work[[ii]] %<-% {
       print(future::sessionDetails())
       resT <- mpileup(bam, fa=fa, chromosomes=chromosomesT, Q=Q, pathD=pathD, ..., force=force, verbose=less(verbose, 1))
       verbose && print(verbose, resT)
-      stop_if_not(length(resT) == length(todo))
+      .stop_if_not(length(resT) == length(todo))
       resT
     } %label% label
     
@@ -136,18 +136,18 @@ setMethodS3("mpileup", "BamDataSet", function(bams, fa, Q=20, chromosomes=getSeq
   verbose && enter(verbose, "Collect and resolve all futures")
   work <- resolve(work, value=TRUE, progress=TRUE)
   verbose && print(verbose, work)
-  stop_if_not(length(work) == length(bams))
+  .stop_if_not(length(work) == length(bams))
   verbose && exit(verbose)
 
   ## Step 4: Gather and rearrange
   verbose && enter(verbose, "Gather and rearrange")
-  stop_if_not(length(work) == ncol(res))
+  .stop_if_not(length(work) == ncol(res))
   for (ii in seq_along(work)) {
     resII <- res[,ii]
     todo <- which(unlist(lapply(resII, FUN=is.null)))
     if (length(todo) == 0) next
     workII <- work[[ii]]
-    stop_if_not(length(workII) == length(todo))
+    .stop_if_not(length(workII) == length(todo))
     res[todo, ii] <- workII
   }
   work <- todo <- NULL ## Not needed anymore
@@ -173,14 +173,14 @@ setMethodS3("mpileup", "BamDataFile", function(bam, fa, Q=20, chromosomes=getSeq
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'bam':
-  stop_if_not(inherits(bam, "BamDataFile"))
+  .stop_if_not(inherits(bam, "BamDataFile"))
 
   # Argument 'fa':
-  stop_if_not(inherits(fa, "FastaReferenceFile"))
+  .stop_if_not(inherits(fa, "FastaReferenceFile"))
   ## Assert compatible chromosome names and equal chromosome lengths
   seqLengths <- getSeqLengths(fa)
-  stop_if_not(all(getSeqNames(bam) %in% names(seqLengths)))
-  stop_if_not(all(seqLengths[getSeqNames(bam)] == getSeqLengths(bam)))
+  .stop_if_not(all(getSeqNames(bam) %in% names(seqLengths)))
+  .stop_if_not(all(seqLengths[getSeqNames(bam)] == getSeqLengths(bam)))
   
   # Argument 'pathD':
   pathD <- Arguments$getWritablePath(pathD)
@@ -208,8 +208,8 @@ setMethodS3("mpileup", "BamDataFile", function(bam, fa, Q=20, chromosomes=getSeq
   verbose && printf(verbose, "Chromosomes: [%d] %s\n", nchrs, hpaste(chromosomes))
 
   ## Assert BAM use the same chromosome names
-  stop_if_not(all(chromosomes %in% getSeqNames(fa)))
-  stop_if_not(all(chromosomes %in% getSeqNames(bam)))
+  .stop_if_not(all(chromosomes %in% getSeqNames(fa)))
+  .stop_if_not(all(chromosomes %in% getSeqNames(bam)))
   
   name <- getFullName(bam)
 

@@ -344,7 +344,7 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
   is <- getIndexSet(this)
   for (ii in seq_along(bams)) {
     bam <- bams[[ii]]
-    stop_if_not(isFile(bam))
+    .stop_if_not(isFile(bam))
     isCompatibleWith(bam, is)
   }
 

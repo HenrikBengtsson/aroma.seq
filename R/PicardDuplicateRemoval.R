@@ -143,8 +143,8 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
         verbose && str(verbose, df);
 
         # Assert no overwrite
-        stop_if_not(getAbsolutePath(pathnameD) != getAbsolutePath(pathname));
-        stop_if_not(getAbsolutePath(pathnameM) != getAbsolutePath(pathnameD));
+        .stop_if_not(getAbsolutePath(pathnameD) != getAbsolutePath(pathname));
+        .stop_if_not(getAbsolutePath(pathnameM) != getAbsolutePath(pathnameD));
 
         args$verbose <- less(verbose, 20);
         res <- do.call(systemPicard, args);

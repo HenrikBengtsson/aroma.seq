@@ -257,7 +257,7 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
         if (!isFile(pathnameSAI)) {
 	  fq <- dfList[[kk]]
           pathnameFQ <- pathnameFQs[kk]
-	  stop_if_not(pathnameFQ == getPathname(fq))
+	  .stop_if_not(pathnameFQ == getPathname(fq))
 
           args <- list("aln", f=shQuote(pathnameSAI), shQuote(indexPrefix))
 	  if (inherits(fq, "BamDataFile")) args <- c(args, "-b")

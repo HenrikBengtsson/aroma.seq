@@ -3,7 +3,7 @@ htable <- function(x, useNA="ifany", ..., fmtstr="%s [%d]") {
   hpaste(sprintf(fmtstr, names(t), t), ...)
 }
 
-stop_if_not <- function(...) {
+.stop_if_not <- function(...) {
   res <- list(...)
   n <- length(res)
   if (n == 0L) return()

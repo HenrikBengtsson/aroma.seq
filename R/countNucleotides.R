@@ -96,7 +96,7 @@ setMethodS3("countNucleotides", "BamDataFile", function(bam, loci, ..., cache=FA
     res <- scanBam(pathname, param=params);
     verbose && cat(verbose, "Number of positions read: ", length(res));
     # Sanity check
-    stop_if_not(length(res) == length(posCC));
+    .stop_if_not(length(res) == length(posCC));
     verbose && exit(verbose);
 
     # Count alleles
@@ -177,7 +177,7 @@ setMethodS3("countNucleotides", "BamDataSet", function(bams, loci, ..., verbose=
       counts <- matrix(0L, nrow=dimII[1L], ncol=dimII[2L])
       dimnames(counts) <- dimnames(countsII)
     }
-    stop_if_not(identical(dimII, dim(counts)))
+    .stop_if_not(identical(dimII, dim(counts)))
 
     countsII[is.na(countsII)] <- 0L
     counts <- counts + countsII

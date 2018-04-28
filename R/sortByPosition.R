@@ -45,7 +45,7 @@ setMethodS3("sortByPosition", "BamDataFile", function(this, pathD=getPath(this),
   bIndex <- Arguments$getLogical(bIndex)
 
   # Argument 'suffix'
-  stop_if_not(is.character(suffix))  ## Should test if single string, and return informative error msg
+  .stop_if_not(is.character(suffix))  ## Should test if single string, and return informative error msg
 
   # Argument 'skip':
   skip <- Arguments$getLogical(skip);
@@ -119,7 +119,7 @@ setMethodS3("sortByPosition", "BamDataSet", function(ds, path=getPath(ds), suffi
   path <- Arguments$getWritablePath(path);
 
   # Argument 'suffix'
-  stop_if_not(is.character(suffix))  ## Should test if single string, and return informative error msg
+  .stop_if_not(is.character(suffix))  ## Should test if single string, and return informative error msg
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);

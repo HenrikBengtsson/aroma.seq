@@ -60,9 +60,9 @@ setMethodS3("bwaSamse", "default", function(pathnameSAI, pathnameFQ, indexPrefix
   verbose && enter(verbose, "Running BWA 'samse'");
 
   # Assert that input files are not overwritten
-  stop_if_not(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameSAI));
-  stop_if_not(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFQ));
-##  stop_if_not(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFA));
+  .stop_if_not(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameSAI));
+  .stop_if_not(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFQ));
+##  .stop_if_not(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFA));
 
   res <- systemBWA("samse", "f"=shQuote(pathnameD), shQuote(indexPrefix), shQuote(pathnameSAI), shQuote(pathnameFQ), ..., verbose=less(verbose, 10));
 

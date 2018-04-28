@@ -7,11 +7,11 @@ hasSpaces <- function(s, ...) {
 }
 
 assertNoCommas <- function(s, ...) {
-  stop_if_not(!any(hasCommas(s)));
+  .stop_if_not(!any(hasCommas(s)));
 }
 
 assertNoSpaces <- function(s, ...) {
-  stop_if_not(!any(hasSpaces(s)));
+  .stop_if_not(!any(hasSpaces(s)));
 }
 
 assertNoDuplicated <- function(x, .name=NULL, ...) {

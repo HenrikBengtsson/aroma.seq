@@ -105,7 +105,7 @@ setMethodS3("getOutputDataSet", "FastQCReporter", function(this, onMissing=c("dr
 
 setMethodS3("process", "FastQCReporter", function(this, ..., skip=TRUE, force=FALSE, verbose=FALSE) {
   # Requirements
-  stop_if_not(isCapableOf(aroma.seq, "fastqc"));
+  .stop_if_not(isCapableOf(aroma.seq, "fastqc"));
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -205,7 +205,7 @@ setMethodS3("process", "FastQCReporter", function(this, ..., skip=TRUE, force=FA
       verbose && print(verbose, res)
 
       # Sanity check
-      stop_if_not(isDirectory(pathDT))
+      .stop_if_not(isDirectory(pathDT))
 
 
       # FIXME: Do we need to pool here?  Does fastQC() return before output
@@ -219,7 +219,7 @@ setMethodS3("process", "FastQCReporter", function(this, ..., skip=TRUE, force=FA
                            ignore.case=TRUE, full.names=FALSE)
       if (length(filesT) > 0L) {
         # Sanity check
-        stop_if_not(length(filesT) == 1L)
+        .stop_if_not(length(filesT) == 1L)
 
         # FastQC (>= 0.11.1)
         # Unzip *_fastqc.zip file
@@ -243,11 +243,11 @@ setMethodS3("process", "FastQCReporter", function(this, ..., skip=TRUE, force=FA
       }
 
       # Sanity check
-      stop_if_not(length(dirT) > 0L)
-      stop_if_not(length(dirT) == 1L)
+      .stop_if_not(length(dirT) > 0L)
+      .stop_if_not(length(dirT) == 1L)
 
       pathT <- file.path(pathDT, dirT)
-      stop_if_not(isDirectory(pathT))
+      .stop_if_not(isDirectory(pathT))
 
       # Sanity check
       pathnameDT <- file.path(pathT, filenameD)
@@ -264,14 +264,14 @@ setMethodS3("process", "FastQCReporter", function(this, ..., skip=TRUE, force=FA
       file.rename(pathT, pathD)
 
       # Sanity check
-      stop_if_not(!isDirectory(pathT))
+      .stop_if_not(!isDirectory(pathT))
 
       # CLEANUP
       removeDirectory(pathDT)
 
       # Sanity check
-      stop_if_not(isDirectory(pathD))
-      stop_if_not(!isDirectory(pathDT))
+      .stop_if_not(isDirectory(pathD))
+      .stop_if_not(!isDirectory(pathDT))
 
       verbose && exit(verbose)
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

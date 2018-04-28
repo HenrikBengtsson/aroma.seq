@@ -41,7 +41,7 @@ setMethodS3("samtoolsView", "default", function(pathname, pathnameD, ..., verbos
   verbose && enter(verbose, "Running samtools 'view'");
 
   # Assert that input files are not overwritten
-  stop_if_not(getAbsolutePath(pathnameD) != getAbsolutePath(pathname));
+  .stop_if_not(getAbsolutePath(pathnameD) != getAbsolutePath(pathname));
 
   res <- systemSamtools("view", "o"=shQuote(pathnameD), shQuote(pathname), ..., verbose=less(verbose, 10));
 

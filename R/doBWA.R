@@ -64,7 +64,7 @@ setMethodS3("doBWA", "AromaSeqDataFileSet", function(dataSet, reference, ..., ve
   # Checking requirements
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "BWA/Check requirements");
-  stop_if_not(isCapableOf(aroma.seq, "bwa"));
+  .stop_if_not(isCapableOf(aroma.seq, "bwa"));
   verbose && exit(verbose);
 
 

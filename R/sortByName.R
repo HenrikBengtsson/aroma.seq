@@ -45,7 +45,7 @@ setMethodS3("sortByName", "BamDataFile", function(this, pathD=getPath(this), bIn
   bIndex <- Arguments$getLogical(bIndex)
 
   # Argument 'suffix'
-  stop_if_not(is.character(suffix))  ## Should test if single string, and return informative error msg
+  .stop_if_not(is.character(suffix))  ## Should test if single string, and return informative error msg
 
   # Argument 'skip':
   skip <- Arguments$getLogical(skip);
@@ -119,10 +119,10 @@ setMethodS3("sortByName", "BamDataSet", function(ds, path=getPath(ds), tag='byNa
   path <- Arguments$getWritablePath(path);
 
   # Argument 'tag':
-  stop_if_not(is.character(tag))
+  .stop_if_not(is.character(tag))
 
   # Argument 'suffix'; this is required for extract() at end to work
-  stop_if_not(is.character(suffix))
+  .stop_if_not(is.character(suffix))
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);

@@ -30,7 +30,7 @@ setMethodS3("binTabulate", "MaskedDNAString", function(seq, bx, letters=c("A", "
   # in most (all?) cases.  If non-zero, we'll adjust the binning
   # accordingly.
   offset <- seq@offset;
-  stop_if_not(offset >= 0L);
+  .stop_if_not(offset >= 0L);
 
   # Adjust for sequence offset?
   if (offset != 0L) {

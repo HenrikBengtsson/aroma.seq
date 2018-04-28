@@ -180,7 +180,7 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
       chr <- gsub(":.*", "", data$Locus);
       pos <- gsub(".*:", "", data$Locus);
       pos <- as.integer(pos);
-      stop_if_not(length(pos) == length(chr));
+      .stop_if_not(length(pos) == length(chr));
       verbose && exit(verbose);
 
       verbose && enter(verbose, "Parsing (A,C,G,T,N) counts");
@@ -196,12 +196,12 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
       counts <- gsub("^:", "", counts);
       counts <- strsplit(counts, split=":", fixed=TRUE);
       ns <- sapply(counts, FUN=length);
-      stop_if_not(all(ns == 5L));
+      .stop_if_not(all(ns == 5L));
       counts <- unlist(counts, use.names=FALSE);
       counts <- as.integer(counts);
       counts <- matrix(counts, ncol=5L, byrow=TRUE);
       colnames(counts) <- c("A", "C", "G", "T", "N");
-      stop_if_not(nrow(counts) == length(chr));
+      .stop_if_not(nrow(counts) == length(chr));
       verbose && exit(verbose);
 
       verbose && enter(verbose, "Summaries of nucleotide counts");
@@ -218,7 +218,7 @@ setMethodS3("process", "GatkAlleleCounting", function(this, ..., overwrite=FALSE
 
       # Sanity check
       if (dropEmpty) {
-        stop_if_not(all(totalCoverage > 0L));
+        .stop_if_not(all(totalCoverage > 0L));
       }
 
       # Per-SNP coverage
@@ -362,7 +362,7 @@ setMethodS3("getCombineBy", "GatkAlleleCounting", function(this, ...) {
 
       # Add to total counts
       idxs <- match(keysT, table=keys);
-      stop_if_not(all(is.finite(idxs)));
+      .stop_if_not(all(is.finite(idxs)));
       countsU[idxs,] <- countsU[idxs,] + countsT;
 
       # Remainders

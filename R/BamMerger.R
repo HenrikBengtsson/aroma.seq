@@ -202,7 +202,7 @@ setMethodS3("process", "BamMerger", function(this, ..., skip=TRUE, force=FALSE, 
       } else {
         pathnameBAMT2 <- mergeBam(pathnames, destination=pathnameBAMT, indexDestination=TRUE, overwrite=force)
         verbose && cat(verbose, "Generated BAM file: ", pathnameBAMT)
-        stop_if_not(pathnameBAMT2 == pathnameBAMT)
+        .stop_if_not(pathnameBAMT2 == pathnameBAMT)
         file.rename(pathnameBAIT, pathnameBAI)
       }
 

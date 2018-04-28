@@ -133,9 +133,9 @@ setMethodS3("getSeqChecksums", "FastaReferenceFile", function(this, idxs=NULL, f
   if (length(todo) == 0) return(res)
 
   fa <- FaFile(getPathname(this))
-  stop_if_not(countFa(fa) == nbrOfSeqs)
+  .stop_if_not(countFa(fa) == nbrOfSeqs)
   fai <- scanFaIndex(fa)
-  stop_if_not(length(fai) == nbrOfSeqs)
+  .stop_if_not(length(fai) == nbrOfSeqs)
 
   for (kk in seq_along(todo)) {
     ii <- todo[kk]
@@ -523,7 +523,7 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method=c("b
 
 
   verbose && enter(verbose, "Building BWA index files");
-  stop_if_not(isCapableOf(aroma.seq, "bwa"));
+  .stop_if_not(isCapableOf(aroma.seq, "bwa"));
 
   pathnameFA <- getPathname(this);
   verbose && cat(verbose, "FASTA reference file to be indexed: ", pathnameFA);
@@ -582,7 +582,7 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method=c("b
   verbose && print(verbose, res)
 
   # Sanity check
-  stop_if_not(!is.null(res));
+  .stop_if_not(!is.null(res));
 
   # Assert compatibility
   isCompatibleWith(this, res, mustWork=TRUE, verbose=less(verbose, 50))
@@ -650,7 +650,7 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
 
 
   verbose && enter(verbose, "Building Bowtie2 index file");
-  stop_if_not(isCapableOf(aroma.seq, "bowtie2"));
+  .stop_if_not(isCapableOf(aroma.seq, "bowtie2"));
 
   pathnameFA <- getPathname(this);
   verbose && cat(verbose, "FASTA reference file to be indexed: ", pathnameFA);
@@ -692,7 +692,7 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
   is <- Bowtie2IndexSet$byPrefix(prefix);
 
   # Sanity check
-  stop_if_not(!is.null(is));
+  .stop_if_not(!is.null(is));
 
   # Assert compatibility
   isCompatibleWith(this, is, mustWork=TRUE, verbose=less(verbose, 50))
