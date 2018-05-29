@@ -66,7 +66,9 @@ setMethodS3("capabilitiesOf", "AromaSeq", function(static, what=NULL, force=FALS
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   supports <- function(fcn, ...) {
     tryCatch({
-      !is.null(fcn(mustExist=FALSE))
+      res <- fcn(mustExist = FALSE)
+      if (is.null(res)) return(FALSE)
+      structure(TRUE, version = attr(res, "version"))
     }, error = function(ex) FALSE)
   } # supports()
 
@@ -99,17 +101,17 @@ setMethodS3("capabilitiesOf", "AromaSeq", function(static, what=NULL, force=FALS
       res <- res[o]
     }, category="LC_COLLATE", locale="C")
 
-    # Coerce into a named character vector
-    res <- unlist(res)
-
     # Record
     static$.capabilities <- res
   }
 
   if (!is.null(what)) {
-    res <- res[what]
+    res <- res[[what]]
+  } else {
+    # Coerce into a named logical vector
+    res <- unlist(res)
   }
-
+  
   res
 }, static=TRUE)
 
