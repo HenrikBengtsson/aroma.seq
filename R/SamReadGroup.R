@@ -47,35 +47,35 @@ setConstructorS3("SamReadGroup", function(id=NULL, sample=NULL, library=NULL, pl
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'id':
-  id <- Arguments$getCharacter(id);
+  id <- Arguments$getCharacter(id)
 
   # Argument 'sample':
-  sample <- Arguments$getCharacter(sample);
+  sample <- Arguments$getCharacter(sample)
 
   # Argument 'library':
-  library <- Arguments$getCharacter(library);
+  library <- Arguments$getCharacter(library)
 
   # Argument 'platform':
-  platform <- Arguments$getCharacter(platform);
+  platform <- Arguments$getCharacter(platform)
 
   # Argument 'platformUnit':
-  platformUnit <- Arguments$getCharacter(platformUnit);
+  platformUnit <- Arguments$getCharacter(platformUnit)
 
   # Argument 'sequencingCenter':
-  sequencingCenter <- Arguments$getCharacter(sequencingCenter);
+  sequencingCenter <- Arguments$getCharacter(sequencingCenter)
 
   # Argument 'description':
-  description <- Arguments$getCharacter(description);
+  description <- Arguments$getCharacter(description)
 
   # Argument 'runDate':
   # Should be ISO 8601 date (e.g. 2012-09-28) or date/time format
   # (e.g. 2012-09-28T02:13Z).
   if (inherits(runDate, "Date")) {
-    runDate <- Arguments$getCharacter(runDate);
+    runDate <- Arguments$getCharacter(runDate)
   } else if (inherits(runDate, "POSIXct") || inherits(runDate, "POSIXlt")) {
-    runDate <- Arguments$getCharacter(runDate);
+    runDate <- Arguments$getCharacter(runDate)
   } else {
-    runDate <- Arguments$getCharacter(runDate);
+    runDate <- Arguments$getCharacter(runDate)
   }
 
 
@@ -93,141 +93,141 @@ setConstructorS3("SamReadGroup", function(id=NULL, sample=NULL, library=NULL, pl
     PG=program,
     PI=predictedInsertSize,
     ...
-  );
+  )
 })
 
 
 setMethodS3("as.character", "SamReadGroup", function(x, ...) {
-  this <- x;
-  s <- sprintf("%s:", class(this)[1]);
-  s <- c(s, asString(this, fmtstr=" %s:%s", ...));
-  GenericSummary(s);
+  this <- x
+  s <- sprintf("%s:", class(this)[1])
+  s <- c(s, asString(this, fmtstr=" %s:%s", ...))
+  GenericSummary(s)
 }, protected=TRUE)
 
 
 setMethodS3("byScanBamHeader", "SamReadGroup", function(static, header, ...) {
-  text <- header$text;
-  keys <- names(text);
-  rgList <- text[(keys == "@RG")];
+  text <- header$text
+  keys <- names(text)
+  rgList <- text[(keys == "@RG")]
   rgList <- lapply(rgList, FUN=function(params) {
-    pattern <- "([^:]*):(.*)";
-    keys <- gsub(pattern, "\\1", params);
-    values <- gsub(pattern, "\\2", params);
-    names(values) <- keys;
-    values;
-  });
+    pattern <- "([^:]*):(.*)"
+    keys <- gsub(pattern, "\\1", params)
+    values <- gsub(pattern, "\\2", params)
+    names(values) <- keys
+    values
+  })
 
-  resList <- vector("list", length=length(rgList));
+  resList <- vector("list", length=length(rgList))
   for (kk in seq_along(rgList)) {
-    rg <- rgList[[kk]];
-    res <- newInstance(static);
+    rg <- rgList[[kk]]
+    res <- newInstance(static)
     for (key in names(rg)) {
-      res[[key]] <- rg[key];
+      res[[key]] <- rg[key]
     }
-    resList[[kk]] <- res;
+    resList[[kk]] <- res
   } # for (kk ...)
 
-  resList;
+  resList
 }, static=TRUE) # byScanBamHeader()
 
 
 
 setMethodS3("merge", "SamReadGroup", function(x, y, ...) {
   # To please R CMD check
-  this <- x;
-  other <- y;
+  this <- x
+  other <- y
 
   # Argument 'other':
-  other <- Arguments$getInstanceOf(other, "SamReadGroup");
+  other <- Arguments$getInstanceOf(other, "SamReadGroup")
 
-  res <- this;
-  rgList <- asSamList(other);
+  res <- this
+  rgList <- asSamList(other)
   for (key in names(rgList)) {
-    res[[key]] <- rgList[[key]];
+    res[[key]] <- rgList[[key]]
   }
 
-  res;
+  res
 })
 
 
 setMethodS3("hasID", "SamReadGroup", function(this, ...) {
-  !is.null(this$ID);
+  !is.null(this$ID)
 })
 
 
 setMethodS3("hasSample", "SamReadGroup", function(this, ...) {
-  !is.null(this$SM);
+  !is.null(this$SM)
 })
 
 setMethodS3("hasLibrary", "SamReadGroup", function(this, ...) {
-  !is.null(this$LB);
+  !is.null(this$LB)
 })
 
 setMethodS3("hasPlatform", "SamReadGroup", function(this, ...) {
-  !is.null(this$PL);
+  !is.null(this$PL)
 })
 
 setMethodS3("hasPlatformUnit", "SamReadGroup", function(this, ...) {
-  !is.null(this$PU);
+  !is.null(this$PU)
 })
 
 setMethodS3("hasSequencingCenter", "SamReadGroup", function(this, ...) {
-  !is.null(this$CN);
+  !is.null(this$CN)
 })
 
 setMethodS3("hasDescription", "SamReadGroup", function(this, ...) {
-  !is.null(this$DS);
+  !is.null(this$DS)
 })
 
 setMethodS3("hasRunDate", "SamReadGroup", function(this, ...) {
-  !is.null(this$DT);
+  !is.null(this$DT)
 })
 
 
 setMethodS3("isEmpty", "SamReadGroup", function(this, ...) {
-  (length(asSamList(this, ...)) == 0L);
+  (length(asSamList(this, ...)) == 0L)
 })
 
 setMethodS3("asSamList", "SamReadGroup", function(this, drop=TRUE, ...) {
-  res <- attributes(this);
-  keep <- (nchar(names(res)) == 2L);
-  res <- res[keep];
+  res <- attributes(this)
+  keep <- (nchar(names(res)) == 2L)
+  res <- res[keep]
   if (drop) {
-    keep <- !sapply(res, FUN=is.null);
-    res <- res[keep];
+    keep <- !sapply(res, FUN=is.null)
+    res <- res[keep]
   }
-  res <- lapply(res, FUN=unname);
-  res;
+  res <- lapply(res, FUN=unname)
+  res
 })
 
 
 setMethodS3("asString", "SamReadGroup", function(this, fmtstr="@RG\t%s:%s", collapse=NULL, ...) {
-  res <- asSamList(this, ...);
-  keys <- names(res);
-  res <- unlist(res, use.names=TRUE);
-  res <- sprintf(fmtstr, keys, res);
-  names(res) <- keys;
+  res <- asSamList(this, ...)
+  keys <- names(res)
+  res <- unlist(res, use.names=TRUE)
+  res <- sprintf(fmtstr, keys, res)
+  names(res) <- keys
   if (!is.null(collapse)) {
-    res <- paste(res, collapse=collapse);
+    res <- paste(res, collapse=collapse)
   }
-  res;
+  res
 })
 
 
 
 
 setMethodS3("validate", "SamReadGroup", function(this, ...) {
-  rgList <- asSamList(this, ...);
+  rgList <- asSamList(this, ...)
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Platform
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  platform <- rgList[["PL"]];
+  platform <- rgList[["PL"]]
   if (!is.null(platform)) {
     knownPlatforms <- c("CAPILLARY", "HELICOS", "ILLUMINA", "IONTORRENT",
-                        "LS454", "PACBIO", "SOLID");
+                        "LS454", "PACBIO", "SOLID")
     if (!is.element(toupper(platform), knownPlatforms)) {
-      throw("Unknown 'PL' (platform) value: ", platform);
+      throw("Unknown 'PL' (platform) value: ", platform)
     }
   }
 
@@ -236,7 +236,7 @@ setMethodS3("validate", "SamReadGroup", function(this, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (!is.null(platform)) {
     if (toupper(platform) == "ILLUMINA") {
-      platformUnit <- rgList[["PL"]];
+      platformUnit <- rgList[["PL"]]
       if (!is.null(platformUnit)) {
         # convention: Illumina flowcell barcode suffixed with a period and
         # the lane number (and further suffixed with period followed by
@@ -251,10 +251,10 @@ setMethodS3("validate", "SamReadGroup", function(this, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Run date
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  runDate <- rgList[["DT"]];
+  runDate <- rgList[["DT"]]
   # Should be ISO 8601 date (e.g. 2012-09-28) or date/time format
   # (e.g. 2012-09-28T02:13Z).
   # TODO...
 
-  invisible(TRUE);
+  invisible(TRUE)
 })

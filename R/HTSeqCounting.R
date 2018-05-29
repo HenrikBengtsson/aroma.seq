@@ -40,37 +40,37 @@ setConstructorS3("HTSeqCounting", function(dataSet=NULL, transcripts=NULL, ...) 
   # Validate arguments
   if (!is.null(dataSet)) {
     # Argument 'dataSet':
-    dataSet <- Arguments$getInstanceOf(dataSet, "BamDataSet");
+    dataSet <- Arguments$getInstanceOf(dataSet, "BamDataSet")
 
     # Argument 'transcripts':
-    transcripts <- Arguments$getInstanceOf(transcripts, "GtfDataFile");
+    transcripts <- Arguments$getInstanceOf(transcripts, "GtfDataFile")
   } # if (!is.null(dataSet))
 
 
   # Arguments '...':
-  args <- list(...);
+  args <- list(...)
 
   extend(AromaSeqTransform(dataSet, ...), "HTSeqCounting",
     .transcripts = transcripts
-  );
+  )
 })
 
 
 setMethodS3("getRootPath", "HTSeqCounting", function(this, ...) {
-  "htseqCountData";
+  "htseqCountData"
 }, protected=TRUE)
 
 
 setMethodS3("getParameters", "HTSeqCounting", function(this, ...) {
-  params <- NextMethod("getAsteriskTags");
-  params$transcripts <- this$.transcripts;
-  params;
+  params <- NextMethod("getAsteriskTags")
+  params$transcripts <- this$.transcripts
+  params
 }, protected=TRUE)
 
 
 setMethodS3("getSampleNames", "HTSeqCounting", function(this, ...) {
-  ds <- getInputDataSet(this);
-  getFullNames(ds, ...);
+  ds <- getInputDataSet(this)
+  getFullNames(ds, ...)
 }, protected=TRUE)
 
 
@@ -78,111 +78,111 @@ setMethodS3("process", "HTSeqCounting", function(this, ..., skip=TRUE, force=FAL
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Assert external software versions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  .stop_if_not(isCapableOf(aroma.seq, "htseq"));
+  .stop_if_not(isCapableOf(aroma.seq, "htseq"))
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'force':
-  force <- Arguments$getLogical(force);
+  force <- Arguments$getLogical(force)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "HTSeq counting");
-  ds <- getInputDataSet(this);
-  verbose && cat(verbose, "Input data set:");
-  verbose && print(verbose, ds);
+  verbose && enter(verbose, "HTSeq counting")
+  ds <- getInputDataSet(this)
+  verbose && cat(verbose, "Input data set:")
+  verbose && print(verbose, ds)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Identify groups to be processed
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (force) {
-    todo <- seq_along(ds);
+    todo <- seq_along(ds)
   } else {
-    counts <- getOutputDataSet(this, onMissing="NA", verbose=less(verbose, 1));
-    todo <- which(!sapply(counts, FUN=isFile));
+    counts <- getOutputDataSet(this, onMissing="NA", verbose=less(verbose, 1))
+    todo <- which(!sapply(counts, FUN=isFile))
   }
-  verbose && cat(verbose, "Number of samples to process: ", length(todo));
+  verbose && cat(verbose, "Number of samples to process: ", length(todo))
 
   # Already done?
   if (!force && length(todo) == 0L) {
-    verbose && cat(verbose, "Already processed.");
-    verbose && print(verbose, counts);
-    verbose && exit(verbose);
-    return(counts);
+    verbose && cat(verbose, "Already processed.")
+    verbose && print(verbose, counts)
+    verbose && exit(verbose)
+    return(counts)
   }
 
-  outPath <- getPath(this);
-  verbose && cat(verbose, "Output directory: ", outPath);
+  outPath <- getPath(this)
+  verbose && cat(verbose, "Output directory: ", outPath)
 
-  params <- getParameters(this);
-  transcripts <- params$transcripts;
-  verbose && cat(verbose, "Using transcripts:");
-  verbose && print(verbose, transcripts);
+  params <- getParameters(this)
+  transcripts <- params$transcripts
+  verbose && cat(verbose, "Using transcripts:")
+  verbose && print(verbose, transcripts)
   # Workaround for *gzipped* GTF files (not supported by HTSeq binaries)
   if (isGzipped(transcripts)) {
-    verbose && enter(verbose, "Temporary uncompressing file");
+    verbose && enter(verbose, "Temporary uncompressing file")
     pathnameZ <- getPathname(transcripts)
     pathname <- gunzip(pathnameZ, temporary=TRUE, remove=FALSE)
     done <- FALSE
     on.exit({
       if (done) file.remove(pathname)
     }, add=TRUE)
-    transcripts <- newInstance(transcripts, pathname);
-    verbose && cat(verbose, "Using (temporary) transcripts:");
-    verbose && print(verbose, transcripts);
-    verbose && exit(verbose);
+    transcripts <- newInstance(transcripts, pathname)
+    verbose && cat(verbose, "Using (temporary) transcripts:")
+    verbose && print(verbose, transcripts)
+    verbose && exit(verbose)
   }
   # Sanity check
-  .stop_if_not(!isGzipped(transcripts));
+  .stop_if_not(!isGzipped(transcripts))
 
-  verbose && cat(verbose, "Number of samples: ", length(ds));
+  verbose && cat(verbose, "Number of samples: ", length(ds))
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validating compatibility between GTF and BAM data set
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Validating compatibility between GTF and BAM data set");
+  verbose && enter(verbose, "Validating compatibility between GTF and BAM data set")
   # Get one BAM file.
-  bam <- ds[[1L]];
-  bamNames <- getTargetNames(bam);
-  verbose && printf(verbose, "Target/chromosome names in BAM: %s [%d]\n", hpaste(bamNames), length(bamNames));
+  bam <- ds[[1L]]
+  bamNames <- getTargetNames(bam)
+  verbose && printf(verbose, "Target/chromosome names in BAM: %s [%d]\n", hpaste(bamNames), length(bamNames))
 
   # Slightly faster to parse unzipped file.
-  gtf <- transcripts;
-  gtfNames <- getSeqNames(gtf, unique=TRUE);
-  gtf <- params$transcripts;
-  verbose && printf(verbose, "Sequence/chromosome names in GTF: %s [%d]\n", hpaste(gtfNames), length(gtfNames));
+  gtf <- transcripts
+  gtfNames <- getSeqNames(gtf, unique=TRUE)
+  gtf <- params$transcripts
+  verbose && printf(verbose, "Sequence/chromosome names in GTF: %s [%d]\n", hpaste(gtfNames), length(gtfNames))
 
-  inBoth <- intersect(bamNames, gtfNames);
+  inBoth <- intersect(bamNames, gtfNames)
   if (length(inBoth) == 0L) {
-    msg <- sprintf("Incompatible GTF file: None of the %d sequence/chromosome names in the GTF (%s) are found in the BAM file (%s): [%s] not in [%s]", length(gtfNames), getPathname(gtf), getPathname(bam), hpaste(gtfNames), hpaste(bamNames));
-    verbose && cat(verbose, msg);
-    throw(msg);
+    msg <- sprintf("Incompatible GTF file: None of the %d sequence/chromosome names in the GTF (%s) are found in the BAM file (%s): [%s] not in [%s]", length(gtfNames), getPathname(gtf), getPathname(bam), hpaste(gtfNames), hpaste(bamNames))
+    verbose && cat(verbose, msg)
+    throw(msg)
   }
 
-  inBAMnotGTF <- setdiff(bamNames, gtfNames);
+  inBAMnotGTF <- setdiff(bamNames, gtfNames)
   if (length(inBAMnotGTF) > 0L) {
-    msg <- sprintf("Possibly an incompatible GTF file: Found %d target/chromosome names in the BAM file (%s) that are not in the GTF (%s): [%s] not in [%s]", length(inBAMnotGTF), getPathname(bam), getPathname(gtf), hpaste(inBAMnotGTF), hpaste(gtfNames));
-    verbose && cat(verbose, msg);
+    msg <- sprintf("Possibly an incompatible GTF file: Found %d target/chromosome names in the BAM file (%s) that are not in the GTF (%s): [%s] not in [%s]", length(inBAMnotGTF), getPathname(bam), getPathname(gtf), hpaste(inBAMnotGTF), hpaste(gtfNames))
+    verbose && cat(verbose, msg)
     # FIXME: Should we use throw() here instead?  Set some thresholding? /HB 2014-03-10
-    warning(msg);
+    warning(msg)
   }
 
-  inGTFnotBAM <- setdiff(gtfNames, bamNames);
+  inGTFnotBAM <- setdiff(gtfNames, bamNames)
   if (length(inGTFnotBAM) > 0L) {
-    msg <- sprintf("Not counting all sequences/chromosomes in GTF file: Found %d sequence/chromosome names in the GTF (%s) that are not in the BAM file (%s): [%s] not in [%s]", length(inGTFnotBAM), getPathname(gtf), getPathname(bam), hpaste(inGTFnotBAM), hpaste(gtfNames));
-    verbose && cat(verbose, msg);
-    warning(msg);
+    msg <- sprintf("Not counting all sequences/chromosomes in GTF file: Found %d sequence/chromosome names in the GTF (%s) that are not in the BAM file (%s): [%s] not in [%s]", length(inGTFnotBAM), getPathname(gtf), getPathname(bam), hpaste(inGTFnotBAM), hpaste(gtfNames))
+    verbose && cat(verbose, msg)
+    warning(msg)
   }
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

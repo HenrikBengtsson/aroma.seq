@@ -17,13 +17,13 @@ setMethodS3("directoryStructure", "list", function(struct, ...) {
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'struct':
-  names <- names(struct);
+  names <- names(struct)
   for (name in c("pattern", "replacement")) {
     if (!is.element(name, names)) {
-      throw(sprintf("List argument 'struct' does not have element %s: %s", sQuote(name), paste(sQuote(names), collapse=", ")));
+      throw(sprintf("List argument 'struct' does not have element %s: %s", sQuote(name), paste(sQuote(names), collapse=", ")))
     }
   }
-  struct;
+  struct
 }) # directoryStructure()
 
 
@@ -33,182 +33,182 @@ setMethodS3("directoryStructure", "character", function(struct, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'struct':
   if (missing(struct)) {
-    struct <- match.arg(struct);
+    struct <- match.arg(struct)
   }
-  struct <- Arguments$getCharacter(struct, length=c(1L, 1L));
+  struct <- Arguments$getCharacter(struct, length=c(1L, 1L))
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Create a directory structures?
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  parts <- strsplit(struct, split="/", fixed=TRUE);
-  parts <- unlist(parts, use.names=FALSE);
-  names <- gsub("^<(.*)>$", "\\1", parts);
-  pattern <- paste(rep("([^/]*)", times=length(parts)), collapse="/");
-  replacement <- sprintf("\\%d", seq_along(names));
-  names(replacement) <- names;
+  parts <- strsplit(struct, split="/", fixed=TRUE)
+  parts <- unlist(parts, use.names=FALSE)
+  names <- gsub("^<(.*)>$", "\\1", parts)
+  pattern <- paste(rep("([^/]*)", times=length(parts)), collapse="/")
+  replacement <- sprintf("\\%d", seq_along(names))
+  names(replacement) <- names
   struct <- list(
     pattern = pattern,
     replacement = replacement
-  );
+  )
 
   # Validate
-  struct <- directoryStructure(struct, ...);
+  struct <- directoryStructure(struct, ...)
 
-  struct;
+  struct
 }) # directoryStructure()
 
 setMethodS3(".findDefaultDirectoryStructure", "GenericDataFile", function(this, ...) {
-  fcn <- NULL;
+  fcn <- NULL
   for (class in class(this)) {
-    fcn <- getS3method("directoryStructure", class, optional=TRUE);
+    fcn <- getS3method("directoryStructure", class, optional=TRUE)
     if (!is.null(fcn)) {
-      args <- formals(fcn);
-      if (is.element("default", names(args))) return(args$default);
+      args <- formals(fcn)
+      if (is.element("default", names(args))) return(args$default)
     }
   }
-  throw(sprintf("Failed to locate default directory structure for class '%s'", class(this)[1L]));
+  throw(sprintf("Failed to locate default directory structure for class '%s'", class(this)[1L]))
 })
 
 setMethodS3(".findDefaultDirectoryStructure", "GenericDataFileSet", function(this, ...) {
   # Infer 'default' from corresponding file class.
-  className <- this$getFileClass();
-  clazz <- Class$forName(className);
-  classNames <- class(newInstance(clazz));
-  fcn <- NULL;
+  className <- this$getFileClass()
+  clazz <- Class$forName(className)
+  classNames <- class(newInstance(clazz))
+  fcn <- NULL
   for (class in classNames) {
-    fcn <- getS3method("directoryStructure", class, optional=TRUE);
+    fcn <- getS3method("directoryStructure", class, optional=TRUE)
     if (!is.null(fcn)) {
-      args <- formals(fcn);
-      if (is.element("default", names(args))) return(args$default);
+      args <- formals(fcn)
+      if (is.element("default", names(args))) return(args$default)
     }
   }
-  throw(sprintf("Failed to locate default directory structure for class '%s'", className));
+  throw(sprintf("Failed to locate default directory structure for class '%s'", className))
 })
 
 setMethodS3("directoryStructure", "GenericDataFile", function(this, default=NULL, ...) {
-  parts <- this$.directoryStructure;
+  parts <- this$.directoryStructure
   if (is.null(parts)) {
-    if (is.null(default)) default <- .findDefaultDirectoryStructure(this);
-    parts <- directoryStructure(default, ...);
+    if (is.null(default)) default <- .findDefaultDirectoryStructure(this)
+    parts <- directoryStructure(default, ...)
   }
-  parts;
+  parts
 })
 
 setMethodS3("directoryStructure", "GenericDataFileSet", function(this, default=NULL, ...) {
-  parts <- this$.directoryStructure;
+  parts <- this$.directoryStructure
   if (is.null(parts)) {
-    if (is.null(default)) default <- .findDefaultDirectoryStructure(this);
-    parts <- directoryStructure(default, ...);
+    if (is.null(default)) default <- .findDefaultDirectoryStructure(this)
+    parts <- directoryStructure(default, ...)
   }
-  parts;
+  parts
 })
 
 setMethodS3("directoryStructure<-", "GenericDataFile", function(this, ..., value) {
-  if (missing(value)) { args <- list(...); value <- args[[length(args)]] };
-  struct <- directoryStructure(value);
-  this$.directoryStructure <- struct;
-  invisible(this);
+  if (missing(value)) { args <- list(...); value <- args[[length(args)]] }
+  struct <- directoryStructure(value)
+  this$.directoryStructure <- struct
+  invisible(this)
 })
 
 setMethodS3("directoryStructure<-", "GenericDataFileSet", function(this, ..., value) {
-  if (missing(value)) { args <- list(...); value <- args[[length(args)]] };
-  struct <- directoryStructure(value);
-  this$.directoryStructure <- struct;
+  if (missing(value)) { args <- list(...); value <- args[[length(args)]] }
+  struct <- directoryStructure(value)
+  this$.directoryStructure <- struct
   # Update all files accordingly
-  this <- updateDirectoryStructure(this);
-  invisible(this);
+  this <- updateDirectoryStructure(this)
+  invisible(this)
 })
 
 setMethodS3("updateDirectoryStructure", "GenericDataFileSet", function(this, ...) {
-  struct <- this$.directoryStructure;
-  files <- this$files;
-  files <- lapply(files, FUN=`directoryStructure<-`, struct);
-  this$files <- files;
-  invisible(this);
+  struct <- this$.directoryStructure
+  files <- this$files
+  files <- lapply(files, FUN=`directoryStructure<-`, struct)
+  this$files <- files
+  invisible(this)
 }, protected=TRUE)
 
 
 setMethodS3("directoryItems", "character", function(paths, struct, ..., as="list") {
   # Argument 'struct':
-  struct <- directoryStructure(struct, ...);
+  struct <- directoryStructure(struct, ...)
 
   # Nothing to do?
-  if (is.null(struct)) return(list());
+  if (is.null(struct)) return(list())
 
   # Append optional slush/tail to the end
-  pattern <- sprintf("%s(|/(.*))", struct$pattern);
-  tail <- sprintf("\\%d", length(struct$replacement)+1L);
-  names(tail) <- "<tail>";
-  replacement <- c(struct$replacement, tail);
+  pattern <- sprintf("%s(|/(.*))", struct$pattern)
+  tail <- sprintf("\\%d", length(struct$replacement)+1L)
+  names(tail) <- "<tail>"
+  replacement <- c(struct$replacement, tail)
 
   # Parse path according to 'struct'
-  paths <- gsub("\\", "/", paths, fixed=TRUE);
-  res <- agsub(pattern=pattern, replacement=replacement, paths, ..., as=as);
+  paths <- gsub("\\", "/", paths, fixed=TRUE)
+  res <- agsub(pattern=pattern, replacement=replacement, paths, ..., as=as)
 
   if (is.matrix(res)) {
-     tail <- res[,"<tail>"];
-     res <- append(res, c(hasTail=nzchar(tail)));
+     tail <- res[,"<tail>"]
+     res <- append(res, c(hasTail=nzchar(tail)))
   } else if (is.list(res)) {
-     tail <- res[["<tail>"]];
-     res <- append(res, list(hasTail=nzchar(tail)));
+     tail <- res[["<tail>"]]
+     res <- append(res, list(hasTail=nzchar(tail)))
   } else {
-    throw("Cannot set 'hasTail' element.");
+    throw("Cannot set 'hasTail' element.")
   }
 
-  res;
+  res
 }) # directoryItems()
 
 
 setMethodS3("directoryItems", "GenericDataFile", function(this, ...) {
-  struct <- directoryStructure(this);
+  struct <- directoryStructure(this)
   # Nothing to do?
-  if (is.null(struct)) return(list());
+  if (is.null(struct)) return(list())
 
-  pathname <- getPathname(this);
-  directoryItems(pathname, struct=struct, ...);
+  pathname <- getPathname(this)
+  directoryItems(pathname, struct=struct, ...)
 }, protected=TRUE)
 
 
 setMethodS3("directoryItems", "GenericDataFileSet", function(this, ...) {
-  struct <- directoryStructure(this);
+  struct <- directoryStructure(this)
   # Nothing to do?
-  if (is.null(struct)) return(list());
+  if (is.null(struct)) return(list())
 
-  path <- getPath(this);
-  pathname <- file.path(path, NA_character_);
-  directoryItems(pathname, struct=struct, ...);
+  path <- getPath(this)
+  pathname <- file.path(path, NA_character_)
+  directoryItems(pathname, struct=struct, ...)
 }, protected=TRUE)
 
 
 setMethodS3("directoryItem", "GenericDataFileSet", function(this, name, default=NULL, ..., mustExist=TRUE) {
-  items <- directoryItems(this, ...);
+  items <- directoryItems(this, ...)
   if (!is.element(name, names(items))) {
     if (is.null(default)) {
       if (mustExist) {
-        path <- getPath(this);
-        throw(sprintf("Cannot infer %s from path %s using set directory structure (%s).", sQuote(name), sQuote(path), paste(sQuote(names(items)), collapse=", ")));
+        path <- getPath(this)
+        throw(sprintf("Cannot infer %s from path %s using set directory structure (%s).", sQuote(name), sQuote(path), paste(sQuote(names(items)), collapse=", ")))
       }
     }
-    items[[name]] <- default;
+    items[[name]] <- default
   }
-  value <- items[[name]];
-  value;
+  value <- items[[name]]
+  value
 }, protected=TRUE) # directoryItem()
 
 setMethodS3("directoryItem", "GenericDataFile", function(this, name, default=NULL, ..., mustExist=TRUE) {
-  items <- directoryItems(this, ...);
+  items <- directoryItems(this, ...)
   if (!is.element(name, names(items))) {
     if (is.null(default)) {
       if (mustExist) {
-        pathname <- getPathname(this);
-        throw(sprintf("Cannot infer %s from pathname %s using set directory structure (%s).", sQuote(name), sQuote(pathname), paste(sQuote(names(items)), collapse=", ")));
+        pathname <- getPathname(this)
+        throw(sprintf("Cannot infer %s from pathname %s using set directory structure (%s).", sQuote(name), sQuote(pathname), paste(sQuote(names(items)), collapse=", ")))
       }
     }
-    items[[name]] <- default;
+    items[[name]] <- default
   }
-  value <- items[[name]];
-  attr(value, "hasTail") <- items$hasTail;
-  value;
+  value <- items[[name]]
+  attr(value, "hasTail") <- items$hasTail
+  value
 }, protected=TRUE) # directoryItem()
 
 
@@ -216,15 +216,15 @@ setMethodS3("directoryItem", "GenericDataFile", function(this, name, default=NUL
 # AD HOC
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 setMethodS3("getOrganismName", "GenericDataFile", function(this, ...) {
-  directoryItem(this, name="organism");
+  directoryItem(this, name="organism")
 })
 
 setMethodS3("getDataSetName", "GenericDataFile", function(this, ...) {
-  directoryItem(this, name="dataset");
+  directoryItem(this, name="dataset")
 })
 
 setMethodS3("getSampleName", "GenericDataFile", function(this, ...) {
-  directoryItem(this, name="sample", default=getFullName(this, ...));
+  directoryItem(this, name="sample", default=getFullName(this, ...))
 })
 
 

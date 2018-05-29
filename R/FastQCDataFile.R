@@ -33,21 +33,21 @@
 # }
 #*/###########################################################################
 setConstructorS3("FastQCDataFile", function(...) {
-  extend(GenericDataFile(...), c("FastQCDataFile", uses("AromaSeqDataFile")));
+  extend(GenericDataFile(...), c("FastQCDataFile", uses("AromaSeqDataFile")))
 })
 
 setMethodS3("as.character", "FastQCDataFile", function(x, ...) {
-  this <- x;
-  s <- NextMethod("as.character");
-  s;
+  this <- x
+  s <- NextMethod("as.character")
+  s
 }, protected=TRUE)
 
 setMethodS3("getSampleName", "FastQCDataFile", function(this, ...) {
-  name <- getPath(this);
-  name <- basename(name);
-  name;
+  name <- getPath(this)
+  name <- basename(name)
+  name
 }, protected=TRUE)
 
 setMethodS3("getDefaultFullName", "FastQCDataFile", function(this, ...) {
-  getSampleName(this, ...);
+  getSampleName(this, ...)
 }, protected=TRUE)

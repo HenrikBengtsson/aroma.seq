@@ -40,34 +40,34 @@ setConstructorS3("Bowtie2Alignment", function(..., groupBy=NULL, indexSet=NULL) 
   # Argument 'groupBy':
   if (is.null(groupBy)) {
   } else if (is.character(groupBy)) {
-    groupBy <- match.arg(groupBy, choices=c("name"));
+    groupBy <- match.arg(groupBy, choices=c("name"))
   } else if (is.list(groupBy)) {
     # Validated below
   } else {
-    throw("Invalid argument 'groupBy': ", mode(groupBy));
+    throw("Invalid argument 'groupBy': ", mode(groupBy))
   }
 
   # Argument 'indexSet':
   if (!is.null(indexSet)) {
-    indexSet <- Arguments$getInstanceOf(indexSet, "Bowtie2IndexSet");
+    indexSet <- Arguments$getInstanceOf(indexSet, "Bowtie2IndexSet")
   }
 
   # Arguments '...':
-  args <- list(...);
+  args <- list(...)
 
-  this <- extend(AbstractAlignment(..., indexSet=indexSet, groupBy=groupBy), c("Bowtie2Alignment", uses("FileGroupsInterface")));
+  this <- extend(AbstractAlignment(..., indexSet=indexSet, groupBy=groupBy), c("Bowtie2Alignment", uses("FileGroupsInterface")))
 
   # Argument 'groupBy':
   if (is.list(groupBy)) {
-    validateGroups(this, groups=groupBy);
+    validateGroups(this, groups=groupBy)
   }
 
-  this;
+  this
 })
 
 
 setMethodS3("getSampleNames", "Bowtie2Alignment", function(this, ...) {
-  getGroupNames(this, ...);
+  getGroupNames(this, ...)
 }, protected=TRUE)
 
 
@@ -101,39 +101,39 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   asBowtie2Parameters <- function(rg, ...) {
     if (isEmpty(rg)) {
-      return(NULL);
+      return(NULL)
     }
 
     # Validate
 ##    if (!hasID(rg)) {
-##      throw("Bowtie requires that the SAM read group has an ID.");
+##      throw("Bowtie requires that the SAM read group has an ID.")
 ##    }
 
-    rgId <- asSamList(rg)$ID;
-    if (is.null(rgId)) rgId <- 1L;
+    rgId <- asSamList(rg)$ID
+    if (is.null(rgId)) rgId <- 1L
 
-    rgArgs <- asString(rg, fmtstr="%s:%s");
-    rgArgs <- rgArgs[regexpr("^ID:", rgArgs) == -1L];
+    rgArgs <- asString(rg, fmtstr="%s:%s")
+    rgArgs <- rgArgs[regexpr("^ID:", rgArgs) == -1L]
 
     # Don't forget to put within quotation marks
-    rgArgs <- sprintf("\"%s\"", rgArgs);
+    rgArgs <- sprintf("\"%s\"", rgArgs)
 
     # Escape spaces [NOT ENOUGH, because bowtie2 calls 'perl bowtie2'
     # and in the latter step it is all lost. /HB 2014-08-11]
-    ## rgArgs <- gsub(" ", "\\ ", rgArgs, fixed=TRUE);
+    ## rgArgs <- gsub(" ", "\\ ", rgArgs, fixed=TRUE)
 
     # Sanity check
-    nok <- hasCommas(rgArgs);
+    nok <- hasCommas(rgArgs)
     if (any(nok)) {
-      throw("SAM Read Group options must not contain spaces (=not supported by Bowtie2): ", hpaste(sQuote(rgArgs[nok])));
+      throw("SAM Read Group options must not contain spaces (=not supported by Bowtie2): ", hpaste(sQuote(rgArgs[nok])))
     }
 
-    rgArgs <- as.list(rgArgs);
-    names(rgArgs) <- rep("--rg", times=length(rgArgs));
+    rgArgs <- as.list(rgArgs)
+    names(rgArgs) <- rep("--rg", times=length(rgArgs))
 
-    rgArgs <- c(list("--rg-id"=rgId), rgArgs);
+    rgArgs <- c(list("--rg-id"=rgId), rgArgs)
 
-    rgArgs;
+    rgArgs
   } # asBowtie2Parameters()
 
 
@@ -141,92 +141,92 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'force':
-  force <- Arguments$getLogical(force);
+  force <- Arguments$getLogical(force)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Bowtie2 alignment");
-  ds <- getInputDataSet(this);
-  verbose && cat(verbose, "Input data set:");
-  verbose && print(verbose, ds);
+  verbose && enter(verbose, "Bowtie2 alignment")
+  ds <- getInputDataSet(this)
+  verbose && cat(verbose, "Input data set:")
+  verbose && print(verbose, ds)
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Get groups of items to be processed at the same time
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Grouping input data set");
-  groups <- getGroups(this);
-  verbose && printf(verbose, "Merging into %d groups: %s\n", length(groups), hpaste(names(groups)));
-  verbose && str(verbose, head(groups));
-  verbose && cat(verbose, "Number of items per groups:");
-  ns <- sapply(groups, FUN=length);
-  t <- table(ns);
-  names(t) <- sprintf("n=%s", names(t));
-  verbose && print(verbose, t);
-  verbose && exit(verbose);
+  verbose && enter(verbose, "Grouping input data set")
+  groups <- getGroups(this)
+  verbose && printf(verbose, "Merging into %d groups: %s\n", length(groups), hpaste(names(groups)))
+  verbose && str(verbose, head(groups))
+  verbose && cat(verbose, "Number of items per groups:")
+  ns <- sapply(groups, FUN=length)
+  t <- table(ns)
+  names(t) <- sprintf("n=%s", names(t))
+  verbose && print(verbose, t)
+  verbose && exit(verbose)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Identify groups to be processed
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (force) {
-    todo <- seq_along(groups);
+    todo <- seq_along(groups)
   } else {
-    bams <- getOutputDataSet(this, onMissing="NA", verbose=less(verbose, 1));
-    todo <- which(!sapply(bams, FUN=isFile));
+    bams <- getOutputDataSet(this, onMissing="NA", verbose=less(verbose, 1))
+    todo <- which(!sapply(bams, FUN=isFile))
   }
-  verbose && cat(verbose, "Number of groups to process: ", length(todo));
+  verbose && cat(verbose, "Number of groups to process: ", length(todo))
 
   # Already done?
   if (!force && length(todo) == 0L) {
-    verbose && cat(verbose, "Already processed.");
-    verbose && print(verbose, bams);
-    verbose && exit(verbose);
-    return(bams);
+    verbose && cat(verbose, "Already processed.")
+    verbose && print(verbose, bams)
+    verbose && exit(verbose)
+    return(bams)
   }
 
-  isPaired <- isPaired(ds);
-  verbose && cat(verbose, "Paired-end analysis: ", isPaired);
+  isPaired <- isPaired(ds)
+  verbose && cat(verbose, "Paired-end analysis: ", isPaired)
 
-  outPath <- getPath(this);
-  verbose && cat(verbose, "Output directory: ", outPath);
+  outPath <- getPath(this)
+  verbose && cat(verbose, "Output directory: ", outPath)
 
   # Additional alignment parameters
-  params <- getParameters(this);
-  verbose && cat(verbose, "Parameters:");
-  verbose && str(verbose, params);
+  params <- getParameters(this)
+  verbose && cat(verbose, "Parameters:")
+  verbose && str(verbose, params)
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Retrieving/building Bowtie2 index set
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Retrieving/building Bowtie2 index set");
-  is <- getIndexSet(this);
-  verbose && cat(verbose, "Aligning using index set:");
-  verbose && print(verbose, is);
-  indexPrefix <- getIndexPrefix(is);
-  verbose && exit(verbose);
+  verbose && enter(verbose, "Retrieving/building Bowtie2 index set")
+  is <- getIndexSet(this)
+  verbose && cat(verbose, "Aligning using index set:")
+  verbose && print(verbose, is)
+  indexPrefix <- getIndexPrefix(is)
+  verbose && exit(verbose)
 
-  rgSet <- this$.rgSet;
+  rgSet <- this$.rgSet
   if (!is.null(rgSet)) {
-    verbose && cat(verbose, "Assigning SAM read group:");
-    verbose && print(verbose, rgSet);
-    validate(rgSet);
+    verbose && cat(verbose, "Assigning SAM read group:")
+    verbose && print(verbose, rgSet)
+    validate(rgSet)
   }
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # User arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  args <- params;
+  args <- params
   # Drop already used parameters
-  args$groupBy <- NULL;
-  verbose && cat(verbose, "User arguments:");
-  verbose && str(verbose, args);
+  args$groupBy <- NULL
+  verbose && cat(verbose, "User arguments:")
+  verbose && str(verbose, args)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -359,21 +359,21 @@ setMethodS3("process", "Bowtie2Alignment", function(this, ..., skip=TRUE, force=
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 setMethodS3("validateGroups", "Bowtie2Alignment", function(this, groups, ...) {
   # Input data set
-  ds <- getInputDataSet(this);
-  nbrOfFiles <- length(ds);
+  ds <- getInputDataSet(this)
+  nbrOfFiles <- length(ds)
 
   # Sanity checks
-  idxs <- unlist(groups, use.names=FALSE);
-  idxs <- Arguments$getIndices(idxs, max=nbrOfFiles);
+  idxs <- unlist(groups, use.names=FALSE)
+  idxs <- Arguments$getIndices(idxs, max=nbrOfFiles)
   if (length(idxs) < nbrOfFiles) {
-    throw("One or more input FASTQ files is not part of any group.");
+    throw("One or more input FASTQ files is not part of any group.")
   } else if (length(idxs) > nbrOfFiles) {
-    throw("One or more input FASTQ files is part of more than one group.");
+    throw("One or more input FASTQ files is part of more than one group.")
   }
 
   if (is.null(names(groups))) {
-    throw("The list of groups does not have names.");
+    throw("The list of groups does not have names.")
   }
 
-  invisible(groups);
+  invisible(groups)
 }, protected=TRUE)

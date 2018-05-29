@@ -33,5 +33,5 @@
 # @keyword internal
 #*/###########################################################################
 setConstructorS3("BwaIndexFile", function(...) {
-  extend(AbstractIndexFile(...), "BwaIndexFile");
+  extend(AbstractIndexFile(...), "BwaIndexFile")
 })

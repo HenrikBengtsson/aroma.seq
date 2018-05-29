@@ -26,26 +26,26 @@ setMethodS3("samtoolsSort", "default", function(pathname, pathnameD, ..., verbos
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'pathname':
-  pathname <- Arguments$getReadablePathname(pathname);
+  pathname <- Arguments$getReadablePathname(pathname)
 
   # Argument 'pathnameD':
-  pathnameD <- Arguments$getWritablePathname(pathnameD);
+  pathnameD <- Arguments$getWritablePathname(pathnameD)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Running samtools 'sort'");
+  verbose && enter(verbose, "Running samtools 'sort'")
 
   # Assert that input files are not overwritten
-  .stop_if_not(getAbsolutePath(pathnameD) != getAbsolutePath(pathname));
+  .stop_if_not(getAbsolutePath(pathnameD) != getAbsolutePath(pathname))
 
-  res <- systemSamtools("sort", ..., shQuote(pathname), shQuote(pathnameD), verbose=less(verbose, 10));
+  res <- systemSamtools("sort", ..., shQuote(pathname), shQuote(pathnameD), verbose=less(verbose, 10))
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  res;
+  res
 }) # samtoolsSort()

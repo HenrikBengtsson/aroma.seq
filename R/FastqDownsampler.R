@@ -35,51 +35,51 @@ setConstructorS3("FastqDownsampler", function(dataSet=NULL, subset=1e6, seed=NUL
   # Validate arguments
   if (!is.null(dataSet)) {
     # Argument 'dataSet':
-    dataSet <- Arguments$getInstanceOf(dataSet, "FastqDataSet");
+    dataSet <- Arguments$getInstanceOf(dataSet, "FastqDataSet")
 
     # Argument 'subset':
     if (length(subset) == 1L) {
-      subset <- Arguments$getNumeric(subset, range=c(0,Inf));
+      subset <- Arguments$getNumeric(subset, range=c(0,Inf))
       if (subset <= 1) {
-        subset <- Arguments$getDouble(subset, range=c(0,1));
+        subset <- Arguments$getDouble(subset, range=c(0,1))
       } else {
-        subset <- Arguments$getInteger(subset, range=c(1,Inf));
+        subset <- Arguments$getInteger(subset, range=c(1,Inf))
       }
     } else {
-      throw("Not yet implemented.");
-      subset <- Arguments$getIndex(subset);
+      throw("Not yet implemented.")
+      subset <- Arguments$getIndex(subset)
     }
 
     # Argument 'seed':
-    if (!is.null(seed)) seed <- Arguments$getInteger(seed);
+    if (!is.null(seed)) seed <- Arguments$getInteger(seed)
   } # if (!is.null(dataSet))
 
-  extend(AromaSeqTransform(dataSet=dataSet, subset=subset, seed=seed, ...), "FastqDownsampler");
+  extend(AromaSeqTransform(dataSet=dataSet, subset=subset, seed=seed, ...), "FastqDownsampler")
 })
 
 
 setMethodS3("getSampleSize", "FastqDownsampler", function(this, df, ...) {
-  params <- getParameters(this);
-  subset <- params$subset;
+  params <- getParameters(this)
+  subset <- params$subset
   if (subset <= 1) {
-    n <- subset * nbrOfSeqs(df);
-    n <- Arguments$getInteger(n);
+    n <- subset * nbrOfSeqs(df)
+    n <- Arguments$getInteger(n)
   } else {
-    n <- subset;
+    n <- subset
   }
-  n;
-}, protected=TRUE);
+  n
+}, protected=TRUE)
 
 
 setMethodS3("getAsteriskTags", "FastqDownsampler", function(this, ...) {
-  params <- getParameters(this);
-  sprintf("n=%g", params$subset);
-}, protected=TRUE);
+  params <- getParameters(this)
+  sprintf("n=%g", params$subset)
+}, protected=TRUE)
 
 
 setMethodS3("getRootPath", "FastqDownsampler", function(this, ...) {
-  "fastqData";
-}, protected=TRUE);
+  "fastqData"
+}, protected=TRUE)
 
 
 setMethodS3("process", "FastqDownsampler", function(this, ..., force=FALSE, verbose=FALSE) {
@@ -87,24 +87,24 @@ setMethodS3("process", "FastqDownsampler", function(this, ..., force=FALSE, verb
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Downsampling FASTQ data set");
-  ds <- getInputDataSet(this);
-  verbose && print(verbose, ds);
+  verbose && enter(verbose, "Downsampling FASTQ data set")
+  ds <- getInputDataSet(this)
+  verbose && print(verbose, ds)
 
-  params <- getParameters(this);
-  seed <- params$seed;
-  verbose && cat(verbose, "Random seed: ", seed);
+  params <- getParameters(this)
+  seed <- params$seed
+  verbose && cat(verbose, "Random seed: ", seed)
 
   if (isPaired(ds)) {
     throw(sprintf("%s does not yet support paired-end FASTQ data sets: %s",
-                  class(this)[1L], getPath(ds)));
+                  class(this)[1L], getPath(ds)))
   }
 
 

@@ -41,10 +41,10 @@ setMethodS3("segmentByCBS", "CnvKitCopyNumberRatioFile", function(this, ..., min
   minLength <- Arguments$getNumeric(minLength, range=c(0,Inf))
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 

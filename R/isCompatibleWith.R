@@ -21,17 +21,17 @@ setMethodS3("isCompatibleWithBySeqNames", "default", function(this, other, mustW
   verbose && print(verbose, other)
 
   if (inherits(this, "GenericDataFile")) {
-    label <- getPathname(this);
+    label <- getPathname(this)
   } else if (inherits(this, "GenericDataFileSet")) {
-    label <- getPath(this);
+    label <- getPath(this)
   } else {
     label <- class(this)[1L]
   }
 
   if (inherits(other, "GenericDataFile")) {
-    labelO <- getPathname(other);
+    labelO <- getPathname(other)
   } else if (inherits(other, "GenericDataFileSet")) {
-    labelO <- getPath(other);
+    labelO <- getPath(other)
   } else {
     labelO <- class(other)[1L]
   }
@@ -49,7 +49,7 @@ setMethodS3("isCompatibleWithBySeqNames", "default", function(this, other, mustW
 
   # Sanity check
   if (length(common) == 0L) {
-    msg <- sprintf("The sequence names of the %s ('%s') and the %s set ('%s') are incompatible, because they have no names in common.", class(this)[1L], class(other)[1L], label, labelO);
+    msg <- sprintf("The sequence names of the %s ('%s') and the %s set ('%s') are incompatible, because they have no names in common.", class(this)[1L], class(other)[1L], label, labelO)
     verbose && cat(verbose, msg)
     # Assertion?
     if (mustWork) throw(msg)
@@ -212,13 +212,13 @@ setMethodS3("isCompatibleWith", "GcBaseFile", function(this, other, mustWork=FAL
 setMethodS3("isCompatibleWith", "Bowtie2IndexSet", function(this, other, mustWork=FALSE, ...) {
   if (isTopHat2IndexSet(this)) {
     if (inherits(other, "GtfDataFile")) {
-      gtf <- other;
-      fullname <- basename(getIndexPrefix(this));
-      fullnameGTF <- getFullName(gtf);
+      gtf <- other
+      fullname <- basename(getIndexPrefix(this))
+      fullnameGTF <- getFullName(gtf)
       if (fullnameGTF != fullname) {
-        msg <- sprintf("%s (%s) is incompatible with %s (%s) because their fullnames does not match: %s != %s", class(this)[1L], class(other)[1L], getPath(this), getPathname(gtf), fullname, fullnameGTF);
-        if (mustWork) throw(msg);
-        return(FALSE);
+        msg <- sprintf("%s (%s) is incompatible with %s (%s) because their fullnames does not match: %s != %s", class(this)[1L], class(other)[1L], getPath(this), getPathname(gtf), fullname, fullnameGTF)
+        if (mustWork) throw(msg)
+        return(FALSE)
       }
     }
   } else {

@@ -105,40 +105,40 @@ setMethodS3("getIndexFile", "BamDataFile", function(this, create = TRUE, clean =
 
 
 setMethodS3("hasIndex", "BamDataFile", function(this, ...) {
-  !is.null(getIndexFile(this, create = FALSE));
+  !is.null(getIndexFile(this, create = FALSE))
 })
 
 
 
 setMethodS3("getIndexStats", "BamDataFile", function(this, ..., force=FALSE) {
-  stats <- this$.idxStats;
+  stats <- this$.idxStats
 
   if (force || is.null(stats)) {
-    pathname <- getPathname(this);
+    pathname <- getPathname(this)
     if (!hasIndex(this)) {
-      throw("Cannot get index statistics. Index does not exists: ", pathname);
+      throw("Cannot get index statistics. Index does not exists: ", pathname)
     }
     # Quote pathnames
-    bfr <- systemSamtools("idxstats", shQuote(pathname), stdout=TRUE, ...);
-    bfr <- strsplit(bfr, split="\t", fixed=TRUE);
-    seqName <- sapply(bfr, FUN=.subset, 1L);
-    seqLength <- as.integer(sapply(bfr, FUN=.subset, 2L));
-    countMapped <- as.numeric(sapply(bfr, FUN=.subset, 3L));
-    countUnmapped <- as.numeric(sapply(bfr, FUN=.subset, 4L));
+    bfr <- systemSamtools("idxstats", shQuote(pathname), stdout=TRUE, ...)
+    bfr <- strsplit(bfr, split="\t", fixed=TRUE)
+    seqName <- sapply(bfr, FUN=.subset, 1L)
+    seqLength <- as.integer(sapply(bfr, FUN=.subset, 2L))
+    countMapped <- as.numeric(sapply(bfr, FUN=.subset, 3L))
+    countUnmapped <- as.numeric(sapply(bfr, FUN=.subset, 4L))
 
     # NOTE: samtools idxstats can return ridicolously(!) large read
     # counts.  Let's assume they are errors and set to NAs. /HB 2010-10-02
-    countMapped[countMapped >= .Machine$integer.max] <- NA;
-    countUnmapped[countUnmapped >= .Machine$integer.max] <- NA;
-    countMapped <- as.integer(countMapped);
-    countUnmapped <- as.integer(countUnmapped);
+    countMapped[countMapped >= .Machine$integer.max] <- NA
+    countUnmapped[countUnmapped >= .Machine$integer.max] <- NA
+    countMapped <- as.integer(countMapped)
+    countUnmapped <- as.integer(countUnmapped)
 
-    stats <- data.frame(length=seqLength, mapped=countMapped, unmapped=countUnmapped);
-    rownames(stats) <- seqName;
-    this$.idxStats <- stats;
+    stats <- data.frame(length=seqLength, mapped=countMapped, unmapped=countUnmapped)
+    rownames(stats) <- seqName
+    this$.idxStats <- stats
   }
 
-  stats;
+  stats
 })
 
 
@@ -172,20 +172,20 @@ setMethodS3("getReadCounts", "BamDataFile", function(this, ...) {
 setMethodS3("nbrOfReads", "BamDataFile", function(this, ...) {
   ## Does always work. /HB 2014-04-18
   ## Maybe 'samtools flagstat' is better?
-  counts <- getReadCounts(this, ...);
+  counts <- getReadCounts(this, ...)
   ## Very slow?!? /HB 2014-04-19
-##  counts <- Rsamtools::countBam(getPathname(this))$records;
-  sum(counts, na.rm=TRUE);
+##  counts <- Rsamtools::countBam(getPathname(this))$records
+  sum(counts, na.rm=TRUE)
 })
 
 setMethodS3("nbrOfMappedReads", "BamDataFile", function(this, ...) {
-  counts <- getReadCounts(this, ...);
-  counts["mapped"];
+  counts <- getReadCounts(this, ...)
+  counts["mapped"]
 })
 
 setMethodS3("nbrOfUnmappedReads", "BamDataFile", function(this, ...) {
-  counts <- getReadCounts(this, ...);
-  counts["unmapped"];
+  counts <- getReadCounts(this, ...)
+  counts["unmapped"]
 })
 
 
@@ -207,27 +207,27 @@ setMethodS3("nbrOfUnmappedReads", "BamDataFile", function(this, ...) {
 #   \url{http://seqanswers.com/forums/showthread.php?t=3739}\cr
 # }
 setMethodS3("isSorted", "BamDataFile", function(this, ...) {
-  isTRUE(hasIndex(this));
+  isTRUE(hasIndex(this))
 })
 
 
 # Argument '...' must be 2nd to match the generic base::sort() function.
 setMethodS3("sort", "BamDataFile", function(x, ..., force=FALSE) {
   # To please R CMD check
-  this <- x;
+  this <- x
 
   # Nothing todo?
   if (!force && isSorted(this)) {
-    return(this);
+    return(this)
   }
 
-  throw("Not yet implemented!");
+  throw("Not yet implemented!")
 })
 
 setMethodS3("getTargets", "BamDataFile", function(this, ...) {
-  hdr <- getHeader(this);
-  targets <- hdr$targets;
-  targets;
+  hdr <- getHeader(this)
+  targets <- hdr$targets
+  targets
 })
 
 
@@ -255,12 +255,12 @@ setMethodS3("getTotalTargetLength", "BamDataFile", function(this, ...) {
 
 
 setMethodS3("getHeader", "BamDataFile", function(this, force=FALSE, ...) {
-  header <- this$.header;
+  header <- this$.header
   if (force || is.null(header)) {
-    header <- readHeader(this, ...);
-    this$.header <- header;
+    header <- readHeader(this, ...)
+    this$.header <- header
   }
-  header;
+  header
 })
 
 setMethodS3("readHeader", "BamDataFile", function(this, ...) {
@@ -273,62 +273,62 @@ setMethodS3("readHeader", "BamDataFile", function(this, ...) {
 
 
 setMethodS3("getPrograms", "BamDataFile", function(this, ...) {
-  hdr <- getHeader(this, ...);
-  pgs <- hdr$text[names(hdr$text) == "@PG"];
+  hdr <- getHeader(this, ...)
+  pgs <- hdr$text[names(hdr$text) == "@PG"]
   pgs <- lapply(pgs, FUN=function(pg) {
-    pg <- trim(pg);
-    pg <- strsplit(pg, split=":", fixed=TRUE);
-    keys <- sapply(pg, FUN=function(x) x[1L]);
-    values <- sapply(pg, FUN=function(x) x[-1L]);
-    names(values) <- keys;
-    values;
+    pg <- trim(pg)
+    pg <- strsplit(pg, split=":", fixed=TRUE)
+    keys <- sapply(pg, FUN=function(x) x[1L])
+    values <- sapply(pg, FUN=function(x) x[-1L])
+    names(values) <- keys
+    values
   })
-  ids <- sapply(pgs, FUN=function(x) x[[1L]]);
-  pgs <- lapply(pgs, FUN=function(x) x[-1L]);
-  names(pgs) <- ids;
-  pgs;
+  ids <- sapply(pgs, FUN=function(x) x[[1L]])
+  pgs <- lapply(pgs, FUN=function(x) x[-1L])
+  names(pgs) <- ids
+  pgs
 }, protected=TRUE)
 
 setMethodS3("getProgram", "BamDataFile", function(this, ...) {
-  pgList <- getPrograms(this, ...);
+  pgList <- getPrograms(this, ...)
   if (length(pgList) >= 1L) {
-    pgList <- pgList[[1L]];
+    pgList <- pgList[[1L]]
   } else {
-    pgList <- list();
+    pgList <- list()
   }
-  pgList;
+  pgList
 }, protected=TRUE)
 
 setMethodS3("getProgramString", "BamDataFile", function(this, full=FALSE, ...) {
-  pgs <- getPrograms(this, ...);
-  res <- c();
+  pgs <- getPrograms(this, ...)
+  res <- c()
   for (kk in seq_along(pgs)) {
-    pg <- pgs[[kk]];
-    name <- names(pgs)[kk];
-    resK <- sprintf("(%d)", kk);
+    pg <- pgs[[kk]]
+    name <- names(pgs)[kk]
+    resK <- sprintf("(%d)", kk)
 
     # Program name
-    pn <- c();
-    if (!is.null(name)) pn <- c(pn, gsub("[.][0-9]+$", "", name));
-    if (is.element("PN", names(pg))) pn <- c(pn, pg["PN"]);
+    pn <- c()
+    if (!is.null(name)) pn <- c(pn, gsub("[.][0-9]+$", "", name))
+    if (is.element("PN", names(pg))) pn <- c(pn, pg["PN"])
     if (length(pn) == 2L) {
-      pattern <- sprintf("^%s", pn[2]);
-      pn[1] <- gsub(pattern, "", pn[1]);
-      pn <- pn[nzchar(pn)];
+      pattern <- sprintf("^%s", pn[2])
+      pn[1] <- gsub(pattern, "", pn[1])
+      pn <- pn[nzchar(pn)]
     }
-    pn <- paste(pn, collapse=" ");
-    resK <- c(resK, pn);
+    pn <- paste(pn, collapse=" ")
+    resK <- c(resK, pn)
 
-    if (is.element("VN", names(pg))) resK <- c(resK, sprintf("v%s", pg["VN"]));
+    if (is.element("VN", names(pg))) resK <- c(resK, sprintf("v%s", pg["VN"]))
     if (full) {
-      if (is.element("CL", names(pg))) resK <- c(resK, sprintf("(call: %s)", pg["CL"]));
-      if (is.element("DS", names(pg))) resK <- c(resK, sprintf("[%s]", pg["DS"]));
+      if (is.element("CL", names(pg))) resK <- c(resK, sprintf("(call: %s)", pg["CL"]))
+      if (is.element("DS", names(pg))) resK <- c(resK, sprintf("[%s]", pg["DS"]))
     }
-    resK <- paste(resK, collapse=" ");
-    res <- c(res, resK);
+    resK <- paste(resK, collapse=" ")
+    res <- c(res, resK)
   }
-  res <- paste(res, collapse="; ");
-  res;
+  res <- paste(res, collapse="; ")
+  res
 }, protected=TRUE)
 
 
@@ -357,18 +357,18 @@ setMethodS3("getProgramString", "BamDataFile", function(this, full=FALSE, ...) {
 #      \url{http://gatkforums.broadinstitute.org/discussion/1317/collected-faqs-about-bam-files}\cr
 # }
 setMethodS3("getReadGroups", "BamDataFile", function(this, ...) {
-  hdr <- getHeader(this, ...);
-  SamReadGroup$byScanBamHeader(hdr, ...);
+  hdr <- getHeader(this, ...)
+  SamReadGroup$byScanBamHeader(hdr, ...)
 })
 
 setMethodS3("getReadGroup", "BamDataFile", function(this, ...) {
-  rgList <- getReadGroups(this, ...);
+  rgList <- getReadGroups(this, ...)
   if (length(rgList) >= 1L) {
-    rgList <- rgList[[1L]];
+    rgList <- rgList[[1L]]
   } else {
-    rgList <- SamReadGroup();
+    rgList <- SamReadGroup()
   }
-  rgList;
+  rgList
 })
 
 
@@ -391,61 +391,61 @@ setMethodS3("replaceAllReadGroups", "BamDataFile", function(this, rg="*", ..., v
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'rg':
   if (is.character(rg) && rg == "*") {
-    rg <- SamReadGroup();
-    keys <- names(asSamList(rg, drop=FALSE));
-    for (key in keys) rg[[key]] <- "*";
+    rg <- SamReadGroup()
+    keys <- names(asSamList(rg, drop=FALSE))
+    for (key in keys) rg[[key]] <- "*"
   } else {
-    rg <- Arguments$getInstanceOf(rg, "SamReadGroup");
+    rg <- Arguments$getInstanceOf(rg, "SamReadGroup")
   }
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Updating Read Groups");
+  verbose && enter(verbose, "Updating Read Groups")
 
 
-  pathname <- getPathname(this);
+  pathname <- getPathname(this)
 
   # Output pathname
-  pathnameD <- gsub("[.]bam$", ",RG.bam", pathname);
-  pathnameD <- Arguments$getWritablePathname(pathnameD, mustNotExist=(!skip && !overwrite));
+  pathnameD <- gsub("[.]bam$", ",RG.bam", pathname)
+  pathnameD <- Arguments$getWritablePathname(pathnameD, mustNotExist=(!skip && !overwrite))
 
   if (isFile(pathnameD)) {
     if (skip) {
-      verbose && cat(verbose, "Already exists. Skipping.");
-      bf <- newInstance(this, pathnameD);
-      buildIndex(bf, skip=TRUE, verbose=less(verbose, 10));
-      verbose && exit(verbose);
-      return(bf);
+      verbose && cat(verbose, "Already exists. Skipping.")
+      bf <- newInstance(this, pathnameD)
+      buildIndex(bf, skip=TRUE, verbose=less(verbose, 10))
+      verbose && exit(verbose)
+      return(bf)
     }
     if (!overwrite) {
-      throw("Cannot replace SAM read groups. File already exists: ", pathnameD);
+      throw("Cannot replace SAM read groups. File already exists: ", pathnameD)
     }
   }
 
 
-  verbose && cat(verbose, "Arguments:");
-  verbose && print(verbose, rg);
+  verbose && cat(verbose, "Arguments:")
+  verbose && print(verbose, rg)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Use default values from existing read groups of the input file?
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  rgList <- asSamList(rg);
-  keep <- sapply(rgList, FUN=function(x) identical(x, "*"));
-  keys <- names(rgList)[keep];
+  rgList <- asSamList(rg)
+  keep <- sapply(rgList, FUN=function(x) identical(x, "*"))
+  keys <- names(rgList)[keep]
   if (length(keys) > 0L) {
-    rgDefault <- getReadGroups(this);
-    rgDefault <- Reduce(merge, rgDefault);
+    rgDefault <- getReadGroups(this)
+    rgDefault <- Reduce(merge, rgDefault)
     # Sanity check
-    .stop_if_not(inherits(rgDefault, "SamReadGroup"));
+    .stop_if_not(inherits(rgDefault, "SamReadGroup"))
 
     for (key in keys) {
-      rg[[key]] <- rgDefault[[key]];
+      rg[[key]] <- rgDefault[[key]]
     }
   } # for (key ...)
 
@@ -453,44 +453,44 @@ setMethodS3("replaceAllReadGroups", "BamDataFile", function(this, rg="*", ..., v
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  validate(rg);
+  validate(rg)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Assert mandatory fields
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  rgList <- asSamList(rg);
-  mandatory <- c("SM", "LB", "PL", "PU");
-  missing <- setdiff(mandatory, names(rgList));
+  rgList <- asSamList(rg)
+  mandatory <- c("SM", "LB", "PL", "PU")
+  missing <- setdiff(mandatory, names(rgList))
   if (length(missing)) {
-    throw("Cannot write read groups. Mandatory fields are missing: ", hpaste(missing));
+    throw("Cannot write read groups. Mandatory fields are missing: ", hpaste(missing))
   }
 
-  verbose && cat(verbose, "Arguments:");
-  verbose && str(verbose, rgList);
+  verbose && cat(verbose, "Arguments:")
+  verbose && str(verbose, rgList)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Write new BAM file
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  args <- list("AddOrReplaceReadGroups", I=pathname, O=pathnameD);
-  args <- c(args, asString(rg, fmtstr="RG%s=%s"));
-  verbose && str(verbose, args);
-  args$verbose <- less(verbose, 10);
+  args <- list("AddOrReplaceReadGroups", I=pathname, O=pathnameD)
+  args <- c(args, asString(rg, fmtstr="RG%s=%s"))
+  verbose && str(verbose, args)
+  args$verbose <- less(verbose, 10)
 
-  res <- do.call(systemPicard, args);
-  status <- attr(res, "status"); if (is.null(status)) status <- 0L;
-  verbose && cat(verbose, "Results:");
-  verbose && str(verbose, res);
-  verbose && cat(verbose, "Status:");
-  verbose && str(verbose, status);
+  res <- do.call(systemPicard, args)
+  status <- attr(res, "status"); if (is.null(status)) status <- 0L
+  verbose && cat(verbose, "Results:")
+  verbose && str(verbose, res)
+  verbose && cat(verbose, "Status:")
+  verbose && str(verbose, status)
 
-  bf <- newInstance(this, pathnameD);
-  buildIndex(bf, overwrite=TRUE, verbose=less(verbose, 10));
+  bf <- newInstance(this, pathnameD)
+  buildIndex(bf, overwrite=TRUE, verbose=less(verbose, 10))
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  bf;
+  bf
 }) # replaceAllReadGroups()
 
 
@@ -498,13 +498,13 @@ setMethodS3("replaceAllReadGroups", "BamDataFile", function(this, rg="*", ..., v
 setMethodS3("extractReadStartPositions", "BamDataFile", function(this, param=ScanBamParam(what=c("rname", "pos")), flag=scanBamFlag(isUnmappedQuery=FALSE, isDuplicate=FALSE), ..., verbose=FALSE) {
   use("Rsamtools")
 
-  pathname <- getPathname(this);
+  pathname <- getPathname(this)
 
-  data <- scanBam(pathname, flag=flag, param=param, ...);
-  data <- data[[1L]];
-  data <- as.data.frame(data);
-  data$rname <- as.character(data$rname);
-  data;
+  data <- scanBam(pathname, flag=flag, param=param, ...)
+  data <- data[[1L]]
+  data <- as.data.frame(data)
+  data$rname <- as.character(data$rname)
+  data
 })
 
 
@@ -515,49 +515,49 @@ setMethodS3("readDataFrame", "BamDataFile", function(this, fields=NULL, flag=sca
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'fields':
-  knownFields <- c("qname", "flag", "rname", "strand", "pos", "qwidth", "mapq", "cigar", "mrnm", "mpos", "isize");
+  knownFields <- c("qname", "flag", "rname", "strand", "pos", "qwidth", "mapq", "cigar", "mrnm", "mpos", "isize")
   if (is.null(fields)) {
-    fields <- knownFields;
+    fields <- knownFields
   }
-  fields <- match.arg(fields, choices=knownFields, several.ok=TRUE);
+  fields <- match.arg(fields, choices=knownFields, several.ok=TRUE)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Reading data frame");
+  verbose && enter(verbose, "Reading data frame")
 
-  pathname <- getPathname(this);
-  verbose && cat(verbose, "Pathname: ", pathname);
+  pathname <- getPathname(this)
+  verbose && cat(verbose, "Pathname: ", pathname)
 
-  param <- ScanBamParam(what=fields, which=which);
-  verbose && cat(verbose, "scanBam() parameters:");
-  verbose && print(verbose, param);
+  param <- ScanBamParam(what=fields, which=which)
+  verbose && cat(verbose, "scanBam() parameters:")
+  verbose && print(verbose, param)
 
-  data <- scanBam(pathname, param=param, ...);
+  data <- scanBam(pathname, param=param, ...)
 
   # Sanity check
-  .stop_if_not(is.list(data) && length(data) == 1L);
-  data <- data[[1L]];
-  .stop_if_not(is.list(data));
-  verbose && str(verbose, data);
+  .stop_if_not(is.list(data) && length(data) == 1L)
+  data <- data[[1L]]
+  .stop_if_not(is.list(data))
+  verbose && str(verbose, data)
 
-  verbose && enter(verbose, "Coercing list to data frame");
+  verbose && enter(verbose, "Coercing list to data frame")
   # Sanity check
-  ns <- sapply(data, FUN=length);
-  .stop_if_not(all(ns == ns[1L]));
+  ns <- sapply(data, FUN=length)
+  .stop_if_not(all(ns == ns[1L]))
 
-  data <- as.data.frame(data, stringsAsFactors=TRUE);
-  verbose && str(verbose, data);
-  verbose && exit(verbose);
+  data <- as.data.frame(data, stringsAsFactors=TRUE)
+  verbose && str(verbose, data)
+  verbose && exit(verbose)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  data;
+  data
 })
 
 
@@ -568,22 +568,22 @@ setMethodS3("readReadPositions", "BamDataFile", function(this, ..., flag=scanBam
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Reading (rname,pos)");
+  verbose && enter(verbose, "Reading (rname,pos)")
 
-  verbose && cat(verbose, "scanBam() flags:");
-  verbose && print(verbose, flag);
+  verbose && cat(verbose, "scanBam() flags:")
+  verbose && print(verbose, flag)
 
-  data <- readDataFrame(this, fields=c("rname", "pos"), flag=flag, ..., verbose=less(verbose, 5));
+  data <- readDataFrame(this, fields=c("rname", "pos"), flag=flag, ..., verbose=less(verbose, 5))
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  data;
+  data
 }) # readReadPositions()
 
 
@@ -623,26 +623,26 @@ setMethodS3("validate", "BamDataFile", function(this, method=c("picard"), ..., v
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'method':
-  method <- match.arg(method);
+  method <- match.arg(method)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, sprintf("Validating %s", class(this)[1L]));
-  verbose && cat(verbose, "Validation method: ", method);
+  verbose && enter(verbose, sprintf("Validating %s", class(this)[1L]))
+  verbose && cat(verbose, "Validation method: ", method)
 
   if (method == "picard") {
-    .stop_if_not(isCapableOf(aroma.seq, "picard"));
-    res <- picardValidateSamFile(getPathname(this), ..., verbose=verbose);
+    .stop_if_not(isCapableOf(aroma.seq, "picard"))
+    res <- picardValidateSamFile(getPathname(this), ..., verbose=verbose)
   }
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  invisible(res);
+  invisible(res)
 }, protected=TRUE)
 
 
@@ -651,152 +651,152 @@ setMethodS3("writeSample", "BamDataFile", function(this, pathname, n, seed=NULL,
   use("Rsamtools")
 
   # Argument 'pathname':
-  pathname <- Arguments$getWritablePathname(pathname, mustNotExist=TRUE);
+  pathname <- Arguments$getWritablePathname(pathname, mustNotExist=TRUE)
 
   # Argument 'n':
-  n <- Arguments$getInteger(n, range=c(1,Inf));
-  nMax <- nbrOfReads(this);
+  n <- Arguments$getInteger(n, range=c(1,Inf))
+  nMax <- nbrOfReads(this)
   if (n > nMax) {
-    throw("Requested more reads than available. Cannot sample with replacement: ", n, " > ", nMax);
+    throw("Requested more reads than available. Cannot sample with replacement: ", n, " > ", nMax)
   }
 
   # Argument 'seed':
-  if (!is.null(seed)) seed <- Arguments$getInteger(seed);
+  if (!is.null(seed)) seed <- Arguments$getInteger(seed)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, sprintf("Writing sample of %s", class(this)[1L]));
-  verbose && print(verbose, this);
-  verbose && cat(verbose, "Sample size: ", n);
-  verbose && cat(verbose, "seed: ", seed);
+  verbose && enter(verbose, sprintf("Writing sample of %s", class(this)[1L]))
+  verbose && print(verbose, this)
+  verbose && cat(verbose, "Sample size: ", n)
+  verbose && cat(verbose, "seed: ", seed)
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Set the random seed
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (!is.null(seed)) {
-    verbose && enter(verbose, "Setting (temporary) random seed");
-    oldRandomSeed <- NULL;
+    verbose && enter(verbose, "Setting (temporary) random seed")
+    oldRandomSeed <- NULL
     if (exists(".Random.seed", mode="integer")) {
-      oldRandomSeed <- get(".Random.seed", mode="integer");
+      oldRandomSeed <- get(".Random.seed", mode="integer")
     }
     on.exit({
       if (!is.null(oldRandomSeed)) {
-        .Random.seed <<- oldRandomSeed;
+        .Random.seed <<- oldRandomSeed
       }
-    }, add=TRUE);
-    verbose && cat(verbose, "The random seed will be reset to its original state afterward.");
-    verbose && cat(verbose, "Seed: ", seed);
-    set.seed(seed);
-    verbose && exit(verbose);
+    }, add=TRUE)
+    verbose && cat(verbose, "The random seed will be reset to its original state afterward.")
+    verbose && cat(verbose, "Seed: ", seed)
+    set.seed(seed)
+    verbose && exit(verbose)
   }
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Sample what to keep
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  yieldSize <- 1e6;
+  yieldSize <- 1e6
 
-  progress <- isVisible(verbose);
-  verbose && cat(verbose, "Displaying progress: ", progress);
-  cprogress <- 0L;
-  dprogress <- ceiling(nMax/yieldSize/100);
-  sprogress <- paste(rep(".", times=max(min(100/dprogress, 100),1)), collapse="");
+  progress <- isVisible(verbose)
+  verbose && cat(verbose, "Displaying progress: ", progress)
+  cprogress <- 0L
+  dprogress <- ceiling(nMax/yieldSize/100)
+  sprogress <- paste(rep(".", times=max(min(100/dprogress, 100),1)), collapse="")
 
-  verbose && enter(verbose, "Sampling read indexed to keep");
+  verbose && enter(verbose, "Sampling read indexed to keep")
   if (n < nMax) {
     # FIXME: For a BAM file with, say, 2*10^9 reads, here we
     # allocate a vector of 8GB just to keep track of which
     # reads to keep. /HB 2014-04-19
-    verbose && printf(verbose, "Allocating logical vector of length %d: %g GB\n", nMax, (4*nMax)/1024^3);
-    keep <- logical(length=nMax);
-    keep[sample(nMax, size=n, replace=FALSE)] <- TRUE;
-##    verbose && print(verbose, table(keep));
+    verbose && printf(verbose, "Allocating logical vector of length %d: %g GB\n", nMax, (4*nMax)/1024^3)
+    keep <- logical(length=nMax)
+    keep[sample(nMax, size=n, replace=FALSE)] <- TRUE
+##    verbose && print(verbose, table(keep))
 
     # Offset
-    offset <- 0L;
+    offset <- 0L
 
     # TODO: Added ram/buffer size option. /HB 2013-07-01
     filter <- FilterRules(list(sampler=function(x) {
       # Display progress?
       if (progress) {
         if (cprogress %% dprogress == 0L) {
-          message(sprogress, appendLF=FALSE);
-          cprogress <<- cprogress + 1L;
+          message(sprogress, appendLF=FALSE)
+          cprogress <<- cprogress + 1L
         }
       }
 
-      n <- nrow(x);
+      n <- nrow(x)
 ##      message(sprintf("n=%d",n))
 
       # Nothing to do?
-      if (n == 0L) return(logical(0L));
+      if (n == 0L) return(logical(0L))
 
       # Available indices
-      res <- keep[offset + seq_len(n)];
+      res <- keep[offset + seq_len(n)]
 ##      message(sprintf("n2=%d",length(res)))
       # Sanity check
-      .stop_if_not(length(res) == n);
+      .stop_if_not(length(res) == n)
 
       # Update offset
-      offset <<- offset + n;
+      offset <<- offset + n
 
       if (progress) {
         if (cprogress == 100L) {
-          message(" [100%]", appendLF=TRUE);
-          cprogress <<- 0L;
+          message(" [100%]", appendLF=TRUE)
+          cprogress <<- 0L
         }
       }
 
-      res;
+      res
     }))
   } else {
-    verbose && cat(verbose, "Nothing to filter; keeping all reads");
+    verbose && cat(verbose, "Nothing to filter; keeping all reads")
     # Nothing to filter; keep everything
-    filter <- NULL;
+    filter <- NULL
   }
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
 
-  verbose && enter(verbose, "Filtering");
+  verbose && enter(verbose, "Filtering")
   # Input file
-  pathnameBAM <- getPathname(this);
+  pathnameBAM <- getPathname(this)
 
   # Index file
-  pathnameI <- sprintf("%s.bai", pathname);
+  pathnameI <- sprintf("%s.bai", pathname)
 
   # Write to temporary file
-  pathnameT <- pushTemporaryFile(pathname);
-  pathnameIT <- sprintf("%s.bai", pathnameT);
+  pathnameT <- pushTemporaryFile(pathname)
+  pathnameIT <- sprintf("%s.bai", pathnameT)
 
-  bam <- BamFile(pathnameBAM, yieldSize=yieldSize);
+  bam <- BamFile(pathnameBAM, yieldSize=yieldSize)
 
-  if (progress) message("[0%] ", appendLF=FALSE);
-  pathname2 <- filterBam(bam, destination=pathnameT, filter=filter, indexDestination=TRUE);
-  keep <- NULL; # Not needed anymore
-  if (progress && cprogress < 100L) message(" [100%]", appendLF=TRUE);
+  if (progress) message("[0%] ", appendLF=FALSE)
+  pathname2 <- filterBam(bam, destination=pathnameT, filter=filter, indexDestination=TRUE)
+  keep <- NULL # Not needed anymore
+  if (progress && cprogress < 100L) message(" [100%]", appendLF=TRUE)
 
-  verbose && cat(verbose, "Created: ", pathname2);
+  verbose && cat(verbose, "Created: ", pathname2)
 
-  bam2 <- newInstance(this, pathname2);
-  .stop_if_not(nbrOfReads(bam2) == n);
+  bam2 <- newInstance(this, pathname2)
+  .stop_if_not(nbrOfReads(bam2) == n)
 
   # Undo temporary files
-  file.rename(pathnameIT, pathnameI);
-  pathname <- popTemporaryFile(pathnameT);
+  file.rename(pathnameIT, pathnameI)
+  pathname <- popTemporaryFile(pathnameT)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  bam <- newInstance(this, pathname);
-  verbose && print(verbose, bam);
+  bam <- newInstance(this, pathname)
+  verbose && print(verbose, bam)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  bam;
+  bam
 }, protected=TRUE)
 
 
@@ -862,14 +862,14 @@ setMethodS3("tview", "BamDataFile", function(this, reference=NULL, chromosome=NU
 
 
 setMethodS3("getFlagStat", "BamDataFile", function(this, ..., force=FALSE) {
-  stats <- this$.flagStat;
+  stats <- this$.flagStat
 
   if (force || is.null(stats)) {
-    pathname <- getPathname(this);
+    pathname <- getPathname(this)
     if (!hasIndex(this)) {
-      throw("Cannot get index statistics. Index does not exists: ", pathname);
+      throw("Cannot get index statistics. Index does not exists: ", pathname)
     }
-    bfr <- systemSamtools("flagstat", shQuote(pathname), stdout=TRUE, ...);
+    bfr <- systemSamtools("flagstat", shQuote(pathname), stdout=TRUE, ...)
     bfr <- trim(bfr)
 
     # Parse
@@ -882,10 +882,10 @@ setMethodS3("getFlagStat", "BamDataFile", function(this, ..., force=FALSE) {
     })
     stats <- Reduce(rbind, stats)
 
-    this$.flagStat <- stats;
+    this$.flagStat <- stats
   }
 
-  stats;
+  stats
 })
 
 

@@ -39,7 +39,7 @@ setMethodS3("sortByName", "BamDataFile", function(this, pathD=getPath(this), bIn
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'pathD':
-  pathD <- Arguments$getWritablePath(pathD);
+  pathD <- Arguments$getWritablePath(pathD)
 
   # Argument 'bIndex':
   bIndex <- Arguments$getLogical(bIndex)
@@ -48,53 +48,53 @@ setMethodS3("sortByName", "BamDataFile", function(this, pathD=getPath(this), bIn
   .stop_if_not(is.character(suffix))  ## Should test if single string, and return informative error msg
 
   # Argument 'skip':
-  skip <- Arguments$getLogical(skip);
+  skip <- Arguments$getLogical(skip)
 
   # Argument 'overwrite':
-  overwrite <- Arguments$getLogical(overwrite);
+  overwrite <- Arguments$getLogical(overwrite)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Sorting BAM file");
+  verbose && enter(verbose, "Sorting BAM file")
 
-  pathname <- getPathname(this);
-  verbose && cat(verbose, "Source pathname: ", pathname);
+  pathname <- getPathname(this)
+  verbose && cat(verbose, "Source pathname: ", pathname)
 
-  fullname <- getFullName(this);
+  fullname <- getFullName(this)
   filenameD <- sprintf(paste("%s", suffix, ".bam", sep=""), fullname)
-  pathnameD <- file.path(pathD, filenameD);
-  verbose && cat(verbose, "Destination pathname: ", pathnameD);
+  pathnameD <- file.path(pathD, filenameD)
+  verbose && cat(verbose, "Destination pathname: ", pathnameD)
 
   # Asserts
-  pathnameD <- Arguments$getWritablePathname(pathnameD, mustNotExist=!overwrite);
+  pathnameD <- Arguments$getWritablePathname(pathnameD, mustNotExist=!overwrite)
 
   # If bam file already sorted, only need to copy .bam and .bai to new destination
   if (skip && isSorted(this)) {
-    verbose && cat(verbose, "Already sorted.");
+    verbose && cat(verbose, "Already sorted.")
     # Create index if needed
     pathnameI <- paste(pathname, ".bai", sep="")
     if (bIndex && !file.exists(pathnameI)) {
       pathnameI <- indexBam(pathname)
     }
     if (getAbsolutePath(pathnameD) != getAbsolutePath(pathname)) {
-      verbose && cat(verbose, "Copying to destination.");
+      verbose && cat(verbose, "Copying to destination.")
       file.copy(pathname, pathnameD)
       if (bIndex) {
         file.copy(pathnameI, paste(pathnameD, ".bai", sep=""))
       }
     }
-    res <- BamDataFile(pathnameD);
-    verbose && exit(verbose);
-    return(res);
+    res <- BamDataFile(pathnameD)
+    verbose && exit(verbose)
+    return(res)
   }
 
-  pathnameDx <- gsub("[.]bam$", "", pathnameD);
-  verbose && cat(verbose, "BAM destination: ", pathnameDx);
+  pathnameDx <- gsub("[.]bam$", "", pathnameD)
+  verbose && cat(verbose, "BAM destination: ", pathnameDx)
   # Call Rsamtools::sortBam()
   # - This could hypothetically change pathnameD, but do not check for this (yet)
   # - TODO:  Confirm/modify header to set SORT flag
@@ -104,10 +104,10 @@ setMethodS3("sortByName", "BamDataFile", function(this, pathD=getPath(this), bIn
     pathnameI <- indexBam(pathnameD)
   }
 
-  res <- BamDataFile(pathnameD);
-  verbose && print(verbose, res);
-  verbose && exit(verbose);
-  res;
+  res <- BamDataFile(pathnameD)
+  verbose && print(verbose, res)
+  verbose && exit(verbose)
+  res
 }) # sortByName() for BamDataFile
 
 
@@ -116,7 +116,7 @@ setMethodS3("sortByName", "BamDataSet", function(ds, path=getPath(ds), tag='byNa
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'path':
-  path <- Arguments$getWritablePath(path);
+  path <- Arguments$getWritablePath(path)
 
   # Argument 'tag':
   .stop_if_not(is.character(tag))
@@ -125,33 +125,33 @@ setMethodS3("sortByName", "BamDataSet", function(ds, path=getPath(ds), tag='byNa
   .stop_if_not(is.character(suffix))
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Sorting BAM data set");
+  verbose && enter(verbose, "Sorting BAM data set")
 
-  verbose && cat(verbose, "BAM data set:");
-  verbose && print(verbose, ds);
-  verbose && cat(verbose, "BAM path: ", path);
+  verbose && cat(verbose, "BAM data set:")
+  verbose && print(verbose, ds)
+  verbose && cat(verbose, "BAM path: ", path)
 
   # TO DO: Parallelize. /HB 2013-11-08
   for (ii in seq_along(ds)) {
-    df <- ds[[ii]];
-    verbose && enter(verbose, sprintf("File #%d ('%s') of %d", ii, getName(df), length(ds)));
-    bf <- sortByName(df, path=path, ..., verbose=less(verbose,1));
-    verbose && exit(verbose);
+    df <- ds[[ii]]
+    verbose && enter(verbose, sprintf("File #%d ('%s') of %d", ii, getName(df), length(ds)))
+    bf <- sortByName(df, path=path, ..., verbose=less(verbose,1))
+    verbose && exit(verbose)
   } # for (ii ...)
 
-  bs <- BamDataSet$byPath(path);
-  bs <- extract(bs, paste(getFullNames(ds), suffix, sep=""), onMissing="error");
-  verbose && print(verbose, bs);
+  bs <- BamDataSet$byPath(path)
+  bs <- extract(bs, paste(getFullNames(ds), suffix, sep=""), onMissing="error")
+  verbose && print(verbose, bs)
 
   ## TODO: Assert completeness
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  bs;
+  bs
 }) # sortByName() for BamDataSet

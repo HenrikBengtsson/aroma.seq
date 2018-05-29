@@ -43,27 +43,27 @@ setMethodS3("doHTSeqCount", "BamDataSet", function(dataSet, transcripts, ..., ve
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'dataSet':
-  dataSet <- Arguments$getInstanceOf(dataSet, "BamDataSet");
+  dataSet <- Arguments$getInstanceOf(dataSet, "BamDataSet")
 
   # Argument 'transcripts':
-  transcripts <- Arguments$getInstanceOf(transcripts, "GtfDataFile"); 
+  transcripts <- Arguments$getInstanceOf(transcripts, "GtfDataFile")
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "HTSeqCounting");
+  verbose && enter(verbose, "HTSeqCounting")
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Checking requirements
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "HTSeqCounting/Check requirements");
-  .stop_if_not(isCapableOf(aroma.seq, "htseq"));
-  verbose && exit(verbose);
+  verbose && enter(verbose, "HTSeqCounting/Check requirements")
+  .stop_if_not(isCapableOf(aroma.seq, "htseq"))
+  verbose && exit(verbose)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -73,22 +73,22 @@ setMethodS3("doHTSeqCount", "BamDataSet", function(dataSet, transcripts, ..., ve
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # HTSeqCounting
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "HTSeqCounting/Alignment");
-  htc <- HTSeqCounting(dataSet, transcripts=transcripts, ...);
-  verbose && print(verbose, htc);
+  verbose && enter(verbose, "HTSeqCounting/Alignment")
+  htc <- HTSeqCounting(dataSet, transcripts=transcripts, ...)
+  verbose && print(verbose, htc)
 
-  counts <- process(htc, verbose=verbose);
-  verbose && print(verbose, counts);
+  counts <- process(htc, verbose=verbose)
+  verbose && print(verbose, counts)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  counts;
+  counts
 }) # doHTSeqCount()
 
 
 setMethodS3("doHTSeqCount", "default", function(...) {
-  throw("In order to use doHTSeqCount(), the data need to be aligned into a BamDataFileSet first.");
+  throw("In order to use doHTSeqCount(), the data need to be aligned into a BamDataFileSet first.")
 })

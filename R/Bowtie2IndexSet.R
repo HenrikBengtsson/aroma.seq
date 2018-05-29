@@ -44,7 +44,7 @@ setMethodS3("as.character", "Bowtie2IndexSet", function(x, ...) {
 
 
 setMethodS3("getDefaultFilePatterns", "Bowtie2IndexSet", function(static, prefix, ...) {
-  knownExts <- c("1", "2", "3", "4", "rev.1", "rev.2");
+  knownExts <- c("1", "2", "3", "4", "rev.1", "rev.2")
   sprintf("%s[.](%s)[.]bt2$", basename(prefix), paste(knownExts, collapse="|"))
 }, static=TRUE, protected=TRUE)
 
@@ -52,32 +52,32 @@ setMethodS3("getDefaultFilePatterns", "Bowtie2IndexSet", function(static, prefix
 setMethodS3("isComplete", "Bowtie2IndexSet", function(this, ...) {
   # TODO: The set of index files generated may vary with
   # bowtie2-index options. /HB 2012-09-27
-  knownExts <- c("1", "2", "3", "4", "rev.1", "rev.2");
-  knownExts <- sprintf("%s.bt2", knownExts);
-  if (length(this) < length(knownExts)) return(FALSE);
+  knownExts <- c("1", "2", "3", "4", "rev.1", "rev.2")
+  knownExts <- sprintf("%s.bt2", knownExts)
+  if (length(this) < length(knownExts)) return(FALSE)
 
-  filenames <- sapply(this, getFilename);
-  patterns <- sprintf("[.]%s$", knownExts);
-  idxs <- sapply(patterns, FUN=grep, filenames);
-  ns <- sapply(idxs, FUN=length);
+  filenames <- sapply(this, getFilename)
+  patterns <- sprintf("[.]%s$", knownExts)
+  idxs <- sapply(patterns, FUN=grep, filenames)
+  ns <- sapply(idxs, FUN=length)
 
-  if(any(ns == 0L)) return(FALSE);
+  if(any(ns == 0L)) return(FALSE)
 
-  TRUE;
+  TRUE
 })
 
 
 setMethodS3("getSummary", "Bowtie2IndexSet", function(this, ...) {
-  .stop_if_not(isComplete(this));
-  .stop_if_not(isCapableOf(aroma.seq, "bowtie2"));
-  prefix <- getIndexPrefix(this);
+  .stop_if_not(isComplete(this))
+  .stop_if_not(isCapableOf(aroma.seq, "bowtie2"))
+  prefix <- getIndexPrefix(this)
   tempfile
-  bfr <- system2("bowtie2-inspect", args=c("--summary", prefix), stdout=TRUE);
-  keys <- gsub("\\t.*", "", bfr);
-  values <- strsplit(bfr, split="\t", fixed=TRUE);
-  values <- lapply(values, FUN="[", -1L);
-  names(values) <- keys;
-  values;
+  bfr <- system2("bowtie2-inspect", args=c("--summary", prefix), stdout=TRUE)
+  keys <- gsub("\\t.*", "", bfr)
+  values <- strsplit(bfr, split="\t", fixed=TRUE)
+  values <- lapply(values, FUN="[", -1L)
+  names(values) <- keys
+  values
 })
 
 
@@ -88,11 +88,11 @@ setMethodS3("readSeqLengths", "Bowtie2IndexSet", function(this, force=FALSE, ...
   prefix <- getIndexPrefix(this)
 
   # Check for cached results
-  dirs <- c("aroma.seq", getOrganism(this));
-  key <- list(method="readSeqLengths", class=class(this), prefix=prefix);
-  lens <- loadCache(key=key, dirs=dirs);
+  dirs <- c("aroma.seq", getOrganism(this))
+  key <- list(method="readSeqLengths", class=class(this), prefix=prefix)
+  lens <- loadCache(key=key, dirs=dirs)
   if (!force && !is.null(lens)) {
-    return(lens);
+    return(lens)
   }
 
   names <- system2("bowtie2-inspect", args=c("--names", prefix), stdout=TRUE)
@@ -102,7 +102,7 @@ setMethodS3("readSeqLengths", "Bowtie2IndexSet", function(this, force=FALSE, ...
   names(lens) <- names
 
   # Cache
-  saveCache(lens, key=key, dirs=dirs);
+  saveCache(lens, key=key, dirs=dirs)
 
   lens
 }, protected=TRUE)
@@ -120,6 +120,6 @@ setMethodS3("getSeqLengths", "Bowtie2IndexSet", function(this, force=FALSE, ...)
 
 setMethodS3("isTopHat2IndexSet", "Bowtie2IndexSet", function(this, ...) {
   # AD HOC
-  path <- getPath(this);
-  grepl("tophat2", path, fixed=TRUE);
+  path <- getPath(this)
+  grepl("tophat2", path, fixed=TRUE)
 }, protected=TRUE)

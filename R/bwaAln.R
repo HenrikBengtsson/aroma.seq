@@ -36,31 +36,31 @@ setMethodS3("bwaAln", "default", function(pathnameFQ, indexPrefix, pathnameD, ..
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'pathnameFQ':
-  pathnameFQ <- Arguments$getReadablePathname(pathnameFQ);
+  pathnameFQ <- Arguments$getReadablePathname(pathnameFQ)
 
   # Argument 'indexPrefix':
-  dummy <- Arguments$getReadablePath(getParent(indexPrefix));
+  dummy <- Arguments$getReadablePath(getParent(indexPrefix))
 
   # Argument 'pathnameD':
-  pathnameD <- Arguments$getWritablePathname(pathnameD);
+  pathnameD <- Arguments$getWritablePathname(pathnameD)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Running BWA 'aln'");
+  verbose && enter(verbose, "Running BWA 'aln'")
 
   # Assert that input files are not overwritten
-  .stop_if_not(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFQ));
-##  .stop_if_not(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFA));
+  .stop_if_not(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFQ))
+##  .stop_if_not(getAbsolutePath(pathnameD) != getAbsolutePath(pathnameFA))
 
-  res <- systemBWA("aln", "f"=shQuote(pathnameD), shQuote(indexPrefix), ..., shQuote(pathnameFQ), verbose=less(verbose, 10));
+  res <- systemBWA("aln", "f"=shQuote(pathnameD), shQuote(indexPrefix), ..., shQuote(pathnameFQ), verbose=less(verbose, 10))
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  res;
+  res
 }) # bwaAln()

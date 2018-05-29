@@ -40,36 +40,36 @@
 #*/###########################################################################
 onExit <- function(expr=NULL, where=c("first", "last", "replace"), ..., exits, envir=parent.frame()) {
   # Argument 'expr':
-  expr <- substitute(expr);
+  expr <- substitute(expr)
 
   # Argument 'exits':
-  hasExits <- !missing(exits);
+  hasExits <- !missing(exits)
   if (!hasExits) {
     if (exists(".on.exit.expressions", envir=envir, inherits=FALSE)) {
-      exits <- get(".on.exit.expressions", envir=envir, inherits=FALSE);
+      exits <- get(".on.exit.expressions", envir=envir, inherits=FALSE)
     } else {
-      exits <- NULL;
+      exits <- NULL
     }
   }
   if (!is.null(exits)) {
-    .stop_if_not(is.call(exits));
+    .stop_if_not(is.call(exits))
   }
 
   # Argument 'where':
-  where <- match.arg(where);
-  if (is.null(exits)) where <- "replace";
+  where <- match.arg(where)
+  if (is.null(exits)) where <- "replace"
 
   if (where == "replace") {
-    exits <- expr;
+    exits <- expr
   } else if (where == "last") {
-    exits <- substitute({ old; new }, list(old=exits, new=expr));
+    exits <- substitute({ old; new }, list(old=exits, new=expr))
   } else if (where == "first") {
-    exits <- substitute({ new; old }, list(old=exits, new=expr));
+    exits <- substitute({ new; old }, list(old=exits, new=expr))
   }
 
   if (!hasExits) {
-    assign(".on.exit.expressions", exits, envir=envir, inherits=FALSE);
+    assign(".on.exit.expressions", exits, envir=envir, inherits=FALSE)
   }
 
-  invisible(exits);
+  invisible(exits)
 } # onExit()

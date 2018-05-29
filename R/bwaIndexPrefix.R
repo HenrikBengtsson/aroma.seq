@@ -28,5 +28,5 @@
 # @keyword internal
 #*/###########################################################################
 setMethodS3("bwaIndexPrefix", "default", function(pathnameFA, subdir="bwa", tags="*", ...) {
-  createIndexPrefix(pathnameFA, subdir=subdir, tags=tags, ...);
+  createIndexPrefix(pathnameFA, subdir=subdir, tags=tags, ...)
 }) # bwaIndexPrefix()

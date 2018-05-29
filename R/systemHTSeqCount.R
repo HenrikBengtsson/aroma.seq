@@ -33,50 +33,50 @@ setMethodS3("systemHTSeqCount", "default", function(..., args=NULL, stdout=TRUE,
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'args':
   if (is.list(args)) {
-    args <- unlist(args, use.names=TRUE);
+    args <- unlist(args, use.names=TRUE)
   }
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Calling htseq-count executable");
+  verbose && enter(verbose, "Calling htseq-count executable")
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Locates the htseq-count executable
-  bin <- findHTSeq(command=command, verbose=less(verbose, 50));
-  verbose && cat(verbose, "Executable:");
-  verbose && print(verbose, bin);
+  bin <- findHTSeq(command=command, verbose=less(verbose, 50))
+  verbose && cat(verbose, "Executable:")
+  verbose && print(verbose, bin)
 
-  verbose && cat(verbose, "Arguments passed to system2():");
-  verbose && str(verbose, list(stdout=stdout, stderr=stderr));
-  args <- c(list(...), args);
-  verbose && cat(verbose, "Arguments passed to htseq-count:");
-  verbose && print(verbose, args);
+  verbose && cat(verbose, "Arguments passed to system2():")
+  verbose && str(verbose, list(stdout=stdout, stderr=stderr))
+  args <- c(list(...), args)
+  verbose && cat(verbose, "Arguments passed to htseq-count:")
+  verbose && print(verbose, args)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # System call
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && cat(verbose, "Arguments as command-line options:");
+  verbose && cat(verbose, "Arguments as command-line options:")
 
-  verbose && enter(verbose, "Calling system2()");
-  cmdArgs <- sprintf("%s %s", names(args), args);
-  cmdArgs <- trim(cmdArgs);
-  cmdArgs <- cmdArgs[nchar(cmdArgs) > 0L];
-  verbose && cat(verbose, "Arguments:");
-  verbose && print(verbose, cmdArgs);
+  verbose && enter(verbose, "Calling system2()")
+  cmdArgs <- sprintf("%s %s", names(args), args)
+  cmdArgs <- trim(cmdArgs)
+  cmdArgs <- cmdArgs[nchar(cmdArgs) > 0L]
+  verbose && cat(verbose, "Arguments:")
+  verbose && print(verbose, cmdArgs)
   if (!.fake) {
-    res <- system2(bin, args=cmdArgs, stdout=stdout, stderr=stderr);
+    res <- system2(bin, args=cmdArgs, stdout=stdout, stderr=stderr)
   } else {
     cat("<fake run>\n")
-    res <- "<fake run>";
+    res <- "<fake run>"
   }
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  verbose && exit(verbose);
-  res;
+  verbose && exit(verbose)
+  res
 }) # systemHTSeqCount()

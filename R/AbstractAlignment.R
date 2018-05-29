@@ -32,10 +32,10 @@ setConstructorS3("AbstractAlignment", function(dataSet=NULL, indexSet=NULL, rgSe
   # Validate arguments
   if (!is.null(dataSet)) {
     # Argument 'dataSet':
-    dataSet <- Arguments$getInstanceOf(dataSet, "AromaSeqDataFileSet");
+    dataSet <- Arguments$getInstanceOf(dataSet, "AromaSeqDataFileSet")
 
     # Argument 'indexSet':
-    indexSet <- Arguments$getInstanceOf(indexSet, "AbstractIndexSet");
+    indexSet <- Arguments$getInstanceOf(indexSet, "AbstractIndexSet")
 
     # Argument 'rgSet':
     if (is.null(rgSet)) {
@@ -43,7 +43,7 @@ setConstructorS3("AbstractAlignment", function(dataSet=NULL, indexSet=NULL, rgSe
         rgSet <- getSamReadGroup(dataSet)
       }
     } else {
-      rgSet <- Arguments$getInstanceOf(rgSet, "SamReadGroup");
+      rgSet <- Arguments$getInstanceOf(rgSet, "SamReadGroup")
     }
   } # if (!is.null(dataSet))
 
@@ -56,57 +56,57 @@ setConstructorS3("AbstractAlignment", function(dataSet=NULL, indexSet=NULL, rgSe
 
 
 setMethodS3("as.character", "AbstractAlignment", function(x, ...) {
-  s <- NextMethod("as.character");
-  s <- c(s, sprintf("Paired alignment: %s", isPaired(x)));
-  s;
+  s <- NextMethod("as.character")
+  s <- c(s, sprintf("Paired alignment: %s", isPaired(x)))
+  s
 }, protected=TRUE)
 
 setMethodS3("isPaired", "AbstractAlignment", function(this, ...) {
-  ds <- getInputDataSet(this);
-  isPaired(ds, ...);
+  ds <- getInputDataSet(this)
+  isPaired(ds, ...)
 }, protected=TRUE)
 
 
 setMethodS3("getIndexSet", "AbstractAlignment", function(this, ...) {
-  this$.indexSet;
+  this$.indexSet
 }, protected=TRUE)
 
 # This methods use lower case by default, e.g. bwa and bowtie2.
 setMethodS3("getAcronym", "AbstractAlignment", function(this, case=c("lower", "upper"), ...) {
   # Argument 'case':
-  case <- match.arg(case);
+  case <- match.arg(case)
 
-  name <- class(this)[1L];
-  name <- gsub("Alignment", "", name, fixed=TRUE);
-  name <- toupper(name);
+  name <- class(this)[1L]
+  name <- gsub("Alignment", "", name, fixed=TRUE)
+  name <- toupper(name)
 
   if (case == "lower") {
-    name <- tolower(name);
+    name <- tolower(name)
   }
-  name;
+  name
 }, protected=TRUE)
 
 
 setMethodS3("getAsteriskTags", "AbstractAlignment", function(this, collapse=NULL, ...) {
-  tags <- NextMethod("getAsteriskTags");
+  tags <- NextMethod("getAsteriskTags")
 
   # Tags when paired-end reads are used
-  if (isPaired(this)) tags <- c(tags, "pe");
+  if (isPaired(this)) tags <- c(tags, "pe")
 
   # Tags for the index set
-  is <- getIndexSet(this);
-  tags <- c(tags, getTags(is, collapse=NULL));
+  is <- getIndexSet(this)
+  tags <- c(tags, getTags(is, collapse=NULL))
 
-  tags <- unique(tags);
-  paste(tags, collapse=collapse);
+  tags <- unique(tags)
+  paste(tags, collapse=collapse)
 }, protected=TRUE)
 
 
 setMethodS3("getOrganism", "AbstractAlignment", function(this, ...) {
-  is <- getIndexSet(this);
-  getOrganism(is);
+  is <- getIndexSet(this)
+  getOrganism(is)
 }, protected=TRUE)
 
 setMethodS3("getRootPath", "AbstractAlignment", function(this, ...) {
-  "bamData";
+  "bamData"
 }, protected=TRUE)

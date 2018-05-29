@@ -87,10 +87,10 @@ setMethodS3("readStats", "SeqzFileSet", function(this, ..., verbose=FALSE) {
 
 setMethodS3("readDataFrameForPSCBS", "SeqzFile", function(this, ..., verbose=FALSE) {
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
   verbose && enterf(verbose, "Loading %s data", class(this)[1])
@@ -121,10 +121,10 @@ setMethodS3("binForPSCBS", "data.frame", function(data, binSize, ..., verbose=FA
   binSize <- Arguments$getNumeric(binSize, range=c(1,Inf))
   
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
@@ -189,10 +189,10 @@ setMethodS3("segmentByPairedPSCBS", "SeqzFileSet", function(seqz, ..., binSize, 
   outPath <- Arguments$getWritablePath(outPath)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 

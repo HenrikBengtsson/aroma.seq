@@ -31,7 +31,7 @@ setMethodS3("cufflinks", "default", function(bams=NULL,  ## vector of pathnames
 
   # Argument 'bams'
   bams <- Arguments$getReadablePathnames(bams)
-  assertNoDuplicated(bams);
+  assertNoDuplicated(bams)
   cufflinksArgs <- bams
 
   ## Add dashes as appropriate to names of "cufflinks options"

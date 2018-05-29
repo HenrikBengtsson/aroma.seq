@@ -4,16 +4,16 @@ findFastqDump <- function(...,
                           verbose=FALSE)
 {
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
   # Aroma-specific variable
-  path <- getExternalHome("FASTQDUMP_HOME");
+  path <- getExternalHome("FASTQDUMP_HOME")
 
-  verbose && enter(verbose, "Locating FastqDump software");
-  res <- findExternal(command=commandName, path=path, versionPattern=versionPattern, ...);
+  verbose && enter(verbose, "Locating FastqDump software")
+  res <- findExternal(command=commandName, path=path, versionPattern=versionPattern, ...)
   res
 } # findFastqDump()

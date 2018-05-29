@@ -32,14 +32,14 @@
 # @author "HB"
 #*/###########################################################################
 setConstructorS3("SamDataFile", function(...) {
-  extend(GenericDataFile(...), c("SamDataFile", uses("AromaSeqDataFile")));
+  extend(GenericDataFile(...), c("SamDataFile", uses("AromaSeqDataFile")))
 })
 
 
 setMethodS3("as.character", "SamDataFile", function(x, ...) {
-  this <- x;
-  s <- NextMethod("as.character");
-  s;
+  this <- x
+  s <- NextMethod("as.character")
+  s
 }, protected=TRUE)
 
 

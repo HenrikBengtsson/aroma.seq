@@ -34,10 +34,10 @@ setConstructorS3("SamTransform", function(..., .className="BamDataSet") {
 
 setMethodS3("getRootPath", "SamTransform", function(this, ...) {
   # Use same root path as input data set, e.g. samData/ or bamData/
-  ds <- getInputDataSet(this);
-  path <- getPath(ds);
-  path <- getParent(path, depth=2L);
+  ds <- getInputDataSet(this)
+  path <- getPath(ds)
+  path <- getParent(path, depth=2L)
   # Sanity check
-  .stop_if_not(regexpr("Data$", path) != -1L);
-  path;
+  .stop_if_not(regexpr("Data$", path) != -1L)
+  path
 }, protected=TRUE)

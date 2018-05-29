@@ -33,19 +33,19 @@
 # @keyword internal
 #*/###########################################################################
 setConstructorS3("AbstractIndexFile", function(...) {
-  extend(GenericDataFile(...), "AbstractIndexFile");
+  extend(GenericDataFile(...), "AbstractIndexFile")
 })
 
 setMethodS3("as.character", "AbstractIndexFile", function(x, ...) {
-  s <- NextMethod("as.character");
-  s <- c(s, sprintf("Index prefix: %s", getIndexPrefix(x)));
-  s;
+  s <- NextMethod("as.character")
+  s <- c(s, sprintf("Index prefix: %s", getIndexPrefix(x)))
+  s
 }, protected=TRUE)
 
 
 setMethodS3("getIndexPrefix", "AbstractIndexFile", function(this, ...) {
-  path <- getPath(this);
-  fullname <- getFullName(this);
-  prefix <- file.path(path, fullname);
-  prefix;
+  path <- getPath(this)
+  fullname <- getFullName(this)
+  prefix <- file.path(path, fullname)
+  prefix
 })

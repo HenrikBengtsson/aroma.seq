@@ -27,5 +27,5 @@ setConstructorS3("PairedEndFastqDataSet", function(...) {
 
 
 setMethodS3("byPath", "PairedEndFastqDataSet", function(static, ...) {
-  NextMethod("byPath", paired=TRUE);
+  NextMethod("byPath", paired=TRUE)
 }, protected=TRUE)

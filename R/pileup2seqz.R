@@ -28,10 +28,10 @@ pileup2seqz <- function(pus, gc, sampleName, dataset, tags="seqz", organism, pat
   pathD <- Arguments$getWritablePath(pathD)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 

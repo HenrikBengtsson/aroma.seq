@@ -31,13 +31,13 @@
 # @keyword internal
 #*/###########################################################################
 setMethodS3("findFilesTodo", "TotalCnBinnedCounting", function(this, ...) {
-  res <- getOutputDataSet(this, onMissing="NA");
-  isFile <- unlist(sapply(res, FUN=isFile), use.names=FALSE);
-  todo <- !isFile;
-  todo <- which(todo);
+  res <- getOutputDataSet(this, onMissing="NA")
+  isFile <- unlist(sapply(res, FUN=isFile), use.names=FALSE)
+  todo <- !isFile
+  todo <- which(todo)
   if (length(todo) > 0L) {
-    ds <- getInputDataSet(this);
-    names(todo) <- getNames(ds[todo]);
+    ds <- getInputDataSet(this)
+    names(todo) <- getNames(ds[todo])
   }
-  todo;
+  todo
 })

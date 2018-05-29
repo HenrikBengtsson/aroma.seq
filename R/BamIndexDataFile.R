@@ -24,12 +24,12 @@
 # @keyword internal
 #*/###########################################################################
 setConstructorS3("BamIndexDataFile", function(...) {
-  extend(GenericDataFile(...), "BamIndexDataFile");
+  extend(GenericDataFile(...), "BamIndexDataFile")
 })
 
 
 setMethodS3("as.character", "BamIndexDataFile", function(x, ...) {
-  this <- x;
-  s <- NextMethod("as.character");
-  s;
+  this <- x
+  s <- NextMethod("as.character")
+  s
 }, protected=TRUE)

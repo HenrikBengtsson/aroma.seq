@@ -27,98 +27,98 @@ setConstructorS3("BinnedGcNormalization", function(dataSet=NULL, ..., .reqSetCla
   }
 
   extend(AromaTransform(dataSet=dataSet, ..., .reqSetClass=.reqSetClass), "BinnedGcNormalization"
-  );
+  )
 }, abstract=TRUE)
 
 
 setMethodS3("as.character", "BinnedGcNormalization", function(x, ...) {
-  this <- x;
-  s <- NextMethod("as.character");
-  unc <- getGcContentFile(this);
-##  s <- c(s, "GcContentFile:");
-  s <- c(s, as.character(unc));
-  s;
+  this <- x
+  s <- NextMethod("as.character")
+  unc <- getGcContentFile(this)
+##  s <- c(s, "GcContentFile:")
+  s <- c(s, as.character(unc))
+  s
 }, protected=TRUE)
 
 
 
 setMethodS3("getAsteriskTags", "BinnedGcNormalization", function(this, collapse=NULL, ...) {
-  tags <- NextMethod("getAsteriskTags", collapse=NULL);
+  tags <- NextMethod("getAsteriskTags", collapse=NULL)
 
   # Add class-specific tags
 
-  params <- getParameters(this);
+  params <- getParameters(this)
 
   # Collapsed or split?
   if (!is.null(collapse)) {
-    tags <- paste(tags, collapse=collapse);
+    tags <- paste(tags, collapse=collapse)
   }
 
-  tags;
+  tags
 }, protected=TRUE)
 
 
 
 setMethodS3("getRootPath", "BinnedGcNormalization", function(this, ...) {
-  "smoothCnData";
+  "smoothCnData"
 }, protected=TRUE)
 
 
 
 setMethodS3("getPath", "BinnedGcNormalization", function(this, create=TRUE, ...) {
-  path <- NextMethod("getPath", create=FALSE);
-  parent <- dirname(path);
+  path <- NextMethod("getPath", create=FALSE)
+  parent <- dirname(path)
 
-  ds <- getInputDataSet(this);
-  chipType <- getChipType(ds, fullname=FALSE);
+  ds <- getInputDataSet(this)
+  chipType <- getChipType(ds, fullname=FALSE)
 
   # The full path
-  path <- filePath(parent, chipType);
+  path <- filePath(parent, chipType)
 
   if (create) {
-    path <- Arguments$getWritablePath(path);
+    path <- Arguments$getWritablePath(path)
   } else {
-    path <- Arguments$getReadablePath(path, mustExist=FALSE);
+    path <- Arguments$getReadablePath(path, mustExist=FALSE)
   }
 
   # Verify that it is not the same as the input path
-  inPath <- getPath(ds);
+  inPath <- getPath(ds)
   if (getAbsolutePath(path) == getAbsolutePath(inPath)) {
-    throw("The generated output data path equals the input data path: ", path, " == ", inPath);
+    throw("The generated output data path equals the input data path: ", path, " == ", inPath)
   }
 
-  path;
+  path
 }, protected=TRUE)
 
 
 setMethodS3("getGcContentFile", "BinnedGcNormalization", function(this, ...) {
-  ds <- getInputDataSet(this);
-  ugp <- getAromaUgpFile(ds);
-  unc <- getAromaUncFile(ugp);
-  unc;
+  ds <- getInputDataSet(this)
+  ugp <- getAromaUgpFile(ds)
+  unc <- getAromaUncFile(ugp)
+  unc
 })
 
 
 setMethodS3("getOutputFileExtension", "BinnedGcNormalization", function(this, ...) {
-  ds <- getInputDataSet(this);
-  df <- getOneFile(ds, mustExist=TRUE);
-  ext <- getFilenameExtension(df);
-  sprintf(".%s", ext);
+  ds <- getInputDataSet(this)
+  df <- getOneFile(ds, mustExist=TRUE)
+  ext <- getFilenameExtension(df)
+  sprintf(".%s", ext)
 }, protected=TRUE)
 
 
 setMethodS3("getOutputFileSetClass", "BinnedGcNormalization", function(this, ...) {
-  ds <- getInputDataSet(this);
-  className <- class(ds)[1L];
-  Class$forName(className);
+  ds <- getInputDataSet(this)
+  className <- class(ds)[1L]
+  Class$forName(className)
 }, protected=TRUE)
 
 
 setMethodS3("getOutputFileClass", "BinnedGcNormalization", function(this, ...) {
-  setClass <- getOutputFileSetClass(this, ...);
-  setInstance <- newInstance(setClass);
-  className <- getFileClass(setInstance);
-  Class$forName(className);
+  setClass <- getOutputFileSetClass(this, ...)
+  setInstance <- newInstance(setClass)
+  className <- getFileClass(setInstance)
+  Class$forName(className)
 }, protected=TRUE)
 
 
@@ -127,54 +127,54 @@ setMethodS3("getOutputDataSet0", "BinnedGcNormalization", function(this, pattern
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
   # Argument 'pattern':
   if (!is.null(pattern)) {
-    pattern <- Arguments$getRegularExpression(pattern=pattern);
+    pattern <- Arguments$getRegularExpression(pattern=pattern)
   }
 
 
-  verbose && enter(verbose, "Retrieving existing set of output files");
-  ds <- getInputDataSet(this);
-  outPath <- getPath(this);
+  verbose && enter(verbose, "Retrieving existing set of output files")
+  ds <- getInputDataSet(this)
+  outPath <- getPath(this)
   if (is.null(className)) {
-    clazz <- getOutputFileSetClass(this);
-    className <- getName(clazz);
+    clazz <- getOutputFileSetClass(this)
+    className <- getName(clazz)
   }
-  verbose && cat(verbose, "Class: ", className);
+  verbose && cat(verbose, "Class: ", className)
 
-  path <- getPath(this);
-  verbose && cat(verbose, "Path: ", path);
+  path <- getPath(this)
+  verbose && cat(verbose, "Path: ", path)
 
   if (is.null(pattern)) {
     # Default filename pattern find non-private (no dot prefix) files with
     # the same file name extension as the input data set.
-    fileExt <- getOutputFileExtension(this);
-    fileExt <- c(fileExt, tolower(fileExt), toupper(fileExt));
-    fileExt <- sprintf("(%s)", paste(unique(fileExt), collapse="|"));
-    verbose && cat(verbose, "Expected file extensions: ", fileExt);
-    pattern <- sprintf("^[^.].*%s$", fileExt);
+    fileExt <- getOutputFileExtension(this)
+    fileExt <- c(fileExt, tolower(fileExt), toupper(fileExt))
+    fileExt <- sprintf("(%s)", paste(unique(fileExt), collapse="|"))
+    verbose && cat(verbose, "Expected file extensions: ", fileExt)
+    pattern <- sprintf("^[^.].*%s$", fileExt)
   }
-  verbose && cat(verbose, "Pattern: ", pattern);
+  verbose && cat(verbose, "Pattern: ", pattern)
 
-  verbose && enter(verbose, sprintf("Calling %s$forName()", className));
-  clazz <- Class$forName(className);
-  args <- list(path=path, pattern=pattern, ...);
-  verbose && str(verbose, args);
-  args$verbose <- less(verbose);
-  staticMethod <- clazz$byPath;
-  dsOut <- do.call(staticMethod, args=args);
-  rm(staticMethod, args); # Not needed anymore
-  verbose && exit(verbose);
+  verbose && enter(verbose, sprintf("Calling %s$forName()", className))
+  clazz <- Class$forName(className)
+  args <- list(path=path, pattern=pattern, ...)
+  verbose && str(verbose, args)
+  args$verbose <- less(verbose)
+  staticMethod <- clazz$byPath
+  dsOut <- do.call(staticMethod, args=args)
+  rm(staticMethod, args) # Not needed anymore
+  verbose && exit(verbose)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  dsOut;
+  dsOut
 }, protected=TRUE)
 
 
@@ -184,45 +184,45 @@ setMethodS3("process", "BinnedGcNormalization", function(this, ..., force=FALSE,
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'force':
-  force <- Arguments$getLogical(force);
+  force <- Arguments$getLogical(force)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
   if (isDone(this)) {
-    dsOut <- getOutputDataSet(this);
-    return(invisible(dsOut));
+    dsOut <- getOutputDataSet(this)
+    return(invisible(dsOut))
   }
 
-  verbose && enter(verbose, "Normalizing for binned GC content effects");
+  verbose && enter(verbose, "Normalizing for binned GC content effects")
 
-  params <- getParameters(this);
+  params <- getParameters(this)
 
-  verbose && print(verbose, "Input data set:");
-  ds <- getInputDataSet(this);
-  verbose && print(verbose, ds);
+  verbose && print(verbose, "Input data set:")
+  ds <- getInputDataSet(this)
+  verbose && print(verbose, ds)
 
-  verbose && enter(verbose, "Extracting GC content per bin");
-  unc <- getGcContentFile(this);
-  verbose && print(verbose, unc);
+  verbose && enter(verbose, "Extracting GC content per bin")
+  unc <- getGcContentFile(this)
+  verbose && print(verbose, unc)
 
   ## FIXME: Read GC content data only iff needed
   ##        (move to inside the for-loop)  /HB 2016-03-12
-  gc <- getGcContent(unc);
-  verbose && str(verbose, gc);
-  verbose && summary(verbose, gc);
-  verbose && exit(verbose);
+  gc <- getGcContent(unc)
+  verbose && str(verbose, gc)
+  verbose && summary(verbose, gc)
+  verbose && exit(verbose)
 
   # Get Class object for the output files
-  clazz <- getOutputFileClass(this);
+  clazz <- getOutputFileClass(this)
 
   # Get the filename extension for output files
-  ext <- getOutputFileExtension(this);
+  ext <- getOutputFileExtension(this)
 
 
 
@@ -336,5 +336,5 @@ setMethodS3("process", "BinnedGcNormalization", function(this, ..., force=FALSE,
 
 
 setMethodS3("getOutputFiles", "BinnedGcNormalization", function(this, ...) {
-  NextMethod("getOutputFiles", pattern=".*[.]asb$");
+  NextMethod("getOutputFiles", pattern=".*[.]asb$")
 }, protected=TRUE)

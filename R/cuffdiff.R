@@ -38,7 +38,7 @@ setMethodS3("cuffdiff", "default", function(transcriptsGtf, ## e.g. from TopHat?
 
   # Argument 'bams'
   bams <- Arguments$getReadablePathnames(bams)
-  assertNoDuplicated(bams);
+  assertNoDuplicated(bams)
   if (length(bams) < 2L) {
     throw("'bams' argument too short; need at least two sam/bam files")
   }
@@ -63,14 +63,14 @@ setMethodS3("cuffdiff", "default", function(transcriptsGtf, ## e.g. from TopHat?
   ## Assign cuffdiffOptions; add dashes to names if needed
   if (!is.null(optionsVec)) {
     cuffdiffOptions <- optionsVec
-    nms <- names(cuffdiffOptions);
-    missing <- grep("^[^-]", nms);
+    nms <- names(cuffdiffOptions)
+    missing <- grep("^[^-]", nms)
     if (length(missing) > 0L) {
-      invalid <- (nchar(cuffdiffOptions[missing]) < 1);
+      invalid <- (nchar(cuffdiffOptions[missing]) < 1)
       if (any(invalid)) {
-        throw("Detected non-valid command line switch(es): ", hpaste(cuffdiffOptions[missing][invalid]));
+        throw("Detected non-valid command line switch(es): ", hpaste(cuffdiffOptions[missing][invalid]))
       }
-      ## nms[missing] <- sprintf("-%s", nms[missing]);
+      ## nms[missing] <- sprintf("-%s", nms[missing])
       nmsMissing <- nms[missing]
       nmsMissingWithDash <- paste(ifelse(nchar(nmsMissing) == 1, "-", "--"), nmsMissing, sep="")
       nms[missing] <- nmsMissingWithDash

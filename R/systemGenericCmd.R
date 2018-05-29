@@ -34,58 +34,58 @@ setMethodS3("systemGenericCmd", "default", function(commandName=NULL,
     throw("Argument 'command' is null; supply the name of a command to run")
   }
 
-  dotArgs <- list(...);  ## list with one item named 'args'; these are the arguments to *genericCmd*
+  dotArgs <- list(...) ## list with one item named 'args'; these are the arguments to *genericCmd*
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, paste("Calling", commandName, "executable"));
+  verbose && enter(verbose, paste("Calling", commandName, "executable"))
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Locate executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  bin <- findCmd(commandName, verbose=less(verbose, 50));
-  verbose && cat(verbose, "Executable:");
-  verbose && print(verbose, bin);
+  bin <- findCmd(commandName, verbose=less(verbose, 50))
+  verbose && cat(verbose, "Executable:")
+  verbose && print(verbose, bin)
 
-  verbose && cat(verbose, "Arguments passed to system2():");
+  verbose && cat(verbose, "Arguments passed to system2():")
   verbose && str(verbose, system2ArgsList)
-  verbose && cat(verbose, paste("Arguments passed to", commandName));
-  verbose && str(verbose, dotArgs);
+  verbose && cat(verbose, paste("Arguments passed to", commandName))
+  verbose && str(verbose, dotArgs)
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup command line switches
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  ## dotArgs <- trim(dotArgs);
-  verbose && cat(verbose, "Command line options:");
-  verbose && print(verbose, dotArgs);
+  ## dotArgs <- trim(dotArgs)
+  verbose && cat(verbose, "Command line options:")
+  verbose && print(verbose, dotArgs)
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # System call
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && cat(verbose, "System call:");
-  cmd <- sprintf("%s %s", bin, paste(dotArgs, collapse=" "));
-  verbose && print(verbose, cmd);
-  verbose && str(verbose, system2ArgsList);
+  verbose && cat(verbose, "System call:")
+  cmd <- sprintf("%s %s", bin, paste(dotArgs, collapse=" "))
+  verbose && print(verbose, cmd)
+  verbose && str(verbose, system2ArgsList)
 
-  verbose && enter(verbose, "system2() call");
+  verbose && enter(verbose, "system2() call")
   callArgs <- list(command=bin, args=paste(names(dotArgs$args), dotArgs$args, sep=" "))
   callArgs <- c(callArgs, system2ArgsList)
 
-  verbose && str(verbose, callArgs);
+  verbose && str(verbose, callArgs)
   if (!.fake) {
-    res <- do.call(what=base::system2, args=callArgs);
+    res <- do.call(what=base::system2, args=callArgs)
   } else {
     cat("<fake run>\n")
-    res <- "<fake run>";
+    res <- "<fake run>"
   }
 
-  verbose && exit(verbose);
-  verbose && exit(verbose);
-  res;
+  verbose && exit(verbose)
+  verbose && exit(verbose)
+  res
 }) # systemGenericCmd

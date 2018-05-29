@@ -45,71 +45,71 @@ setConstructorS3("TopHat2Alignment", function(..., groupBy=NULL, indexSet=NULL, 
   # Argument 'groupBy':
   if (is.null(groupBy)) {
   } else if (is.character(groupBy)) {
-    groupBy <- match.arg(groupBy, choices=c("name"));
+    groupBy <- match.arg(groupBy, choices=c("name"))
   } else if (is.list(groupBy)) {
     # Validated below
   } else {
-    throw("Invalid argument 'groupBy': ", mode(groupBy));
+    throw("Invalid argument 'groupBy': ", mode(groupBy))
   }
 
   # Argument 'indexSet':
   if (!is.null(indexSet)) {
-    indexSet <- Arguments$getInstanceOf(indexSet, "Bowtie2IndexSet");
+    indexSet <- Arguments$getInstanceOf(indexSet, "Bowtie2IndexSet")
   }
 
   # Argument 'transcripts':
   if (!is.null(transcripts)) {
-    transcripts <- Arguments$getInstanceOf(transcripts, "GtfDataFile");
+    transcripts <- Arguments$getInstanceOf(transcripts, "GtfDataFile")
   }
 
   # Arguments '...':
-  args <- list(...);
+  args <- list(...)
 
   this <- extend(AbstractAlignment(..., indexSet=indexSet, groupBy=groupBy), c("TopHat2Alignment", uses("FileGroupsInterface")),
     transcripts = transcripts
-  );
+  )
 
   # Argument 'groupBy':
   if (is.list(groupBy)) {
-    validateGroups(this, groups=groupBy);
+    validateGroups(this, groups=groupBy)
   }
 
-  this;
+  this
 })
 
 
 setMethodS3("getRootPath", "TopHat2Alignment", function(this, ...) {
-  "tophat2Data";
+  "tophat2Data"
 }, protected=TRUE)
 
 
 setMethodS3("getParameters", "TopHat2Alignment", function(this, ...) {
-  params <- NextMethod("getAsteriskTags");
-  params$transcripts <- this$transcripts;
-  params;
+  params <- NextMethod("getAsteriskTags")
+  params$transcripts <- this$transcripts
+  params
 }, protected=TRUE)
 
 
 setMethodS3("getAsteriskTags", "TopHat2Alignment", function(this, ...) {
-  tags <- NextMethod("getAsteriskTags");
-  params <- getParameters(this);
+  tags <- NextMethod("getAsteriskTags")
+  params <- getParameters(this)
   if (!is.null(params$transcripts)) {
-    tags <- c(tags, "gtf");
+    tags <- c(tags, "gtf")
   }
-  tags;
+  tags
 }, protected=TRUE)
 
 
 setMethodS3("getSampleNames", "TopHat2Alignment", function(this, ...) {
-  getGroupNames(this, ...);
+  getGroupNames(this, ...)
 }, protected=TRUE)
 
 setMethodS3("getExpectedOutputPaths", "TopHat2Alignment", function(this, ...) {
   # Find all available output directories
-  path <- getPath(this);
-  sampleNames <- getSampleNames(this);
-  paths <- file.path(path, sampleNames);
-  paths;
+  path <- getPath(this)
+  sampleNames <- getSampleNames(this)
+  paths <- file.path(path, sampleNames)
+  paths
 }, protected=TRUE)
 
 
@@ -117,148 +117,148 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Test for non-compatible bowtie2 and tophat2 versions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  .stop_if_not(isCapableOf(aroma.seq, "tophat2"));
-  .stop_if_not(isCapableOf(aroma.seq, "bowtie2"));
-  verT <- attr(findTopHat2(), "version");
-  verB <- attr(findBowtie2(), "version");
+  .stop_if_not(isCapableOf(aroma.seq, "tophat2"))
+  .stop_if_not(isCapableOf(aroma.seq, "bowtie2"))
+  verT <- attr(findTopHat2(), "version")
+  verB <- attr(findBowtie2(), "version")
   if (!is.null(verT) && !is.null(verB)) {
-    bad <- (verT == "2.0.3" && verB == "2.1.0");
+    bad <- (verT == "2.0.3" && verB == "2.1.0")
     if (bad) {
       throw(sprintf("Detected incompatible software installations. TopHat2 v%s is known to not work with Bowtie2 v%s.", verT, verB))
     }
   }
-  verT <- verB <- NULL;
+  verT <- verB <- NULL
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'force':
-  force <- Arguments$getLogical(force);
+  force <- Arguments$getLogical(force)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "TopHat2 alignment");
-  ds <- getInputDataSet(this);
-  verbose && cat(verbose, "Input data set:");
-  verbose && print(verbose, ds);
+  verbose && enter(verbose, "TopHat2 alignment")
+  ds <- getInputDataSet(this)
+  verbose && cat(verbose, "Input data set:")
+  verbose && print(verbose, ds)
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Get groups of items to be processed at the same time
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Grouping input data set");
-  groups <- getGroups(this);
-  verbose && printf(verbose, "Merging into %d groups: %s\n", length(groups), hpaste(names(groups)));
-  verbose && str(verbose, head(groups));
-  verbose && cat(verbose, "Number of items per groups:");
-  ns <- sapply(groups, FUN=length);
-  t <- table(ns);
-  names(t) <- sprintf("n=%s", names(t));
-  verbose && print(verbose, t);
-  verbose && exit(verbose);
+  verbose && enter(verbose, "Grouping input data set")
+  groups <- getGroups(this)
+  verbose && printf(verbose, "Merging into %d groups: %s\n", length(groups), hpaste(names(groups)))
+  verbose && str(verbose, head(groups))
+  verbose && cat(verbose, "Number of items per groups:")
+  ns <- sapply(groups, FUN=length)
+  t <- table(ns)
+  names(t) <- sprintf("n=%s", names(t))
+  verbose && print(verbose, t)
+  verbose && exit(verbose)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Identify groups to be processed
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (force) {
-    todo <- seq_along(groups);
+    todo <- seq_along(groups)
   } else {
-    bams <- getOutputDataSet(this, onMissing="NA", verbose=less(verbose, 1));
-    todo <- which(!sapply(bams, FUN=isFile));
+    bams <- getOutputDataSet(this, onMissing="NA", verbose=less(verbose, 1))
+    todo <- which(!sapply(bams, FUN=isFile))
   }
-  verbose && cat(verbose, "Number of groups to process: ", length(todo));
+  verbose && cat(verbose, "Number of groups to process: ", length(todo))
 
   # Already done?
   if (!force && length(todo) == 0L) {
-    verbose && cat(verbose, "Already processed.");
-    verbose && print(verbose, bams);
-    verbose && exit(verbose);
-    return(bams);
+    verbose && cat(verbose, "Already processed.")
+    verbose && print(verbose, bams)
+    verbose && exit(verbose)
+    return(bams)
   }
 
-  isPaired <- isPaired(ds);
-  verbose && cat(verbose, "Paired-end analysis: ", isPaired);
+  isPaired <- isPaired(ds)
+  verbose && cat(verbose, "Paired-end analysis: ", isPaired)
 
-  outPath <- getPath(this);
-  verbose && cat(verbose, "Output directory: ", outPath);
+  outPath <- getPath(this)
+  verbose && cat(verbose, "Output directory: ", outPath)
 
   # Additional alignment parameters
-  params <- getParameters(this);
-  verbose && cat(verbose, "Parameters:");
-  verbose && str(verbose, params);
+  params <- getParameters(this)
+  verbose && cat(verbose, "Parameters:")
+  verbose && str(verbose, params)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Retrieving/building Bowtie2 index set
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Retrieving/building Bowtie2 index set");
-  is <- getIndexSet(this, verbose=less(verbose, 10));
-  verbose && cat(verbose, "Aligning using index set:");
-  verbose && print(verbose, is);
+  verbose && enter(verbose, "Retrieving/building Bowtie2 index set")
+  is <- getIndexSet(this, verbose=less(verbose, 10))
+  verbose && cat(verbose, "Aligning using index set:")
+  verbose && print(verbose, is)
 
   # Make sure TopHat finds the FASTA reference in the directory
   # of the index set
-  pathT <- getPath(is);
-  fa <- getFastaReferenceFile(is);
-  pathnameT <- file.path(pathT, getFilename(fa));
-  faT <- linkTo(fa, pathnameT, skip=TRUE);
-  faT <- newInstance(fa, pathnameT);
-  verbose && cat(verbose, "FASTA file that TopHat will see/use:");
-  verbose && print(verbose, faT);
-  .stop_if_not(getPath(faT) == getPath(is));
-  pathT <- fa <- pathnameT <- faT <- NULL;
-  verbose && exit(verbose);
+  pathT <- getPath(is)
+  fa <- getFastaReferenceFile(is)
+  pathnameT <- file.path(pathT, getFilename(fa))
+  faT <- linkTo(fa, pathnameT, skip=TRUE)
+  faT <- newInstance(fa, pathnameT)
+  verbose && cat(verbose, "FASTA file that TopHat will see/use:")
+  verbose && print(verbose, faT)
+  .stop_if_not(getPath(faT) == getPath(is))
+  pathT <- fa <- pathnameT <- faT <- NULL
+  verbose && exit(verbose)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Retrieving/building TopHat2 transcriptome index set?
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Align with known transcripts?
-  transcripts <- params$transcripts;
-  tis <- NULL;
+  transcripts <- params$transcripts
+  tis <- NULL
   if (!is.null(transcripts)) {
-    verbose && enter(verbose, "Retrieving/building TopHat2 transcriptome index set");
-    verbose && cat(verbose, "Using transcripts:");
-    verbose && print(verbose, transcripts);
+    verbose && enter(verbose, "Retrieving/building TopHat2 transcriptome index set")
+    verbose && cat(verbose, "Using transcripts:")
+    verbose && print(verbose, transcripts)
 
     # (a) Workaround for *gzipped* GTF files (not supported by TopHat binaries)
     if (isGzipped(transcripts)) {
-      verbose && enter(verbose, "Temporary uncompressing file");
+      verbose && enter(verbose, "Temporary uncompressing file")
       pathnameZ <- getPathname(transcripts)
       pathname <- gunzip(pathnameZ, temporary=TRUE, remove=FALSE)
-      done <- FALSE;
+      done <- FALSE
       on.exit({
         if (done) file.remove(pathname)
-      }, add=TRUE);
-      transcripts <- newInstance(transcripts, pathname);
-      verbose && cat(verbose, "Using (temporary) transcripts:");
-      verbose && print(verbose, transcripts);
-      verbose && exit(verbose);
+      }, add=TRUE)
+      transcripts <- newInstance(transcripts, pathname)
+      verbose && cat(verbose, "Using (temporary) transcripts:")
+      verbose && print(verbose, transcripts)
+      verbose && exit(verbose)
     }
     # Sanity check
-    .stop_if_not(!isGzipped(transcripts));
+    .stop_if_not(!isGzipped(transcripts))
 
     # (b) Build transcriptome index set
-    verbose && enter(verbose, "Building transcriptome index set");
-    outPathT <- file.path(getParent(getPath(is)), "tophat2");
+    verbose && enter(verbose, "Building transcriptome index set")
+    outPathT <- file.path(getParent(getPath(is)), "tophat2")
     tis <- buildTopHat2TranscriptomeIndexSet(is, gtf=transcripts, outPath=outPathT, verbose=less(verbose, 10))
-    verbose && print(verbose, tis);
+    verbose && print(verbose, tis)
 
-    verbose && exit(verbose);
+    verbose && exit(verbose)
   }
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # User arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  args <- params;
+  args <- params
   # Drop already used parameters
   args$transcripts <- NULL
   args$groupBy <- NULL
@@ -272,8 +272,8 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Apply aligner to each of the FASTQ files
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && cat(verbose, "Number of files: ", length(ds));
-  verbose && cat(verbose, "Number of groups: ", length(groups));
+  verbose && cat(verbose, "Number of files: ", length(ds))
+  verbose && cat(verbose, "Number of groups: ", length(groups))
   outPath <- getPath(this)
   IDXS <- groups[todo]
 
@@ -370,21 +370,21 @@ setMethodS3("process", "TopHat2Alignment", function(this, ..., skip=TRUE, force=
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 setMethodS3("validateGroups", "TopHat2Alignment", function(this, groups, ...) {
   # Input data set
-  ds <- getInputDataSet(this);
-  nbrOfFiles <- length(ds);
+  ds <- getInputDataSet(this)
+  nbrOfFiles <- length(ds)
 
   # Sanity checks
-  idxs <- unlist(groups, use.names=FALSE);
-  idxs <- Arguments$getIndices(idxs, max=nbrOfFiles);
+  idxs <- unlist(groups, use.names=FALSE)
+  idxs <- Arguments$getIndices(idxs, max=nbrOfFiles)
   if (length(idxs) < nbrOfFiles) {
-    throw("One or more input FASTQ files is not part of any group.");
+    throw("One or more input FASTQ files is not part of any group.")
   } else if (length(idxs) > nbrOfFiles) {
-    throw("One or more input FASTQ files is part of more than one group.");
+    throw("One or more input FASTQ files is part of more than one group.")
   }
 
   if (is.null(names(groups))) {
-    throw("The list of groups does not have names.");
+    throw("The list of groups does not have names.")
   }
 
-  invisible(groups);
+  invisible(groups)
 }, protected=TRUE)

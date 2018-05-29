@@ -39,12 +39,12 @@
 # @author "HB"
 #*/###########################################################################
 setConstructorS3("PicardDuplicateRemoval", function(..., ASSUME_SORTED=TRUE, VALIDATION_STRINGENCY="SILENT") {
-  extend(SamTransform(..., ASSUME_SORTED=ASSUME_SORTED, VALIDATION_STRINGENCY=VALIDATION_STRINGENCY), "PicardDuplicateRemoval");
+  extend(SamTransform(..., ASSUME_SORTED=ASSUME_SORTED, VALIDATION_STRINGENCY=VALIDATION_STRINGENCY), "PicardDuplicateRemoval")
 })
 
 
 setMethodS3("getAsteriskTags", "PicardDuplicateRemoval", function(this, collapse=NULL, ...) {
-  "-dups";
+  "-dups"
 }, protected=TRUE)
 
 
@@ -54,37 +54,37 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Picard removal of duplicated reads");
+  verbose && enter(verbose, "Picard removal of duplicated reads")
 
-  ds <- getInputDataSet(this);
-  verbose && cat(verbose, "Input data set:");
-  verbose && print(verbose, ds);
+  ds <- getInputDataSet(this)
+  verbose && cat(verbose, "Input data set:")
+  verbose && print(verbose, ds)
 
   if (force) {
-    todo <- seq_along(ds);
+    todo <- seq_along(ds)
   } else {
-    todo <- findFilesTodo(this, verbose=less(verbose, 1));
+    todo <- findFilesTodo(this, verbose=less(verbose, 1))
     # Already done?
     if (length(todo) == 0L) {
-      verbose && cat(verbose, "Already done. Skipping.");
-      res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1));
-      verbose && exit(verbose);
-      return(invisible(res));
+      verbose && cat(verbose, "Already done. Skipping.")
+      res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1))
+      verbose && exit(verbose)
+      return(invisible(res))
     }
   }
 
-  nbrOfFiles <- length(this);
-  verbose && cat(verbose, "Number of files: ", nbrOfFiles);
+  nbrOfFiles <- length(this)
+  verbose && cat(verbose, "Number of files: ", nbrOfFiles)
 
-  params <- getParameters(this);
-  verbose && cat(verbose, "Additional Picard MarkDuplicates arguments:");
-  verbose && str(verbose, params);
+  params <- getParameters(this)
+  verbose && cat(verbose, "Additional Picard MarkDuplicates arguments:")
+  verbose && str(verbose, params)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -127,9 +127,9 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
       # (a) Filter via Picard
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       if (!skip || !isFile(pathnameD)) {
-        verbose && enter(verbose, "Calling Picard MarkDuplicates");
+        verbose && enter(verbose, "Calling Picard MarkDuplicates")
 
-        pathnameM <- gsub("[.]bam$", ",picard,MarkDuplicates,metrics.log", pathnameD);
+        pathnameM <- gsub("[.]bam$", ",picard,MarkDuplicates,metrics.log", pathnameD)
         args <- list(
           "MarkDuplicates",
           INPUT=pathname,
@@ -138,35 +138,35 @@ setMethodS3("process", "PicardDuplicateRemoval", function(this, ..., skip=TRUE, 
           REMOVE_DUPLICATES=TRUE,
           ASSUME_SORTED=TRUE,            # TODO: Assert! /HB 2012-10-02
           VALIDATION_STRINGENCY="SILENT"
-        );
-        verbose && cat(verbose, "Arguments:");
-        verbose && str(verbose, df);
+        )
+        verbose && cat(verbose, "Arguments:")
+        verbose && str(verbose, df)
 
         # Assert no overwrite
-        .stop_if_not(getAbsolutePath(pathnameD) != getAbsolutePath(pathname));
-        .stop_if_not(getAbsolutePath(pathnameM) != getAbsolutePath(pathnameD));
+        .stop_if_not(getAbsolutePath(pathnameD) != getAbsolutePath(pathname))
+        .stop_if_not(getAbsolutePath(pathnameM) != getAbsolutePath(pathnameD))
 
-        args$verbose <- less(verbose, 20);
-        res <- do.call(systemPicard, args);
-        status <- attr(res, "status"); if (is.null(status)) status <- 0L;
-        verbose && cat(verbose, "Results:");
-        verbose && str(verbose, res);
-        verbose && cat(verbose, "Status:");
-        verbose && str(verbose, status);
+        args$verbose <- less(verbose, 20)
+        res <- do.call(systemPicard, args)
+        status <- attr(res, "status"); if (is.null(status)) status <- 0L
+        verbose && cat(verbose, "Results:")
+        verbose && str(verbose, res)
+        verbose && cat(verbose, "Status:")
+        verbose && str(verbose, status)
 
-        verbose && exit(verbose);
+        verbose && exit(verbose)
       } # if (!isFile(pathnameD))
 
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
       # (b) Generic BAM index
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-      bf <- BamDataFile(pathnameD);
-      verbose && print(verbose, bf);
+      bf <- BamDataFile(pathnameD)
+      verbose && print(verbose, bf)
 
       if (!skip || !hasIndex(bf)) {
-        verbose && enter(verbose, "Creating BAM index");
-        buildIndex(bf, skip=skip, overwrite=!skip, verbose=less(verbose, 10));
-        verbose && exit(verbose);
+        verbose && enter(verbose, "Creating BAM index")
+        buildIndex(bf, skip=skip, overwrite=!skip, verbose=less(verbose, 10))
+        verbose && exit(verbose)
       }
 
       pathnameD <- Arguments$getReadablePathname(pathnameD)

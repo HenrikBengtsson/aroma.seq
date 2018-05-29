@@ -22,7 +22,7 @@
 # @keyword internal
 #*/###########################################################################
 setConstructorS3("AromaSeq", function(...) {
-  extend(AromaPackage("aroma.seq", ...), "AromaSeq");
+  extend(AromaPackage("aroma.seq", ...), "AromaSeq")
 })
 
 

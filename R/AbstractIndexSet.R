@@ -26,25 +26,25 @@
 # @keyword internal
 #*/###########################################################################
 setConstructorS3("AbstractIndexSet", function(files=NULL, ...) {
-  extend(GenericDataFileSet(files=files, ...), "AbstractIndexSet");
+  extend(GenericDataFileSet(files=files, ...), "AbstractIndexSet")
 })
 
 
 setMethodS3("as.character", "AbstractIndexSet", function(x, ...) {
-  this <- x;
-  s <- NextMethod("as.character");
-  s <- c(s, sprintf("Index prefix: %s", getIndexPrefix(this)));
-  s <- c(s, sprintf("Organism: %s", getOrganism(this)));
-  s <- c(s, sprintf("Complete: %s", isComplete(this)));
-  s;
+  this <- x
+  s <- NextMethod("as.character")
+  s <- c(s, sprintf("Index prefix: %s", getIndexPrefix(this)))
+  s <- c(s, sprintf("Organism: %s", getOrganism(this)))
+  s <- c(s, sprintf("Complete: %s", isComplete(this)))
+  s
 }, protected=TRUE)
 
 
 setMethodS3("getOrganism", "AbstractIndexSet", function(this, ...) {
-  path <- getPath(this);
-  path <- dirname(path);
-  organism <- basename(path);
-  organism;
+  path <- getPath(this)
+  path <- dirname(path)
+  organism <- basename(path)
+  organism
 })
 
 
@@ -55,10 +55,10 @@ setMethodS3("getDefaultFilePatterns", "AbstractIndexSet", function(static, prefi
 
 setMethodS3("byPrefix", "AbstractIndexSet", function(static, prefix, pattern=NULL, ..., verbose=FALSE) {
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
   verbose && enterf(verbose, "Locating %s by prefix", class(static)[1])
@@ -78,22 +78,22 @@ setMethodS3("byPrefix", "AbstractIndexSet", function(static, prefix, pattern=NUL
 
 
 setMethodS3("getIndexPrefix", "AbstractIndexSet", function(this, ...) {
-  df <- getOneFile(this);
-  getIndexPrefix(df, ...);
+  df <- getOneFile(this)
+  getIndexPrefix(df, ...)
 })
 
 
 setMethodS3("getFastaReferenceFile", "AbstractIndexSet", function(this, ...) {
-  organism <- getOrganism(this);
-  prefix <- getIndexPrefix(this);
-  fullname <- basename(prefix);
-  fa <- FastaReferenceFile$byOrganism(organism, prefix=fullname);
+  organism <- getOrganism(this)
+  prefix <- getIndexPrefix(this)
+  fullname <- basename(prefix)
+  fa <- FastaReferenceFile$byOrganism(organism, prefix=fullname)
 
   # Assert compatibility
-  isCompatibleWith(fa, this, mustWork=TRUE);
+  isCompatibleWith(fa, this, mustWork=TRUE)
 
-  fa;
+  fa
 })
 
 
-setMethodS3("isComplete", "AbstractIndexSet", abstract=TRUE);
+setMethodS3("isComplete", "AbstractIndexSet", abstract=TRUE)

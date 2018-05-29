@@ -41,9 +41,9 @@ setMethodS3("as.character", "GtfDataFile", function(x, ...) {
 })
 
 setMethodS3("getOrganism", "GtfDataFile", function(this, ...) {
-  path <- getPath(this);
-  organism <- basename(path);
-  organism;
+  path <- getPath(this)
+  organism <- basename(path)
+  organism
 })
 
 
@@ -87,11 +87,11 @@ setMethodS3("findByOrganism", "GtfDataFile", function(static, organism, tags=NUL
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'organism':
-  organism <- Arguments$getOrganism(organism);
+  organism <- Arguments$getOrganism(organism)
 
   # Argument 'prefix':
   if (!is.null(prefix)) {
-    prefix <- Arguments$getRegularExpression(prefix);
+    prefix <- Arguments$getRegularExpression(prefix)
   }
 
 
@@ -99,59 +99,59 @@ setMethodS3("findByOrganism", "GtfDataFile", function(static, organism, tags=NUL
   # Search in annotationData/organisms/<organism>/
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Create the fullname
-  fullname <- paste(c(organism, tags), collapse=",");
+  fullname <- paste(c(organism, tags), collapse=",")
 
   # Extract the name and the tags
-  parts <- unlist(strsplit(fullname, split=",", fixed=TRUE));
-  organism <- parts[1L];
-  tags <- parts[-1L];
+  parts <- unlist(strsplit(fullname, split=",", fixed=TRUE))
+  organism <- parts[1L]
+  tags <- parts[-1L]
 
   # Search for "organisms/<organism>/<prefix>.*[.]gtf$" files
-  patternS <- pattern;
-  if (!is.null(prefix)) patternS <- sprintf("%s.*%s", prefix, patternS);
+  patternS <- pattern
+  if (!is.null(prefix)) patternS <- sprintf("%s.*%s", prefix, patternS)
   args <- list(
     set="organisms",
     name=organism,
     pattern=patternS,
     ...
-  );
-  pathname <- do.call(findAnnotationData, args=args);
+  )
+  pathname <- do.call(findAnnotationData, args=args)
 
   # If not found, look for Windows shortcuts
   if (is.null(pathname)) {
     # Search for a Windows shortcut
     args$pattern <- sprintf("%s[.]lnk$", args$pattern)
-    pathname <- do.call(findAnnotationData, args=args);
+    pathname <- do.call(findAnnotationData, args=args)
     if (!is.null(pathname)) {
       # ..and expand it
-      pathname <- Arguments$getReadablePathname(pathname, mustExist=FALSE);
+      pathname <- Arguments$getReadablePathname(pathname, mustExist=FALSE)
       if (!isFile(pathname))
-        pathname <- NULL;
+        pathname <- NULL
     }
   }
 
-  pathname;
+  pathname
 }, static=TRUE, protected=TRUE) # findByOrganism()
 
 
 setMethodS3("byOrganism", "GtfDataFile", function(static, organism, ...) {
   # Argument 'organism':
-  organism <- Arguments$getOrganism(organism);
+  organism <- Arguments$getOrganism(organism)
 
   # Locate GTF file
-  pathname <- findByOrganism(static, organism, ...);
+  pathname <- findByOrganism(static, organism, ...)
   if (length(pathname) == 0L)
-    throw("Failed to located GTF file for organism: ", organism);
+    throw("Failed to located GTF file for organism: ", organism)
 
   # Allocate object
-  res <- newInstance(static, pathname, ..., .onUnknownArgs="ignore");
+  res <- newInstance(static, pathname, ..., .onUnknownArgs="ignore")
 
   # Validate
-  organismR <- getOrganism(res);
+  organismR <- getOrganism(res)
   if (organismR != organism) {
-    throw(sprintf("The located %s (%s) specifies an organism different from the requested one: %s != %s", class(res)[1L], getPathname(res), sQuote(organismR), sQuote(organism)));
+    throw(sprintf("The located %s (%s) specifies an organism different from the requested one: %s != %s", class(res)[1L], getPathname(res), sQuote(organismR), sQuote(organism)))
   }
-  res;
+  res
 }, static=TRUE) # byOrganism()
 
 

@@ -26,26 +26,26 @@ setMethodS3("samtoolsView", "default", function(pathname, pathnameD, ..., verbos
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'pathname':
-  pathname <- Arguments$getReadablePathname(pathname);
+  pathname <- Arguments$getReadablePathname(pathname)
 
   # Argument 'pathnameD':
-  pathnameD <- Arguments$getWritablePathname(pathnameD);
+  pathnameD <- Arguments$getWritablePathname(pathnameD)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Running samtools 'view'");
+  verbose && enter(verbose, "Running samtools 'view'")
 
   # Assert that input files are not overwritten
-  .stop_if_not(getAbsolutePath(pathnameD) != getAbsolutePath(pathname));
+  .stop_if_not(getAbsolutePath(pathnameD) != getAbsolutePath(pathname))
 
-  res <- systemSamtools("view", "o"=shQuote(pathnameD), shQuote(pathname), ..., verbose=less(verbose, 10));
+  res <- systemSamtools("view", "o"=shQuote(pathnameD), shQuote(pathname), ..., verbose=less(verbose, 10))
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  res;
+  res
 }) # samtoolsView()

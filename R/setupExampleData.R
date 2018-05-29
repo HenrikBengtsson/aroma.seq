@@ -20,37 +20,37 @@
 #*/###########################################################################
 setupExampleData <- function(dirs=c("annotationData", "bamData", "fastqData*"), ...) {
   # Argument 'dirs':
-  dirs <- Arguments$getCharacters(dirs);
+  dirs <- Arguments$getCharacters(dirs)
 
-  links <- (regexpr("[*]$", dirs) != -1L);
-  dirs <- gsub("[*]$", "", dirs);
+  links <- (regexpr("[*]$", dirs) != -1L)
+  dirs <- gsub("[*]$", "", dirs)
 
-  pathS <- system.file("exData", package="aroma.seq", mustWork=TRUE);
+  pathS <- system.file("exData", package="aroma.seq", mustWork=TRUE)
 
   for (ii in seq_along(dirs)) {
-    dir <- dirs[ii];
-    link <- links[ii];
+    dir <- dirs[ii]
+    link <- links[ii]
 
     # Nothing to do?
-    if (isDirectory(dir)) next;
+    if (isDirectory(dir)) next
 
     # Create
-    dirS <- file.path(pathS, dir);
+    dirS <- file.path(pathS, dir)
 
     # Nothing to do?
-    if (!isDirectory(dirS)) next;
+    if (!isDirectory(dirS)) next
 
     if (link) {
-      dir <- Arguments$getWritablePath(dir);
+      dir <- Arguments$getWritablePath(dir)
       for (dirSS in list.files(path=dirS)) {
-        createLink(link=file.path(dir, dirSS), target=file.path(dirS, dirSS));
+        createLink(link=file.path(dir, dirSS), target=file.path(dirS, dirSS))
       }
     } else {
-      copyDirectory(dirS, to=dir, copy.mode=FALSE, overwrite=FALSE);
+      copyDirectory(dirS, to=dir, copy.mode=FALSE, overwrite=FALSE)
     }
 
     # Sanity check
-    .stop_if_not(isDirectory(dir));
+    .stop_if_not(isDirectory(dir))
   } # for (ii ...)
 
 
@@ -58,25 +58,25 @@ setupExampleData <- function(dirs=c("annotationData", "bamData", "fastqData*"), 
   # Data set: GATK Resource Bundle (iff available)
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (isCapableOf(aroma.seq, "gatk")) {
-    bin <- findGATK();
-    srcPath <- file.path(dirname(bin), "resources");
-    srcPath <- Arguments$getReadablePath(srcPath, mustExist=FALSE);
+    bin <- findGATK()
+    srcPath <- file.path(dirname(bin), "resources")
+    srcPath <- Arguments$getReadablePath(srcPath, mustExist=FALSE)
     if (isDirectory(srcPath)) {
-      dataset <- "GATKResourceBundle";
-      organism <- "GATKExample";
+      dataset <- "GATKResourceBundle"
+      organism <- "GATKExample"
 
       if (is.element("annotationData", dirs)) {
-        path <- file.path("annotationData", "organisms", organism);
-        path <- Arguments$getWritablePath(path);
-        pathnames <- dir(path=srcPath, pattern="^exampleFASTA[.]", full.names=TRUE);
+        path <- file.path("annotationData", "organisms", organism)
+        path <- Arguments$getWritablePath(path)
+        pathnames <- dir(path=srcPath, pattern="^exampleFASTA[.]", full.names=TRUE)
         sapply(pathnames, FUN=function(pathname) {
-          copyFile(pathname, file.path(path, basename(pathname)), copy.mode=FALSE, skip=TRUE);
+          copyFile(pathname, file.path(path, basename(pathname)), copy.mode=FALSE, skip=TRUE)
         })
       }
 
       if (is.element("bamData", dirs)) {
-        path <- file.path("bamData", dataset, organism);
-        path <- Arguments$getWritablePath(path);
+        path <- file.path("bamData", dataset, organism)
+        path <- Arguments$getWritablePath(path)
 
         pathnames <- dir(path=srcPath, pattern="^exampleBAM[.]", full.names=TRUE)
         sapply(pathnames, FUN=function(pathname) {
@@ -86,5 +86,5 @@ setupExampleData <- function(dirs=c("annotationData", "bamData", "fastqData*"), 
     } # if (isDirectory(srcPath))
   }
 
-  invisible(dirs);
+  invisible(dirs)
 } # setupExampleData()

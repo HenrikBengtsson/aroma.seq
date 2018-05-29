@@ -32,45 +32,45 @@ setMethodS3("systemFastqDump", "default", function(...,
 
   # Arguments '...':
   Args <- unlist(list(...))
-  # Args <- Args$args; # char vector of args passed to fastq-dump
+  # Args <- Args$args # char vector of args passed to fastq-dump
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Calling FastqDump executable");
+  verbose && enter(verbose, "Calling FastqDump executable")
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Locate executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  bin <- findFastqDump(commandName=commandName);
-  verbose && cat(verbose, "Executable:");
-  verbose && print(verbose, bin);
+  bin <- findFastqDump(commandName=commandName)
+  verbose && cat(verbose, "Executable:")
+  verbose && print(verbose, bin)
 
-  # verbose && cat(verbose, "Arguments passed to system2():");
+  # verbose && cat(verbose, "Arguments passed to system2():")
   # verbose && str(verbose, system2ArgsList)
-  verbose && cat(verbose, "Arguments passed to FastqDump:");
-  verbose && str(verbose, Args);
+  verbose && cat(verbose, "Arguments passed to FastqDump:")
+  verbose && str(verbose, Args)
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # System call
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   
-  verbose && enter(verbose, "system2() call");
-  cmd <- sprintf("%s %s", bin, paste(Args, collapse=" "));
-  verbose && print(verbose, cmd);
+  verbose && enter(verbose, "system2() call")
+  cmd <- sprintf("%s %s", bin, paste(Args, collapse=" "))
+  verbose && print(verbose, cmd)
 
   if (!.fake) {
     res <- system2(command=commandName, args=Args, stderr=Stderr, stdout=Stdout)
   } else {
     cat("<fake run>\n")
-    res <- "<fake run>";
+    res <- "<fake run>"
   }
 
-  verbose && exit(verbose);
-  verbose && exit(verbose);
-  res;
+  verbose && exit(verbose)
+  verbose && exit(verbose)
+  res
 }) # systemFastqDump()

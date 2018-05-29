@@ -25,22 +25,22 @@ setMethodS3("samtoolsFaidx", "default", function(pathname, ..., verbose=FALSE) {
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'pathname':
-  pathname <- Arguments$getReadablePathname(pathname);
+  pathname <- Arguments$getReadablePathname(pathname)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Running samtools 'faidx'");
+  verbose && enter(verbose, "Running samtools 'faidx'")
 
-  res <- systemSamtools("faidx", shQuote(pathname), ..., verbose=less(verbose, 10));
+  res <- systemSamtools("faidx", shQuote(pathname), ..., verbose=less(verbose, 10))
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  res;
+  res
 }) # samtoolsFaidx()
 
 

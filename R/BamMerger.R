@@ -39,53 +39,53 @@ setConstructorS3("BamMerger", function(dataSet=NULL, groupBy=NULL, ...) {
   if (!is.null(dataSet)) {
     # Argument 'groupBy':
     if (is.character(groupBy)) {
-      groupBy <- match.arg(groupBy, choices=c("name"));
+      groupBy <- match.arg(groupBy, choices=c("name"))
     } else if (is.list(groupBy)) {
       # Validated below
     } else {
-      throw("Invalid argument 'groupBy': ", mode(groupBy));
+      throw("Invalid argument 'groupBy': ", mode(groupBy))
     }
   }
 
-  this <- extend(SamTransform(dataSet, groupBy=groupBy, ...), c("BamMerger", uses("FileGroupsInterface")));
+  this <- extend(SamTransform(dataSet, groupBy=groupBy, ...), c("BamMerger", uses("FileGroupsInterface")))
 
   # Argument 'groupBy':
   if (is.list(groupBy)) {
-    validateGroups(this, groups=groupBy);
+    validateGroups(this, groups=groupBy)
   }
 
-  this;
+  this
 })
 
 
 setMethodS3("getAsteriskTags", "BamMerger", function(this, ...) {
   # The 'groupBy' tag
-  params <- getParameters(this);
-  groupBy <- params$groupBy;
+  params <- getParameters(this)
+  groupBy <- params$groupBy
   if (is.character(groupBy)) {
-    groupBy <- sprintf("by%s", capitalize(groupBy));
+    groupBy <- sprintf("by%s", capitalize(groupBy))
   } else {
     # Generate a short checksum
-    groupBy <- getChecksum(groupBy, algo="crc32");
+    groupBy <- getChecksum(groupBy, algo="crc32")
   }
 
-  c("merged", groupBy);
+  c("merged", groupBy)
 }, protected=TRUE)
 
 setMethodS3("getOutputDataSet", "BamMerger", function(this, onMissing=c("drop", "NA", "error"), ...) {
   # Argument 'onMissing':
-  onMissing <- match.arg(onMissing);
+  onMissing <- match.arg(onMissing)
 
 
   ## Find all existing output data files
-  path <- getPath(this);
-  bams <- BamDataSet$byPath(path, ...);
+  path <- getPath(this)
+  bams <- BamDataSet$byPath(path, ...)
 
   ## Order according to grouped input data set
-  names <- getGroupNames(this);
-  bams <- extract(bams, names, onMissing=onMissing);
+  names <- getGroupNames(this)
+  bams <- extract(bams, names, onMissing=onMissing)
 
-  bams;
+  bams
 }) # getOutputDataSet() for BamMerger
 
 
@@ -95,43 +95,43 @@ setMethodS3("process", "BamMerger", function(this, ..., skip=TRUE, force=FALSE, 
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'force':
-  force <- Arguments$getLogical(force);
+  force <- Arguments$getLogical(force)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Merging BAM files");
-  ds <- getInputDataSet(this);
-  verbose && cat(verbose, "Input data set:");
-  verbose && print(verbose, ds);
+  verbose && enter(verbose, "Merging BAM files")
+  ds <- getInputDataSet(this)
+  verbose && cat(verbose, "Input data set:")
+  verbose && print(verbose, ds)
 
-  groups <- getGroups(this);
-  verbose && printf(verbose, "Merging into %d groups: %s\n", length(groups), hpaste(names(groups)));
-  verbose && str(verbose, head(groups));
+  groups <- getGroups(this)
+  verbose && printf(verbose, "Merging into %d groups: %s\n", length(groups), hpaste(names(groups)))
+  verbose && str(verbose, head(groups))
 
   if (force) {
-    todo <- seq_along(groups);
+    todo <- seq_along(groups)
   } else {
-    todo <- findFilesTodo(this, verbose=less(verbose, 1));
+    todo <- findFilesTodo(this, verbose=less(verbose, 1))
     # Already done?
     if (length(todo) == 0L) {
-      verbose && cat(verbose, "Already done. Skipping.");
-      res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1));
-      verbose && exit(verbose);
-      return(invisible(res));
+      verbose && cat(verbose, "Already done. Skipping.")
+      res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1))
+      verbose && exit(verbose)
+      return(invisible(res))
     }
   }
 
-  verbose && cat(verbose, "Number of files: ", length(ds));
-  verbose && cat(verbose, "Number of groups: ", length(groups));
+  verbose && cat(verbose, "Number of files: ", length(ds))
+  verbose && cat(verbose, "Number of groups: ", length(groups))
 
-  path <- getPath(this);
-  verbose && cat(verbose, "Output path: ", path);
+  path <- getPath(this)
+  verbose && cat(verbose, "Output path: ", path)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -241,21 +241,21 @@ setMethodS3("process", "BamMerger", function(this, ..., skip=TRUE, force=FALSE, 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 setMethodS3("validateGroups", "BamMerger", function(this, groups, ...) {
   # Input data set
-  ds <- getInputDataSet(this);
-  nbrOfFiles <- length(ds);
+  ds <- getInputDataSet(this)
+  nbrOfFiles <- length(ds)
 
   # Sanity checks
-  idxs <- unlist(groups, use.names=FALSE);
-  idxs <- Arguments$getIndices(idxs, max=nbrOfFiles);
+  idxs <- unlist(groups, use.names=FALSE)
+  idxs <- Arguments$getIndices(idxs, max=nbrOfFiles)
   if (length(idxs) < nbrOfFiles) {
-    throw("One or more input BAM files is not part of any group.");
+    throw("One or more input BAM files is not part of any group.")
   } else if (length(idxs) > nbrOfFiles) {
-    throw("One or more input BAM files is part of more than one group.");
+    throw("One or more input BAM files is part of more than one group.")
   }
 
   if (is.null(names(groups))) {
-    throw("The list of groups does not have names.");
+    throw("The list of groups does not have names.")
   }
 
-  invisible(groups);
+  invisible(groups)
 }, protected=TRUE)

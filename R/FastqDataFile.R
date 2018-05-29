@@ -35,78 +35,78 @@
 setConstructorS3("FastqDataFile", function(..., paired=FALSE) {
   extend(GenericDataFile(...), c("FastqDataFile", uses("AromaSeqDataFile")),
     .paired = paired
-  );
+  )
 })
 
 setMethodS3("as.character", "FastqDataFile", function(x, ...) {
-  this <- x;
-  s <- NextMethod("as.character");
-  s <- c(s, sprintf("Is paired: %s", isPaired(this)));
-  n <- nbrOfSeqs(this, fast=TRUE);
-  s <- c(s, sprintf("Number of sequences: %s", n));
-  s <- c(s, sprintf("Common width of sequences: %d", getCommonSeqWidth(this, fast=TRUE)));
-  s;
+  this <- x
+  s <- NextMethod("as.character")
+  s <- c(s, sprintf("Is paired: %s", isPaired(this)))
+  n <- nbrOfSeqs(this, fast=TRUE)
+  s <- c(s, sprintf("Number of sequences: %s", n))
+  s <- c(s, sprintf("Common width of sequences: %d", getCommonSeqWidth(this, fast=TRUE)))
+  s
 }, protected=TRUE)
 
 
 setMethodS3("isPaired", "FastqDataFile", function(this, ...) {
-  this$.paired;
+  this$.paired
 }, protected=TRUE)
 
 
 setMethodS3("getDefaultFullName", "FastqDataFile", function(this, paired=isPaired(this), ...) {
-  name <- NextMethod("getDefaultFullName");
+  name <- NextMethod("getDefaultFullName")
 
   # Drop filename extension
-  name <- gsub("[.](fastq|fq)$", "", name, ignore.case=TRUE);
+  name <- gsub("[.](fastq|fq)$", "", name, ignore.case=TRUE)
 
   # Drop paired-end suffixes, e.g. '_1'?
   if (paired) {
-    name <- gsub("_(1|R1|2|R2)$", "", name, ignore.case=TRUE);
+    name <- gsub("_(1|R1|2|R2)$", "", name, ignore.case=TRUE)
   }
 
-  name;
+  name
 }, protected=TRUE)
 
 
 setMethodS3("nbrOfSeqs", "FastqDataFile", function(this, ...) {
-  geo <- getGeometry(this, ...);
-  geo[1L];
+  geo <- getGeometry(this, ...)
+  geo[1L]
 })
 
 
 setMethodS3("getCommonSeqWidth", "FastqDataFile", function(this, ...) {
-  geo <- getGeometry(this, ...);
-  geo[2L];
+  geo <- getGeometry(this, ...)
+  geo[2L]
 })
 
 
 setMethodS3("getGeometry", "FastqDataFile", function(this, force=FALSE, fast=FALSE, ...) {
-  geometry <- this$.geometry;
+  geometry <- this$.geometry
 
   # If not cached, return NAs immediately?
   if (is.null(geometry) && fast) geometry <- c(NA_integer_, NA_integer_)
 
   if (force || is.null(geometry)) {
-    geometry <- readGeometry(this, ...);
+    geometry <- readGeometry(this, ...)
     if (!Biobase::anyMissing(geometry)) {
-      this$.geometry <- geometry;
+      this$.geometry <- geometry
     }
   }
-  geometry;
+  geometry
 })
 
 
 setMethodS3("readGeometry", "FastqDataFile", function(this, ...) {
-  naValue <- c(NA_integer_, NA_integer_);
+  naValue <- c(NA_integer_, NA_integer_)
 
   # Nothing to do?
-  if (!isFile(this)) return(naValue);
+  if (!isFile(this)) return(naValue)
 
-  pathname <- getPathname(this);
-  geometry <- memoizedCall2(this, function(this, ...) Biostrings::fastq.geometry(pathname));
+  pathname <- getPathname(this)
+  geometry <- memoizedCall2(this, function(this, ...) Biostrings::fastq.geometry(pathname))
 
-  geometry;
+  geometry
 }, private=TRUE)
 
 
@@ -114,25 +114,25 @@ setMethodS3("writeSample", "FastqDataFile", function(this, pathname, n, ordered=
   use("ShortRead")
 
   # Argument 'pathname':
-  pathname <- Arguments$getWritablePathname(pathname, mustNotExist=TRUE);
+  pathname <- Arguments$getWritablePathname(pathname, mustNotExist=TRUE)
 
   # Argument 'n':
-  n <- Arguments$getInteger(n, range=c(1,Inf));
+  n <- Arguments$getInteger(n, range=c(1,Inf))
 
   # Argument 'ordered':
-  ordered <- Arguments$getLogical(ordered);
+  ordered <- Arguments$getLogical(ordered)
 
   # Argument 'seed':
-  if (!is.null(seed)) seed <- Arguments$getInteger(seed);
+  if (!is.null(seed)) seed <- Arguments$getInteger(seed)
 
   # Argument 'full':
-  full <- Arguments$getLogical(full);
+  full <- Arguments$getLogical(full)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
@@ -140,42 +140,42 @@ setMethodS3("writeSample", "FastqDataFile", function(this, pathname, n, ordered=
   # Set the random seed
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (!is.null(seed)) {
-    verbose && enter(verbose, "Setting (temporary) random seed");
-    oldRandomSeed <- NULL;
+    verbose && enter(verbose, "Setting (temporary) random seed")
+    oldRandomSeed <- NULL
     if (exists(".Random.seed", mode="integer")) {
-      oldRandomSeed <- get(".Random.seed", mode="integer");
+      oldRandomSeed <- get(".Random.seed", mode="integer")
     }
     on.exit({
       if (!is.null(oldRandomSeed)) {
-        .Random.seed <<- oldRandomSeed;
+        .Random.seed <<- oldRandomSeed
       }
-    }, add=TRUE);
-    verbose && cat(verbose, "The random seed will be reset to its original state afterward.");
-    verbose && cat(verbose, "Seed: ", seed);
-    set.seed(seed);
-    verbose && exit(verbose);
+    }, add=TRUE)
+    verbose && cat(verbose, "The random seed will be reset to its original state afterward.")
+    verbose && cat(verbose, "Seed: ", seed)
+    set.seed(seed)
+    verbose && exit(verbose)
   }
 
 
   # TODO: Added ram/buffer size option. /HB 2013-07-01
-  pathnameFQ <- getPathname(this);
-  fs <- FastqSampler(pathnameFQ, n=n, ordered=ordered, ...);
+  pathnameFQ <- getPathname(this)
+  fs <- FastqSampler(pathnameFQ, n=n, ordered=ordered, ...)
   on.exit({
-    if (!is.null(fs)) close(fs);
-  });
-  data <- yield(fs);
-  writeFastq(data, file=pathname, mode="w", full=full);
-  data <- NULL;
-  close(fs);
-  fs <- NULL;
+    if (!is.null(fs)) close(fs)
+  })
+  data <- yield(fs)
+  writeFastq(data, file=pathname, mode="w", full=full)
+  data <- NULL
+  close(fs)
+  fs <- NULL
 
-  newInstance(this, pathname);
+  newInstance(this, pathname)
 }, protected=TRUE)
 
 
 setMethodS3("findMateFile", "FastqDataFile", function(this, mustExist=FALSE, ...) {
-  path <- getPath(this);
-  filename <- getFilename(this);
+  path <- getPath(this)
+  filename <- getFilename(this)
 
   # Recognized R1/R2 filename patterns
   formats <- c(
@@ -183,42 +183,42 @@ setMethodS3("findMateFile", "FastqDataFile", function(this, mustExist=FALSE, ...
     "_(%d)(_[0-9]+)",
     "_(R%d)()",
     "_(R%d)(_[0-9]+)"
-  );
-  formats <- sprintf("^(.*)%s[.]((fq|fastq)(|[.]gz))$", formats);
+  )
+  formats <- sprintf("^(.*)%s[.]((fq|fastq)(|[.]gz))$", formats)
 
   # For R1 and R2...
-  pathnameM <- NULL;
+  pathnameM <- NULL
   for (mm in 1:2) {
-    patterns <- unname(sapply(formats, FUN=sprintf, mm));
-    pos <- unlist(sapply(patterns, FUN=regexpr, filename), use.names=FALSE);
-    pattern <- patterns[pos != -1L][1L];
+    patterns <- unname(sapply(formats, FUN=sprintf, mm))
+    pos <- unlist(sapply(patterns, FUN=regexpr, filename), use.names=FALSE)
+    pattern <- patterns[pos != -1L][1L]
     if (!is.na(pattern)) {
-      p1 <- gsub(pattern, "\\1", filename);
-      p2 <- gsub(pattern, "\\2", filename);
-      p3 <- gsub(pattern, "\\3", filename);
-      ext <- gsub(pattern, "\\4", filename);
-      mate <- 2L-mm+1L;
-      p2M <-gsub(mm, mate, p2, fixed=TRUE);
-      filenameM <- sprintf("%s_%s%s.%s", p1, p2M, p3, ext);
-      pathnameM <- Arguments$getReadablePathname(filenameM, path=path, mustExist=FALSE);
+      p1 <- gsub(pattern, "\\1", filename)
+      p2 <- gsub(pattern, "\\2", filename)
+      p3 <- gsub(pattern, "\\3", filename)
+      ext <- gsub(pattern, "\\4", filename)
+      mate <- 2L-mm+1L
+      p2M <-gsub(mm, mate, p2, fixed=TRUE)
+      filenameM <- sprintf("%s_%s%s.%s", p1, p2M, p3, ext)
+      pathnameM <- Arguments$getReadablePathname(filenameM, path=path, mustExist=FALSE)
 
       # Found mate file?
       if (isFile(pathnameM)) {
-        break;
+        break
       }
     }
   } # for (mm ...)
 
   # Sanity check
   if (mustExist && is.null(pathnameM)) {
-    throw("Failed to locate mate-pair file: ", getPathname(this));
+    throw("Failed to locate mate-pair file: ", getPathname(this))
   }
 
-  pathnameM;
+  pathnameM
 }, protected=TRUE)
 
 setMethodS3("getMateFile", "FastqDataFile", function(this, ...) {
-  pathnameM <- findMateFile(this, ..., mustExist=TRUE);
+  pathnameM <- findMateFile(this, ..., mustExist=TRUE)
   newInstance(this, pathnameM, paired=TRUE)
 }, protected=TRUE)
 
