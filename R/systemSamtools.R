@@ -43,7 +43,8 @@ setMethodS3("systemSamtools", "default", function(command, ..., .fake=FALSE, ver
   # Locate executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   bin <- findSamtools(verbose=less(verbose, 50));
-  verbose && cat(verbose, "Executable: ", bin);
+  verbose && cat(verbose, "Executable:");
+  verbose && print(verbose, bin);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

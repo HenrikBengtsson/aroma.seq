@@ -58,7 +58,8 @@ setMethodS3("systemPicard", "default", function(command, ..., verbose=FALSE) {
   # Locate executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   path <- findPicard(verbose=less(verbose, 50));
-  verbose && cat(verbose, "Picard directory: ", path);
+  verbose && cat(verbose, "Picard directory:")
+  verbose && print(verbose, path);
 
   verbose && cat(verbose, "Picard command: ", command);
   filename <- sprintf("%s.jar", command);

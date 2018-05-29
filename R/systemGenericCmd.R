@@ -49,7 +49,8 @@ setMethodS3("systemGenericCmd", "default", function(commandName=NULL,
   # Locate executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   bin <- findCmd(commandName, verbose=less(verbose, 50));
-  verbose && cat(verbose, "Executable: ", bin);
+  verbose && cat(verbose, "Executable:");
+  verbose && print(verbose, bin);
 
   verbose && cat(verbose, "Arguments passed to system2():");
   verbose && str(verbose, system2ArgsList)

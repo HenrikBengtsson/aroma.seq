@@ -43,7 +43,8 @@ setMethodS3("systemBWA", "default", function(command, ..., .fake=FALSE, verbose=
   # Locate executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   bin <- findBWA(verbose=less(verbose, 50));
-  verbose && cat(verbose, "Executable: ", bin);
+  verbose && cat(verbose, "Executable:");
+  verbose && print(verbose, bin);
 
   # Unwrap vectors
   args <- unlist(args);

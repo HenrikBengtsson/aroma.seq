@@ -38,10 +38,12 @@ setMethodS3("systemFastQC", "default", function(..., verbose=FALSE) {
   # Locate executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   perl <- findPerl(verbose=less(verbose, 50));
-  verbose && cat(verbose, "Perl executable: ", perl);
+  verbose && cat(verbose, "Perl executable:");
+  verbose && print(verbose, perl);
 
   fastq <- findFastQC(verbose=less(verbose, 50));
-  verbose && cat(verbose, "FastQC executable: ", fastq);
+  verbose && cat(verbose, "FastQC executable:");
+  verbose && print(verbose, fastq);
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Call FastQC

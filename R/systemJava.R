@@ -50,7 +50,8 @@ setMethodS3("systemJava", "default", function(..., jvmArgs=Sys.getenv("JVM_ARGS"
   # Locate executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   bin <- findJava(verbose=less(verbose, 50));
-  verbose && cat(verbose, "Java executable: ", bin);
+  verbose && cat(verbose, "Java executable:");
+  verbose && print(verbose, bin);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

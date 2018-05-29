@@ -43,7 +43,8 @@ setMethodS3("systemBowtie2Build", "default", function(commandName="bowtie2-build
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Locates the bowtie2-build executable
   bin <- findBowtie2(command=commandName, verbose=less(verbose, 50));
-  verbose && cat(verbose, "Executable: ", bin);
+  verbose && cat(verbose, "Executable:");
+  verbose && print(verbose, bin);
   verbose && cat(verbose, "Arguments passed to system2():");
   verbose && str(verbose, system2ArgsList)
   verbose && cat(verbose, "Arguments passed to bowtie2-build:");

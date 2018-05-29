@@ -48,7 +48,8 @@ setMethodS3("systemTopHatBuild", "default", function( ## ( No 'command' arg in t
   # Locate executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   bin <- findTopHat(verbose=less(verbose, 50));
-  verbose && cat(verbose, "Executable: ", bin);
+  verbose && cat(verbose, "Executable:");
+  verbose && print(verbose, bin);
 
   verbose && cat(verbose, "Arguments passed to system2():");
   verbose && str(verbose, system2Args);

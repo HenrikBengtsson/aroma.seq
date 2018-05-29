@@ -48,7 +48,9 @@ setMethodS3("systemHTSeqCount", "default", function(..., args=NULL, stdout=TRUE,
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Locates the htseq-count executable
   bin <- findHTSeq(command=command, verbose=less(verbose, 50));
-  verbose && cat(verbose, "Executable: ", bin);
+  verbose && cat(verbose, "Executable:");
+  verbose && print(verbose, bin);
+
   verbose && cat(verbose, "Arguments passed to system2():");
   verbose && str(verbose, list(stdout=stdout, stderr=stderr));
   args <- c(list(...), args);

@@ -49,7 +49,8 @@ setMethodS3("systemSraToolkit", "default", function(command, ..., verbose=FALSE)
   # Locate executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   pathname <- findSraToolkit(command, verbose=less(verbose, 50));
-  verbose && cat(verbose, "SRA Toolkit executable: ", pathname);
+  verbose && cat(verbose, "SRA Toolkit executable:");
+  verbose && print(verbose, pathname);
   pathname <- Arguments$getReadablePathname(pathname);
 
 

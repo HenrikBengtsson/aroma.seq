@@ -44,7 +44,8 @@ setMethodS3("systemGATK", "default", function(..., verbose=FALSE) {
   # Locate executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   pathname <- findGATK(verbose=less(verbose, 50));
-  verbose && cat(verbose, "GATK jar file: ", pathname);
+  verbose && cat(verbose, "GATK jar file:")
+  verbose && print(verbose, pathname);
   pathname <- Arguments$getReadablePathname(pathname);
 
 
