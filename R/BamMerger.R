@@ -25,7 +25,7 @@
 # }
 #
 # \section{Supported operating systems}{
-#   This method is available on Linux, OSX, and Windows [1].
+#   This method is available on Linux, macOS, and Windows [1].
 # }
 #
 # @author HB

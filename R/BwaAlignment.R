@@ -15,7 +15,7 @@
 #  \item{...}{Arguments passed to @see "AbstractAlignment".}
 #  \item{indexSet}{An @see "BwaIndexSet".}
 #  \item{flavor}{A @character string specifying the type of
-#    BWA algoritm to use for alignment.}
+#    BWA algorithm to use for alignment.}
 # }
 #
 # \section{Fields and Methods}{

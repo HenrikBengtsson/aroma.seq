@@ -20,7 +20,7 @@
 # }
 #
 # \section{Support for compressed input files}{
-#   If gzip'ed FASTA files are used, this function will temporarily decompress
+#   If gzipped FASTA files are used, this function will temporarily decompress
 #   before passing them to the bowtie2-build external software (which only
 #   support non-compressed FASTA files).
 # }

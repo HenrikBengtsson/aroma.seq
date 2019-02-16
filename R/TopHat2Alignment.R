@@ -25,7 +25,7 @@
 # }
 #
 # \section{Supported operating systems}{
-#   This method is available on Linux and OSX [1].
+#   This method is available on Linux and macOS [1].
 # }
 #
 # @author "TT"

@@ -6,7 +6,7 @@
 # \description{
 #  @classhierarchy
 #
-#  A BwaIndexFile object represents a Bwa index file.
+#  A BwaIndexFile object represents a BWA index file.
 # }
 #
 # @synopsis

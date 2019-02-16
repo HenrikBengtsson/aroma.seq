@@ -15,18 +15,18 @@
 # \arguments{
 #   \item{analysisType}{(required) A @character string specifying type of
 #     analysis.
-#     In GATK, this corrensponds to engine argument
+#     In GATK, this corresponds to engine argument
 #     \code{--analysis_type} (or \code{-T}).}
 #   \item{...}{(optional) named arguments}.
 #   \item{pathnameI}{(optional) A @character @vector specifying one or more
 #     (SAM or BAM) files.
-#     In GATK, this corrensponds to one or more engine arguments
+#     In GATK, this corresponds to one or more engine arguments
 #     \code{--input_file} (or \code{-I}).}
 #   \item{pathnameR}{(optional) A @character string specifying a reference file.
-#     In GATK, this corrensponds to engine argument
+#     In GATK, this corresponds to engine argument
 #     \code{--reference_sequence} (or \code{-R}).}
 #   \item{pathnameL}{(optional) A @character string specifying a ROD file.
-#     In GATK, this corrensponds to engine argument
+#     In GATK, this corresponds to engine argument
 #     \code{--interval} (or \code{-L}).}
 #   \item{outPath}{Directory where result files are written.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
