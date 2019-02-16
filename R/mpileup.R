@@ -134,7 +134,7 @@ setMethodS3("mpileup", "BamDataSet", function(bams, fa, Q=20, chromosomes=getSeq
 
   ## Step 3: Resolve and collect
   verbose && enter(verbose, "Collect and resolve all futures")
-  work <- resolve(work, value=TRUE, progress=TRUE)
+  work <- resolve(work, value=TRUE)
   verbose && print(verbose, work)
   .stop_if_not(length(work) == length(bams))
   verbose && exit(verbose)
@@ -258,7 +258,7 @@ setMethodS3("mpileup", "BamDataFile", function(bam, fa, Q=20, chromosomes=getSeq
   } # for (kk ...)
 
   verbose && enter(verbose, "Collect and resolve all futures")
-  res <- resolve(res, value=TRUE, progress=TRUE)
+  res <- resolve(res, value=TRUE)
   verbose && print(verbose, res)
   verbose && exit(verbose)
 
