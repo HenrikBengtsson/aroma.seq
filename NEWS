@@ -8,6 +8,10 @@ NEW FEATURES:
  * readStats() and readTotalCNsAndBAFs() for SeqzFile no longer outputs
    a progress bar in non-interactive mode.
    
+BUG FIXES:
+
+ * mpileup() for BamDataSet did not assert that BAM files have been indexed.
+ 
 
 Version: 0.9.2 [2017-06-26]
 

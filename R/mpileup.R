@@ -58,6 +58,9 @@ setMethodS3("mpileup", "BamDataSet", function(bams, fa, Q=20, chromosomes=getSeq
   ## Assert BAM use the same chromosome names
   .stop_if_not(all(chromosomes %in% getSeqNames(fa)))
 
+  ## Assert BAM are indexed, i.e. they have BAI files
+  .stop_if_not(all(vapply(bams, FUN = hasIndex, FUN.VALUE = FALSE)))
+
   ## Chromosome-by-sample matrix of MPileupFile:s
   ## (will be transposed before being returned)
   res <- list()
