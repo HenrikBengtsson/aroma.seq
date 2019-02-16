@@ -7,6 +7,8 @@ NEW FEATURES:
 
  * readStats() and readTotalCNsAndBAFs() for SeqzFile no longer outputs
    a progress bar in non-interactive mode.
+
+ * mpileup() now outputs sessionDetails() as a verbose message; was stdout.
    
 BUG FIXES:
 

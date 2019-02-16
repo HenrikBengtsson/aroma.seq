@@ -46,7 +46,7 @@ setMethodS3("mpileup", "BamDataSet", function(bams, fa, Q=20, chromosomes=getSeq
     on.exit(popState(verbose))
   }
 
-
+  
   verbose && enter(verbose, "mpileup()")
   verbose && print(verbose, bams)
   verbose && print(verbose, fa)
@@ -121,7 +121,7 @@ setMethodS3("mpileup", "BamDataSet", function(bams, fa, Q=20, chromosomes=getSeq
 
     label <- sprintf("sample_%d", ii)
     work[[ii]] %<-% {
-      print(future::sessionDetails())
+      verbose && print(verbose, future::sessionDetails())
       resT <- mpileup(bam, fa=fa, chromosomes=chromosomesT, Q=Q, pathD=pathD, ..., force=force, verbose=less(verbose, 1))
       verbose && print(verbose, resT)
       .stop_if_not(length(resT) == length(todo))
@@ -235,7 +235,7 @@ setMethodS3("mpileup", "BamDataFile", function(bam, fa, Q=20, chromosomes=getSeq
     if (!force && !isFile(pathnameD) && !isFile(pathnameDz)) {
       verbose && enter(verbose, "Running samtools mpileup")
       res[[kk]] %<-% {
-        print(future::sessionDetails())
+        verbose && print(verbose, future::sessionDetails())
         pathnameT <- pushTemporaryFile(pathnameD)
 	ans <- samtoolsMpileup(refFile=getPathname(fa), bamFile=getPathname(bam), pathnameD=pathnameT, r=chr, Q=Q, verbose=verbose)
 	if (ans == 0L) popTemporaryFile(pathnameT)
