@@ -1,7 +1,7 @@
 Package: aroma.seq
 ==================
 
-Version: 0.9.2-9000 [2019-02-16]
+Version: 0.9.2-9000 [2019-07-28]
 
 NEW FEATURES:
 
@@ -9,6 +9,10 @@ NEW FEATURES:
    a progress bar in non-interactive mode.
 
  * mpileup() now outputs sessionDetails() as a verbose message; was stdout.
+
+ * pileup2seqz() requires sequenza (<= 2.1.2). If a newer version is installed,
+   then an informative error message is produced.
+
    
 BUG FIXES:
 

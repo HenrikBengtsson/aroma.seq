@@ -37,7 +37,7 @@ Suggests:
 SuggestsNote: aroma.cn,
     PSCBS,
     readr,
-    sequenza,
+    sequenza (<= 2.1.2),
     BioC (>= 3.2),
     Recommended:
     aroma.light,

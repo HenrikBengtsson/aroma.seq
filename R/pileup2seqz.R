@@ -1,5 +1,9 @@
 pileup2seqz <- function(pus, gc, sampleName, dataset, tags="seqz", organism, pathD=file.path("seqzData", fullname(dataset, tags), organism), ..., force=FALSE, verbose=FALSE) {
   use("sequenza")
+  ver <- packageVersion("sequenza")
+  if (ver > "2.1.2") {
+    stop("aroma.seq::pileup2seqz() requires sequenza (<= 2.1.2)")
+  }
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
