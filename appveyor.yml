@@ -31,12 +31,11 @@ cache:
 build_script:
   - Rscript -e "c(physical = parallel::detectCores(logical = FALSE), logical = parallel::detectCores())"
   - echo Current directory=%CD%
+  - travis-tool.sh install_r gtools markdown readr
   - travis-tool.sh install_bioc aroma.light Biobase Biostrings edgeR GenomicRanges qrqc Rsamtools ShortRead DNAcopy
   - travis-tool.sh install_r aroma.cn
   - travis-tool.sh install_bioc GenomeInfoDb
-  - travis-tool.sh install_r gtools
-  - travis-tool.sh install_bioc aroma.light QDNAseq
-  - travis-tool.sh install_r markdown
+  - travis-tool.sh install_bioc QDNAseq BiocParallel
 
 test_script:
   - travis-tool.sh run_tests
