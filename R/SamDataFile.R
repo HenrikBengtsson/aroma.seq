@@ -32,27 +32,15 @@
 # @author "HB"
 #*/###########################################################################
 setConstructorS3("SamDataFile", function(...) {
-  extend(GenericDataFile(...), c("SamDataFile", uses("AromaSeqDataFile")));
+  extend(GenericDataFile(...), c("SamDataFile", uses("AromaSeqDataFile")))
 })
 
 
 setMethodS3("as.character", "SamDataFile", function(x, ...) {
-  this <- x;
-  s <- NextMethod("as.character");
-  s;
+  this <- x
+  s <- NextMethod("as.character")
+  s
 }, protected=TRUE)
 
 
 setMethodS3("validate", "SamDataFile", validate.BamDataFile)
-
-
-############################################################################
-# HISTORY:
-# 2013-11-16
-# o Added validate() for SamDataFile.
-# 2013-11-08
-# o DOCUMENTATION: Added help on convertToBam() for SamDataFile.
-# o Renamed to use convertToBam() for both SamDataFile and SamDataSet.
-# 2012-09-25
-# o Created from BamDataFile.R.
-############################################################################

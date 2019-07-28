@@ -41,55 +41,50 @@ setMethodS3("systemCuffdiff", "default", function(cuffdiffStr="",
   }
 
   # Arguments '...':
-  dotArgs <- list(...);  ## [ Not used ]
+  dotArgs <- list(...) ## [ Not used ]
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Calling Cuffdiff executable");
+  verbose && enter(verbose, "Calling Cuffdiff executable")
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Locate executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  bin <- findCmd(commandName, verbose=less(verbose, 50));
-  verbose && cat(verbose, "Executable: ", bin);
-  verbose && cat(verbose, "Arguments passed to system2():");
+  bin <- findCmd(commandName, verbose=less(verbose, 50))
+  verbose && cat(verbose, "Executable:")
+  verbose && print(verbose, bin)
+  verbose && cat(verbose, "Arguments passed to system2():")
   verbose && str(verbose, system2ArgsList)
-  verbose && cat(verbose, "Arguments passed to Cuffdiff:");
+  verbose && cat(verbose, "Arguments passed to Cuffdiff:")
   verbose && str(verbose, cuffdiffStr)
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # System call
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && cat(verbose, "Command line args:");
-  verbose && print(verbose, cuffdiffStr);
-  verbose && cat(verbose, "System call:");
+  verbose && cat(verbose, "Command line args:")
+  verbose && print(verbose, cuffdiffStr)
+  verbose && cat(verbose, "System call:")
   cmd <- sprintf("%s %s", bin, cuffdiffStr)  ## << this is the command line
-  verbose && print(verbose, cmd);
+  verbose && print(verbose, cmd)
 
-  verbose && enter(verbose, "system2() call");
+  verbose && enter(verbose, "system2() call")
   callArgs <- list(command=bin, args=cuffdiffStr)
   callArgs <- c(callArgs, system2ArgsList)
 
-  verbose && str(verbose, callArgs);
+  verbose && str(verbose, callArgs)
   if (!.fake) {
-    res <- do.call(what=base::system2, args=callArgs);
+    res <- do.call(what=base::system2, args=callArgs)
   } else {
     cat("<fake run>\n")
-    res <- "<fake run>";
+    res <- "<fake run>"
   }
 
-  verbose && exit(verbose);
-  verbose && exit(verbose);
-  res;
+  verbose && exit(verbose)
+  verbose && exit(verbose)
+  res
 }) # systemCuffdiff()
-
-############################################################################
-# HISTORY:
-# 2013-02-15
-# o Created. TAT
-############################################################################

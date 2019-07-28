@@ -13,7 +13,7 @@ setMethodS3("readTotalCNsAndBAFs", "SeqzFile", function(this, ploidy=2, ..., ver
     Bf              = readr::col_double(),
     zygosity.normal = readr::col_character()
   )
-  data <- readr::read_tsv(pathname, col_types=col_types, progress=isVisible(verbose))
+  data <- readr::read_tsv(pathname, col_types=col_types, progress=interactive() && isVisible(verbose))
 
   depth <- data$depth.tumor + data$depth.normal
   tcn <- ploidy * data$depth.tumor/data$depth.normal
@@ -49,7 +49,7 @@ setMethodS3("readStats", "SeqzFile", function(this, ..., force=FALSE, verbose=FA
     depth.normal = readr::col_integer(),
     depth.tumor  = readr::col_integer()
   )
-  data <- readr::read_tsv(pathname, col_types=col_types, progress=isVisible(verbose))
+  data <- readr::read_tsv(pathname, col_types=col_types, progress=interactive() && isVisible(verbose))
 
   stats <- apply(data, MARGIN=2L, FUN=median, na.rm=TRUE)
   stats <- c(stats, count=nrow(data))
@@ -87,10 +87,10 @@ setMethodS3("readStats", "SeqzFileSet", function(this, ..., verbose=FALSE) {
 
 setMethodS3("readDataFrameForPSCBS", "SeqzFile", function(this, ..., verbose=FALSE) {
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
   verbose && enterf(verbose, "Loading %s data", class(this)[1])
@@ -121,10 +121,10 @@ setMethodS3("binForPSCBS", "data.frame", function(data, binSize, ..., verbose=FA
   binSize <- Arguments$getNumeric(binSize, range=c(1,Inf))
   
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
@@ -189,10 +189,10 @@ setMethodS3("segmentByPairedPSCBS", "SeqzFileSet", function(seqz, ..., binSize, 
   outPath <- Arguments$getWritablePath(outPath)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 

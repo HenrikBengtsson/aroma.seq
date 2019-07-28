@@ -50,10 +50,3 @@ setMethodS3("validate", "IlluminaFastqDataSet", function(this, ...) {
   }
   invisible(this)
 }, protected=TRUE)
-
-
-############################################################################
-# HISTORY:
-# 2012-06-29
-# o Created.
-############################################################################

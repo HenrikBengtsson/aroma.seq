@@ -32,14 +32,14 @@
 # @author "HB"
 #*/###########################################################################
 setConstructorS3("SraDataFile", function(...) {
-  extend(GenericDataFile(...), c("SraDataFile", uses("AromaSeqDataFile")));
+  extend(GenericDataFile(...), c("SraDataFile", uses("AromaSeqDataFile")))
 })
 
 
 setMethodS3("as.character", "SraDataFile", function(x, ...) {
-  this <- x;
-  s <- NextMethod("as.character");
-  s;
+  this <- x
+  s <- NextMethod("as.character")
+  s
 }, protected=TRUE)
 
 
@@ -128,10 +128,3 @@ setMethodS3("fastqDump", "SraDataFile", function(this, path=".", ..., skip=TRUE,
 
   fq
 })
-
-
-############################################################################
-# HISTORY:
-# 2014-09-29
-# o Created.
-############################################################################

@@ -29,39 +29,33 @@ setMethodS3("systemGATK", "default", function(..., verbose=FALSE) {
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Arguments '...':
-  args <- list(...);
+  args <- list(...)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Calling GATK executable");
+  verbose && enter(verbose, "Calling GATK executable")
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Locate executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  pathname <- findGATK(verbose=less(verbose, 50));
-  verbose && cat(verbose, "GATK jar file: ", pathname);
-  pathname <- Arguments$getReadablePathname(pathname);
+  pathname <- findGATK(verbose=less(verbose, 50))
+  verbose && cat(verbose, "GATK jar file:")
+  verbose && print(verbose, pathname)
+  pathname <- Arguments$getReadablePathname(pathname)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Call GATK java jar
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  .fmtArg <- c("--.*"="%s %s", ".*"="-%s %s");
-  res <- systemJavaJar(pathname, ..., .fmtArg=.fmtArg, verbose=less(verbose, 5));
+  .fmtArg <- c("--.*"="%s %s", ".*"="-%s %s")
+  res <- systemJavaJar(pathname, ..., .fmtArg=.fmtArg, verbose=less(verbose, 5))
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  res;
+  res
 }) # systemGATK()
-
-
-############################################################################
-# HISTORY:
-# 2012-09-28
-# o Created from systemPicard.R.
-############################################################################

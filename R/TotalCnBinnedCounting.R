@@ -25,23 +25,23 @@ setConstructorS3("TotalCnBinnedCounting", function(..., .reqSetClass="BamDataSet
   use("aroma.cn")
   TotalCnSmoothing <- aroma.cn::TotalCnSmoothing
 
-  extend(TotalCnSmoothing(..., .reqSetClass=.reqSetClass), "TotalCnBinnedCounting");
+  extend(TotalCnSmoothing(..., .reqSetClass=.reqSetClass), "TotalCnBinnedCounting")
 })
 
 
 setMethodS3("getExpectedOutputFullnames", "TotalCnBinnedCounting", function(this, ...) {
-  names <- NextMethod("getExpectedOutputFullnames");
-  names <- paste(names, "counts", sep=",");
-  names;
+  names <- NextMethod("getExpectedOutputFullnames")
+  names <- paste(names, "counts", sep=",")
+  names
 }, protected=TRUE)
 
 
 setMethodS3("getOutputFileSetClass", "TotalCnBinnedCounting", function(this, ...) {
-  AromaUnitTotalCnBinarySet;
+  AromaUnitTotalCnBinarySet
 }, protected=TRUE)
 
 setMethodS3("getOutputFileExtension", "TotalCnBinnedCounting", function(this, ...) {
-  ",counts.asb";
+  ",counts.asb"
 }, protected=TRUE)
 
 
@@ -50,60 +50,60 @@ setMethodS3("smoothRawCopyNumbers", "TotalCnBinnedCounting", function(this, rawC
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Counting one set of copy numbers");
-  verbose && print(verbose, rawCNs);
+  verbose && enter(verbose, "Counting one set of copy numbers")
+  verbose && print(verbose, rawCNs)
 
-  x <- getPositions(rawCNs);
-  verbose && cat(verbose, "Read positions to be binned:");
-  verbose && str(verbose, x);
+  x <- getPositions(rawCNs)
+  verbose && cat(verbose, "Read positions to be binned:")
+  verbose && str(verbose, x)
 
-  verbose && cat(verbose, "Argument 'target':");
-  verbose && str(verbose, target);
+  verbose && cat(verbose, "Argument 'target':")
+  verbose && str(verbose, target)
 
   # Setting up arguments
-  params <- getParameters(this);
-  targetUgp <- params$targetUgp;
-  params$targetUgp <- NULL;
+  params <- getParameters(this)
+  targetUgp <- params$targetUgp
+  params$targetUgp <- NULL
 
-  xOut <- target$xOut;
-  verbose && cat(verbose, "Target loci: ", hpaste(xOut));
-  by <- median(diff(sort(xOut)), na.rm=TRUE);
+  xOut <- target$xOut
+  verbose && cat(verbose, "Target loci: ", hpaste(xOut))
+  by <- median(diff(sort(xOut)), na.rm=TRUE)
 
-  verbose && cat(verbose, "Distance between target loci: ", by);
-  bx <- c(xOut[1]-by/2, xOut+by/2);
+  verbose && cat(verbose, "Distance between target loci: ", by)
+  bx <- c(xOut[1]-by/2, xOut+by/2)
 
-  verbose && cat(verbose, "Bins:");
-  verbose && str(verbose, bx);
+  verbose && cat(verbose, "Bins:")
+  verbose && str(verbose, bx)
 
-  args <- c(list(), params, list(x=x, bx=bx), ...);
+  args <- c(list(), params, list(x=x, bx=bx), ...)
 
   # Keep only known arguments
-  ns <- getNamespace("matrixStats");
-  binCounts <- get("binCounts", envir=ns, mode="function");
-  knownArguments <- names(formals(binCounts));
-  rm(list="binCounts");
-  keep <- is.element(names(args), knownArguments);
-  args <- args[keep];
+  ns <- getNamespace("matrixStats")
+  binCounts <- get("binCounts", envir=ns, mode="function")
+  knownArguments <- names(formals(binCounts))
+  rm(list="binCounts")
+  keep <- is.element(names(args), knownArguments)
+  args <- args[keep]
 
-  verbose && cat(verbose, "Calling binCounts() with arguments:");
-  verbose && str(verbose, args);
-  args$verbose <- less(verbose, 20);
-  yS <- do.call(binCounts, args=args);
-  verbose && cat(verbose, "Bin counts:");
-  verbose && str(verbose, yS);
+  verbose && cat(verbose, "Calling binCounts() with arguments:")
+  verbose && str(verbose, args)
+  args$verbose <- less(verbose, 20)
+  yS <- do.call(binCounts, args=args)
+  verbose && cat(verbose, "Bin counts:")
+  verbose && str(verbose, yS)
 
-  smoothCNs <- RawCopyNumbers(yS, x=xOut);
+  smoothCNs <- RawCopyNumbers(yS, x=xOut)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  smoothCNs;
+  smoothCNs
 }, protected=TRUE)
 
 
@@ -117,49 +117,49 @@ setMethodS3("process", "TotalCnBinnedCounting", function(this, ..., force=FALSE,
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'force':
-  force <- Arguments$getLogical(force);
+  force <- Arguments$getLogical(force)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Smoothing copy-number towards set of target loci");
+  verbose && enter(verbose, "Smoothing copy-number towards set of target loci")
 
-  ds <- getInputDataSet(this);
-  verbose && cat(verbose, "Input data set:");
-  verbose && print(verbose, ds);
+  ds <- getInputDataSet(this)
+  verbose && cat(verbose, "Input data set:")
+  verbose && print(verbose, ds)
 
   if (force) {
-    todo <- seq_along(ds);
+    todo <- seq_along(ds)
   } else {
-    todo <- findFilesTodo(this, verbose=less(verbose, 1));
+    todo <- findFilesTodo(this, verbose=less(verbose, 1))
     # Already done?
     if (length(todo) == 0L) {
-      verbose && cat(verbose, "Already done. Skipping.");
-      res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1));
-      verbose && exit(verbose);
-      return(invisible(res));
+      verbose && cat(verbose, "Already done. Skipping.")
+      res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1))
+      verbose && exit(verbose)
+      return(invisible(res))
     }
   }
 
-  params <- getParameters(this);
-  verbose && cat(verbose, "Method parameters:");
-  verbose && str(verbose, params);
+  params <- getParameters(this)
+  verbose && cat(verbose, "Method parameters:")
+  verbose && str(verbose, params)
 
-  verbose && enter(verbose, "Identifying all target positions");
-  targetList <- getTargetPositions(this, ...);
-  nbrOfChromosomes <- length(targetList);
-  verbose && str(verbose, targetList);
+  verbose && enter(verbose, "Identifying all target positions")
+  targetList <- getTargetPositions(this, ...)
+  nbrOfChromosomes <- length(targetList)
+  verbose && str(verbose, targetList)
 
-  targetUgp <- params$targetUgp;
-  platform <- getPlatform(targetUgp);
-  chipType <- getChipType(targetUgp);
-  nbrOfUnits <- nbrOfUnits(targetUgp);
-  params$targetUgp <- NULL;
+  targetUgp <- params$targetUgp
+  platform <- getPlatform(targetUgp)
+  chipType <- getChipType(targetUgp)
+  nbrOfUnits <- nbrOfUnits(targetUgp)
+  params$targetUgp <- NULL
   parameters <- list(
     targetUgp=list(
       fullname=getFullName(targetUgp),
@@ -171,15 +171,15 @@ setMethodS3("process", "TotalCnBinnedCounting", function(this, ..., force=FALSE,
     params=params
   )
   # Not needed anymore
-  targetUgp <- params <- NULL;
-  verbose && cat(verbose, "Total number of target units: ", nbrOfUnits);
-  verbose && exit(verbose);
+  targetUgp <- params <- NULL
+  verbose && cat(verbose, "Total number of target units: ", nbrOfUnits)
+  verbose && exit(verbose)
 
   # Get Class object for the output files
-  clazz <- getOutputFileClass(this);
+  clazz <- getOutputFileClass(this)
 
   # Get the filename extension for output files
-  ext <- getOutputFileExtension(this);
+  ext <- getOutputFileExtension(this)
 
   # Output directory
   path <- getPath(this)
@@ -243,7 +243,7 @@ setMethodS3("process", "TotalCnBinnedCounting", function(this, ..., force=FALSE,
 
         smoothCNs <- smoothRawCopyNumbers(this, rawCNs=rawCNs,
                                           target=target, verbose=verbose)
-        rawCNs <- NULL; # Not needed anymore
+        rawCNs <- NULL # Not needed anymore
         verbose && print(verbose, smoothCNs)
         verbose && summary(verbose, smoothCNs)
 
@@ -328,66 +328,56 @@ setMethodS3("extractRawCopyNumbers", "BamDataFile", function(this, chromosome, .
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'chromosome':
-  chromosome <- Arguments$getIndex(chromosome);
+  chromosome <- Arguments$getIndex(chromosome)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Extracting raw \"copy numbers\"");
-  verbose && cat(verbose, "Chromosome index: ", chromosome);
+  verbose && enter(verbose, "Extracting raw \"copy numbers\"")
+  verbose && cat(verbose, "Chromosome index: ", chromosome)
 
-  targetLabels <- names(getTargets(this));
-  chrLabel <- targetLabels[chromosome];  # AD HOC. /HB 2012-10-11
-  verbose && cat(verbose, "Chromosome label: ", chrLabel);
+  targetLabels <- names(getTargets(this))
+  chrLabel <- targetLabels[chromosome] # AD HOC. /HB 2012-10-11
+  verbose && cat(verbose, "Chromosome label: ", chrLabel)
 
   # Read (start) positions on current chromosome
-  gr <- GRanges(seqnames=Rle(chrLabel), ranges=IRanges(-500e6, +500e6));
-  x <- readReadPositions(this, which=gr, verbose=less(verbose, 10))$pos;
-  verbose && cat(verbose, "Read positions:");
-  verbose && str(verbose, x);
+  gr <- GRanges(seqnames=Rle(chrLabel), ranges=IRanges(-500e6, +500e6))
+  x <- readReadPositions(this, which=gr, verbose=less(verbose, 10))$pos
+  verbose && cat(verbose, "Read positions:")
+  verbose && str(verbose, x)
 
-  y <- rep(1.0, times=length(x));
-  cn <- RawCopyNumbers(y, x=x, chromosome=chromosome);
+  y <- rep(1.0, times=length(x))
+  cn <- RawCopyNumbers(y, x=x, chromosome=chromosome)
 
-  verbose && cat(verbose, "Read data:");
-  verbose && cat(verbose, cn);
+  verbose && cat(verbose, "Read data:")
+  verbose && cat(verbose, cn)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  cn;
+  cn
 }, protected=TRUE) # extractRawCopyNumbers()
 
 
 setMethodS3("getPlatform", "BamDataSet", function(this, ...) {
-  getPlatform(getOneFile(this));
+  getPlatform(getOneFile(this))
 })
 
 setMethodS3("getChipType", "BamDataSet", function(this, ...) {
-  getChipType(getOneFile(this));
+  getChipType(getOneFile(this))
 })
 
 setMethodS3("getPlatform", "BamDataFile", function(this, ...) {
-  "NGS";
+  "NGS"
 })
 
 setMethodS3("getChipType", "BamDataFile", function(this, ...) {
-  basename(getPath(this));
+  basename(getPath(this))
 })
 
 setMethodS3("getFilenameExtension", "BamDataFile", function(this, ...) {
-  "bam";
+  "bam"
 }, protected=TRUE)
-
-
-############################################################################
-# HISTORY:
-# 2013-11-24
-# o BUG FIX: smoothRawCopyNumbers() for TotalCnBinnedCounting assumed
-#   that the 'matrixStats' package was loaded.
-# 2012-10-11
-# o Created from TotalCnBinnedSmoothing.R.
-############################################################################

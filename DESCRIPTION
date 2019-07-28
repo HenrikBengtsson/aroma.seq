@@ -1,18 +1,18 @@
 Package: aroma.seq
-Version: 0.9.2
+Version: 0.10.0
 Depends:
     R (>= 3.3.1),
-    R.utils (>= 2.5.0),
-    R.filesets (>= 2.11.0),
-    aroma.core (>= 3.1.0),
-    future (>= 1.5.0)
+    R.utils (>= 2.9.0),
+    R.filesets (>= 2.13.0),
+    aroma.core (>= 3.2.0),
+    future (>= 1.14.0)
 Imports:
     methods,
     R.methodsS3 (>= 1.7.1),
-    R.oo (>= 1.21.0),
-    R.cache (>= 0.12.0),
-    matrixStats (>= 0.52.2),
-    gtools (>= 3.5.0),
+    R.oo (>= 1.22.0),
+    R.cache (>= 0.13.0),
+    matrixStats (>= 0.54.0),
+    gtools (>= 3.8.1),
     Biostrings,
     GenomeInfoDb,
     S4Vectors,
@@ -23,21 +23,22 @@ Imports:
     listenv
 Suggests:
     aroma.cn (>= 1.6.1),
-    markdown (>= 0.7.7),
+    markdown (>= 1.0),
     mgcv,
-    PSCBS (>= 0.62.0),
-    R.devices (>= 2.15.1),
-    R.rsp (>= 0.41.0),
-    readr (>= 1.1.1),
+    PSCBS (>= 0.65.0),
+    R.devices (>= 2.16.0),
+    R.rsp (>= 0.43.1),
+    readr (>= 1.3.1),
     Biobase (>= 2.32.0),
     aroma.light (>= 3.2.0),
     edgeR (>= 3.14.0),
     QDNAseq (>= 1.8.1),
     qrqc (>= 1.26.0)
-SuggestsNote: aroma.cn,
+SuggestsNote:
+    aroma.cn,
     PSCBS,
     readr,
-    sequenza,
+    sequenza (<= 2.1.2),
     BioC (>= 3.2),
     Recommended:
     aroma.light,
@@ -65,4 +66,4 @@ biocViews: Infrastructure, ProprietaryPlatforms, HighThroughputSequencing,
 ByteCompile: TRUE
 URL: https://github.com/HenrikBengtsson/aroma.seq
 BugReports: https://github.com/HenrikBengtsson/aroma.seq/issues
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1

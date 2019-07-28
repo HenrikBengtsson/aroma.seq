@@ -23,17 +23,10 @@
 # @author "HB"
 #*/###########################################################################
 setConstructorS3("FastQCDataFileSet", function(files=NULL, ...) {
-  extend(GenericDataFileSet(files=files, ...), c("FastQCDataFileSet", uses("AromaSeqDataFileSet")));
+  extend(GenericDataFileSet(files=files, ...), c("FastQCDataFileSet", uses("AromaSeqDataFileSet")))
 })
 
 setMethodS3("byPath", "FastQCDataFileSet", function(static, ..., recursive=TRUE, pattern="fastqc_data.txt$", verbose=FALSE) {
-  res <- NextMethod("byPath", recursive=recursive, pattern=pattern);
-  res;
+  res <- NextMethod("byPath", recursive=recursive, pattern=pattern)
+  res
 }, static=TRUE)
-
-
-############################################################################
-# HISTORY:
-# 2014-03-02
-# o Created.
-############################################################################

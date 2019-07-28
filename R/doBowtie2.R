@@ -45,25 +45,25 @@ setMethodS3("doBowtie2", "FastqDataSet", function(dataSet, reference, ..., verbo
   if (inherits(reference, "FastaReferenceFile")) {
   } else if (inherits(reference, "BwaIndexSet")) {
   } else {
-    throw("Argument 'reference' should either be of class 'FastaReferenceFile' or 'BwaIndexSet': ", class(reference)[1L]);
+    throw("Argument 'reference' should either be of class 'FastaReferenceFile' or 'BwaIndexSet': ", class(reference)[1L])
   }
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Bowtie2");
+  verbose && enter(verbose, "Bowtie2")
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Checking requirements
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Bowtie2/Check requirements");
-  stopifnot(isCapableOf(aroma.seq, "bwa"));
-  verbose && exit(verbose);
+  verbose && enter(verbose, "Bowtie2/Check requirements")
+  .stop_if_not(isCapableOf(aroma.seq, "bwa"))
+  verbose && exit(verbose)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -73,46 +73,39 @@ setMethodS3("doBowtie2", "FastqDataSet", function(dataSet, reference, ..., verbo
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Bowtie2 'aln' with options '-n 2' and '-q 40'.
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Bowtie2/Alignment");
+  verbose && enter(verbose, "Bowtie2/Alignment")
 
   # Retrieve Bowtie2 index set?
   if (inherits(reference, "Bowtie2IndexSet")) {
-    is <- reference;
+    is <- reference
   } else if (inherits(reference, "FastaReferenceFile")) {
-    verbose && enter(verbose, "Bowtie2/Alignment/Retrieving index set");
-    fa <- reference;
-    verbose && print(verbose, fa);
-    is <- buildBowtie2IndexSet(fa, verbose=verbose);
-    verbose && print(verbose, is);
-    verbose && exit(verbose);
+    verbose && enter(verbose, "Bowtie2/Alignment/Retrieving index set")
+    fa <- reference
+    verbose && print(verbose, fa)
+    is <- buildBowtie2IndexSet(fa, verbose=verbose)
+    verbose && print(verbose, is)
+    verbose && exit(verbose)
     # Not needed anymore
-    fa <- NULL;
+    fa <- NULL
   }
     # Not needed anymore
-  reference <- NULL;
+  reference <- NULL
 
-  alg <- Bowtie2Alignment(dataSet, indexSet=is, ...);
-  verbose && print(verbose, alg);
+  alg <- Bowtie2Alignment(dataSet, indexSet=is, ...)
+  verbose && print(verbose, alg)
 
-  bams <- process(alg, verbose=verbose);
-  verbose && print(verbose, bams);
+  bams <- process(alg, verbose=verbose)
+  verbose && print(verbose, bams)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  bams;
+  bams
 }) # doBowtie2()
 
 
 setMethodS3("doBowtie2", "default", function(...) {
-  throw("The \"default\" method is still not implemented. Please see help('doBowtie2').");
+  throw("The \"default\" method is still not implemented. Please see help('doBowtie2').")
 })
-
-
-############################################################################
-# HISTORY:
-# 2013-08-22
-# o Created.
-############################################################################

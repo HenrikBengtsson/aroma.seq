@@ -29,19 +29,19 @@
 # @author "HB"
 #*/###########################################################################
 setConstructorS3("HTSeqCountDataSet", function(files=NULL, ...) {
-  extend(TabularTextFileSet(files=files, ...), c("HTSeqCountDataSet", uses("AromaSeqDataFileSet")));
+  extend(TabularTextFileSet(files=files, ...), c("HTSeqCountDataSet", uses("AromaSeqDataFileSet")))
 })
 
 
 setMethodS3("getDepth", "HTSeqCountDataSet", function(this, ...) {
-  1L;
+  1L
 }, protected=TRUE)
 
 
 setMethodS3("getOrganism", "HTSeqCountDataSet", function(this, ...) {
-  organism <- directoryItem(this, "organism");
-  organism <- Arguments$getCharacter(organism, length=c(1L, 1L));
-  organism;
+  organism <- directoryItem(this, "organism")
+  organism <- Arguments$getCharacter(organism, length=c(1L, 1L))
+  organism
 }, protected=TRUE)
 
 
@@ -50,25 +50,25 @@ setMethodS3("byPath", "HTSeqCountDataSet", function(static, ..., recursive=FALSE
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'recursive':
-  recursive <- Arguments$getLogical(recursive);
+  recursive <- Arguments$getLogical(recursive)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Setting up ", class(static)[1L], " by path");
-  verbose && cat(verbose, "Recursive: ", recursive);
-  verbose && cat(verbose, "Filename pattern: ", pattern);
+  verbose && enter(verbose, "Setting up ", class(static)[1L], " by path")
+  verbose && cat(verbose, "Recursive: ", recursive)
+  verbose && cat(verbose, "Filename pattern: ", pattern)
 
-  res <- NextMethod("byPath", recursive=recursive, pattern=pattern);
+  res <- NextMethod("byPath", recursive=recursive, pattern=pattern)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  res;
+  res
 }, protected=TRUE)
 
 
@@ -78,10 +78,10 @@ setMethodS3("findByName", "HTSeqCountDataSet", function(static, name, tags=NULL,
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'organism':
   if (!is.null(organism)) {
-    organism <- Arguments$getOrganism(organism);
+    organism <- Arguments$getOrganism(organism)
   }
 
-  NextMethod("findByPath", subdirs=organism, paths=paths, pattern=pattern);
+  NextMethod("findByPath", subdirs=organism, paths=paths, pattern=pattern)
 }, static=TRUE)
 
 
@@ -92,79 +92,79 @@ setMethodS3("byName", "HTSeqCountDataSet", function(static, name, tags=NULL, org
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'organism':
   if (!is.null(organism)) {
-    organism <- Arguments$getOrganism(organism);
+    organism <- Arguments$getOrganism(organism)
   }
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Setting up ", class(static)[1L], " by name");
+  verbose && enter(verbose, "Setting up ", class(static)[1L], " by name")
 
-  verbose && cat(verbose, "Organism: ", organism);
+  verbose && cat(verbose, "Organism: ", organism)
 
   suppressWarnings({
     paths <- findByName(static, name, tags=tags, organism=organism,
-                                      firstOnly=FALSE, ...);
+                                      firstOnly=FALSE, ...)
   })
   if (is.null(paths)) {
-    path <- file.path(paste(c(name, tags), collapse=","), organism);
-    throw("Cannot create ", class(static)[1], ".  No such directory: ", path);
+    path <- file.path(paste(c(name, tags), collapse=","), organism)
+    throw("Cannot create ", class(static)[1], ".  No such directory: ", path)
   }
 
-  verbose && cat(verbose, "Paths to possible data sets:");
-  verbose && print(verbose, paths);
+  verbose && cat(verbose, "Paths to possible data sets:")
+  verbose && print(verbose, paths)
 
   # Record all exception
-  exList <- list();
+  exList <- list()
 
-  res <- NULL;
+  res <- NULL
   for (kk in seq_along(paths)) {
-    path <- paths[kk];
-    verbose && enter(verbose, sprintf("Trying path #%d of %d", kk, length(paths)));
-    verbose && cat(verbose, "Path: ", path);
+    path <- paths[kk]
+    verbose && enter(verbose, sprintf("Trying path #%d of %d", kk, length(paths)))
+    verbose && cat(verbose, "Path: ", path)
 
     tryCatch({
       suppressWarnings({
-        res <- byPath(static, path=path, ..., verbose=verbose);
-      });
+        res <- byPath(static, path=path, ..., verbose=verbose)
+      })
     }, error = function(ex) {
-      exList <<- append(exList, list(list(exception=ex, path=path)));
+      exList <<- append(exList, list(list(exception=ex, path=path)))
 
-      verbose && cat(verbose, "Data set could not be setup for this path, because:");
-      verbose && cat(verbose, ex$message);
-    });
+      verbose && cat(verbose, "Data set could not be setup for this path, because:")
+      verbose && cat(verbose, ex$message)
+    })
 
     if (!is.null(res)) {
       if (length(res) > 0) {
-        verbose && cat(verbose, "Successful setup of data set.");
-        verbose && exit(verbose);
-        break;
+        verbose && cat(verbose, "Successful setup of data set.")
+        verbose && exit(verbose)
+        break
       }
     }
 
-    verbose && exit(verbose);
+    verbose && exit(verbose)
   } # for (kk ...)
 
   if (is.null(res)) {
     exMsgs <- sapply(exList, FUN=function(ex) {
       sprintf("%s (while trying '%s').",
-                   ex$exception$message, ex$path);
-    });
-    exMsgs <- sprintf("(%d) %s", seq_along(exMsgs), exMsgs);
-    exMsgs <- paste(exMsgs, collapse="  ");
-    msg <- sprintf("Failed to setup a data set for any of %d data directories located. The following reasons were reported: %s", length(paths), exMsgs);
-    verbose && cat(verbose, msg);
-    throw(msg);
+                   ex$exception$message, ex$path)
+    })
+    exMsgs <- sprintf("(%d) %s", seq_along(exMsgs), exMsgs)
+    exMsgs <- paste(exMsgs, collapse="  ")
+    msg <- sprintf("Failed to setup a data set for any of %d data directories located. The following reasons were reported: %s", length(paths), exMsgs)
+    verbose && cat(verbose, msg)
+    throw(msg)
   }
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  res;
+  res
 }, static=TRUE)
 
 
@@ -196,28 +196,28 @@ setMethodS3("byName", "HTSeqCountDataSet", function(static, name, tags=NULL, org
 #*/###########################################################################
 setMethodS3("readDGE", "HTSeqCountDataSet", function(this, labels=getFullNames(this), ...) {
   use("edgeR")
-  ns <- getNamespace("edgeR");
-  readDGE <- get("readDGE", envir=ns, mode="function");
+  ns <- getNamespace("edgeR")
+  readDGE <- get("readDGE", envir=ns, mode="function")
 
-  pathnames <- getPathnames(this);
+  pathnames <- getPathnames(this)
 
   # Argument 'labels':
-  labels <- Arguments$getCharacters(labels, length=rep(length(pathnames), times=2L));
+  labels <- Arguments$getCharacters(labels, length=rep(length(pathnames), times=2L))
 
   # Read
-  data <- readDGE(pathnames, labels=labels, ...);
+  data <- readDGE(pathnames, labels=labels, ...)
 
   # Drop "__no_feature" etc.
-  genes <- rownames(data);
-  genes <- genes[!grepl("^__", genes)];
-  data <- data[genes,];
+  genes <- rownames(data)
+  genes <- genes[!grepl("^__", genes)]
+  data <- data[genes,]
 
-  data;
+  data
 }, protected=TRUE)
 
 
 setMethodS3("extractDGEList", "HTSeqCountDataSet", function(this, ...) {
-  readDGE(this, ...);
+  readDGE(this, ...)
 })
 
 
@@ -237,7 +237,7 @@ setMethodS3("extractCounts", "HTSeqCountDataFile", function(this, ..., drop=FALS
     colnames(data) <- getName(this)
   }
 
-  data;
+  data
 })
 
 setMethodS3("extractCounts", "HTSeqCountDataSet", function(this, rows=NULL, ...) {
@@ -251,20 +251,7 @@ setMethodS3("extractCounts", "HTSeqCountDataSet", function(this, rows=NULL, ...)
   }
 
   data <- extractMatrix(this, column=2L, colClass="integer", rows=rows, ...)
-  rownames(data) <- genes;
+  rownames(data) <- genes
 
-  data;
+  data
 })
-
-
-
-############################################################################
-# HISTORY:
-# 2014-08-27
-# o Added extractCounts() for HTSeqCountDataFile and HTSeqCountDataSet.
-# o BUG FIX/ROBUSTNESS: Now extractMatrix() and readDGE() for
-#   HTSeqCountDataSet drops "genes" with prefix '__' in case they exists,
-#   e.g. "__no_feature", "__ambiguous", etc.
-# 2014-01-24
-# o Created.
-############################################################################

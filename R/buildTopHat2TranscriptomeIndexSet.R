@@ -31,11 +31,11 @@ setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(thi
   # Local functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   hasCommas <- function(pathnames, ...) {
-    (regexpr(",", pathnames, fixed=TRUE) != -1L);
+    (regexpr(",", pathnames, fixed=TRUE) != -1L)
   } # hasCommas()
 
   assertNoCommas <- function(pathnames, ...) {
-    stopifnot(!any(hasCommas(pathnames)));
+    .stop_if_not(!any(hasCommas(pathnames)))
   } # assertNoCommas()
 
 
@@ -49,7 +49,7 @@ setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(thi
 
   # Argument 'fa':
   if (!is.null(fa)) {
-    fa <- Arguments$getInstanceOf(fa, "FastaReferenceFile");
+    fa <- Arguments$getInstanceOf(fa, "FastaReferenceFile")
   }
 
   # Argument 'outPath':
@@ -109,45 +109,45 @@ setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(thi
   # Call TopHat executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Assert TopHat and that it is of a sufficient version
-  stopifnot(isCapableOf(aroma.seq, "tophat2"))
+  .stop_if_not(isCapableOf(aroma.seq, "tophat2"))
   verT <- attr(findTopHat2(), "version")
   if (verT < '2.0.10') throw("TopHat version >= 2.0.10 required")
 
   # Link to existing FASTA file (avoids having tophat2 to recreate it)
-  if (is.null(fa)) fa <- getFastaReferenceFile(this);
-  verbose && cat(verbose, "FASTA:");
-  verbose && print(verbose, fa);
-  linkTo(fa, path=getPath(this));
+  if (is.null(fa)) fa <- getFastaReferenceFile(this)
+  verbose && cat(verbose, "FASTA:")
+  verbose && print(verbose, fa)
+  linkTo(fa, path=getPath(this))
 
   # Output to temporary directory
-  outPathT <- sprintf("%s.tmp", outPath);
+  outPathT <- sprintf("%s.tmp", outPath)
 
   # (Pre-existing) index for the reference genome
   res <- tophat(getIndexPrefix(this), gtf=pathnameGTF, outPath=outPathT,
                 optionsVec=c("--transcriptome-index"="."),
                 ..., verbose=less(verbose, 10))
-  status <- attr(res, "status"); if (is.null(status)) status <- 0L;
-  verbose && cat(verbose, "Results:");
-  verbose && str(verbose, res);
-  verbose && cat(verbose, "Status: ", status);
+  status <- attr(res, "status"); if (is.null(status)) status <- 0L
+  verbose && cat(verbose, "Results:")
+  verbose && str(verbose, res)
+  verbose && cat(verbose, "Status: ", status)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Cleanup
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Remove local tmp/ directory, if exists and empty
-  pathT <- file.path(outPathT, "tmp");
+  pathT <- file.path(outPathT, "tmp")
   if (isDirectory(pathT) && length(listDirectory(pathT, private=TRUE)) == 0L) {
-    removeDirectory(pathT);
+    removeDirectory(pathT)
   }
 
   # Rename any remaining local directories
-  dirs <- listDirectory(outPathT, private=TRUE, fullNames=TRUE);
-  dirs <- dirs[isDirectory(dirs)];
+  dirs <- listDirectory(outPathT, private=TRUE, fullNames=TRUE)
+  dirs <- dirs[isDirectory(dirs)]
   for (pathT in dirs) {
-    dirTT <- sprintf("%s.%s", getFullName(gtf), basename(pathT));
-    pathTT <- file.path(outPathT, dirTT);
-    file.rename(pathT, pathTT);
+    dirTT <- sprintf("%s.%s", getFullName(gtf), basename(pathT))
+    pathTT <- file.path(outPathT, dirTT)
+    file.rename(pathT, pathTT)
   }
 
   # Try to setup index set
@@ -157,19 +157,19 @@ setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(thi
   isCompatibleWith(tis, gtf, mustWork=TRUE, verbose=less(verbose, 50))
 
   # Move all related files and directories one by one to final destination
-  pattern <- sprintf("^%s[.]", prefixName);
+  pattern <- sprintf("^%s[.]", prefixName)
   for (filename in listDirectory(path=outPathT, pattern=pattern)) {
-    pathnameS <- file.path(outPathT, filename);
-    pathnameD <- file.path(outPath, filename);
-    renameFile(pathnameS, pathnameD, overwrite=FALSE);
+    pathnameS <- file.path(outPathT, filename)
+    pathnameD <- file.path(outPath, filename)
+    renameFile(pathnameS, pathnameD, overwrite=FALSE)
   }
 
   # Assert that all files have been moved
-  stopifnot(length(listDirectory(outPathT, pattern=pattern)) == 0L);
+  .stop_if_not(length(listDirectory(outPathT, pattern=pattern)) == 0L)
 
   # Remove temporary directory, if empty
   if (length(listDirectory(outPathT, private=TRUE)) == 0L) {
-    removeDirectory(outPathT);
+    removeDirectory(outPathT)
   }
 
 
@@ -188,23 +188,3 @@ setMethodS3("buildTopHat2TranscriptomeIndexSet", "Bowtie2IndexSet", function(thi
 
   tis
 }) # buildTopHat2TranscriptomeIndexSet()
-
-
-
-############################################################################
-# HISTORY:
-# 2014-08-23 [HB]
-# o BUG FIX: buildTopHat2TranscriptomeIndexSet() would give an error
-#   if the final destination directory already existed.
-# o CLEANUP: Now any logs/ directory is renamed to <fullname>.logs/.
-# o CLEANUP: Now any empty tmp/ directories are removed at the end.
-# o ROBUSTNESS: Now buildTopHat2TranscriptomeIndexSet() asserts that the
-#   returned index set is compatible with the input index set file.
-# 2014-07-22 [HB]
-# o ROBUSTNESS: Now buildTopHat2TranscriptomeIndexSet() asserts that the
-#   Bowtie2 index set and GTF have compatible sequence names and that
-#   the GTF filename has no commas.
-# o CLEANUP: Tidied up code and harmonized with the rest of the package.
-# 2014-02-04 [TT]
-# o Created.
-############################################################################

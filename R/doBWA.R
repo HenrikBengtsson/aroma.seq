@@ -47,25 +47,25 @@ setMethodS3("doBWA", "AromaSeqDataFileSet", function(dataSet, reference, ..., ve
   if (inherits(reference, "FastaReferenceFile")) {
   } else if (inherits(reference, "BwaIndexSet")) {
   } else {
-    throw("Argument 'reference' should either be of class 'FastaReferenceFile' or 'BwaIndexSet': ", class(reference)[1L]);
+    throw("Argument 'reference' should either be of class 'FastaReferenceFile' or 'BwaIndexSet': ", class(reference)[1L])
   }
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "BWA");
+  verbose && enter(verbose, "BWA")
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Checking requirements
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "BWA/Check requirements");
-  stopifnot(isCapableOf(aroma.seq, "bwa"));
-  verbose && exit(verbose);
+  verbose && enter(verbose, "BWA/Check requirements")
+  .stop_if_not(isCapableOf(aroma.seq, "bwa"))
+  verbose && exit(verbose)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -75,47 +75,39 @@ setMethodS3("doBWA", "AromaSeqDataFileSet", function(dataSet, reference, ..., ve
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # BWA 'aln' with options '-n 2' and '-q 40'.
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "BWA/Alignment");
+  verbose && enter(verbose, "BWA/Alignment")
 
   # Retrieve BWA index set?
   if (inherits(reference, "BwaIndexSet")) {
-    is <- reference;
+    is <- reference
   } else if (inherits(reference, "FastaReferenceFile")) {
-    verbose && enter(verbose, "BWA/Alignment/Retrieving index set");
-    fa <- reference;
-    verbose && print(verbose, fa);
-    is <- buildBwaIndexSet(fa, verbose=verbose);
-    verbose && print(verbose, is);
-    verbose && exit(verbose);
+    verbose && enter(verbose, "BWA/Alignment/Retrieving index set")
+    fa <- reference
+    verbose && print(verbose, fa)
+    is <- buildBwaIndexSet(fa, verbose=verbose)
+    verbose && print(verbose, is)
+    verbose && exit(verbose)
     # Not needed anymore
-    fa <- NULL;
+    fa <- NULL
   }
     # Not needed anymore
-  reference <- NULL;
+  reference <- NULL
 
-  alg <- BwaAlignment(dataSet, indexSet=is, ...);
-  verbose && print(verbose, alg);
+  alg <- BwaAlignment(dataSet, indexSet=is, ...)
+  verbose && print(verbose, alg)
 
-  bs <- process(alg, verbose=verbose);
-  verbose && print(verbose, bs);
+  bs <- process(alg, verbose=verbose)
+  verbose && print(verbose, bs)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  bs;
+  bs
 }) # doBWA()
 
 
 setMethodS3("doBWA", "default", function(...) {
   throw("The \"default\" method is still not implemented. Please see help('doBWA').")
 })
-
-############################################################################
-# HISTORY:
-# 2013-11-17
-# o Now doBWA() builds BWA indices using method 'bwtsw' (was 'is').
-# 2013-08-22
-# o Created.
-############################################################################

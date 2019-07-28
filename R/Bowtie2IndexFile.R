@@ -33,21 +33,14 @@
 # @keyword internal
 #*/###########################################################################
 setConstructorS3("Bowtie2IndexFile", function(...) {
-  extend(AbstractIndexFile(...), "Bowtie2IndexFile");
+  extend(AbstractIndexFile(...), "Bowtie2IndexFile")
 })
 
 
 setMethodS3("getIndexPrefix", "Bowtie2IndexFile", function(this, ...) {
-  path <- getPath(this);
-  fullname <- getFullName(this);
-  fullname <- gsub("(|[.]rev)[.][0-9]$", "", fullname);
-  prefix <- file.path(path, fullname);
-  prefix;
+  path <- getPath(this)
+  fullname <- getFullName(this)
+  fullname <- gsub("(|[.]rev)[.][0-9]$", "", fullname)
+  prefix <- file.path(path, fullname)
+  prefix
 })
-
-
-############################################################################
-# HISTORY:
-# 2012-09-25
-# o Created.
-############################################################################

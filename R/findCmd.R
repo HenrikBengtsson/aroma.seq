@@ -34,52 +34,45 @@ setMethodS3("findCmd", "default", function(command, mustExist=TRUE, ..., verbose
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'command':
-  command <- Arguments$getCharacter(command);
+  command <- Arguments$getCharacter(command)
   if (nchar(command) < 1) {
-    throw(sprintf("Failed to locate executable:  command argument is NULL."));
+    throw(sprintf("Failed to locate executable:  command argument is NULL."))
   }
 
   # Argument 'mustExist':
-  mustExist <- Arguments$getLogical(mustExist);
+  mustExist <- Arguments$getLogical(mustExist)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Locating software");
-  verbose && cat(verbose, "Command: ", command);
+  verbose && enter(verbose, "Locating software")
+  verbose && cat(verbose, "Command: ", command)
 
   # Check for cached results
-  res <- .findCache(name=command);
+  res <- .findCache(name=command)
   if (!is.null(res)) {
-    pathname <- res$path;
-    verbose && cat(verbose, "Found cached result.");
-    verbose && exit(verbose);
-    return(pathname);
+    pathname <- res$path
+    verbose && cat(verbose, "Found cached result.")
+    verbose && exit(verbose)
+    return(pathname)
   }
 
-  pathname <- Sys.which(command);
-  if (identical(pathname, "")) pathname <- NULL;
-  if (!isFile(pathname)) pathname <- NULL;
-  verbose && cat(verbose, "Located pathname: ", pathname);
+  pathname <- Sys.which(command)
+  if (identical(pathname, "")) pathname <- NULL
+  if (!isFile(pathname)) pathname <- NULL
+  verbose && cat(verbose, "Located pathname: ", pathname)
 
   if (isFile(pathname)) {
-    .findCache(name=command, path=pathname);
+    .findCache(name=command, path=pathname)
   } else if (mustExist) {
-    throw(sprintf("Failed to locate (executable '%s').", command));
+    throw(sprintf("Failed to locate (executable '%s').", command))
   }
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  pathname;
+  pathname
 }) # findCmd()
-
-
-############################################################################
-# HISTORY:
-# 2013-01-29
-# o Created TAT
-############################################################################

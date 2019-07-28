@@ -14,7 +14,7 @@
 
 \description{
  Records expressions to be executed when the current function exits (regardless of cause).
- This methtod differ from \code{\link[base]{on.exit}}() in that it adds the
+ This method differ from \code{\link[base]{on.exit}}() in that it adds the
  option to \emph{prepend} an expression to already existing expressed,
  as an alternative to the default \emph{append}.
 

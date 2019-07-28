@@ -6,7 +6,7 @@
 # \description{
 #  @classhierarchy
 #
-#  A BwaIndexFile object represents a Bwa index file.
+#  A BwaIndexFile object represents a BWA index file.
 # }
 #
 # @synopsis
@@ -33,12 +33,5 @@
 # @keyword internal
 #*/###########################################################################
 setConstructorS3("BwaIndexFile", function(...) {
-  extend(AbstractIndexFile(...), "BwaIndexFile");
+  extend(AbstractIndexFile(...), "BwaIndexFile")
 })
-
-
-############################################################################
-# HISTORY:
-# 2012-09-25
-# o Created.
-############################################################################

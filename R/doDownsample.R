@@ -38,20 +38,20 @@ setMethodS3("doDownsample", "BamDataSet", function(dataSet, subset=1e6, ..., ver
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Downsampling");
-  ds <- BamDownsampler(dataSet, subset=subset, ...);
-  verbose && print(verbose, ds);
-  dsOut <- process(ds, verbose=verbose);
-  verbose && print(verbose, dsOut);
-  verbose && exit(verbose);
+  verbose && enter(verbose, "Downsampling")
+  ds <- BamDownsampler(dataSet, subset=subset, ...)
+  verbose && print(verbose, ds)
+  dsOut <- process(ds, verbose=verbose)
+  verbose && print(verbose, dsOut)
+  verbose && exit(verbose)
 
-  dsOut;
+  dsOut
 }) # doDownsample()
 
 
@@ -60,33 +60,23 @@ setMethodS3("doDownsample", "FastqDataSet", function(dataSet, subset=1e6, ..., v
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Downsampling");
-  ds <- FastqDownsampler(dataSet, subset=subset, ...);
-  verbose && print(verbose, ds);
-  dsOut <- process(ds, verbose=verbose);
-  verbose && print(verbose, dsOut);
-  verbose && exit(verbose);
+  verbose && enter(verbose, "Downsampling")
+  ds <- FastqDownsampler(dataSet, subset=subset, ...)
+  verbose && print(verbose, ds)
+  dsOut <- process(ds, verbose=verbose)
+  verbose && print(verbose, dsOut)
+  verbose && exit(verbose)
 
-  dsOut;
+  dsOut
 }) # doDownsample()
 
 
 setMethodS3("doDownsample", "default", function(...) {
-  throw("The \"default\" method is still not implemented. Please see help('doDownsample').");
+  throw("The \"default\" method is still not implemented. Please see help('doDownsample').")
 })
-
-
-############################################################################
-# HISTORY:
-# 2014-04-23
-# o BUG FIX: doDownsample() for FastqDataSet ignored argument 'subset'.
-# 2014-04-18
-# o Added doDownsample() for BamDataSet and FastqDataSet.
-# o Created.
-############################################################################

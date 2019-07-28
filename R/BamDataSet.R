@@ -23,7 +23,7 @@
 # @author "HB"
 #*/###########################################################################
 setConstructorS3("BamDataSet", function(files=NULL, ...) {
-  extend(GenericDataFileSet(files=files, ...), c("BamDataSet", uses("AromaSeqDataFileSet")));
+  extend(GenericDataFileSet(files=files, ...), c("BamDataSet", uses("AromaSeqDataFileSet")))
 })
 
 setMethodS3("as.character", "BamDataSet", function(x, ...) {
@@ -42,20 +42,20 @@ setMethodS3("as.character", "BamDataSet", function(x, ...) {
 })
 
 setMethodS3("getOrganism", "BamDataSet", function(this, ...) {
-  organism <- directoryItem(this, "organism");
-  organism <- Arguments$getCharacter(organism, length=c(1L, 1L));
-  organism;
-}, protected=TRUE);
+  organism <- directoryItem(this, "organism")
+  organism <- Arguments$getCharacter(organism, length=c(1L, 1L))
+  organism
+}, protected=TRUE)
 
 
 setMethodS3("getDepth", "BamDataSet", function(this, ...) {
-  path <- getPath(this, absolute=FALSE);
-  parts <- unlist(strsplit(path, split="/", fixed=TRUE));
-  nparts <- length(parts);
-  depth <- nparts - 2L;
-  depth <- Arguments$getInteger(depth, range=c(0,Inf));
-  depth;
-}, protected=TRUE);
+  path <- getPath(this, absolute=FALSE)
+  parts <- unlist(strsplit(path, split="/", fixed=TRUE))
+  nparts <- length(parts)
+  depth <- nparts - 2L
+  depth <- Arguments$getInteger(depth, range=c(0,Inf))
+  depth
+}, protected=TRUE)
 
 
 setMethodS3("findByName", "BamDataSet", function(static, name, tags=NULL, organism=NULL, ..., paths="bamData", pattern="[.](bam|BAM)$") {
@@ -64,15 +64,15 @@ setMethodS3("findByName", "BamDataSet", function(static, name, tags=NULL, organi
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'organism':
   if (!is.null(organism)) {
-    organism <- Arguments$getOrganism(organism);
+    organism <- Arguments$getOrganism(organism)
   }
 
-  NextMethod("findByPath", subdirs=organism, paths=paths, pattern=pattern);
+  NextMethod("findByPath", subdirs=organism, paths=paths, pattern=pattern)
 }, static=TRUE)
 
 
 setMethodS3("byPath", "BamDataSet", function(static, ..., pattern="[.](bam|BAM)$") {
-  NextMethod("byPath", pattern=pattern);
+  NextMethod("byPath", pattern=pattern)
 }, static=TRUE)
 
 
@@ -82,79 +82,79 @@ setMethodS3("byName", "BamDataSet", function(static, name, tags=NULL, organism=N
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'organism':
   if (!is.null(organism)) {
-    organism <- Arguments$getOrganism(organism);
+    organism <- Arguments$getOrganism(organism)
   }
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Setting up ", class(static)[1L], " by name");
+  verbose && enter(verbose, "Setting up ", class(static)[1L], " by name")
 
-  verbose && cat(verbose, "Organism: ", organism);
+  verbose && cat(verbose, "Organism: ", organism)
 
   suppressWarnings({
     paths <- findByName(static, name, tags=tags, organism=organism,
-                                                   firstOnly=FALSE, ...);
+                                                   firstOnly=FALSE, ...)
   })
   if (is.null(paths)) {
-    path <- file.path(paste(c(name, tags), collapse=","), organism);
-    throw("Cannot create ", class(static)[1], ".  No such directory: ", path);
+    path <- file.path(paste(c(name, tags), collapse=","), organism)
+    throw("Cannot create ", class(static)[1], ".  No such directory: ", path)
   }
 
-  verbose && cat(verbose, "Paths to possible data sets:");
-  verbose && print(verbose, paths);
+  verbose && cat(verbose, "Paths to possible data sets:")
+  verbose && print(verbose, paths)
 
   # Record all exception
-  exList <- list();
+  exList <- list()
 
-  res <- NULL;
+  res <- NULL
   for (kk in seq_along(paths)) {
-    path <- paths[kk];
-    verbose && enter(verbose, sprintf("Trying path #%d of %d", kk, length(paths)));
-    verbose && cat(verbose, "Path: ", path);
+    path <- paths[kk]
+    verbose && enter(verbose, sprintf("Trying path #%d of %d", kk, length(paths)))
+    verbose && cat(verbose, "Path: ", path)
 
     tryCatch({
       suppressWarnings({
-        res <- byPath(static, path=path, ..., verbose=verbose);
-      });
+        res <- byPath(static, path=path, ..., verbose=verbose)
+      })
     }, error = function(ex) {
-      exList <<- append(exList, list(list(exception=ex, path=path)));
+      exList <<- append(exList, list(list(exception=ex, path=path)))
 
-      verbose && cat(verbose, "Data set could not be setup for this path, because:");
-      verbose && cat(verbose, ex$message);
-    });
+      verbose && cat(verbose, "Data set could not be setup for this path, because:")
+      verbose && cat(verbose, ex$message)
+    })
 
     if (!is.null(res)) {
       if (length(res) > 0) {
-        verbose && cat(verbose, "Successful setup of data set.");
-        verbose && exit(verbose);
-        break;
+        verbose && cat(verbose, "Successful setup of data set.")
+        verbose && exit(verbose)
+        break
       }
     }
 
-    verbose && exit(verbose);
+    verbose && exit(verbose)
   } # for (kk ...)
 
   if (is.null(res)) {
     exMsgs <- sapply(exList, FUN=function(ex) {
       sprintf("%s (while trying '%s').",
-                   ex$exception$message, ex$path);
-    });
-    exMsgs <- sprintf("(%d) %s", seq_along(exMsgs), exMsgs);
-    exMsgs <- paste(exMsgs, collapse="  ");
-    msg <- sprintf("Failed to setup a data set for any of %d data directories located. The following reasons were reported: %s", length(paths), exMsgs);
-    verbose && cat(verbose, msg);
-    throw(msg);
+                   ex$exception$message, ex$path)
+    })
+    exMsgs <- sprintf("(%d) %s", seq_along(exMsgs), exMsgs)
+    exMsgs <- paste(exMsgs, collapse="  ")
+    msg <- sprintf("Failed to setup a data set for any of %d data directories located. The following reasons were reported: %s", length(paths), exMsgs)
+    verbose && cat(verbose, msg)
+    throw(msg)
   }
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  res;
+  res
 }, static=TRUE)
 
 
@@ -188,19 +188,3 @@ setMethodS3("isPaired", "BamDataSet", function(this, ..., force = FALSE) {
   }
   paired
 })
-
-
-############################################################################
-# HISTORY:
-# 2015-05-06
-# o Added splitByTargetType() to BamDataSet.
-# 2013-11-11
-# o BUG FIX: BamDataSet$byPath() would include also SAM files.
-# 2013-11-09
-# o Added static findByName() and byName() for BamDataSet.
-# o Added getOrganism() to BamDataSet.
-# 2012-09-25
-# o Added getDepth().
-# 2012-06-28
-# o Created.
-############################################################################

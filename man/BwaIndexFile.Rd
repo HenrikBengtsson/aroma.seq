@@ -35,7 +35,7 @@ extends \emph{\link[aroma.seq]{AbstractIndexFile}}\cr
 
 
 
- A BwaIndexFile object represents a Bwa index file.
+ A BwaIndexFile object represents a BWA index file.
 }
 
 \usage{

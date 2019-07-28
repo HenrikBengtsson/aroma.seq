@@ -27,7 +27,7 @@
 # }
 #
 # \section{Supported operating systems}{
-#   This method is available on Linux, OSX, and Windows [1].
+#   This method is available on Linux, macOS, and Windows [1].
 # }
 #
 # @author HB
@@ -48,106 +48,106 @@ setConstructorS3("FastQCReporter", function(dataSet=NULL, groupBy=NULL, ..., .cl
   if (!is.null(dataSet)) {
     # Argument 'groupBy':
     if (is.character(groupBy)) {
-      groupBy <- match.arg(groupBy, choices=c("name"));
+      groupBy <- match.arg(groupBy, choices=c("name"))
     } else if (is.list(groupBy)) {
       # Validated below
     } else {
-      throw("Invalid argument 'groupBy': ", mode(groupBy));
+      throw("Invalid argument 'groupBy': ", mode(groupBy))
     }
   }
 
-  this <- extend(AromaSeqTransform(dataSet, groupBy=groupBy, ..., .className=.className), c("FastQCReporter", uses("FileGroupsInterface")));
+  this <- extend(AromaSeqTransform(dataSet, groupBy=groupBy, ..., .className=.className), c("FastQCReporter", uses("FileGroupsInterface")))
 
   # Argument 'groupBy':
   if (is.list(groupBy)) {
-    validateGroups(this, groups=groupBy);
+    validateGroups(this, groups=groupBy)
   }
 
-  this;
+  this
 })
 
 setMethodS3("getRootPath", "FastQCReporter", function(this, ...) {
-  "reports";
+  "reports"
 }, protected=TRUE)
 
 setMethodS3("getAsteriskTags", "FastQCReporter", function(this, ...) {
   # The 'groupBy' tag
-  params <- getParameters(this);
-  groupBy <- params$groupBy;
+  params <- getParameters(this)
+  groupBy <- params$groupBy
   if (is.character(groupBy)) {
-    groupBy <- sprintf("by%s", capitalize(groupBy));
+    groupBy <- sprintf("by%s", capitalize(groupBy))
   } else {
     # Generate a short checksum
-    groupBy <- getChecksum(groupBy, algo="crc32");
+    groupBy <- getChecksum(groupBy, algo="crc32")
   }
 
-  c("FastQC", groupBy);
+  c("FastQC", groupBy)
 }, protected=TRUE)
 
 
 setMethodS3("getOutputDataSet", "FastQCReporter", function(this, onMissing=c("drop", "NA", "error"), ...) {
   # Argument 'onMissing':
-  onMissing <- match.arg(onMissing);
+  onMissing <- match.arg(onMissing)
 
 
   ## Find all existing output data files
-  path <- getPath(this);
-  fqcs <- FastQCDataFileSet$byPath(path, ...);
+  path <- getPath(this)
+  fqcs <- FastQCDataFileSet$byPath(path, ...)
 
   ## Order according to grouped input data set
-  names <- getGroupNames(this);
-  fqcs <- extract(fqcs, names, onMissing=onMissing);
+  names <- getGroupNames(this)
+  fqcs <- extract(fqcs, names, onMissing=onMissing)
 
-  fqcs;
+  fqcs
 }) # getOutputDataSet() for FastQCReporter
 
 
 
 setMethodS3("process", "FastQCReporter", function(this, ..., skip=TRUE, force=FALSE, verbose=FALSE) {
   # Requirements
-  stopifnot(isCapableOf(aroma.seq, "fastqc"));
+  .stop_if_not(isCapableOf(aroma.seq, "fastqc"))
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'force':
-  force <- Arguments$getLogical(force);
+  force <- Arguments$getLogical(force)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Generating FastQC reports");
-  ds <- getInputDataSet(this);
-  verbose && cat(verbose, "Input data set:");
-  verbose && print(verbose, ds);
+  verbose && enter(verbose, "Generating FastQC reports")
+  ds <- getInputDataSet(this)
+  verbose && cat(verbose, "Input data set:")
+  verbose && print(verbose, ds)
 
-  groups <- getGroups(this);
-  verbose && printf(verbose, "Merging into %d groups: %s\n", length(groups), hpaste(names(groups)));
-  verbose && str(verbose, head(groups));
+  groups <- getGroups(this)
+  verbose && printf(verbose, "Merging into %d groups: %s\n", length(groups), hpaste(names(groups)))
+  verbose && str(verbose, head(groups))
 
   if (force) {
-    todo <- seq_along(groups);
+    todo <- seq_along(groups)
   } else {
-    todo <- findFilesTodo(this, verbose=less(verbose, 1));
+    todo <- findFilesTodo(this, verbose=less(verbose, 1))
     # Already done?
     if (length(todo) == 0L) {
-      verbose && cat(verbose, "Already done. Skipping.");
-      res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1));
-      verbose && exit(verbose);
-      return(invisible(res));
+      verbose && cat(verbose, "Already done. Skipping.")
+      res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1))
+      verbose && exit(verbose)
+      return(invisible(res))
     }
   }
 
-  verbose && cat(verbose, "Number of files: ", length(ds));
-  verbose && cat(verbose, "Number of groups: ", length(groups));
+  verbose && cat(verbose, "Number of files: ", length(ds))
+  verbose && cat(verbose, "Number of groups: ", length(groups))
 
-  path <- getPath(this);
-  verbose && cat(verbose, "Output path: ", path);
+  path <- getPath(this)
+  verbose && cat(verbose, "Output path: ", path)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -190,7 +190,7 @@ setMethodS3("process", "FastQCReporter", function(this, ..., skip=TRUE, force=FA
       pathDT <- sprintf("%s.tmp", pathD)
       verbose && cat(verbose, "Temporary output path: ", pathDT)
 
-      # FIXME: Make this method smarter about passing the --casava option;
+      # FIXME: Make this method smarter about passing the --casava option
       # From http://seqanswers.com/forums/showpost.php?p=58152&postcount=200:
       # "Those names don't look like the names generated by Casava. According
       #  to the docs I've got the fastq file names should follow the pattern:
@@ -205,7 +205,7 @@ setMethodS3("process", "FastQCReporter", function(this, ..., skip=TRUE, force=FA
       verbose && print(verbose, res)
 
       # Sanity check
-      stopifnot(isDirectory(pathDT))
+      .stop_if_not(isDirectory(pathDT))
 
 
       # FIXME: Do we need to pool here?  Does fastQC() return before output
@@ -219,7 +219,7 @@ setMethodS3("process", "FastQCReporter", function(this, ..., skip=TRUE, force=FA
                            ignore.case=TRUE, full.names=FALSE)
       if (length(filesT) > 0L) {
         # Sanity check
-        stopifnot(length(filesT) == 1L)
+        .stop_if_not(length(filesT) == 1L)
 
         # FastQC (>= 0.11.1)
         # Unzip *_fastqc.zip file
@@ -243,11 +243,11 @@ setMethodS3("process", "FastQCReporter", function(this, ..., skip=TRUE, force=FA
       }
 
       # Sanity check
-      stopifnot(length(dirT) > 0L)
-      stopifnot(length(dirT) == 1L)
+      .stop_if_not(length(dirT) > 0L)
+      .stop_if_not(length(dirT) == 1L)
 
       pathT <- file.path(pathDT, dirT)
-      stopifnot(isDirectory(pathT))
+      .stop_if_not(isDirectory(pathT))
 
       # Sanity check
       pathnameDT <- file.path(pathT, filenameD)
@@ -264,14 +264,14 @@ setMethodS3("process", "FastQCReporter", function(this, ..., skip=TRUE, force=FA
       file.rename(pathT, pathD)
 
       # Sanity check
-      stopifnot(!isDirectory(pathT))
+      .stop_if_not(!isDirectory(pathT))
 
       # CLEANUP
       removeDirectory(pathDT)
 
       # Sanity check
-      stopifnot(isDirectory(pathD))
-      stopifnot(!isDirectory(pathDT))
+      .stop_if_not(isDirectory(pathD))
+      .stop_if_not(!isDirectory(pathDT))
 
       verbose && exit(verbose)
       # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -306,36 +306,21 @@ setMethodS3("process", "FastQCReporter", function(this, ..., skip=TRUE, force=FA
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 setMethodS3("validateGroups", "FastQCReporter", function(this, groups, ...) {
   # Input data set
-  ds <- getInputDataSet(this);
-  nbrOfFiles <- length(ds);
+  ds <- getInputDataSet(this)
+  nbrOfFiles <- length(ds)
 
   # Sanity checks
-  idxs <- unlist(groups, use.names=FALSE);
-  idxs <- Arguments$getIndices(idxs, max=nbrOfFiles);
+  idxs <- unlist(groups, use.names=FALSE)
+  idxs <- Arguments$getIndices(idxs, max=nbrOfFiles)
   if (length(idxs) < nbrOfFiles) {
-    throw("One or more input FASTQ files is not part of any group.");
+    throw("One or more input FASTQ files is not part of any group.")
   } else if (length(idxs) > nbrOfFiles) {
-    throw("One or more input FASTQ files is part of more than one group.");
+    throw("One or more input FASTQ files is part of more than one group.")
   }
 
   if (is.null(names(groups))) {
-    throw("The list of groups does not have names.");
+    throw("The list of groups does not have names.")
   }
 
-  invisible(groups);
+  invisible(groups)
 }, protected=TRUE)
-
-
-############################################################################
-# HISTORY:
-# 2014-08-07
-# o BUG FIX: Now FastQCReporter also works with FastQC (>= 0.11.1).
-# 2014-07-18
-# o The error message when FastQC fail to generate a '*_fastqc'
-#   subdirectory is now more informative.
-# 2014-04-13 [HB]
-# o CLEANUP: Now FastQCReporter outputs sample directories without the
-#   default and auxillary '_fastqc' suffix.
-# 2014-03-02 [HB]
-# o Created.
-############################################################################

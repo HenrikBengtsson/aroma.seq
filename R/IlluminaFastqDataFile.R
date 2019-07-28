@@ -27,7 +27,7 @@
 # }
 #*/###########################################################################
 setConstructorS3("IlluminaFastqDataFile", function(...) {
-  extend(FastqDataFile(...), "IlluminaFastqDataFile");
+  extend(FastqDataFile(...), "IlluminaFastqDataFile")
 })
 
 
@@ -50,76 +50,76 @@ setMethodS3("as.character", "IlluminaFastqDataFile", function(x, ...) {
 
 
 setMethodS3("getFileVersion", "IlluminaFastqDataFile", function(this, ...) {
-  name <- getFullName(this, ...);
-  patterns <- c("Casava_v1.4"="^[^_]+_[ACGTN]+_L[0-9]+_R[0-9]");
+  name <- getFullName(this, ...)
+  patterns <- c("Casava_v1.4"="^[^_]+_[ACGTN]+_L[0-9]+_R[0-9]")
   for (key in names(patterns)) {
-    pattern <- patterns[key];
+    pattern <- patterns[key]
     if (regexpr(pattern, name) != -1) {
-      return(key);
+      return(key)
     }
   }
-  as.character(NA);
+  as.character(NA)
 })
 
 
 setMethodS3("getSampleName", "IlluminaFastqDataFile", function(this, ...) {
   # Get the default sample name
-  default <- getFullName(this, ...);
+  default <- getFullName(this, ...)
 
   # Get the "struct-inferred" sample name, if any
-  name <- NextMethod("getSampleName");
+  name <- NextMethod("getSampleName")
 
   # Nothing more to do?
   if (name != default) {
-    return(name);
+    return(name)
   }
 
   # Trim it?
-  ver <- getFileVersion(this);
-  if (is.na(ver)) ver <- "<gzipped; unknown>";
+  ver <- getFileVersion(this)
+  if (is.na(ver)) ver <- "<gzipped; unknown>"
   if (ver == "Casava_v1.4") {
-    barcode <- getBarcodeSequence(this);
+    barcode <- getBarcodeSequence(this)
     # AD HOC patch for observing ATGNCA when expected ATGTCA. /HB 2012-10-01
-    barcode <- gsub("N", ".", barcode, fixed=TRUE);
-    pattern <- sprintf("_%s_L[0-9]+_R[0-9](_[0-9]+)$", barcode);
+    barcode <- gsub("N", ".", barcode, fixed=TRUE)
+    pattern <- sprintf("_%s_L[0-9]+_R[0-9](_[0-9]+)$", barcode)
     if (regexpr(pattern, name) == -1L) {
-      throw(sprintf("The fullname (%s) of the %s with version %s does not match the expected pattern (%s): %s", sQuote(name), class(this)[1L], sQuote(ver), sQuote(pattern), getPathname(this)));
+      throw(sprintf("The fullname (%s) of the %s with version %s does not match the expected pattern (%s): %s", sQuote(name), class(this)[1L], sQuote(ver), sQuote(pattern), getPathname(this)))
     }
-    name <- gsub(pattern, "", name);
+    name <- gsub(pattern, "", name)
   } else {
-    warning("Unknown Illumina FASTQ file version. Using fullname as sample name: ", name);
+    warning("Unknown Illumina FASTQ file version. Using fullname as sample name: ", name)
   }
 
-  name;
+  name
 })
 
 setMethodS3("getPlatform", "IlluminaFastqDataFile", function(this, ...) {
-  "Illumina";
+  "Illumina"
 })
 
 setMethodS3("getLane", "IlluminaFastqDataFile", function(this, ...) {
-  info <- getFirstSequenceInfo(this);
-  info$laneIdx;
+  info <- getFirstSequenceInfo(this)
+  info$laneIdx
 })
 
 setMethodS3("getInstrumentId", "IlluminaFastqDataFile", function(this, ...) {
-  info <- getFirstSequenceInfo(this);
-  info$instrumentId;
+  info <- getFirstSequenceInfo(this)
+  info$instrumentId
 })
 
 setMethodS3("getFlowcellId", "IlluminaFastqDataFile", function(this, ...) {
-  info <- getFirstSequenceInfo(this);
-  info$flowcellId;
+  info <- getFirstSequenceInfo(this)
+  info$flowcellId
 })
 
 setMethodS3("getBarcodeSequence", "IlluminaFastqDataFile", function(this, ...) {
-  info <- getFirstSequenceInfo(this);
-  info$indexSequence;
+  info <- getFirstSequenceInfo(this)
+  info$indexSequence
 })
 
 setMethodS3("getReadDirection", "IlluminaFastqDataFile", function(this, ...) {
-  info <- getFirstSequenceInfo(this);
-  info$read;
+  info <- getFirstSequenceInfo(this)
+  info$read
 })
 
 setMethodS3("getPlatformUnit", "IlluminaFastqDataFile", function(this, ...) {
@@ -129,42 +129,42 @@ setMethodS3("getPlatformUnit", "IlluminaFastqDataFile", function(this, ...) {
 #        the lane number (and further suffixed with period followed by
 #        sample member name for pooled runs). If referencing an existing
 #        already archived run, then please use the run alias in the SRA.
-  parts <- c(getFlowcellId(this), getLane(this), getSampleName(this));
-  paste(parts, collapse=".");
+  parts <- c(getFlowcellId(this), getLane(this), getSampleName(this))
+  paste(parts, collapse=".")
 })
 
 setMethodS3("getFirstSequenceInfo", "IlluminaFastqDataFile", function(this, force=FALSE, ...) {
   use("ShortRead")
 
-  info <- this$.info;
+  info <- this$.info
 
   if (force || is.null(info)) {
-    pathnameFQ <- getPathname(this);
+    pathnameFQ <- getPathname(this)
 
     ##  Really inefficient way to find the first sequence information.
     ## /HB 2013-11-19
-    ## ff <- FastqFile(pathnameFQ);
-    ## on.exit(close(ff));
-    ## rfq <- readFastq(ff);
+    ## ff <- FastqFile(pathnameFQ)
+    ## on.exit(close(ff))
+    ## rfq <- readFastq(ff)
 
     fqs <- FastqSampler(pathnameFQ, n=1L, ordered=TRUE)
-    on.exit(if (!is.null(fqs)) close(fqs));
-    rfq <- yield(fqs);
-    close(fqs); fqs <- NULL;
+    on.exit(if (!is.null(fqs)) close(fqs))
+    rfq <- yield(fqs)
+    close(fqs); fqs <- NULL
 
-    id <- id(rfq)[1L];
-    info <- as.character(id);
-    rfq <- NULL; # Not needed anymore
+    id <- id(rfq)[1L]
+    info <- as.character(id)
+    rfq <- NULL # Not needed anymore
 
-    patternA <- "^([^:]+):([0-9]+):([^:]+):([0-9]+):([0-9]+):([0-9]+):([0-9]+)";
-    patternB <- " ([^:]+):([^:]+):([0-9]+):([^:]+)$";
-    pattern <- sprintf("%s%s", patternA, patternB);
+    patternA <- "^([^:]+):([0-9]+):([^:]+):([0-9]+):([0-9]+):([0-9]+):([0-9]+)"
+    patternB <- " ([^:]+):([^:]+):([0-9]+):([^:]+)$"
+    pattern <- sprintf("%s%s", patternA, patternB)
     if (regexpr(pattern, info) == -1) {
       throw(sprintf("The (first) sequence of the FASTQ file has an 'info' string (%s) that does not match the expected regular expression (%s): %s", sQuote(info), sQuote(pattern), sQuote(pathnameFQ)))
     }
 
-    infoA <- gsub(patternB, "", info);
-    infoB <- gsub(patternA, "", info);
+    infoA <- gsub(patternB, "", info)
+    infoB <- gsub(patternA, "", info)
 
     info <- list(
       instrumentId=gsub(patternA, "\\1", infoA),
@@ -178,12 +178,12 @@ setMethodS3("getFirstSequenceInfo", "IlluminaFastqDataFile", function(this, forc
       isFiltered=gsub(patternB, "\\2", infoB),
       controlNumber=as.integer(gsub(patternB, "\\3", infoB)),
       indexSequence=gsub(patternB, "\\4", infoB)
-    );
+    )
 
-    this$.info <- info;
+    this$.info <- info
   }
 
-  info;
+  info
 }, protected=TRUE)
 
 
@@ -192,26 +192,8 @@ setMethodS3("getDefaultSamReadGroup", "IlluminaFastqDataFile", function(this, ..
   # SM: Sample
   # PL: Platform unit
   # PU: Platform
-  SM <- getSampleName(this);
-  PL <- getPlatform(this);
-  PU <- getPlatformUnit(this);
-  SamReadGroup(SM=SM, PL=PL, PU=PU);
+  SM <- getSampleName(this)
+  PL <- getPlatform(this)
+  PU <- getPlatformUnit(this)
+  SamReadGroup(SM=SM, PL=PL, PU=PU)
 })
-
-
-
-############################################################################
-# HISTORY:
-# 2013-12-21
-# o SPEEDUP: Now getFirstSequenceInfo() for IlluminaFastqDataFile only
-#   parses one read (it used to read all of the FASTQ file).
-# 2013-11-19
-# o Now getSampleName() for IlluminaFastqDataFile gives a more informative
-#   error message if the fullname does not match the expected pattern.
-# 2012-10-16
-# o BUG FIX: getSampleName() did not handle trailing indices, e.g. _002.
-# 2012-10-02
-# o Added getFileVersion().
-# 2012-06-29
-# o Created.
-############################################################################

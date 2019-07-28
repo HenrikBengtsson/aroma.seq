@@ -35,49 +35,40 @@ setMethodS3("fastQC", "default", function(..., pathnames=character(0L), outPath=
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'pathnames':
-  pathnames <- lapply(pathnames, FUN=Arguments$getReadablePathname);
-  pathnames <- unlist(pathnames, use.names=TRUE);
+  pathnames <- lapply(pathnames, FUN=Arguments$getReadablePathname)
+  pathnames <- unlist(pathnames, use.names=TRUE)
 
   # Argument 'outPath':
   if (!is.null(outPath)) {
-    outPath <- Arguments$getWritablePath(outPath);
+    outPath <- Arguments$getWritablePath(outPath)
   }
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Running FastQC");
-  verbose && cat(verbose, "Input pathnames:");
-  verbose && print(verbose, pathnames);
+  verbose && enter(verbose, "Running FastQC")
+  verbose && cat(verbose, "Input pathnames:")
+  verbose && print(verbose, pathnames)
 
-  args <- list(...);
+  args <- list(...)
   if (length(pathnames) > 0L) {
     # Always quote pathnames (to handle spaces)
-    pathnames <- sprintf("%s", shQuote(pathnames));
-    args <- c(list(pathnames), args);
+    pathnames <- sprintf("%s", shQuote(pathnames))
+    args <- c(list(pathnames), args)
   }
   if (!is.null(outPath)) {
-    args <- c(args, sprintf("--outdir %s", shQuote(outPath)));
+    args <- c(args, sprintf("--outdir %s", shQuote(outPath)))
   }
-  verbose && cat(verbose, "Arguments:");
-  verbose && str(verbose, args);
-  args <- c(args,verbose=less(verbose, 10));
-  res <- do.call(systemFastQC, args=args);
+  verbose && cat(verbose, "Arguments:")
+  verbose && str(verbose, args)
+  args <- c(args,verbose=less(verbose, 10))
+  res <- do.call(systemFastQC, args=args)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  res;
+  res
 }) # fastQC()
-
-
-############################################################################
-# HISTORY:
-# 2014-03-10 [HB]
-# o ROBUSTNESS: Now fastQC() uses shQuote() for all pathnames.
-# 2014-02-28 [HB]
-# o Created from bwaSamse().
-############################################################################

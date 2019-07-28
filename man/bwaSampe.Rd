@@ -34,11 +34,11 @@
   pathnameFA <- "annotationData/organisms/Lambda_phage/lambda_virus.fa"
   bwaIndex(pathnameFA)
 
-  pathnameSAI <- "bwaData/LambdaVirusExample/Lambda_phage/reads_1.sai";
-  pathnameFQ <- "fastqData/LambdaVirusExample/Lambda_phage/reads_1.fq";
-  pathnameD <- "bwaData/LambdaVirusExample/Lambda_phage/reads_1.sam";
+  pathnameSAI <- "bwaData/LambdaVirusExample/Lambda_phage/reads_1.sai"
+  pathnameFQ <- "fastqData/LambdaVirusExample/Lambda_phage/reads_1.fq"
+  pathnameD <- "bwaData/LambdaVirusExample/Lambda_phage/reads_1.sam"
   bwaSampe(pathnameSAI=pathnameSAI, pathnameFQ=pathnameFQ,
-           pathnameFA=pathnameFA, pathnameD=pathnameD);
+           pathnameFA=pathnameFA, pathnameD=pathnameD)
 }}
 
 \author{Henrik Bengtsson}

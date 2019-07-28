@@ -149,10 +149,3 @@ setMethodS3("typeOfSequenceOrdering", "numeric", function(values, rank=TRUE, as=
 
   scores
 })
-
-
-############################################################################
-# HISTORY:
-# 2015-05-06
-# o Added typeOfSequenceOrdering().
-############################################################################

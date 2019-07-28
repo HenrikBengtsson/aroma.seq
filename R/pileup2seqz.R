@@ -1,12 +1,16 @@
 pileup2seqz <- function(pus, gc, sampleName, dataset, tags="seqz", organism, pathD=file.path("seqzData", fullname(dataset, tags), organism), ..., force=FALSE, verbose=FALSE) {
   use("sequenza")
+  ver <- packageVersion("sequenza")
+  if (ver > "2.1.2") {
+    stop("aroma.seq::pileup2seqz() requires sequenza (<= 2.1.2)")
+  }
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'pus':
-  stopifnot(is.list(pus))
-  stopifnot(length(pus) == 2)
+  .stop_if_not(is.list(pus))
+  .stop_if_not(length(pus) == 2)
 
   # Argument 'gc':
   gc <- Arguments$getInstanceOf(gc, "GcBaseFile")
@@ -28,10 +32,10 @@ pileup2seqz <- function(pus, gc, sampleName, dataset, tags="seqz", organism, pat
   pathD <- Arguments$getWritablePath(pathD)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
@@ -53,13 +57,13 @@ pileup2seqz <- function(pus, gc, sampleName, dataset, tags="seqz", organism, pat
 
   cmd <- system.file("exec", "sequenza-utils.py", package="sequenza", mustWork=TRUE)
   verbose && cat(verbose, "Sequenza executable: ", cmd)
-  stopifnot(isCapableOf(aroma.seq, "python"))
+  .stop_if_not(isCapableOf(aroma.seq, "python"))
   
   chromosomes <- names(ns)
   chromosomes <- gsub(".*,chr=", "", chromosomes)
   nchrs <- length(chromosomes)
   verbose && printf(verbose, "Chromosomes: [%d] %s\n", nchrs, hpaste(chromosomes))
-  stopifnot(!is.null(chromosomes))
+  .stop_if_not(!is.null(chromosomes))
 
   plist <- listenv()
   for (chr in chromosomes) {
@@ -79,7 +83,7 @@ pileup2seqz <- function(pus, gc, sampleName, dataset, tags="seqz", organism, pat
       verbose && enter(verbose, "Running sequenza-utils.py pileup2seqz")
       n <- ns[[chr]]
       t <- ts[[chr]]
-      stopifnot(!is.null(n), !is.null(t))
+      .stop_if_not(!is.null(n), !is.null(t))
       if (inherits(n, "MPileupFile")) n <- getPathname(n)
       if (inherits(t, "MPileupFile")) t <- getPathname(t)
       n <- Arguments$getReadablePathname(n)

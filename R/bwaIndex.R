@@ -31,42 +31,27 @@ setMethodS3("bwaIndex", "default", function(pathnameFA, indexPrefix="*", ..., ve
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'pathnameFA':
-  pathnameFA <- Arguments$getReadablePathname(pathnameFA);
+  pathnameFA <- Arguments$getReadablePathname(pathnameFA)
 
   # Argument 'indexPrefix':
   if (identical(indexPrefix, "*")) {
-    indexPrefix <- bwaIndexPrefix(pathnameFA);
+    indexPrefix <- bwaIndexPrefix(pathnameFA)
   }
   if (!is.null(indexPrefix)) {
-    path <- Arguments$getWritablePath(getParent(indexPrefix));
+    path <- Arguments$getWritablePath(getParent(indexPrefix))
   }
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Running BWA index");
-  verbose && cat(verbose, "Index prefix: ", indexPrefix);
-  res <- systemBWA("index", p=shQuote(indexPrefix), ..., shQuote(pathnameFA), verbose=less(verbose, 10));
-  verbose && exit(verbose);
+  verbose && enter(verbose, "Running BWA index")
+  verbose && cat(verbose, "Index prefix: ", indexPrefix)
+  res <- systemBWA("index", p=shQuote(indexPrefix), ..., shQuote(pathnameFA), verbose=less(verbose, 10))
+  verbose && exit(verbose)
 
-  res;
+  res
 }) # bwaIndex()
-
-
-
-############################################################################
-# HISTORY:
-# 2014-03-10 [HB]
-# o ROBUSTNESS: Now bwaIndex() uses shQuote() for all pathnames.
-# 2013-11-21
-# o CLEANUP: bwaIndex() no longer has a 'method' argument as it is no
-#   longer needed by bwaIndexPrefix().
-# 2012-09-27
-# o Added argument 'method' with will be passed to bwaIndexPrefix().
-# 2012-09-24
-# o Created.
-############################################################################

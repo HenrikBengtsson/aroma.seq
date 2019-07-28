@@ -44,125 +44,125 @@
 # @keyword internal
 #*/###########################################################################
 setMethodS3("doQDNAseq", "BamDataFile", function(df, binWidth, residual=TRUE, blacklist=TRUE, mappability=NA, bases=NA, filterAllosomes=TRUE, ..., path=".", force=FALSE, verbose=FALSE) {
-  R.utils::use("QDNAseq (>= 1.2.4)");
+  R.utils::use("QDNAseq (>= 1.2.4)")
   # To please 'R CMD check'
-  getBinAnnotations <- binReadCounts <- applyFilters <- correctBins <- normalizeBins <- NULL;
-  rm(list=c("getBinAnnotations", "binReadCounts", "applyFilters", "correctBins", "normalizeBins"), inherits=FALSE);
+  getBinAnnotations <- binReadCounts <- applyFilters <- correctBins <- normalizeBins <- NULL
+  rm(list=c("getBinAnnotations", "binReadCounts", "applyFilters", "correctBins", "normalizeBins"), inherits=FALSE)
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'binWidth':
-  bins <- NULL;
+  bins <- NULL
   if (inherits(binWidth, "AnnotatedDataFrame")) {
-    bins <- binWidth;
+    bins <- binWidth
   } else {
-    binWidth <- Arguments$getInteger(binWidth, range=c(0.1, 10e3));
+    binWidth <- Arguments$getInteger(binWidth, range=c(0.1, 10e3))
   }
 
   # Argument 'path':
-  path <- Arguments$getWritablePath(path);
+  path <- Arguments$getWritablePath(path)
 
   # Argument 'force':
-  force <- Arguments$getLogical(force);
+  force <- Arguments$getLogical(force)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "QDNAseq");
-  verbose && print(verbose, df);
+  verbose && enter(verbose, "QDNAseq")
+  verbose && print(verbose, df)
 
   # Output pathname
-  filename <- sprintf("%s.rds", getFullName(df));
-  pathname <- Arguments$getReadablePathname(filename, path=path, mustExist=FALSE);
-  verbose && cat(verbose, "Output pathname: ", pathname);
+  filename <- sprintf("%s.rds", getFullName(df))
+  pathname <- Arguments$getReadablePathname(filename, path=path, mustExist=FALSE)
+  verbose && cat(verbose, "Output pathname: ", pathname)
 
   # Already done?
-  isDone <- (!force && isFile(pathname));
+  isDone <- (!force && isFile(pathname))
   if (isDone) {
-    verbose && cat(verbose, "Already processed. Skipping.");
-    df <- RdsFile(pathname);
-    verbose && exit(verbose);
-    return(df);
+    verbose && cat(verbose, "Already processed. Skipping.")
+    df <- RdsFile(pathname)
+    verbose && exit(verbose)
+    return(df)
   }
 
 
   # Disable 'QDNAseq' messages?
   if (!as.logical(verbose)) {
-    oopts <- options("QDNAseq::verbose"=FALSE);
-    on.exit(options(oopts), add=TRUE);
+    oopts <- options("QDNAseq::verbose"=FALSE)
+    on.exit(options(oopts), add=TRUE)
   }
 
 
-  args <- list(...);
-  keys <- names(args);
+  args <- list(...)
+  keys <- names(args)
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (is.null(bins)) {
-    verbose && enter(verbose, "QDNAseq/Retrieve QDNAseq bin annotation");
-    bins <- getBinAnnotations(binWidth);
-    verbose && print(verbose, bins);
-    verbose && exit(verbose);
+    verbose && enter(verbose, "QDNAseq/Retrieve QDNAseq bin annotation")
+    bins <- getBinAnnotations(binWidth)
+    verbose && print(verbose, bins)
+    verbose && exit(verbose)
   }
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Processing
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "QDNAseq/Reading and binning data");
-  pathnameBAM <- getPathname(df);
-  data <- binReadCounts(bins, bamfiles=pathnameBAM, cache=FALSE, force=TRUE);
-  verbose && print(verbose, data);
-  bins <- pathnameBAM <- NULL;
-  verbose && exit(verbose);
+  verbose && enter(verbose, "QDNAseq/Reading and binning data")
+  pathnameBAM <- getPathname(df)
+  data <- binReadCounts(bins, bamfiles=pathnameBAM, cache=FALSE, force=TRUE)
+  verbose && print(verbose, data)
+  bins <- pathnameBAM <- NULL
+  verbose && exit(verbose)
 
-  verbose && enter(verbose, "QDNAseq/Filtering out bins based on a priori filters");
+  verbose && enter(verbose, "QDNAseq/Filtering out bins based on a priori filters")
   keysF <- setdiff(names(formals(applyFilters)), c("object", "force", "..."))
   argsF <- args[intersect(keys, keysF)]
-  verbose && cat(verbose, "Arguments:");
-  verbose && str(verbose, argsF);
-  dataF <- do.call(applyFilters, args=c(list(data), argsF));
-  verbose && print(verbose, dataF);
-  data <- NULL;
-  verbose && exit(verbose);
+  verbose && cat(verbose, "Arguments:")
+  verbose && str(verbose, argsF)
+  dataF <- do.call(applyFilters, args=c(list(data), argsF))
+  verbose && print(verbose, dataF)
+  data <- NULL
+  verbose && exit(verbose)
 
-  verbose && enter(verbose, "QDNAseq/Correcting bin counts for GC content and mappability");
+  verbose && enter(verbose, "QDNAseq/Correcting bin counts for GC content and mappability")
   keysC <- setdiff(names(formals(correctBins)), c("object", "force", "..."))
-  argsC <- args[intersect(keys, keysC)];
-  verbose && cat(verbose, "Arguments:");
-  verbose && str(verbose, argsC);
-  dataC <- do.call(correctBins, args=c(list(dataF), argsC));
-  verbose && print(verbose, dataC);
-  dataF <- NULL;
-  verbose && exit(verbose);
+  argsC <- args[intersect(keys, keysC)]
+  verbose && cat(verbose, "Arguments:")
+  verbose && str(verbose, argsC)
+  dataC <- do.call(correctBins, args=c(list(dataF), argsC))
+  verbose && print(verbose, dataC)
+  dataF <- NULL
+  verbose && exit(verbose)
 
-  verbose && enter(verbose, "QDNAseq/Normalization bin copy numbers");
+  verbose && enter(verbose, "QDNAseq/Normalization bin copy numbers")
   keysN <- setdiff(names(formals(normalizeBins)), c("object", "force", "..."))
-  argsN <- args[intersect(keys, keysN)];
-  verbose && cat(verbose, "Arguments:");
-  verbose && str(verbose, argsN);
-  dataN <- do.call(normalizeBins, args=c(list(dataC), argsN));
-  verbose && print(verbose, dataN);
-  dataC <- NULL;
-  verbose && exit(verbose);
+  argsN <- args[intersect(keys, keysN)]
+  verbose && cat(verbose, "Arguments:")
+  verbose && str(verbose, argsN)
+  dataN <- do.call(normalizeBins, args=c(list(dataC), argsN))
+  verbose && print(verbose, dataN)
+  dataC <- NULL
+  verbose && exit(verbose)
 
-  verbose && enter(verbose, "QDNAseq/Saving");
-  verbose && cat(verbose, "Output pathname: ", pathname);
-  saveRDS(dataN, file=pathname);
-  verbose && exit(verbose);
+  verbose && enter(verbose, "QDNAseq/Saving")
+  verbose && cat(verbose, "Output pathname: ", pathname)
+  saveRDS(dataN, file=pathname)
+  verbose && exit(verbose)
 
-  df <- RdsFile(pathname);
+  df <- RdsFile(pathname)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  df;
+  df
 }) # doQDNAseq()
 
 
@@ -174,83 +174,83 @@ setMethodS3("doQDNAseq", "BamDataSet", function(dataSet, ..., force=FALSE, verbo
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'force':
-  force <- Arguments$getLogical(force);
+  force <- Arguments$getLogical(force)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "QDNAseq");
+  verbose && enter(verbose, "QDNAseq")
 
-  verbose && enter(verbose, "QDNAseq/copy number estimation");
-  qe <- QDNAseqEstimation(dataSet, ...);
-  verbose && print(verbose, qe);
-  cns <- process(qe, force=force, verbose=verbose);
-  verbose && print(verbose, cns);
-  verbose && exit(verbose);
+  verbose && enter(verbose, "QDNAseq/copy number estimation")
+  qe <- QDNAseqEstimation(dataSet, ...)
+  verbose && print(verbose, qe)
+  cns <- process(qe, force=force, verbose=verbose)
+  verbose && print(verbose, cns)
+  verbose && exit(verbose)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  cns;
+  cns
 }) # doQDNAseq()
 
 
 setMethodS3("doQDNAseq", "FastqDataSet", function(dataSet, binWidth, reference, ..., verbose=FALSE) {
-  R.utils::use("QDNAseq (>= 0.5.8)");
-  getBinAnnotations <- NULL;
+  R.utils::use("QDNAseq (>= 0.5.8)")
+  getBinAnnotations <- NULL
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'binWidth':
-  bins <- NULL;
+  bins <- NULL
   if (inherits(binWidth, "AnnotatedDataFrame")) {
-    bins <- binWidth;
+    bins <- binWidth
   } else {
-    binWidth <- Arguments$getInteger(binWidth, range=c(0.1, 10e3));
+    binWidth <- Arguments$getInteger(binWidth, range=c(0.1, 10e3))
   }
 
   # Argument 'reference':
   if (inherits(reference, "FastaReferenceFile")) {
   } else if (inherits(reference, "BwaIndexSet")) {
   } else {
-    throw("Argument 'reference' should either be of class 'FastaReferenceFile' or 'BwaIndexSet': ", class(reference)[1L]);
+    throw("Argument 'reference' should either be of class 'FastaReferenceFile' or 'BwaIndexSet': ", class(reference)[1L])
   }
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "QDNAseq");
+  verbose && enter(verbose, "QDNAseq")
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Checking requirements
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "QDNAseq/Check requirements");
+  verbose && enter(verbose, "QDNAseq/Check requirements")
 
-  verbose && enter(verbose, "QDNAseq/Check requirements/BWA");
-  stopifnot(isCapableOf(aroma.seq, "bwa"));
-  verbose && exit(verbose);
+  verbose && enter(verbose, "QDNAseq/Check requirements/BWA")
+  .stop_if_not(isCapableOf(aroma.seq, "bwa"))
+  verbose && exit(verbose)
 
-  verbose && enter(verbose, "QDNAseq/Check requirements/Picard");
-  stopifnot(isCapableOf(aroma.seq, "picard"));
-  verbose && exit(verbose);
+  verbose && enter(verbose, "QDNAseq/Check requirements/Picard")
+  .stop_if_not(isCapableOf(aroma.seq, "picard"))
+  verbose && exit(verbose)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
 
   # Disable 'QDNAseq' messages?
   if (!as.logical(verbose)) {
-    oopts <- options("QDNAseq::verbose"=FALSE);
-    on.exit(options(oopts), add=TRUE);
+    oopts <- options("QDNAseq::verbose"=FALSE)
+    on.exit(options(oopts), add=TRUE)
   }
 
 
@@ -258,94 +258,56 @@ setMethodS3("doQDNAseq", "FastqDataSet", function(dataSet, binWidth, reference, 
   # Setup
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (is.null(bins)) {
-    verbose && enter(verbose, "QDNAseq/Retrieve QDNAseq bin annotation");
-    bins <- getBinAnnotations(binWidth);
-    verbose && print(verbose, bins);
-    verbose && exit(verbose);
+    verbose && enter(verbose, "QDNAseq/Retrieve QDNAseq bin annotation")
+    bins <- getBinAnnotations(binWidth)
+    verbose && print(verbose, bins)
+    verbose && exit(verbose)
   }
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # BWA alignment
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "QDNAseq/BWA alignment");
+  verbose && enter(verbose, "QDNAseq/BWA alignment")
 
   # Daud Sie (VUMC) confirm that they are using 'bwa aln -n 2 -q 40'
   # [private email from HB on 2013-11-19]
-  bs <- doBWA(dataSet, reference=reference, n=2, q=40, verbose=verbose);
-  verbose && print(verbose, bs);
+  bs <- doBWA(dataSet, reference=reference, n=2, q=40, verbose=verbose)
+  verbose && print(verbose, bs)
 
   # Not needed anymore
-  reference <- NULL;
+  reference <- NULL
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Remove duplicated reads using Picard
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "QDNAseq/Remove duplicated reads");
-  dr <- PicardDuplicateRemoval(bs);
-  verbose && print(verbose, dr);
+  verbose && enter(verbose, "QDNAseq/Remove duplicated reads")
+  dr <- PicardDuplicateRemoval(bs)
+  verbose && print(verbose, dr)
 
-  bsU <- process(dr, verbose=verbose);
-  verbose && print(verbose, bsU);
+  bsU <- process(dr, verbose=verbose)
+  verbose && print(verbose, bsU)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # QDNAseq copy number estimation
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "QDNAseq/copy number estimation");
-  cns <- doQDNAseq(bsU, binWidth=bins, ..., verbose=verbose);
-  verbose && print(verbose, cns);
-  verbose && exit(verbose);
+  verbose && enter(verbose, "QDNAseq/copy number estimation")
+  cns <- doQDNAseq(bsU, binWidth=bins, ..., verbose=verbose)
+  verbose && print(verbose, cns)
+  verbose && exit(verbose)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  cns;
+  cns
 }) # doQDNAseq()
 
 
 setMethodS3("doQDNAseq", "default", function(...) {
-  throw("The \"default\" method is still not implemented. Please see help('doQDNAseq').");
+  throw("The \"default\" method is still not implemented. Please see help('doQDNAseq').")
 })
-
-
-############################################################################
-# HISTORY:
-# 2013-11-20
-# o Now doQDNAseq() for BamDataFile no-longer caches raw bin counts.
-# o Now doQDNAseq() for BamDataFile saves RDS files.
-# 2013-11-18
-# o CLEANUP/REDUNDANCY: Now doQDNAseq() for BamDataFile passes only the
-#   subset of arguments part of '...' that apply to each of the internal
-#   QDNAseq steps.  This means that doQDNAseq() no longer have to
-#   replicate the arguments of the QDNAseq package.
-# o REPRODUCIBILITY: doQDNAseq() for BamDataFile forgot to apply the
-#   pre-filtering of QDNAseq.
-# 2013-11-16
-# o CLEANUP: Now doQDNAseq() for BamDataSet utilized QDNAseqEstimation.
-# 2013-10-31
-# o Updated capitalization to reflect the updated 'QDNAseq' package name.
-# 2013-08-31
-# o BUG FIX: doQDNAseq() for BamDataSet would give an error when it
-#   tried to collect and return the result file set.
-# o BUG FIX: doQDNAseq() for BamDataSet would give an error if data set
-#   was already processed and verbose output was enabled.
-# 2013-08-22
-# o CLEANUP: Now doQDNAseq() utilizes doBWA().
-# 2013-07-29
-# o Now doQDNAseq() for BamDataSet saves processed data to QDNAseqData/.
-# 2013-07-11
-# o SPEEDUP: Now doQDNAseq() only retrieves the bin annotation data
-#   onces per call/data set.
-# o Added Rdoc comments for doQDNAseq().
-# o Added doQDNAseq() for FastqDataSet, which leverages ditto for
-#   BamDataSet.
-# 2013-07-03
-# o Added to verbose statements.
-# 2013-07-02
-# o Created.
-############################################################################

@@ -29,103 +29,103 @@
 #*/###########################################################################
 bowtie2 <- function(reads1, reads2=NULL, indexPrefix, pathnameSAM, ..., gzAllowed=NA, verbose=FALSE) {
   # Make sure to evaluate registered onExit() statements
-  on.exit(eval(onExit()));
+  on.exit(eval(onExit()))
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'reads1'
-  reads1 <- Arguments$getReadablePathnames(reads1, absolutePath=TRUE);
-  assertNoDuplicated(reads1);
+  reads1 <- Arguments$getReadablePathnames(reads1, absolutePath=TRUE)
+  assertNoDuplicated(reads1)
 
   # Argument 'reads2'
-  isPaired <- (length(reads2) > 0L);
+  isPaired <- (length(reads2) > 0L)
   if (isPaired) {
-    stopifnot(length(reads2) == length(reads1));
-    reads2 <- Arguments$getReadablePathnames(reads2, absolutePath=TRUE);
-    assertNoDuplicated(reads2);
+    .stop_if_not(length(reads2) == length(reads1))
+    reads2 <- Arguments$getReadablePathnames(reads2, absolutePath=TRUE)
+    assertNoDuplicated(reads2)
   }
 
   # Argument 'indexPrefix':
-  indexPrefix <- Arguments$getCharacter(indexPrefix, length=c(1L,1L));
-  indexPath <- dirname(indexPrefix);
-  indexName <- basename(indexPrefix);
-  indexPath <- Arguments$getReadablePath(indexPath, absolutePath=TRUE);
+  indexPrefix <- Arguments$getCharacter(indexPrefix, length=c(1L,1L))
+  indexPath <- dirname(indexPrefix)
+  indexName <- basename(indexPrefix)
+  indexPath <- Arguments$getReadablePath(indexPath, absolutePath=TRUE)
 
   # Argument 'pathnameSAM':
-  pathnameSAM <- Arguments$getWritablePathname(pathnameSAM, absolutePath=TRUE);
+  pathnameSAM <- Arguments$getWritablePathname(pathnameSAM, absolutePath=TRUE)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-     pushState(verbose);
-     on.exit(popState(verbose), add=TRUE);
+     pushState(verbose)
+     on.exit(popState(verbose), add=TRUE)
   }
 
 
-  verbose && enter(verbose, "Running bowtie2()");
+  verbose && enter(verbose, "Running bowtie2()")
 
-  verbose && cat(verbose, "R1 FASTQ files:");
-  verbose && print(verbose, sapply(reads1, FUN=getRelativePath));
+  verbose && cat(verbose, "R1 FASTQ files:")
+  verbose && print(verbose, sapply(reads1, FUN=getRelativePath))
   if (isPaired) {
-     verbose && cat(verbose, "R2 FASTQ files:");
-     verbose && print(verbose, sapply(reads2, FUN=getRelativePath));
+     verbose && cat(verbose, "R2 FASTQ files:")
+     verbose && print(verbose, sapply(reads2, FUN=getRelativePath))
   }
-  verbose && cat(verbose, "Paired alignment: ", isPaired);
-  verbose && cat(verbose, "Reference index path: ", indexPath);
-  verbose && cat(verbose, "Reference index prefix: ", indexPrefix);
-  outPath <- dirname(pathnameSAM);
-  verbose && cat(verbose, "Output directory: ", outPath);
+  verbose && cat(verbose, "Paired alignment: ", isPaired)
+  verbose && cat(verbose, "Reference index path: ", indexPath)
+  verbose && cat(verbose, "Reference index prefix: ", indexPrefix)
+  outPath <- dirname(pathnameSAM)
+  verbose && cat(verbose, "Output directory: ", outPath)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Handle gzip'ed FASTQ files
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  pathnameFQ <- c(reads1, reads2);
-  assertNoDuplicated(pathnameFQ);
-  isGzipped <- any(sapply(pathnameFQ, FUN=isGzipped));
+  pathnameFQ <- c(reads1, reads2)
+  assertNoDuplicated(pathnameFQ)
+  isGzipped <- any(sapply(pathnameFQ, FUN=isGzipped))
   if (isGzipped) {
-    verbose && enter(verbose, "Detected gzipped FASTQ files");
+    verbose && enter(verbose, "Detected gzipped FASTQ files")
 
     if (is.na(gzAllowed)) {
-      gzAllowed <- queryBowtie2("support:fastq.gz");
+      gzAllowed <- queryBowtie2("support:fastq.gz")
     }
 
     if (!gzAllowed) {
-      verbose && enter(verbose, "Temporarily decompressing gzipped FASTQ files");
+      verbose && enter(verbose, "Temporarily decompressing gzipped FASTQ files")
 
-      decompress <- getOption(aromaSettings, "devel/fastq.gz/decompress", TRUE);
+      decompress <- getOption(aromaSettings, "devel/fastq.gz/decompress", TRUE)
       if (!decompress) {
-        why <- attr(gzAllowed, "why");
-        throw(sprintf("Cannot align reads in '%s': %s", pathnameFQ, why));
+        why <- attr(gzAllowed, "why")
+        throw(sprintf("Cannot align reads in '%s': %s", pathnameFQ, why))
       }
 
       # If not, temporarily decompress (=remove when done)
-      pathnameFQ <- sapply(pathnameFQ, FUN=gunzip, temporary=TRUE, remove=FALSE);
-      pathnameFQtmpA <- pathnameFQ;
+      pathnameFQ <- sapply(pathnameFQ, FUN=gunzip, temporary=TRUE, remove=FALSE)
+      pathnameFQtmpA <- pathnameFQ
       onExit({
         # Make sure to remove temporary file
         lapply(pathnameFQtmpA, FUN=function(pathname) {
-          if (isFile(pathname)) file.remove(pathname);
-        });
-      });
+          if (isFile(pathname)) file.remove(pathname)
+        })
+      })
 
       # Sanity check
-      isGzipped <- any(sapply(pathnameFQ, FUN=isGzipped));
-      stopifnot(!isGzipped);
+      isGzipped <- any(sapply(pathnameFQ, FUN=isGzipped))
+      .stop_if_not(!isGzipped)
 
       # Reassign 'reads1' and 'reads2'.
-      idxs <- seq_along(reads1);
-      reads1 <- pathnameFQ[ idxs];
-      if (isPaired) reads2 <- pathnameFQ[-idxs];
-      idxs <- NULL; # Not needed anymore
+      idxs <- seq_along(reads1)
+      reads1 <- pathnameFQ[ idxs]
+      if (isPaired) reads2 <- pathnameFQ[-idxs]
+      idxs <- NULL # Not needed anymore
 
-      verbose && exit(verbose);
+      verbose && exit(verbose)
     }
 
-    verbose && exit(verbose);
+    verbose && exit(verbose)
   } # if (isGzipped)
-  pathnameFQ <- NULL; # Not needed anymore
+  pathnameFQ <- NULL # Not needed anymore
 
 
 
@@ -133,43 +133,43 @@ bowtie2 <- function(reads1, reads2=NULL, indexPrefix, pathnameSAM, ..., gzAllowe
   # Generate output atomically by writing to a temporary directory
   # that is renamed upon completion.
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  outPathOrg <- outPath;
-  filenameSAM <- basename(pathnameSAM);
-  filenameSAM <- Arguments$getTuxedoOption(filenameSAM);
-  dirT <- tools::file_path_sans_ext(filenameSAM);
-  outPath <- file.path(outPath, dirT);
-  outPath <- sprintf("%s.TMP", outPath);
-  outPath <- Arguments$getWritablePath(outPath, mustNotExist=TRUE);
-  verbose && cat(verbose, "Temporary output directory: ", outPath);
+  outPathOrg <- outPath
+  filenameSAM <- basename(pathnameSAM)
+  filenameSAM <- Arguments$getTuxedoOption(filenameSAM)
+  dirT <- tools::file_path_sans_ext(filenameSAM)
+  outPath <- file.path(outPath, dirT)
+  outPath <- sprintf("%s.TMP", outPath)
+  outPath <- Arguments$getWritablePath(outPath, mustNotExist=TRUE)
+  verbose && cat(verbose, "Temporary output directory: ", outPath)
   # At the end, assume failure, unless successful.
-  outPathFinal <- sprintf("%s.ERROR", outPath);
+  outPathFinal <- sprintf("%s.ERROR", outPath)
   onExit({
     if (outPathFinal == outPathOrg) {
       # Move all files to destination directory
-      files <- list.files(path=outPath, full.names=FALSE, recursive=FALSE);
+      files <- list.files(path=outPath, full.names=FALSE, recursive=FALSE)
       for (file in files) {
-        src <- file.path(outPath, file);
-        dest <- file.path(outPathFinal, file);
-        file.rename(src, dest);
+        src <- file.path(outPath, file)
+        dest <- file.path(outPathFinal, file)
+        file.rename(src, dest)
       }
-      removeDirectory(outPath, recursive=FALSE, mustExist=FALSE);
+      removeDirectory(outPath, recursive=FALSE, mustExist=FALSE)
     } else {
       # Tag working directory with an 'ERROR' tag
-      file.rename(outPath, outPathFinal);
+      file.rename(outPath, outPathFinal)
     }
-  });
+  })
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # While running, let the output directory be the working directory.
   # Make sure the working directory is restored when exiting.
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  opwd <- setwd(outPath);
-  verbose && cat(verbose, "Original working directory: ", opwd);
+  opwd <- setwd(outPath)
+  verbose && cat(verbose, "Original working directory: ", opwd)
   onExit({
-    verbose && cat(verbose, "Resetting working directory: ", opwd);
-    setwd(opwd);
-  });
+    verbose && cat(verbose, "Resetting working directory: ", opwd)
+    setwd(opwd)
+  })
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -183,40 +183,40 @@ bowtie2 <- function(reads1, reads2=NULL, indexPrefix, pathnameSAM, ..., gzAllowe
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # (1b) Inside the temporary output directory, setup a temporary
   #      input directory without commas
-  inPath <- Arguments$getWritablePath("src");
+  inPath <- Arguments$getWritablePath("src")
   onExit({ removeDirectory(inPath, recursive=FALSE, mustExist=FALSE) })
 
   # (2a) Link to the bowtie2 index directory
   #      (such that tophat sees no commas)
-  link <- file.path(inPath, "refIndex");
-  indexPath <- createLink(link=link, target=indexPath);
-  onExit({ removeDirectory(indexPath) });
-  link <- NULL;  # Not needed anymore
-  indexPrefix <- file.path(indexPath, basename(indexPrefix));
-  indexPrefix <- Arguments$getTuxedoOption(indexPrefix);
+  link <- file.path(inPath, "refIndex")
+  indexPath <- createLink(link=link, target=indexPath)
+  onExit({ removeDirectory(indexPath) })
+  link <- NULL # Not needed anymore
+  indexPrefix <- file.path(indexPath, basename(indexPrefix))
+  indexPrefix <- Arguments$getTuxedoOption(indexPrefix)
 
   # (3a) Link to the FASTQ 'R1'
   #      (such that tophat sees no commas)
   if (length(reads1) > 0L) {
     reads1 <- sapply(reads1, FUN=function(pathname) {
-      link <- file.path(inPath, basename(pathname));
-      assertNoCommas(link);
-      createLink(link=link, target=pathname);
+      link <- file.path(inPath, basename(pathname))
+      assertNoCommas(link)
+      createLink(link=link, target=pathname)
     })
     onExit({ file.remove(reads1) })
-    reads1 <- Arguments$getTuxedoOption(reads1);
+    reads1 <- Arguments$getTuxedoOption(reads1)
   }
 
   # (3b) Link to the (optional) FASTQ 'R2'
   #      (such that tophat sees no commas)
   if (length(reads2) > 0L) {
     reads2 <- sapply(reads2, FUN=function(pathname) {
-      link <- file.path(inPath, basename(pathname));
-      assertNoCommas(link);
-      createLink(link=link, target=pathname);
+      link <- file.path(inPath, basename(pathname))
+      assertNoCommas(link)
+      createLink(link=link, target=pathname)
     })
     onExit({ file.remove(reads2) })
-    reads2 <- Arguments$getTuxedoOption(reads2);
+    reads2 <- Arguments$getTuxedoOption(reads2)
   }
 
   # When reaching this point, 'bowtie' will not be able to tell whether
@@ -231,33 +231,33 @@ bowtie2 <- function(reads1, reads2=NULL, indexPrefix, pathnameSAM, ..., gzAllowe
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Call Bowtie2 executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && exit(verbose, "Calling systemBowtie2()");
+  verbose && exit(verbose, "Calling systemBowtie2()")
 
-  indexPrefix <- Arguments$getTuxedoOption(indexPrefix);
+  indexPrefix <- Arguments$getTuxedoOption(indexPrefix)
   args <- list("-x"=shQuote(indexPrefix))
   if (isPaired) {
-    reads1 <- Arguments$getTuxedoOption(reads1);
-    reads2 <- Arguments$getTuxedoOption(reads2);
-    args[["-1"]] <- shQuote(paste(reads1, collapse=","));
-    args[["-2"]] <- shQuote(paste(reads2, collapse=","));
+    reads1 <- Arguments$getTuxedoOption(reads1)
+    reads2 <- Arguments$getTuxedoOption(reads2)
+    args[["-1"]] <- shQuote(paste(reads1, collapse=","))
+    args[["-2"]] <- shQuote(paste(reads2, collapse=","))
   } else {
-    reads1 <- Arguments$getTuxedoOption(reads1);
-    args[["-U"]] <- shQuote(paste(reads1, collapse=","));
+    reads1 <- Arguments$getTuxedoOption(reads1)
+    args[["-U"]] <- shQuote(paste(reads1, collapse=","))
   }
-  args[["-S"]] <- shQuote(filenameSAM);
-  args <- c(args, list(...));
+  args[["-S"]] <- shQuote(filenameSAM)
+  args <- c(args, list(...))
 
-  verbose && cat(verbose, "Arguments:");
-  verbose && print(verbose, args);
+  verbose && cat(verbose, "Arguments:")
+  verbose && print(verbose, args)
 
-  res <- systemBowtie2(args=args, verbose=verbose);
-  status <- attr(res, "status"); if (is.null(status)) status <- 0L;
-  verbose && cat(verbose, "Results:");
-  verbose && str(verbose, res);
-  verbose && cat(verbose, "Status:");
-  verbose && str(verbose, status);
+  res <- systemBowtie2(args=args, verbose=verbose)
+  status <- attr(res, "status"); if (is.null(status)) status <- 0L
+  verbose && cat(verbose, "Results:")
+  verbose && str(verbose, res)
+  verbose && cat(verbose, "Status:")
+  verbose && str(verbose, status)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -266,46 +266,18 @@ bowtie2 <- function(reads1, reads2=NULL, indexPrefix, pathnameSAM, ..., gzAllowe
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (isFile(filenameSAM)) {
     if (file.info(filenameSAM)$size == 0L) {
-      verbose && cat(verbose, "Removing empty SAM file falsely created by Bowtie2: ", filenameSAM);
-      file.remove(filenameSAM);
-      status <- -1L;
+      verbose && cat(verbose, "Removing empty SAM file falsely created by Bowtie2: ", filenameSAM)
+      file.remove(filenameSAM)
+      status <- -1L
     }
   }
 
   # Success?
   if (status == 0L && isFile(filenameSAM)) {
-    outPathFinal <- outPathOrg;
+    outPathFinal <- outPathOrg
   }
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  res;
+  res
 } # bowtie2()
-
-
-############################################################################
-# HISTORY:
-# 2014-08-07 [HB]
-# o Now using arguments 'reads1' and 'reads2', cf. tophat().
-# o Added verbose output.
-# 2014-03-10 [HB]
-# o ROBUSTNESS: Now bowtie2() uses shQuote() for all pathnames.
-# 2014-01-14 [HB]
-# o ROBUSTNESS: Now bowtie2() tests for duplicated entries in 'reads1'
-#   and 'reads2' and gives an informative errors message if detected.
-# 2013-08-24
-# o Now bowtie2() will do paired-end alignment if length(pathnameFQ) == 2.
-# 2013-08-23
-# o BUG FIX: Read Group options ('--rg' and '--rg-id') passed to 'bowtie2'
-#   by the Bowtie2Aligment class missed the preceeding '--'.  Also, if
-#   the Read Group ID was missing NULL was used - now it is set to 1.
-# 2013-07-18
-# o Now bowtie2() handles if there are commas in the pathname of
-#   the FASTQ file by using a tempory file link without commas.  This
-#   is needed because the bowtie2 executable does not support commas.
-# 2013-06-27
-# o Now bowtie2() temporarily decompresses gzipped FASTQ files in case
-#   the installed bowtie2 does not support gzip files.
-# 2012-09-27
-# o Created.
-############################################################################

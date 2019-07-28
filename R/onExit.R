@@ -5,7 +5,7 @@
 #
 # \description{
 #  @get "title" (regardless of cause).
-#  This methtod differ from @see "base::on.exit" in that it adds the
+#  This method differ from @see "base::on.exit" in that it adds the
 #  option to \emph{prepend} an expression to already existing expressed,
 #  as an alternative to the default \emph{append}.
 #
@@ -40,47 +40,36 @@
 #*/###########################################################################
 onExit <- function(expr=NULL, where=c("first", "last", "replace"), ..., exits, envir=parent.frame()) {
   # Argument 'expr':
-  expr <- substitute(expr);
+  expr <- substitute(expr)
 
   # Argument 'exits':
-  hasExits <- !missing(exits);
+  hasExits <- !missing(exits)
   if (!hasExits) {
     if (exists(".on.exit.expressions", envir=envir, inherits=FALSE)) {
-      exits <- get(".on.exit.expressions", envir=envir, inherits=FALSE);
+      exits <- get(".on.exit.expressions", envir=envir, inherits=FALSE)
     } else {
-      exits <- NULL;
+      exits <- NULL
     }
   }
   if (!is.null(exits)) {
-    stopifnot(is.call(exits));
+    .stop_if_not(is.call(exits))
   }
 
   # Argument 'where':
-  where <- match.arg(where);
-  if (is.null(exits)) where <- "replace";
+  where <- match.arg(where)
+  if (is.null(exits)) where <- "replace"
 
   if (where == "replace") {
-    exits <- expr;
+    exits <- expr
   } else if (where == "last") {
-    exits <- substitute({ old; new }, list(old=exits, new=expr));
+    exits <- substitute({ old; new }, list(old=exits, new=expr))
   } else if (where == "first") {
-    exits <- substitute({ new; old }, list(old=exits, new=expr));
+    exits <- substitute({ new; old }, list(old=exits, new=expr))
   }
 
   if (!hasExits) {
-    assign(".on.exit.expressions", exits, envir=envir, inherits=FALSE);
+    assign(".on.exit.expressions", exits, envir=envir, inherits=FALSE)
   }
 
-  invisible(exits);
+  invisible(exits)
 } # onExit()
-
-
-############################################################################
-# HISTORY:
-# 2013-11-08
-# o Added help for onExit().
-# 2013-11-02
-# o Added onExit(), which requires on.exit(eval(onExit())) at the beginning.
-#   See today's email to R-devel for why.
-# o Created.
-############################################################################

@@ -15,7 +15,7 @@
 #  \item{...}{Arguments passed to @see "AbstractAlignment".}
 #  \item{indexSet}{An @see "BwaIndexSet".}
 #  \item{flavor}{A @character string specifying the type of
-#    BWA algoritm to use for alignment.}
+#    BWA algorithm to use for alignment.}
 # }
 #
 # \section{Fields and Methods}{
@@ -34,38 +34,38 @@
 setConstructorS3("BwaAlignment", function(..., indexSet=NULL, flavor=c("backtracking")) {
   # Validate arguments
   if (!is.null(indexSet)) {
-    indexSet <- Arguments$getInstanceOf(indexSet, "BwaIndexSet");
+    indexSet <- Arguments$getInstanceOf(indexSet, "BwaIndexSet")
   }
 
   # Arguments '...':
-  args <- list(...);
+  args <- list(...)
 
   # Arguments 'flavor':
-  flavor <- match.arg(flavor);
+  flavor <- match.arg(flavor)
 
-  extend(AbstractAlignment(..., indexSet=indexSet, flavor=flavor), "BwaAlignment");
+  extend(AbstractAlignment(..., indexSet=indexSet, flavor=flavor), "BwaAlignment")
 })
 
 
 setMethodS3("getAsteriskTags", "BwaAlignment", function(this, collapse=NULL, ...) {
-  tags <- NextMethod("getAsteriskTags", collapse=NULL);
+  tags <- NextMethod("getAsteriskTags", collapse=NULL)
   # Drop BWA index 'method' tag, e.g. 'is' or 'bwtsw'
-  idx <- which(tags == "bwa") + 1L;
-  if (is.element(tags[idx], c("is", "bwtsw"))) tags <- tags[-idx];
+  idx <- which(tags == "bwa") + 1L
+  if (is.element(tags[idx], c("is", "bwtsw"))) tags <- tags[-idx]
 
   # Append flavor
-  flavor <- getFlavor(this);
-  if (!identical(flavor, "backtracking")) tags <- c(tags, flavor);
+  flavor <- getFlavor(this)
+  if (!identical(flavor, "backtracking")) tags <- c(tags, flavor)
 
-  paste(tags, collapse=collapse);
+  paste(tags, collapse=collapse)
 })
 
 
 setMethodS3("getParameterSets", "BwaAlignment", function(this, ...) {
-  paramsList <- NextMethod("getParameterSets");
-  paramsList$method <- list(flavor=getFlavor(this));
-  paramsList$aln <- getOptionalArguments(this, ...);
-  paramsList;
+  paramsList <- NextMethod("getParameterSets")
+  paramsList$method <- list(flavor=getFlavor(this))
+  paramsList$aln <- getOptionalArguments(this, ...)
+  paramsList
 }, protected=TRUE)
 
 
@@ -100,37 +100,37 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   asBwaParameter <- function(rg, default=list(), ...) {
     if (isEmpty(rg)) {
-      return(NULL);
+      return(NULL)
     }
 
     if (!hasSample(rg)) {
-      sm <- default$SM;
+      sm <- default$SM
       if (is.null(sm)) {
-        throw("No default value for required read group 'SM' is specified.");
+        throw("No default value for required read group 'SM' is specified.")
       }
-      rg$SM <- sm;
+      rg$SM <- sm
     }
 
     # Validate
     if (!hasID(rg)) {
-      id <- default$ID;
+      id <- default$ID
       if (!is.null(id)) {
-        msg <- "Using default ID that was specified";
+        msg <- "Using default ID that was specified"
       } else {
-        id <- rg$SM;
-        msg <- "No default ID was specified, so will that of the SM read group";
+        id <- rg$SM
+        msg <- "No default ID was specified, so will that of the SM read group"
       }
-      msg <- sprintf("BWA 'samse/sampe' requires that the SAM read group has an ID. %s, i.e. ID=%s: %s", msg, id, paste(as.character(rg), collapse=", "));
-      warning(msg);
-      rg$ID <- id;
+      msg <- sprintf("BWA 'samse/sampe' requires that the SAM read group has an ID. %s, i.e. ID=%s: %s", msg, id, paste(as.character(rg), collapse=", "))
+      warning(msg)
+      rg$ID <- id
     }
 
-    rgArg <- asString(rg, fmtstr="%s:%s", collapse="\t");
-    rgArg <- sprintf("@RG\t%s", rgArg);
+    rgArg <- asString(rg, fmtstr="%s:%s", collapse="\t")
+    rgArg <- sprintf("@RG\t%s", rgArg)
     # Don't forget to put within quotation marks
-    rgArg <- sprintf("\"%s\"", rgArg);
+    rgArg <- sprintf("\"%s\"", rgArg)
 
-    rgArg <- list(r=rgArg);
+    rgArg <- list(r=rgArg)
   } # asBwaParameter()
 
 
@@ -138,57 +138,57 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "BWA alignment");
+  verbose && enter(verbose, "BWA alignment")
 
-  ds <- getInputDataSet(this);
-  verbose && cat(verbose, "Input data set:");
-  verbose && print(verbose, ds);
+  ds <- getInputDataSet(this)
+  verbose && cat(verbose, "Input data set:")
+  verbose && print(verbose, ds)
 
   if (force) {
-    todo <- seq_along(ds);
+    todo <- seq_along(ds)
   } else {
-    todo <- findFilesTodo(this, verbose=less(verbose, 1));
+    todo <- findFilesTodo(this, verbose=less(verbose, 1))
     # Already done?
     if (length(todo) == 0L) {
-      verbose && cat(verbose, "Already done. Skipping.");
-      res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1));
-      verbose && exit(verbose);
-      return(invisible(res));
+      verbose && cat(verbose, "Already done. Skipping.")
+      res <- getOutputDataSet(this, onMissing="error", verbose=less(verbose, 1))
+      verbose && exit(verbose)
+      return(invisible(res))
     }
   }
 
-  is <- getIndexSet(this);
-  verbose && cat(verbose, "Aligning using index set:");
-  verbose && print(verbose, is);
-  indexPrefix <- getIndexPrefix(is);
+  is <- getIndexSet(this)
+  verbose && cat(verbose, "Aligning using index set:")
+  verbose && print(verbose, is)
+  indexPrefix <- getIndexPrefix(is)
 
-  rgSet <- this$.rgSet;
+  rgSet <- this$.rgSet
   if (!is.null(rgSet)) {
-    verbose && cat(verbose, "Assigning SAM read group:");
-    verbose && print(verbose, rgSet);
-    validate(rgSet);
+    verbose && cat(verbose, "Assigning SAM read group:")
+    verbose && print(verbose, rgSet)
+    validate(rgSet)
   }
 
-  paramsList <- getParameterSets(this);
-  verbose && printf(verbose, "Additional BWA arguments: %s\n", getParametersAsString(this));
+  paramsList <- getParameterSets(this)
+  verbose && printf(verbose, "Additional BWA arguments: %s\n", getParametersAsString(this))
 
-  verbose && cat(verbose, "Number of files: ", length(ds));
+  verbose && cat(verbose, "Number of files: ", length(ds))
 
-  method <- paramsList$method;
+  method <- paramsList$method
   if (method != "backtracking") {
-    throw("Non-supported BWA algorithm. Currently only 'backtracking' is supported: ", method);
+    throw("Non-supported BWA algorithm. Currently only 'backtracking' is supported: ", method)
   }
 
-  isPaired <- isPaired(this);
+  isPaired <- isPaired(this)
   if (isPaired) {
-    pairs <- getFilePairs(ds);
+    pairs <- getFilePairs(ds)
   }
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -257,7 +257,7 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
         if (!isFile(pathnameSAI)) {
 	  fq <- dfList[[kk]]
           pathnameFQ <- pathnameFQs[kk]
-	  stopifnot(pathnameFQ == getPathname(fq))
+	  .stop_if_not(pathnameFQ == getPathname(fq))
 
           args <- list("aln", f=shQuote(pathnameSAI), shQuote(indexPrefix))
 	  if (inherits(fq, "BamDataFile")) args <- c(args, "-b")
@@ -348,34 +348,3 @@ setMethodS3("process", "BwaAlignment", function(this, ..., skip=TRUE, force=FALS
 
   invisible(bams)
 })
-
-
-
-############################################################################
-# HISTORY:
-# 2014-04-13
-# o Now BwaAlignment supports paired-end alignment too.
-# 2013-11-17
-# o CLEANUP: Now getAsteriskTags() for BwaAlignment no longer includes
-#   the 'method' tag, e.g. now 'bwa' when it used to be 'bwa,is'.  This
-#   is because the 'method' tags only indicates *how* the BWA index was
-#   build, not what it outputs (same regardless of method).
-# o If read group ID is missing, process() for BwaAlignment sets it to
-#   be the same as the fullname of the filename.  Same for SM.
-# 2013-11-11
-# o SPEEDUP: Now Bowtie2Alignment and BwaAlignment skips already processed
-#   items much faster and if all are done, even quicker.
-# 2013-08-31
-# o Now process() for BwaAlignment utilizes parallel processing.
-# 2012-10-21
-# o Added argument 'drop' to getParameters().
-# o Now a default 'ID' tag is added to the SAM read group if missing.
-# 2012-10-01
-# o Now process() BwaAlignment write SAM read groups, iff given.
-# o Now BwaAlignment inherits from AbstractAlignment.
-# 2012-09-28
-# o Added support for argument 'rgSet' to BwaAlignment().
-# 2012-09-25
-# o Now process() passes additional arguments to bwaAln().
-# o Created from Bowtie2Alignment.R.
-############################################################################

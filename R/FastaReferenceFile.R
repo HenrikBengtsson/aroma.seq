@@ -45,7 +45,7 @@
 setConstructorS3("FastaReferenceFile", function(...) {
   extend(GenericDataFile(...), c("FastaReferenceFile", uses("SequenceContigsInterface")),
     .seqLengths=NULL
-  );
+  )
 })
 
 setMethodS3("as.character", "FastaReferenceFile", function(x, ...) {
@@ -57,16 +57,16 @@ setMethodS3("as.character", "FastaReferenceFile", function(x, ...) {
 
 
 setMethodS3("getDefaultFullName", "FastaReferenceFile", function(this, ...) {
-  name <- NextMethod("getDefaultFullName");
-  name <- gsub("[.](fasta|fa)$", "", name, ignore.case=TRUE);
-  name;
+  name <- NextMethod("getDefaultFullName")
+  name <- gsub("[.](fasta|fa)$", "", name, ignore.case=TRUE)
+  name
 }, protected=TRUE)
 
 
 setMethodS3("getOrganism", "FastaReferenceFile", function(this, ...) {
-  path <- getPath(this);
-  organism <- basename(path);
-  organism;
+  path <- getPath(this)
+  organism <- basename(path)
+  organism
 })
 
 
@@ -74,37 +74,37 @@ setMethodS3("getOrganism", "FastaReferenceFile", function(this, ...) {
 #   Internally, \code{fasta.seqlengths()} of \pkg{Biostrings} is used.
 # }
 setMethodS3("readSeqLengths", "FastaReferenceFile", function(this, force=FALSE, ...) {
-  pathname <- getPathname(this);
+  pathname <- getPathname(this)
 
   # Check for cached results
-  dirs <- c("aroma.seq", getOrganism(this));
-  key <- list(method="readSeqLengths", class=class(this), pathname=pathname);
-  seqLengths <- loadCache(key=key, dirs=dirs);
+  dirs <- c("aroma.seq", getOrganism(this))
+  key <- list(method="readSeqLengths", class=class(this), pathname=pathname)
+  seqLengths <- loadCache(key=key, dirs=dirs)
   if (!force && !is.null(seqLengths)) {
-    return(seqLengths);
+    return(seqLengths)
   }
 
   # Read FASTA file
   seqLengths <- Biostrings::fasta.seqlengths(pathname)
 
   # Cache
-  saveCache(seqLengths, key=key, dirs=dirs);
+  saveCache(seqLengths, key=key, dirs=dirs)
 
-  seqLengths;
+  seqLengths
 }, private=TRUE)
 
 setMethodS3("getSeqLengths", "FastaReferenceFile", function(this, clean=TRUE, force=FALSE, ...) {
-  seqLengths <- this$.seqLengths;
+  seqLengths <- this$.seqLengths
   if (force || is.null(seqLengths)) {
-    seqLengths <- readSeqLengths(this, ...);
-    this$.seqLengths <- seqLengths;
+    seqLengths <- readSeqLengths(this, ...)
+    this$.seqLengths <- seqLengths
   }
   
   if (clean) {
     names(seqLengths) <- cleanSeqNames(this, names(seqLengths))
   }
   
-  seqLengths;
+  seqLengths
 })
 
 
@@ -114,7 +114,7 @@ setMethodS3("getSeqChecksums", "FastaReferenceFile", function(this, idxs=NULL, f
   if (is.null(idxs)) idxs <- seq_len(nbrOfSeqs)
   nidxs <- length(idxs)
   
-  seqChecksums <- this$.seqChecksums;
+  seqChecksums <- this$.seqChecksums
   if (is.null(seqChecksums)) {
     seqChecksums <- rep(NA_character_, times=nbrOfSeqs)
     names(seqChecksums) <- names
@@ -133,9 +133,9 @@ setMethodS3("getSeqChecksums", "FastaReferenceFile", function(this, idxs=NULL, f
   if (length(todo) == 0) return(res)
 
   fa <- FaFile(getPathname(this))
-  stopifnot(countFa(fa) == nbrOfSeqs)
+  .stop_if_not(countFa(fa) == nbrOfSeqs)
   fai <- scanFaIndex(fa)
-  stopifnot(length(fai) == nbrOfSeqs)
+  .stop_if_not(length(fai) == nbrOfSeqs)
 
   for (kk in seq_along(todo)) {
     ii <- todo[kk]
@@ -196,73 +196,73 @@ setMethodS3("findByOrganism", "FastaReferenceFile", function(static, organism, t
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'organism':
-  organism <- Arguments$getOrganism(organism);
+  organism <- Arguments$getOrganism(organism)
 
   # Argument 'prefix':
   if (!is.null(prefix)) {
-    prefix <- Arguments$getRegularExpression(prefix);
+    prefix <- Arguments$getRegularExpression(prefix)
   }
 
 
-  args <- list(pattern=pattern);
+  args <- list(pattern=pattern)
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Search in annotationData/organisms/<organism>/
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Create the fullname
-  fullname <- paste(c(organism, tags), collapse=",");
+  fullname <- paste(c(organism, tags), collapse=",")
 
   # Extract the name and the tags
-  parts <- unlist(strsplit(fullname, split=",", fixed=TRUE));
-  organism <- parts[1L];
-  tags <- parts[-1L];
+  parts <- unlist(strsplit(fullname, split=",", fixed=TRUE))
+  organism <- parts[1L]
+  tags <- parts[-1L]
 
   # Search for "organisms/<organism>/<prefix>.*[.](fa|fasta)$" files
-  patternS <- pattern;
-  if (!is.null(prefix)) patternS <- sprintf("%s.*%s", prefix, patternS);
+  patternS <- pattern
+  if (!is.null(prefix)) patternS <- sprintf("%s.*%s", prefix, patternS)
   args <- list(
     set="organisms",
     name=organism,
     pattern=patternS,
     ...
-  );
-  pathname <- do.call(findAnnotationData, args=args);
+  )
+  pathname <- do.call(findAnnotationData, args=args)
 
   # If not found, look for Windows shortcuts
   if (is.null(pathname)) {
     # Search for a Windows shortcut
     args$pattern <- sprintf("%s[.]lnk$", args$pattern)
-    pathname <- do.call(findAnnotationData, args=args);
+    pathname <- do.call(findAnnotationData, args=args)
     if (!is.null(pathname)) {
       # ..and expand it
-      pathname <- Arguments$getReadablePathname(pathname, mustExist=FALSE);
+      pathname <- Arguments$getReadablePathname(pathname, mustExist=FALSE)
       if (!isFile(pathname))
-        pathname <- NULL;
+        pathname <- NULL
     }
   }
 
-  pathname;
+  pathname
 }, static=TRUE, protected=TRUE) # findByOrganism()
 
 
 setMethodS3("byOrganism", "FastaReferenceFile", function(static, organism, ...) {
   # Argument 'organism':
-  organism <- Arguments$getOrganism(organism);
+  organism <- Arguments$getOrganism(organism)
 
   # Locate FASTA file
-  pathname <- findByOrganism(static, organism, ...);
+  pathname <- findByOrganism(static, organism, ...)
   if (length(pathname) == 0L)
-    throw("Failed to located FASTA reference file for organism: ", organism);
+    throw("Failed to located FASTA reference file for organism: ", organism)
 
   # Allocate object
-  res <- newInstance(static, pathname, ..., .onUnknownArgs="ignore");
+  res <- newInstance(static, pathname, ..., .onUnknownArgs="ignore")
 
   # Validate
-  organismR <- getOrganism(res);
+  organismR <- getOrganism(res)
   if (organismR != organism) {
-    throw(sprintf("The located %s (%s) specifies an organism different from the requested one: %s != %s", class(res)[1L], getPathname(res), sQuote(organismR), sQuote(organism)));
+    throw(sprintf("The located %s (%s) specifies an organism different from the requested one: %s != %s", class(res)[1L], getPathname(res), sQuote(organismR), sQuote(organism)))
   }
-  res;
+  res
 }, static=TRUE) # byOrganism()
 
 
@@ -297,34 +297,34 @@ setMethodS3("buildIndex", "FastaReferenceFile", function(this, ..., skip=TRUE, v
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'skip':
-  skip <- Arguments$getLogical(skip);
+  skip <- Arguments$getLogical(skip)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Building FASTA FAI index");
-  pathname <- getPathname(this);
-  verbose && cat(verbose, "FASTA pathname: ", pathname);
+  verbose && enter(verbose, "Building FASTA FAI index")
+  pathname <- getPathname(this)
+  verbose && cat(verbose, "FASTA pathname: ", pathname)
 
-  pathnameFAI <- sprintf("%s.fai", pathname);
-  verbose && cat(verbose, "FASTA FAI pathname: ", pathnameFAI);
+  pathnameFAI <- sprintf("%s.fai", pathname)
+  verbose && cat(verbose, "FASTA FAI pathname: ", pathnameFAI)
 
-  pathnameFAI <- Arguments$getWritablePathname(pathnameFAI, mustNotExist=FALSE);
+  pathnameFAI <- Arguments$getWritablePathname(pathnameFAI, mustNotExist=FALSE)
   if (!skip || !isFile(pathnameFAI)) {
-    verbose && enter(verbose, "Building index using Rsamtools");
+    verbose && enter(verbose, "Building index using Rsamtools")
     use("Rsamtools")
-    pathnameD <- indexFa(file=pathname);
-    verbose && cat(verbose, "Generated file: ", pathname);
-    verbose && exit(verbose);
+    pathnameD <- indexFa(file=pathname)
+    verbose && cat(verbose, "Generated file: ", pathname)
+    verbose && exit(verbose)
   }
   fai <- FastaReferenceIndexFile(pathnameFAI)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
   invisible(fai)
 }) # buildIndex()
@@ -357,7 +357,7 @@ setMethodS3("getIndexFile", "FastaReferenceFile", function(this, create = TRUE, 
 
 
 setMethodS3("hasIndex", "FastaReferenceFile", function(this, ...) {
-  !is.null(getIndexFile(this, create = FALSE));
+  !is.null(getIndexFile(this, create = FALSE))
 })
 
 
@@ -398,48 +398,48 @@ setMethodS3("buildDictionary", "FastaReferenceFile", function(this, ..., skip=TR
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'skip':
-  skip <- Arguments$getLogical(skip);
+  skip <- Arguments$getLogical(skip)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Building FASTA sequence dictionary");
-  pathname <- getPathname(this);
-  verbose && cat(verbose, "FASTA pathname: ", pathname);
+  verbose && enter(verbose, "Building FASTA sequence dictionary")
+  pathname <- getPathname(this)
+  verbose && cat(verbose, "FASTA pathname: ", pathname)
 
-  path <- getPath(this);
-  filename <- sprintf("%s.dict", getFullName(this));
-  pathnameDICT <- file.path(path, filename);
-  verbose && cat(verbose, "FASTA DICT pathname: ", pathnameDICT);
+  path <- getPath(this)
+  filename <- sprintf("%s.dict", getFullName(this))
+  pathnameDICT <- file.path(path, filename)
+  verbose && cat(verbose, "FASTA DICT pathname: ", pathnameDICT)
 
-  pathnameDICT <- Arguments$getWritablePathname(pathnameDICT, mustNotExist=FALSE);
+  pathnameDICT <- Arguments$getWritablePathname(pathnameDICT, mustNotExist=FALSE)
   if (!skip || !isFile(pathnameDICT)) {
-    verbose && enter(verbose, "Building sequence dictionary using Picard");
+    verbose && enter(verbose, "Building sequence dictionary using Picard")
 
     # Emulate overwriting
-    if (isFile(pathnameDICT)) file.remove(pathnameDICT);
+    if (isFile(pathnameDICT)) file.remove(pathnameDICT)
 
     # Write to temporary file
-    pathnameDICTT <- pushTemporaryFile(pathnameDICT);
+    pathnameDICTT <- pushTemporaryFile(pathnameDICT)
 
-    res <- systemPicard(command="CreateSequenceDictionary", R=pathname, O=pathnameDICTT, verbose=less(verbose, 50));
-    verbose && cat(verbose, "System result:");
-    verbose && str(verbose, res);
+    res <- systemPicard(command="CreateSequenceDictionary", R=pathname, O=pathnameDICTT, verbose=less(verbose, 50))
+    verbose && cat(verbose, "System result:")
+    verbose && str(verbose, res)
 
-    pathnameDICT <- popTemporaryFile(pathnameDICTT);
-    verbose && cat(verbose, "Generated file: ", pathnameDICT);
-    verbose && exit(verbose);
+    pathnameDICT <- popTemporaryFile(pathnameDICTT)
+    verbose && cat(verbose, "Generated file: ", pathnameDICT)
+    verbose && exit(verbose)
   }
-  pathnameDICT <- Arguments$getReadablePathname(pathnameDICT);
+  pathnameDICT <- Arguments$getReadablePathname(pathnameDICT)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  invisible(pathnameDICT);
+  invisible(pathnameDICT)
 }) # buildDictionary()
 
 
@@ -492,16 +492,16 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method=c("b
   # Local functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   findIndexFiles <- function(prefix, exts=c("amb", "ann", "bwt", "pac", "sa"), ...) {
-    pathnames <- sprintf("%s.%s", prefix, exts);
-    names(pathnames) <- exts;
-    pathnames[!file.exists(pathnames)] <- NA;
-    pathnames;
+    pathnames <- sprintf("%s.%s", prefix, exts)
+    names(pathnames) <- exts
+    pathnames[!file.exists(pathnames)] <- NA
+    pathnames
   } # findIndexFiles()
 
   getIndexFileSet <- function(prefix, ...) {
-    pathnames <- findIndexFiles(prefix);
-    if (any(is.na(pathnames))) return(NULL);
-    dfList <- lapply(pathnames, FUN=GenericDataFile);
+    pathnames <- findIndexFiles(prefix)
+    if (any(is.na(pathnames))) return(NULL)
+    dfList <- lapply(pathnames, FUN=GenericDataFile)
   } # getIndexFileSet()
 
 
@@ -509,45 +509,45 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method=c("b
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'method':
-  method <- match.arg(method);
+  method <- match.arg(method)
 
   # Argument 'skip':
-  skip <- Arguments$getLogical(skip);
+  skip <- Arguments$getLogical(skip)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Building BWA index files");
-  stopifnot(isCapableOf(aroma.seq, "bwa"));
+  verbose && enter(verbose, "Building BWA index files")
+  .stop_if_not(isCapableOf(aroma.seq, "bwa"))
 
-  pathnameFA <- getPathname(this);
-  verbose && cat(verbose, "FASTA reference file to be indexed: ", pathnameFA);
-  verbose && cat(verbose, "Algorithm: ", method);
+  pathnameFA <- getPathname(this)
+  verbose && cat(verbose, "FASTA reference file to be indexed: ", pathnameFA)
+  verbose && cat(verbose, "Algorithm: ", method)
 
   # Sanity check
   if (method == "is") {
-    verbose && enter(verbose, "Asserting that index can be build with method 'is'");
-    size <- getFileSize(this);
-    verbose && printf(verbose, "FASTA filesize: %.f bytes\n", size);
-    maxNbrOfBases <- 2e9;
+    verbose && enter(verbose, "Asserting that index can be build with method 'is'")
+    size <- getFileSize(this)
+    verbose && printf(verbose, "FASTA filesize: %.f bytes\n", size)
+    maxNbrOfBases <- 2e9
     if (size > maxNbrOfBases) {
       nbrOfBases <- getTotalSeqLength(this)
-      verbose && printf(verbose, "Number of bases in FASTA reference: %.f\n", nbrOfBases);
+      verbose && printf(verbose, "Number of bases in FASTA reference: %.f\n", nbrOfBases)
       if (nbrOfBases > maxNbrOfBases) {
-        throw(sprintf("Cannot build BWA index with method 'is' (consider using 'bwtsw' instead).  There are too many bases in FASTA file (%s): %.0f > %.0f", sQuote(pathnameFA), nbrOfBases, maxNbrOfBases));
+        throw(sprintf("Cannot build BWA index with method 'is' (consider using 'bwtsw' instead).  There are too many bases in FASTA file (%s): %.0f > %.0f", sQuote(pathnameFA), nbrOfBases, maxNbrOfBases))
       }
     }
-    verbose && exit(verbose);
+    verbose && exit(verbose)
   }
 
   # The index prefix
-  prefix <- bwaIndexPrefix(pathnameFA, ...);
-  verbose && cat(verbose, "Prefix for index files: ", prefix);
+  prefix <- bwaIndexPrefix(pathnameFA, ...)
+  verbose && cat(verbose, "Prefix for index files: ", prefix)
 
   ## The filename pattern
   fullname <- getFullName(this)
@@ -555,42 +555,42 @@ setMethodS3("buildBwaIndexSet", "FastaReferenceFile", function(this, method=c("b
 
   # Locate existing index files
   res <- tryCatch({
-    BwaIndexSet$byPrefix(prefix);
-  }, error=function(ex) BwaIndexSet());
+    BwaIndexSet$byPrefix(prefix)
+  }, error=function(ex) BwaIndexSet())
   verbose && print(verbose, res)
 
   # Nothing todo?
   if (skip && isComplete(res)) {
-    verbose && cat(verbose, "Already done. Skipping.");
-    verbose && exit(verbose);
+    verbose && cat(verbose, "Already done. Skipping.")
+    verbose && exit(verbose)
     # Assert compatibility
     isCompatibleWith(this, res, mustWork=TRUE, verbose=less(verbose, 50))
     isCompatibleWith(res, this, mustWork=TRUE, verbose=less(verbose, 50))
-    return(res);
+    return(res)
   }
 
   # Read sequences information, if not already done
-  n <- nbrOfSeqs(this);
-  verbose && print(verbose, this);
+  n <- nbrOfSeqs(this)
+  verbose && print(verbose, this)
 
-  res <- bwaIndex(pathnameFA, indexPrefix=prefix, a=method, ..., verbose=less(verbose, 5));
+  res <- bwaIndex(pathnameFA, indexPrefix=prefix, a=method, ..., verbose=less(verbose, 5))
   if (res != 0L) {
-    throw("Failed to build BWA index. Return code: ", res);
+    throw("Failed to build BWA index. Return code: ", res)
   }
 
-  res <- BwaIndexSet$byPrefix(prefix);
+  res <- BwaIndexSet$byPrefix(prefix)
   verbose && print(verbose, res)
 
   # Sanity check
-  stopifnot(!is.null(res));
+  .stop_if_not(!is.null(res))
 
   # Assert compatibility
   isCompatibleWith(this, res, mustWork=TRUE, verbose=less(verbose, 50))
   isCompatibleWith(res, this, mustWork=TRUE, verbose=less(verbose, 50))
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  res;
+  res
 }) # buildBwaIndexSet()
 
 
@@ -639,126 +639,66 @@ setMethodS3("buildBowtie2IndexSet", "FastaReferenceFile", function(this, ..., sk
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'skip':
-  skip <- Arguments$getLogical(skip);
+  skip <- Arguments$getLogical(skip)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Building Bowtie2 index file");
-  stopifnot(isCapableOf(aroma.seq, "bowtie2"));
+  verbose && enter(verbose, "Building Bowtie2 index file")
+  .stop_if_not(isCapableOf(aroma.seq, "bowtie2"))
 
-  pathnameFA <- getPathname(this);
-  verbose && cat(verbose, "FASTA reference file to be indexed: ", pathnameFA);
-##  verbose && cat(verbose, "Algorithm: ", method);
+  pathnameFA <- getPathname(this)
+  verbose && cat(verbose, "FASTA reference file to be indexed: ", pathnameFA)
+##  verbose && cat(verbose, "Algorithm: ", method)
 
   # The index prefix
-  prefix <- bowtie2IndexPrefix(pathnameFA, ...);
-  verbose && cat(verbose, "Prefix for index files: ", prefix);
+  prefix <- bowtie2IndexPrefix(pathnameFA, ...)
+  verbose && cat(verbose, "Prefix for index files: ", prefix)
 
   # Locate existing index set
   is <- tryCatch({
-    Bowtie2IndexSet$byPrefix(prefix);
-  }, error=function(ex) Bowtie2IndexSet());
+    Bowtie2IndexSet$byPrefix(prefix)
+  }, error=function(ex) Bowtie2IndexSet())
 
   # Nothing todo?
   if (skip && isComplete(is)) {
-    verbose && cat(verbose, "Already done. Skipping.");
+    verbose && cat(verbose, "Already done. Skipping.")
     verbose && print(verbose, is)
     # Assert compatibility
     isCompatibleWith(this, is, mustWork=TRUE, verbose=less(verbose, 50))
     isCompatibleWith(is, this, mustWork=TRUE, verbose=less(verbose, 50))
-    verbose && exit(verbose);
-    return(is);
+    verbose && exit(verbose)
+    return(is)
   }
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Build bowtie2 index set
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  res <- bowtie2Build(pathnameFA, prefix, ..., verbose=less(verbose, 5));
-  status <- attr(res, "status"); if (is.null(status)) status <- 0L;
-  verbose && cat(verbose, "Results:");
-  verbose && str(verbose, res);
-  verbose && cat(verbose, "Status:");
-  verbose && str(verbose, status);
+  res <- bowtie2Build(pathnameFA, prefix, ..., verbose=less(verbose, 5))
+  status <- attr(res, "status"); if (is.null(status)) status <- 0L
+  verbose && cat(verbose, "Results:")
+  verbose && str(verbose, res)
+  verbose && cat(verbose, "Status:")
+  verbose && str(verbose, status)
   if (status != 0L) {
-    throw("Failed to build Bowtie2 index. Return code: ", status);
+    throw("Failed to build Bowtie2 index. Return code: ", status)
   }
 
-  is <- Bowtie2IndexSet$byPrefix(prefix);
+  is <- Bowtie2IndexSet$byPrefix(prefix)
 
   # Sanity check
-  stopifnot(!is.null(is));
+  .stop_if_not(!is.null(is))
 
   # Assert compatibility
   isCompatibleWith(this, is, mustWork=TRUE, verbose=less(verbose, 50))
   isCompatibleWith(is, this, mustWork=TRUE, verbose=less(verbose, 50))
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  is;
+  is
 }) # buildBowtie2IndexSet()
-
-
-
-
-############################################################################
-# HISTORY:
-# 2014-08-23
-# o ROBUSTNESS: Now buildBowtie2IndexSet() asserts that the returned
-#   index set is compatible with the FASTA file.
-# 2014-08-11
-# o BUG FIX: getSeqNames() for FastaReferenceFile would return the
-#   sequence description in addition to the ID as part of the name.
-# 2014-04-16
-# o SPEEDUP: Now readSeqLengths() for FastaReferenceFile memoizes results.
-# 2014-04-13
-# o Added buildDictionary() for FastaReferenceFile.
-# 2014-02-25
-# o Now static byOrganism() no longer passes '...'.
-# 2014-02-20
-# o Now findByOrganism() for FastaReferenceFile also locates gzipped files.
-# o Analogously to FastqDataFile, added getDefaultFullName() for
-#   FastaReferenceFile so <fullname>.fasta.gz is properly handled.
-#   Should ideally handled by R.filesets.
-# 2014-01-25
-# o Now static byOrganism() passes '...' also to the constructor.
-# o DOCUMENTATION: Added help for byOrganism().
-# 2013-11-19
-# o ROBUSTNESS: Now FastaReferenceFile$byOrganism() asserts that the
-#   returned FASTA file specifies the requested organism.
-# 2013-11-17
-# o Now buildBwaIndexSet(..., method="is") checks for maximum size of
-#   reference genome (2GB) and gives an informative error if the FASTA
-#   file is greater.
-# o Added argument 'prefix' to findByOrganism() for FastaReferenceFile.
-# 2013-11-10
-# o Added getOrganism().
-# 2013-11-09
-# o Added FastaReferenceFile$byOrganism().
-# 2013-11-01
-# o Now buildBowtie2IndexSet() for FastaReferenceFile supports gzip'ed
-#   FASTA files.
-# 2013-06-27
-# o Added Rdoc comments for buildBowtie2IndexSet().
-# o BUG FIX: buildBowtie2IndexSet() for FastaReferenceFile became broken
-#   after updates in systemBowtie2Build().
-# 2012-10-31
-# o Added buildIndex() for FastaReferenceFile for building FAI index files.
-# 2012-09-27
-# o Added buildBowtie2IndexSet() for FastaReferenceFile.
-# 2012-09-25
-# o SPEEDUP: Now print() only displays sequence information, iff
-#   already cached.  Otherwise, NAs are displayed.
-# o Added mandatory argument 'method' to buildBwaIndexSet().
-# 2012-09-24
-# o Now getTotalSeqLengths() returns a numeric if the result cannot be
-#   held in an integer.
-# o Added buildBwaIndexSet().
-# 2012-06-28
-# o Created.
-############################################################################

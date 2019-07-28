@@ -65,10 +65,3 @@ setMethodS3("readDataFrame", "FastaReferenceIndexFile", function(this, ...) {
   colnames(data) <- c("contig", "size", "location", "basesPerLine", "bytesPerLine")
   data
 }, private=TRUE)
-
-
-############################################################################
-# HISTORY:
-# 2015-05-01
-# o Created.
-############################################################################

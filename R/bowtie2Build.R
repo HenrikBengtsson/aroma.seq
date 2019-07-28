@@ -20,7 +20,7 @@
 # }
 #
 # \section{Support for compressed input files}{
-#   If gzip'ed FASTA files are used, this function will temporarily decompress
+#   If gzipped FASTA files are used, this function will temporarily decompress
 #   before passing them to the bowtie2-build external software (which only
 #   support non-compressed FASTA files).
 # }
@@ -44,11 +44,11 @@ setMethodS3("bowtie2Build", "default", function(pathnameFAs,
   # Local functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   hasCommas <- function(pathnames, ...) {
-    (regexpr(",", pathnames, fixed=TRUE) != -1L);
+    (regexpr(",", pathnames, fixed=TRUE) != -1L)
   } # hasCommas()
 
   assertNoCommas <- function(pathnames, ...) {
-    stopifnot(!any(hasCommas(pathnames)));
+    .stop_if_not(!any(hasCommas(pathnames)))
   } # assertNoCommas()
 
 
@@ -56,74 +56,55 @@ setMethodS3("bowtie2Build", "default", function(pathnameFAs,
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'pathnameFAs':
-  pathnameFAs <- Arguments$getReadablePathnames(pathnameFAs);
-  assertNoDuplicated(pathnameFAs);
-  assertNoCommas(pathnameFAs);
+  pathnameFAs <- Arguments$getReadablePathnames(pathnameFAs)
+  assertNoDuplicated(pathnameFAs)
+  assertNoCommas(pathnameFAs)
 
   # Argument 'bowtieRefIndexPrefix'
-  bowtieRefIndexPrefix <- Arguments$getCharacter(bowtieRefIndexPrefix, length=c(1L,1L));
-  bowtieRefIndexPath <- dirname(bowtieRefIndexPrefix);
-  bowtieRefIndexPath <- Arguments$getWritablePath(bowtieRefIndexPath);
+  bowtieRefIndexPrefix <- Arguments$getCharacter(bowtieRefIndexPrefix, length=c(1L,1L))
+  bowtieRefIndexPath <- dirname(bowtieRefIndexPrefix)
+  bowtieRefIndexPath <- Arguments$getWritablePath(bowtieRefIndexPath)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Workaround for gzip'ed FASTA files
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  isGzipped <- sapply(pathnameFAs, FUN=isGzipped);
+  isGzipped <- sapply(pathnameFAs, FUN=isGzipped)
   if (any(isGzipped)) {
     # Temporarily decompress gzip'ed FASTA files
-    pathnameFAs[isGzipped] <- sapply(pathnameFAs[isGzipped], FUN=gunzip, remove=FALSE, temporary=TRUE);
+    pathnameFAs[isGzipped] <- sapply(pathnameFAs[isGzipped], FUN=gunzip, remove=FALSE, temporary=TRUE)
     on.exit({
-      file.remove(pathnameFAs[isGzipped]);
-    }, add=TRUE);
+      file.remove(pathnameFAs[isGzipped])
+    }, add=TRUE)
   }
 
 
   # Sanity check
-  assertNoCommas(pathnameFAs);
+  assertNoCommas(pathnameFAs)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup call to bowtie2-build binary
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Add dashes as appropriate to names of "bowtie2 options"
-  opts <- optionsVec;
+  opts <- optionsVec
   if (length(opts) > 0L) {
-    nms <- names(opts);
-    names(opts) <- paste(ifelse(nchar(nms) == 1, "-", "--"), nms, sep="");
+    nms <- names(opts)
+    names(opts) <- paste(ifelse(nchar(nms) == 1, "-", "--"), nms, sep="")
   }
 
   # Append FASTA reference files
-  opts <- c(opts, shQuote(paste(unname(pathnameFAs), collapse=",")));
+  opts <- c(opts, shQuote(paste(unname(pathnameFAs), collapse=",")))
 
   # Append bowtie reference index prefix
-  opts <- c(opts, shQuote(bowtieRefIndexPrefix));
+  opts <- c(opts, shQuote(bowtieRefIndexPrefix))
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Call bowtie2-build binary
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  args <- list(command=command, args=opts);
-  res <- do.call(what=systemBowtie2Build, args=args);
+  args <- list(command=command, args=opts)
+  res <- do.call(what=systemBowtie2Build, args=args)
 
-  res;
+  res
 }) # bowtie2Build()
-
-############################################################################
-# HISTORY:
-# 2014-03-10 [HB]
-# o ROBUSTNESS: Now bowtie2Build() uses shQuote() for all pathnames.
-# 2014-03-10 [HB]
-# o ROBUSTNESS: Now bowtie2Build() uses shQuote() for all pathnames.
-# 2014-01-14 [HB]
-# o ROBUSTNESS: Now bowtie2Build() tests for duplicated entries in
-#   'pathnameFAs' and gives an informative errors message if detected.
-# 2013-11-01 [HB]
-# o Now bowtie2Build() supports gzip'ed FASTQ.
-# 2013-03-08 [TT]
-# o Completely rewritten to follow tophat.R template.
-# 2012-09-14 [TT]
-# o First real draft of "level 2" code.
-# 2012-07-18 [HB]
-# o Created bowtie2-build() stub.
-############################################################################

@@ -40,19 +40,19 @@ setMethodS3("findCmdv", "default", function(command=NULL,
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'command':
-  command <- Arguments$getCharacter(command);
+  command <- Arguments$getCharacter(command)
   if (nchar(command) < 1) {
-    throw(sprintf("Failed to locate executable:  command argument is NULL."));
+    throw(sprintf("Failed to locate executable:  command argument is NULL."))
   }
 
   # Argument 'mustExist':
-  mustExist <- Arguments$getLogical(mustExist);
+  mustExist <- Arguments$getLogical(mustExist)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
   # Argument 'version'"
@@ -60,15 +60,15 @@ setMethodS3("findCmdv", "default", function(command=NULL,
     throw("findCmdv:  version argument is null")
   }
 
-  verbose && enter(verbose, "Locating software");
-  verbose && cat(verbose, "Command: ", command);
+  verbose && enter(verbose, "Locating software")
+  verbose && cat(verbose, "Command: ", command)
 
-  pathname <- Sys.which(command);
-  if (identical(pathname, "")) pathname <- NULL;
-  if (!isFile(pathname)) pathname <- NULL;
-  verbose && cat(verbose, "Located pathname: ", pathname);
+  pathname <- Sys.which(command)
+  if (identical(pathname, "")) pathname <- NULL
+  if (!isFile(pathname)) pathname <- NULL
+  verbose && cat(verbose, "Located pathname: ", pathname)
   if (mustExist && !isFile(pathname)) {
-    throw(sprintf("Failed to locate (executable '%s').", command));
+    throw(sprintf("Failed to locate (executable '%s').", command))
   }
 
   ## Primitive parsing to get version string
@@ -84,14 +84,7 @@ setMethodS3("findCmdv", "default", function(command=NULL,
       throw(sprintf("Failed to locate '%s', version '%s'.", command, version))
   }
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  pathname;
+  pathname
 }) # findCmdv()
-
-
-############################################################################
-# HISTORY:
-# 2013-03-07
-# o Created TAT
-############################################################################

@@ -30,64 +30,58 @@ setMethodS3("systemTopHat", "default", function(commandName="tophat",
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   # Arguments '...':
-  dotArgs <- list(...);  ## list with one item named 'args'; these are the arguments to *tophat*
+  dotArgs <- list(...) ## list with one item named 'args'; these are the arguments to *tophat*
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Calling TopHat executable");
+  verbose && enter(verbose, "Calling TopHat executable")
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Locate executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  bin <- findTopHat(command=commandName);
-  verbose && cat(verbose, "Executable: ", bin);
+  bin <- findTopHat(command=commandName)
+  verbose && cat(verbose, "Executable:")
+  verbose && print(verbose, bin)
 
-  verbose && cat(verbose, "Arguments passed to system2():");
+  verbose && cat(verbose, "Arguments passed to system2():")
   verbose && str(verbose, system2ArgsList)
-  verbose && cat(verbose, "Arguments passed to TopHat:");
-  verbose && str(verbose, dotArgs);
+  verbose && cat(verbose, "Arguments passed to TopHat:")
+  verbose && str(verbose, dotArgs)
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup command line switches
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  verbose && cat(verbose, "Command line options:");
-  verbose && print(verbose, dotArgs);
+  verbose && cat(verbose, "Command line options:")
+  verbose && print(verbose, dotArgs)
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # System call
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && cat(verbose, "System call:");
-  cmd <- sprintf("%s %s", bin, paste(dotArgs, collapse=" "));
-  verbose && print(verbose, cmd);
-  verbose && str(verbose, system2ArgsList);
+  verbose && cat(verbose, "System call:")
+  cmd <- sprintf("%s %s", bin, paste(dotArgs, collapse=" "))
+  verbose && print(verbose, cmd)
+  verbose && str(verbose, system2ArgsList)
 
-  verbose && enter(verbose, "system2() call");
+  verbose && enter(verbose, "system2() call")
   callArgs <- list(command=bin, args=paste(names(dotArgs$args), dotArgs$args, sep=" "))
   ## BUG:  This has unacceptable dependence on tophat() call using 'args' as the name for dotArgs
   callArgs <- c(callArgs, system2ArgsList)
 
-  verbose && str(verbose, callArgs);
+  verbose && str(verbose, callArgs)
   if (!.fake) {
-    res <- do.call(what=base::system2, args=callArgs);
+    res <- do.call(what=base::system2, args=callArgs)
   } else {
     cat("<fake run>\n")
-    res <- "<fake run>";
+    res <- "<fake run>"
   }
 
-  verbose && exit(verbose);
-  verbose && exit(verbose);
-  res;
+  verbose && exit(verbose)
+  verbose && exit(verbose)
+  res
 }) # systemTopHat()
-
-
-############################################################################
-# HISTORY:
-# 2013-01-24
-# o Created. TAT
-############################################################################

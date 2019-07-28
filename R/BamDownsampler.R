@@ -35,51 +35,51 @@ setConstructorS3("BamDownsampler", function(dataSet=NULL, subset=1e6, seed=NULL,
   # Validate arguments
   if (!is.null(dataSet)) {
     # Argument 'dataSet':
-    dataSet <- Arguments$getInstanceOf(dataSet, "BamDataSet");
+    dataSet <- Arguments$getInstanceOf(dataSet, "BamDataSet")
 
     # Argument 'subset':
     if (length(subset) == 1L) {
-      subset <- Arguments$getNumeric(subset, range=c(0,Inf));
+      subset <- Arguments$getNumeric(subset, range=c(0,Inf))
       if (subset <= 1) {
-        subset <- Arguments$getDouble(subset, range=c(0,1));
+        subset <- Arguments$getDouble(subset, range=c(0,1))
       } else {
-        subset <- Arguments$getInteger(subset, range=c(1,Inf));
+        subset <- Arguments$getInteger(subset, range=c(1,Inf))
       }
     } else {
-      throw("Not yet implemented.");
-      subset <- Arguments$getIndex(subset);
+      throw("Not yet implemented.")
+      subset <- Arguments$getIndex(subset)
     }
 
     # Argument 'seed':
-    if (!is.null(seed)) seed <- Arguments$getInteger(seed);
+    if (!is.null(seed)) seed <- Arguments$getInteger(seed)
   } # if (!is.null(dataSet))
 
-  extend(AromaSeqTransform(dataSet=dataSet, subset=subset, seed=seed, ...), "BamDownsampler");
+  extend(AromaSeqTransform(dataSet=dataSet, subset=subset, seed=seed, ...), "BamDownsampler")
 })
 
 
 setMethodS3("getSampleSize", "BamDownsampler", function(this, df, ...) {
-  params <- getParameters(this);
-  subset <- params$subset;
+  params <- getParameters(this)
+  subset <- params$subset
   if (subset <= 1) {
-    n <- subset * nbrOfReads(df);
-    n <- Arguments$getInteger(n);
+    n <- subset * nbrOfReads(df)
+    n <- Arguments$getInteger(n)
   } else {
-    n <- subset;
+    n <- subset
   }
-  n;
-}, protected=TRUE);
+  n
+}, protected=TRUE)
 
 
 setMethodS3("getAsteriskTags", "BamDownsampler", function(this, ...) {
-  params <- getParameters(this);
-  sprintf("n=%g", params$subset);
-}, protected=TRUE);
+  params <- getParameters(this)
+  sprintf("n=%g", params$subset)
+}, protected=TRUE)
 
 
 setMethodS3("getRootPath", "BamDownsampler", function(this, ...) {
-  "bamData";
-}, protected=TRUE);
+  "bamData"
+}, protected=TRUE)
 
 
 setMethodS3("process", "BamDownsampler", function(this, ..., force=FALSE, verbose=FALSE) {
@@ -150,10 +150,3 @@ setMethodS3("process", "BamDownsampler", function(this, ..., force=FALSE, verbos
 
   invisible(res)
 })
-
-
-############################################################################
-# HISTORY:
-# 2014-04-18
-# o Created from FastqDownsampler.R.
-############################################################################

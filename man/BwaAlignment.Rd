@@ -46,7 +46,7 @@ BwaAlignment(..., indexSet=NULL, flavor=c("backtracking"))
  \item{...}{Arguments passed to \code{\link{AbstractAlignment}}.}
  \item{indexSet}{An \code{\link{BwaIndexSet}}.}
  \item{flavor}{A \code{\link[base]{character}} string specifying the type of
-   BWA algoritm to use for alignment.}
+   BWA algorithm to use for alignment.}
 }
 
 \section{Fields and Methods}{

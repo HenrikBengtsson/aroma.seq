@@ -25,96 +25,90 @@ setMethodS3("systemBWA", "default", function(command, ..., .fake=FALSE, verbose=
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'command':
-  command <- Arguments$getCharacter(command);
+  command <- Arguments$getCharacter(command)
 
   # Arguments '...':
-  args <- list(...);
+  args <- list(...)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Calling BWA executable");
+  verbose && enter(verbose, "Calling BWA executable")
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Locate executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  bin <- findBWA(verbose=less(verbose, 50));
-  verbose && cat(verbose, "Executable: ", bin);
+  bin <- findBWA(verbose=less(verbose, 50))
+  verbose && cat(verbose, "Executable:")
+  verbose && print(verbose, bin)
 
   # Unwrap vectors
-  args <- unlist(args);
+  args <- unlist(args)
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Split up '...' arguments by system2() and BWA executable
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  keys <- names(args);
+  keys <- names(args)
   if (is.null(keys)) {
-    system2Args <- NULL;
+    system2Args <- NULL
   } else {
-    keep <- is.element(keys, names(formals(base::system2)));
-    system2Args <- args[keep];
-    args <- args[!keep];
+    keep <- is.element(keys, names(formals(base::system2)))
+    system2Args <- args[keep]
+    args <- args[!keep]
   }
 
-  verbose && cat(verbose, "Arguments passed to system2():");
-  verbose && str(verbose, system2Args);
+  verbose && cat(verbose, "Arguments passed to system2():")
+  verbose && str(verbose, system2Args)
 
-  verbose && cat(verbose, "Arguments passed to BWA:");
-  args <- c(list(command), args);
-  verbose && str(verbose, args);
+  verbose && cat(verbose, "Arguments passed to BWA:")
+  args <- c(list(command), args)
+  verbose && str(verbose, args)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup command line switches
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Automatically add dashes
-  keys <- names(args);
-  missing <- grep("^[^-]", keys);
+  keys <- names(args)
+  missing <- grep("^[^-]", keys)
   if (length(missing) > 0L) {
-    invalid <- (args[missing] == "");
+    invalid <- (args[missing] == "")
     if (any(invalid)) {
-      throw("Detected non-valid command line switched: ", hpaste(args[missing][invalid]));
+      throw("Detected non-valid command line switched: ", hpaste(args[missing][invalid]))
     }
-    keys[missing] <- sprintf("-%s", keys[missing]);
+    keys[missing] <- sprintf("-%s", keys[missing])
   }
 
-  args <- paste(keys, args, sep=" ");
-  args <- trim(args);
-  verbose && cat(verbose, "Command line options:");
-  verbose && print(verbose, args);
+  args <- paste(keys, args, sep=" ")
+  args <- trim(args)
+  verbose && cat(verbose, "Command line options:")
+  verbose && print(verbose, args)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # System call
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && cat(verbose, "System call:");
-  cmd <- sprintf("%s %s", bin, paste(args, collapse=" "));
-  verbose && print(verbose, cmd);
-  verbose && str(verbose, system2Args);
+  verbose && cat(verbose, "System call:")
+  cmd <- sprintf("%s %s", bin, paste(args, collapse=" "))
+  verbose && print(verbose, cmd)
+  verbose && str(verbose, system2Args)
 
-  verbose && enter(verbose, "system2() call");
-  callArgs <- list(command=bin, args=args);
-  callArgs <- c(callArgs, system2Args);
-  verbose && str(verbose, callArgs);
+  verbose && enter(verbose, "system2() call")
+  callArgs <- list(command=bin, args=args)
+  callArgs <- c(callArgs, system2Args)
+  verbose && str(verbose, callArgs)
   if (!.fake) {
-    res <- do.call(base::system2, callArgs);
+    res <- do.call(base::system2, callArgs)
   } else {
-    res <- "<fake run>";
+    res <- "<fake run>"
   }
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  res;
+  res
 }) # systemBWA()
-
-
-############################################################################
-# HISTORY:
-# 2012-09-24
-# o Created.
-############################################################################

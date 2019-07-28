@@ -38,60 +38,60 @@ setMethodS3("convertToSam", "BamDataFile", function(this, path=getPath(this), sk
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'path':
-  path <- Arguments$getWritablePath(path);
+  path <- Arguments$getWritablePath(path)
 
   # Argument 'skip':
-  skip <- Arguments$getLogical(skip);
+  skip <- Arguments$getLogical(skip)
 
   # Argument 'overwrite':
-  overwrite <- Arguments$getLogical(overwrite);
+  overwrite <- Arguments$getLogical(overwrite)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Converting BAM file to a SAM file");
+  verbose && enter(verbose, "Converting BAM file to a SAM file")
 
-  pathname <- getPathname(this);
-  verbose && cat(verbose, "BAM pathname: ", pathname);
+  pathname <- getPathname(this)
+  verbose && cat(verbose, "BAM pathname: ", pathname)
 
-  fullname <- getFullName(this);
-  filenameSAM <- sprintf("%s.sam", fullname);
-  pathnameSAM <- file.path(path, filenameSAM);
-  verbose && cat(verbose, "SAM pathname: ", pathnameSAM);
+  fullname <- getFullName(this)
+  filenameSAM <- sprintf("%s.sam", fullname)
+  pathnameSAM <- file.path(path, filenameSAM)
+  verbose && cat(verbose, "SAM pathname: ", pathnameSAM)
 
   # Nothing to do?
   if (skip && isFile(pathnameSAM)) {
-    verbose && cat(verbose, "Already converted. Skipping.");
-    res <- SamDataFile(pathnameSAM);
-    verbose && exit(verbose);
-    return(res);
+    verbose && cat(verbose, "Already converted. Skipping.")
+    res <- SamDataFile(pathnameSAM)
+    verbose && exit(verbose)
+    return(res)
   }
 
   # Asserts
-  stopifnot(getAbsolutePath(pathnameSAM) != getAbsolutePath(pathname));
-  pathnameSAM <- Arguments$getWritablePathname(pathnameSAM, mustNotExist=!overwrite);
+  .stop_if_not(getAbsolutePath(pathnameSAM) != getAbsolutePath(pathname))
+  pathnameSAM <- Arguments$getWritablePathname(pathnameSAM, mustNotExist=!overwrite)
 
   # Converting BAM to SAM
-  verbose && enter(verbose, "Converting using Rsamtools");
-  asSam <- NULL; rm(list="asSam"); # To please R CMD check
+  verbose && enter(verbose, "Converting using Rsamtools")
+  asSam <- NULL; rm(list="asSam") # To please R CMD check
   use("Rsamtools")
-  pathnameSAMx <- gsub("[.]sam$", "", pathnameSAM);
-  verbose && cat(verbose, "SAM destination: ", pathnameSAMx);
+  pathnameSAMx <- gsub("[.]sam$", "", pathnameSAM)
+  verbose && cat(verbose, "SAM destination: ", pathnameSAMx)
   # NB: Rsamtools::asSam() already writes atomically.
   pathnameD <- asSam(pathname, destination=pathnameSAMx,
-                     overwrite=overwrite);
-  verbose && exit(verbose);
+                     overwrite=overwrite)
+  verbose && exit(verbose)
 
-  res <- SamDataFile(pathnameSAM);
+  res <- SamDataFile(pathnameSAM)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  res;
+  res
 }) # convertToSam() for BamDataFile
 
 
@@ -102,53 +102,42 @@ setMethodS3("convertToSam", "BamDataSet", function(ds, path=NULL, ..., verbose=F
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'path':
   if (!is.null(path)) {
-    path <- Arguments$getWritablePath(path);
+    path <- Arguments$getWritablePath(path)
   }
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Converting BAM set to a SAM set");
+  verbose && enter(verbose, "Converting BAM set to a SAM set")
 
-  verbose && cat(verbose, "BAM data set:");
-  verbose && print(verbose, ds);
-  verbose && cat(verbose, "SAM path: ", path);
+  verbose && cat(verbose, "BAM data set:")
+  verbose && print(verbose, ds)
+  verbose && cat(verbose, "SAM path: ", path)
 
   # TO DO: Parallelize. /HB 2013-11-08
-  bfList <- list();
+  bfList <- list()
   for (ii in seq_along(ds)) {
-    df <- ds[[ii]];
-    verbose && enter(verbose, sprintf("File #%d ('%s') of %d", ii, getName(df), length(ds)));
-    pathII <- if (is.null(path)) getPath(df) else path;
-    bf <- convertToSam(df, path=pathII, ..., verbose=less(verbose,1));
-    bfList[[ii]] <- bf;
-    verbose && print(verbose, bf);
-    verbose && exit(verbose);
+    df <- ds[[ii]]
+    verbose && enter(verbose, sprintf("File #%d ('%s') of %d", ii, getName(df), length(ds)))
+    pathII <- if (is.null(path)) getPath(df) else path
+    bf <- convertToSam(df, path=pathII, ..., verbose=less(verbose,1))
+    bfList[[ii]] <- bf
+    verbose && print(verbose, bf)
+    verbose && exit(verbose)
   } # for (ii ...)
 
-  bs <- SamDataSet(bfList);
-  bs <- extract(bs, getFullNames(ds), onMissing="error");
-  verbose && print(verbose, bs);
+  bs <- SamDataSet(bfList)
+  bs <- extract(bs, getFullNames(ds), onMissing="error")
+  verbose && print(verbose, bs)
 
   ## TODO: Assert completeness
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  bs;
+  bs
 }) # convertToSam() for BamDataSet
-
-
-
-############################################################################
-# HISTORY:
-# 2014-04-16 [HB]
-# o BUG FIX: convertToSam() for BamDataSet would write all SAM files
-#   to the directory of the first BAM file.
-# 2014-03-06 [HB]
-# o Created from convertToBam().
-############################################################################
