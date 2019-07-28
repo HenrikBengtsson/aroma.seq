@@ -12,7 +12,6 @@ NEW FEATURES:
 
  * pileup2seqz() requires sequenza (<= 2.1.2). If a newer version is installed,
    then an informative error message is produced.
-
    
 BUG FIXES:
 

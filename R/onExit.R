@@ -5,7 +5,7 @@
 #
 # \description{
 #  @get "title" (regardless of cause).
-#  This methtod differ from @see "base::on.exit" in that it adds the
+#  This method differ from @see "base::on.exit" in that it adds the
 #  option to \emph{prepend} an expression to already existing expressed,
 #  as an alternative to the default \emph{append}.
 #
