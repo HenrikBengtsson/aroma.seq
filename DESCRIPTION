@@ -5,13 +5,13 @@ Depends:
     R.utils (>= 2.9.0),
     R.filesets (>= 2.13.0),
     aroma.core (>= 3.2.0),
-    future (>= 1.14.0)
+    future (>= 1.15.1)
 Imports:
     methods,
     R.methodsS3 (>= 1.7.1),
-    R.oo (>= 1.22.0),
-    R.cache (>= 0.13.0),
-    matrixStats (>= 0.54.0),
+    R.oo (>= 1.23.0),
+    R.cache (>= 0.14.0),
+    matrixStats (>= 0.55.0),
     gtools (>= 3.8.1),
     Biostrings,
     GenomeInfoDb,
