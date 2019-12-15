@@ -98,7 +98,7 @@ setMethodS3("normalizeGcContent", "default", function(y, gcContent, targetFcn=NU
   # Estimate normalization function and predict the signals
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Fit smooth curve
-  naValue <- as.double(NA)
+  naValue <- NA_real_
   mu <- rep(naValue, times=nbrOfDataPoints)
   if (!is.null(targetFcn)) {
     muT <- rep(naValue, times=nbrOfDataPoints)
