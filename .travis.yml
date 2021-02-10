@@ -30,13 +30,12 @@ matrix:
         - _R_S3_METHOD_LOOKUP_USE_TOPENV_AS_DEFENV_=true
         - _R_CHECK_CONNECTIONS_LEFT_OPEN_=true
         - _R_CHECK_LENGTH_1_CONDITION_=true
-        ## Does not work, because futile.* packages fail to install
-        ## - _R_CHECK_LENGTH_1_LOGIC2_=true
-## CRAN does not build aroma.core for R 3.6.1 on macOS 	
-##    - os: osx
-##      r: release
-##      r_github_packages:
-##      - HenrikBengtsson/aroma.core
+        - _R_CHECK_LENGTH_1_LOGIC2_=true
+        - _R_CLASS_MATRIX_ARRAY_=true
+    - os: osx
+      r: release
+      r_github_packages:
+      - HenrikBengtsson/aroma.core
     - os: linux
       r: release
       r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes

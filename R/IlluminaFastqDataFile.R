@@ -58,7 +58,7 @@ setMethodS3("getFileVersion", "IlluminaFastqDataFile", function(this, ...) {
       return(key)
     }
   }
-  as.character(NA)
+  NA_character_
 })
 
 
