@@ -3,7 +3,7 @@ Version: 0.10.0-9000
 Depends:
     R (>= 3.3.1),
     R.utils (>= 2.9.0),
-    R.filesets (>= 2.13.0),
+    R.filesets (>= 2.14.0),
     aroma.core (>= 3.2.0),
     future (>= 1.15.1)
 Imports:
@@ -66,4 +66,4 @@ biocViews: Infrastructure, ProprietaryPlatforms, HighThroughputSequencing,
 ByteCompile: TRUE
 URL: https://github.com/HenrikBengtsson/aroma.seq
 BugReports: https://github.com/HenrikBengtsson/aroma.seq/issues
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
